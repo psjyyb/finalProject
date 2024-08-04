@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Login</title>
+    <title>ARION</title>
 
     <style>
         body {
@@ -163,6 +163,9 @@
                 <label>Save (Code, ID)</label>
             </div>
             <button type="submit">Sign in</button>
+            <div class="error-message" th:if="${param.error}">
+                <p>회사코드 또는 Id 나 비밀번호가 일치하지 않습니다.</p>
+            </div>
             <div class="form-actions">
                 <a href="/find-username">아이디 찾기</a>
                 <a href="/find-password">비밀번호 찾기</a>

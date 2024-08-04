@@ -28,7 +28,7 @@ public class SpringSecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .antMatchers("/", "/home", "/login", "/home/**").permitAll()
+                .antMatchers("/", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/group/**").hasAnyRole("일반사원", "사원관리자")
@@ -39,7 +39,7 @@ public class SpringSecurityConfig {
                 .loginProcessingUrl("/perform_login")
                 .successHandler(customAuthenticationSuccessHandler) // 로그인 성공 시 처리 핸들러 설정
                 .failureUrl("/login?error=true")
-                .usernameParameter("username")  // 변경된 파라미터 이름
+                .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()
                 .and()

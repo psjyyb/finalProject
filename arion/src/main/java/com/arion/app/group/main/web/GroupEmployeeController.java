@@ -1,4 +1,4 @@
-package com.arion.app.group.employee;
+package com.arion.app.group.main.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

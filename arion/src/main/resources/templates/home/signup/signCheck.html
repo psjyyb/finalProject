@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
+<head>
+<meta charset="utf-8">
+<title>ARION</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container2 {
+    max-width: 600px;
+    margin: 90px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-group {
+	display: flex;
+	align-items: center;
+    margin-bottom: 15px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 15px; 
+    transform: scale(1.5); 
+}
+
+textarea {
+    width: 100%;
+    height: 100px; 
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none; 
+    overflow-y: scroll; 
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
+
+button + button {
+    background-color: #6c757d;
+}
+</style>
+<body>
+    <div class="container2">
+        <div class="logo-container">
+            <img th:src="@{/images/arion.png}" alt="Logo" style="width: 150px;">
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="allcheck" name="allcheck" /> 
+            <label for="allcheck">ARION 회원약관, 개인정보 수집 및 이용에 대한 안내 마케팅 활용 및 광고성 정보 수신(선택)에 동의합니다.</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="checkNeed1" name="checkNeed" /> 
+            <label for="checkNeed1">ARION 회원 약관 동의(필수)</label>
+        </div>
+        <div>
+            <textarea readonly>약관내용</textarea>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="checkNeed2" name="checkNeed" /> 
+            <label for="checkNeed2">ARION 회원 약관 동의(필수)</label>
+        </div>
+        <div>
+            <textarea readonly>개인정보 수집 및 이용에 대한 안내</textarea>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="checkChoice" name="checkChoice" /> 
+            <label for="checkChoice">마케팅 활용 및 광고성 정보 수신(선택)</label>
+        </div>
+        <div>
+            <textarea readonly>마케팅 활용 및 광고성 정보 수신 내용</textarea>
+        </div>
+        <button id="signupButton" th:onclick="|location.href='@{/home/signUp}'|" disabled>가입하기</button>
+        <button th:onclick="|location.href='@{/home/}'|">취소</button>
+    </div>
+
+    <script th:src="@{/js/home/signCheck.js}"></script>
+</body>
+</html>

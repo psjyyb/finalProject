@@ -41,12 +41,12 @@ public class SpringSecurityConfig {
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .permitAll()
-                .and()
-            .logout()
-                .logoutUrl("/perform_logout")
-                .logoutSuccessUrl("/")
                 .permitAll();
+//                .and()
+//            .logout()
+//                .logoutUrl("/perform_logout")
+//                .logoutSuccessUrl("/")
+//                .permitAll();
         return http.build();
     }
 }

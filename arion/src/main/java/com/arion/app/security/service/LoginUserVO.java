@@ -37,7 +37,11 @@ public class LoginUserVO implements UserDetails {
     public String getUsername() {
         return userVO.getLoginId();
     }
-
+    
+    public String getCompanyCode() {
+        return userVO.getCompanyCode();
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -57,4 +61,5 @@ public class LoginUserVO implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

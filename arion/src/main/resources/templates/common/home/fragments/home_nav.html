@@ -9,7 +9,7 @@
             <div class="container">
 
                 <!-- Image Logo -->
-                <a class="navbar-brand logo-image" th:href="@{/}"><img src="images/arion.png" alt="alternative"></a> 
+                <a class="navbar-brand logo-image" th:href="@{/home}"><img th:src="@{/images/arion.png}" alt="alternative"></a> 
 
                 <!-- Text Logo - Use this if you don't have a graphic logo -->
                 <!-- <a class="navbar-brand logo-text" href="index.html">Ioniq</a> -->
@@ -39,12 +39,11 @@
                         </li>
                     </ul>
                     <span class="nav-item">
-                        <a class="btn-outline-sm" th:href="@{/}">가입하기</a>
+                        <a class="btn-outline-sm" th:href="@{/home/signCheck}">가입하기</a>
                     </span>
                 </div> <!-- end of navbar-collapse -->
             </div> <!-- end of container -->
         </nav> <!-- end of navbar -->
         <!-- end of navigation -->
-	
-		
+
 </html>

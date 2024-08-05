@@ -9,4 +9,6 @@ public class GroupAdminController {
 	public String groupAdmin() {
 		return "groupAdmin/groupAdminMain";
 	}
+
+
 }

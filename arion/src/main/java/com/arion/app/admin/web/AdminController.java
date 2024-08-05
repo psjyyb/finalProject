@@ -9,4 +9,8 @@ public class AdminController {
 	public String admin() {
 		return "admin/adminMain";
 	}
+	@GetMapping("/adminSubList")
+	public String adminsubList() {
+		return "admin/adminSubList";
+	}
 }

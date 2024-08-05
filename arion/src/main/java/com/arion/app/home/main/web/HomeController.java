@@ -23,7 +23,7 @@ public class HomeController {
     public String home() {
         return "home/home";
     }
-
+    
     @GetMapping("/company")
     public String companyHome(Authentication authentication, Model model) {
         LoginUserVO userDetails = (LoginUserVO) authentication.getPrincipal();
@@ -38,5 +38,15 @@ public class HomeController {
         String companyCode = userDetails.getUserVO().getCompanyCode(); 
         model.addAttribute("companyCode", companyCode);
         return "group/main/groupMain";
+    }
+    
+    @GetMapping("/home/signCheck")
+    public String signCheck() {
+        return "home/signup/signCheck";
+    }
+    
+    @GetMapping("/home/signUp")
+    public String signUp() {
+        return "home/signup/signUp";
     }
 }

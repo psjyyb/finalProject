@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/group/layouts/group_layout}"
-	layout:fragment="Content">
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
 <head>
     <title>Home</title>
 </head>
 <body>
-    <h1>그룹웨어ㅎㄴㅇㄹㅇ</h1>
+    <h1>그룹웨어 관리자</h1>
     <a th:href="@{/admin}">Admin Page</a>
     <a th:href="@{/user}">User Page</a>
     <a th:href="@{/logout}">Logout</a>

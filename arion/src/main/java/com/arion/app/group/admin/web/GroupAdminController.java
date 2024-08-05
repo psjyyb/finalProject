@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GroupAdminController {
 	@GetMapping("/groupAdmin")
 	public String groupAdmin() {
-		return "group/admin/groupAdmin";
+		return "groupAdmin/groupAdminMain";
 	}
 }

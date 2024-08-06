@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
 import com.arion.app.admin.service.ModuleVO;
+import com.arion.app.admin.service.QnAVO;
 
 @Controller
 public class AdminController {
@@ -49,5 +50,33 @@ public class AdminController {
 	@PostMapping("/adminModInsert")
 	public String adminModInsertPro() {
 		return "redirect:/adminModList";
+	}
+	@GetMapping("/adminEndSubList")
+	public String adminEndSubList(Model model) {
+		List<AdminVO> list = adminService.endSunListSelect();
+		model.addAttribute("endSubList",list);
+		return "admin/adminEndSubList";
+	}
+	@GetMapping("/adminQnAList")
+	public String adminQnAList(Model model) {
+		List<QnAVO> list = adminService.qnaListSelect();
+		model.addAttribute("qnaList",list);
+		return "admin/adminQnAList";
+	}
+	@GetMapping("/adminQnAInfo")
+	public String adminQnAInfo(QnAVO qnaVO, Model model) {
+		QnAVO qvo = adminService.qnaInfoSelect(qnaVO);
+		model.addAttribute("qna",qvo);
+		return "admin/adminQnAInfo";
+	}
+	@PostMapping("/adminQnAInfo")
+	public String adminQnAReply(QnAVO qnaVO) {
+		System.out.println(qnaVO);
+		int result = adminService.qnaReply(qnaVO);
+		String url = null;
+		if (result > 0) {
+			url = "redirect:adminQnAList";
+		}
+		return url;
 	}
 }

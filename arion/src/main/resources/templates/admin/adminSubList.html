@@ -13,7 +13,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">진행중 계약</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -48,7 +48,7 @@
                 <!-- /.container-fluid -->
 	<script th:src="@{/js/demo/datatables-demo.js}"></script>
 	<script>
-		$('tr').on('click',function(e){
+		$('tbody tr').on('click',function(e){
 			let code =  $(e.currentTarget).children().first().text();
 			let url = '/adminSubInfo?companyCode='+code;
 			if(confirm('계약서를 보시겠습니까 ?')){

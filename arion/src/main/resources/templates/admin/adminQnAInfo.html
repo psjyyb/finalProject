@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.qna-details p {
+    line-height: 1.6;
+}
+
+.reply-section {
+    margin-top: 30px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style>
+<body>
+ <div class="container">
+        <h1>Q&A 상세 보기</h1>
+         <form th:action="@{/adminQnAInfo}" method="POST" name="insertForm">
+        <div class="qna-details">
+        	<input type="hidden" name="qnaNo" th:value="${qna.qnaNo}">
+            <p><strong>번호:</strong> <span id="qna_no" th:text="${qna.qnaNo}">12345</span></p>
+            <p><strong>제목:</strong> <span id="qna_title" th:text="${qna.qnaTitle}">Q&A 제목 예시</span></p>
+            <p><strong>내용:</strong> <span id="qna_content" th:text="${qna.qnaContent}">Q&A 내용 예시</span></p>
+            <p><strong>작성자:</strong> <span id="qna_writer" th:text="${qna.qnaWriter}">홍길동</span></p>
+            <p><strong>작성일:</strong> <span id="qna_date" th:text="${#dates.format(qna.qnaDate,'yyyy-MM-dd')}">2024-08-06</span></p>
+            <p><strong>회사:</strong> <span id="qna_company" th:text="${qna.qnaCompany}">없음</span></p>
+            <p><strong>상태:</strong> <span id="qna_state" th:text="${qna.qnaState}">답변 대기중</span></p>
+            <p><strong>첨부 이미지:</strong></p>
+        </div>
+        <div class="reply-section">
+            <h2>답변</h2>
+            <textarea name="qnaReply" rows="5" cols="50" placeholder="여기에 답변을 입력하세요" th:text="${qna.qnaReply}"></textarea>
+            <button type="submit" class="btn btn-info">등록</button>
+        </div>
+         </form>
+    </div>
+    <script>
+    $('[name="insertForm"]').on('submit',function(event){
+        event.preventDefault();
+       let reply = $('input[name=qnaReply]');
+       if(reply.val()==''){
+            alert('답변을 입력하세요.');
+            reply.focus();
+            return;
+        }else{
+        	insertForm.submit();
+            alert('답변이 등록되었습니다.');
+           
+        }
+    })
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">종료된 계약</h6>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%"
+						cellspacing="0">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>제목</th>
+								<th>작성자</th>
+								<th>회사</th>
+								<th>날짜</th>
+								<th>답변여부</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="qna :${qnaList}">
+								<tr>
+									<td th:text="${qna.qnaNo}"></td>
+									<td th:text="${qna.qnaTitle}"></td>
+									<td th:text="${qna.qnaWriter}"></td>
+									<td th:text="${qnaqnaCompany}"></td>
+									<td th:text="${#dates.format(qna.qnaDate,'yyyy-MM-dd')}"></td>
+									<td th:text="${qna.qnaState}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/demo/datatables-demo.js}"></script>
+	<script>
+		$('tbody tr').on('click',function(e){
+			let qnaNo =  $(e.currentTarget).children().first().text();
+			let url = '/adminQnAInfo?qnaNo='+qnaNo;
+			console.log(qnaNo);
+			if(confirm('질문을 상세 보시겠습니까 ?')){
+				location.href=url;
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<th:block th:each="module :${moduleList}">
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-success shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div
+										class="text-xs font-weight-bold text-success text-uppercase mb-1"
+										th:text="${module.moduleName}"></div>
+									<div class="h5 mb-0 font-weiaght-bold text-gray-800"
+										th:text="${#numbers.formatInteger(module.modulePrice, 3, 'COMMA')}">원</div>
+								</div>
+								<div class="col-auto">
+									<i><img th:src="@{images/말.jpg}"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>

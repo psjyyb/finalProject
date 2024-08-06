@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+  <style>
+      
+        h1, h2, h3 {
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .info-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .signature {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature div {
+            width: 45%;
+            text-align: center;
+        }
+        .status {
+	color: green;
+	font-size: 16px;
+}
+    </style>
+</head>
+<body>
+    <h1>계약서</h1>
+    <div class="section">
+        <div class="section-title"><h3>계약 정보</h3> <span class="status"></span></div>
+        <table class="info-table">
+	            <tr>
+	                <th>계약번호</th>
+	                <td id="contract_no" th:text="${suncon.contractNo}"></td>
+	            </tr>
+	            <tr>
+	                <th>시작일</th>
+	                <td id="start_date" th:text="${#dates.format(suncon.startDate,'yyyy--MM-dd')}"></td>
+	            </tr>
+	            <tr>
+	                <th>종료일</th>
+	                <td id="final_date" th:text="${#dates.format(suncon.finalDate,'yyyy--MM-dd')}"></td>
+	            </tr>
+	            <tr>
+	                <th>사용자 수</th>
+	                <td id="users_cnt" th:text="${suncon.usersCnt}"></td>
+	            </tr>
+	            <tr>
+	                <th>월 납입금</th>
+	                <td id="month_pay_price" th:text="${#numbers.formatInteger(suncon.monthPayPrice, 3, 'COMMA')}"></td>
+	            </tr>
+	            <tr>
+	                <th>총 납입금</th>
+	                <td id="total_pay_price" th:text="${#numbers.formatInteger(suncon.totalPayPrice, 3, 'COMMA')}"></td>
+	            </tr>
+	            <tr>
+	                <th>계약 상태</th>
+	                <td id="contract_state" th:text="${suncon.contractState}"></td>
+	            </tr>
+        </table>
+    </div>
+    <div class="section">
+        <div class="section-title">회사 정보</div>
+        <table class="info-table">
+            <tr>
+                <th>회사 코드</th>
+                <td id="company_code" th:text="${suncon.companyCode}"></td>
+            </tr>
+            <tr>
+                <th>회사 이름</th>
+                <td id="company_name" th:text="${suncon.companyName}"></td>
+            </tr>
+            <tr>
+                <th>회사 전화번호</th>
+                <td id="company_tel" th:text="${suncon.companyTel}"></td>
+            </tr>
+            <tr>
+                <th>사업자 등록번호</th>
+                <td id="company_business_number" th:text="${suncon.companyBusinessNumber}"></td>
+            </tr>
+            <tr>
+                <th>회사 유형</th>
+                <td id="company_type" th:text="${suncon.companyType}"></td>
+            </tr>
+            <tr>
+                <th>회사 주소</th>
+                <td id="company_post" th:text="${suncon.companyAddress}"></td>
+            </tr>
+            <tr>
+                <th>대표 이메일</th>
+                <td id="ceo_email" th:text="${suncon.ceoEmail}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="signature">
+        <div>
+            <p>갑</p>
+            <p><img th:src="@{/images/signature.jpg}"></p>
+            <p>서명</p>
+        </div>
+        <div>
+            <p>을</p>
+            <p>________________________</p>
+            <p>서명</p>
+        </div>
+    </div>

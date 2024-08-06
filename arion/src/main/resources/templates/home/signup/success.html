@@ -1,15 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/home/layouts/home_layout}"
-    layout:fragment="content">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>ARION</title>
+    <meta charset="UTF-8">
+    <title>ARION</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .container2 {
+            max-width: 600px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #343a40;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 20px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 18px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-	<h1>회원가입 성공</h1>
-    <p>회사 코드: <span th:text="${companyCode}"></span></p>
-    <a th:href="@{/login}">로그인 하러 가기</a>
+    <div class="container2">
+        <h1>회원가입에 성공하셨습니다.</h1>
+        <p>회사 코드: <span th:text="${companyCode}"></span></p>
+        <a class="btn btn-custom" th:href="@{/home}">홈페이지로 가기</a>
+    </div>
 </body>
 </html>

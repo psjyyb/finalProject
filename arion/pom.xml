@@ -9,10 +9,10 @@
 		<version>2.7.18</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>boot01</artifactId>
+	<groupId>com.arion</groupId>
+	<artifactId>ARION</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>boot01</name>
+	<name>ARION</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>

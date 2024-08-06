@@ -26,6 +26,52 @@
     <link th:href="@{/css/styles.css}" rel="stylesheet">
     <!-- Favicon  -->
     <link th:href="@{/images/favicon.png}" rel="icon">
+<style>
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #e7e7e7;
+    width: 100%;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    text-align: left;
+}
+
+.p-small {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+</style>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbarExample">
     <nav th:replace="common/home/fragments/home_nav :: HomeHeaderFragment"></nav>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
+<head>
+<meta charset="utf-8">
+<title>ARION</title>
+</head>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	margin: 150px auto;
+	text-align: center;
+	padding: 0;
+}
+
+.container2 {
+	max-width: 1200px; 
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+	margin-bottom: 20px;
+	border-left: 5px solid #ffa500;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	padding: 20px; 
+	background-color: #fff;
+	text-align: left;
+}
+
+.card-body {
+	padding: 20px; 
+}
+
+.text-xs {
+	font-size: 1.5rem;
+}
+
+.font-weight-bold {
+	font-weight: 700;
+}
+
+.text-success {
+	color: #28a745;
+}
+
+.text-uppercase {
+	text-transform: uppercase;
+}
+
+.text-gray-800 {
+	color: #5a5c69;
+}
+
+.mb-1 {
+	margin-bottom: 0.25rem;
+}
+
+.mb-4 {
+	margin-bottom: 1.5rem;
+}
+
+.no-gutters {
+	margin-right: 0;
+	margin-left: 0;
+}
+
+.col-auto {
+	flex: 0 0 auto;
+}
+
+.col {
+	flex-basis: 0;
+	flex-grow: 1;
+	max-width: 100%;
+}
+
+.mr-2 {
+	margin-right: 0.5rem;
+}
+
+.module-image {
+	width: 100px; /* Set image width */
+	height: auto; /* Maintain aspect ratio */
+}
+.form-group {
+	margin-bottom: 1rem;
+}
+
+label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: bold;
+}
+
+input[type="text"], input[type="number"], select {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23444" d="M2 0L0 2h4zM2 5L0 3h4z"/></svg>') no-repeat right 0.75rem center;
+	background-color: #fff;
+	background-size: 0.65rem auto;
+}
+
+.checkbox-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.checkbox-card {
+	width: calc(33.333% - 10px);
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #f9f9f9;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-card input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.summary {
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 4px;
+	background-color: #f9f9f9;
+}
+
+.summary-item {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+}
+
+.summary-total {
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+.btn {
+	display: inline-block;
+	padding: 0.75rem 1.25rem;
+	border: none;
+	border-radius: 4px;
+	background-color: #28a745;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+	margin-top: 20px;
+}
+
+.btn:hover {
+	background-color: #218838;
+}
+</style>
+<body>
+	<h1>서비스 이용 요금</h1>
+	<div class="container2">
+		<div class="row">
+			<th:block th:each="module :${moduleList}">
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-success shadow h-100 py-2">
+						<div class="col-auto">
+							<i><img th:src="@{/images/말.jpg}"></i>
+						</div>
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div
+										class="text-xs font-weight-bold text-success text-uppercase mb-1"
+										th:text="${module.moduleName}"></div>
+									<div class="h5 mb-0 font-weiaght-bold text-gray-800"
+										th:text="${#numbers.formatInteger(module.modulePrice, 3, 'COMMA')+ '원 / 월'}"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>
+	<h1>계정당 이용 요금</h1>
+	<div class="container2">
+		<div class="text-xs font-weight-bold text-success text-uppercase mb-1">계정당</div>
+		<div class="h5 mb-0 font-weiaght-bold text-gray-800">1200원 / 월</div>
+	</div>
+	<h1>사용료 견적</h1>
+	<div class="container2">
+		<form>
+			<div class="form-group">
+				<label for="accountNumber">계정 수</label>
+				<select id="accountNumber" name="accountNumber">
+					<option value="10">10인</option>
+					<option value="20">20인</option>
+					<option value="30">30인</option>
+					<option value="40">40인</option>
+					<option value="50">50인</option>
+					<option value="60">60인</option>
+					<option value="70">70인</option>
+					<option value="80">80인</option>
+					<option value="90">90인</option>
+					<option value="100">100인</option>
+					<option value="101">100인 초과</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>모듈</label>
+				<div class="checkbox-group">
+					<th:block th:each="module :${moduleList}">
+						<div class="checkbox-card">
+							<input type="checkbox" class="module-checkbox" th:data-price="${module.modulePrice}" th:value="${module.moduleName}">
+							<span th:text="${module.moduleName}"></span>
+						</div>
+					</th:block>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="subscriptionPeriod">구독 기간</label>
+				<select id="subscriptionPeriod" name="subscriptionPeriod">
+					<option value="30">1달 (30일)</option>
+					<option value="60">2달 (60일)</option>
+					<option value="90">3달 (90일)</option>
+					<option value="120">4달 (120일)</option>
+					<option value="150">5달 (150일)</option>
+					<option value="180">6달 (180일)</option>
+					<option value="210">7달 (210일)</option>
+					<option value="240">8달 (240일)</option>
+					<option value="270">9달 (270일)</option>
+					<option value="300">10달 (300일)</option>
+					<option value="330">11달 (330일)</option>
+					<option value="365">1년 (365일)</option>
+					<option value="730">2년 (730일)</option>
+					<option value="1095">3년 (1095일)</option>
+					<option value="1460">4년 (1460일)</option>
+					<option value="1825">5년 (1825일)</option>
+					<option value="1826">5년 초과</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="regularPaymentDate">정기 결제일</label>
+				<input type="text" id="regularPaymentDate" name="regularPaymentDate" >
+			</div>
+			<div class="summary">
+				<div class="summary-item">
+					<span>계정 금액</span>
+					<span id="accountAmount">0원</span>
+				</div>
+				<div class="summary-item">
+					<span>모듈 금액</span>
+					<span id="moduleAmount">0원</span>
+				</div>
+				<div class="summary-item">
+					<span>월 금액</span>
+					<span id="monthlyAmount">0원</span>
+				</div>
+				<div class="summary-total">
+					<span>합계 금액</span>
+					<span id="totalAmount">0원</span>
+				</div>
+			</div>
+			<a href="#" class="btn">계약하기</a>
+		</form>
+	</div>
+	<script th:src="@{/js/home/service.js}"></script>
+</body>
+</html>

@@ -5,11 +5,16 @@
 	layout:fragment="GContent">
 <head>
     <title>Home</title>
+        <script>
+let conpanyCode = window.localStorage.getItem('id');
+console.log(conpanyCode);
+</script>
 </head>
 <body>
     <h1>그룹웨어 관리자</h1>
     <a th:href="@{/admin}">Admin Page</a>
     <a th:href="@{/user}">User Page</a>
     <a th:href="@{/logout}">Logout</a>
+
 </body>
 </html>

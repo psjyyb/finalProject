@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">종료된 계약</h6>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%"
+						cellspacing="0">
+						<thead>
+							<tr>
+								<th>회사코드</th>
+								<th>회사명</th>
+								<th>대표명</th>
+								<th>사용인원수</th>
+								<th>Start date</th>
+								<th>Final date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="sub :${endSubList}">
+								<tr>
+									<td th:text="${sub.companyCode}"></td>
+									<td th:text="${sub.companyName}"></td>
+									<td th:text="${sub.ceoName}"></td>
+									<td th:text="${sub.usersCnt}">명</td>
+									<td th:text="${#dates.format(sub.startDate,'yyyy-MM-dd')}"></td>
+									<td th:text="${#dates.format(sub.finalDate,'yyyy-MM-dd')}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/demo/datatables-demo.js}"></script>
+	<script>
+		$('tbody tr').on('click',function(e){
+			let code =  $(e.currentTarget).children().first().text();
+			let url = '/adminSubInfo?companyCode='+code;
+			if(confirm('계약서를 보시겠습니까 ?')){
+				location.href=url;
+			}
+		})
+	</script>
+</body>
+</html>

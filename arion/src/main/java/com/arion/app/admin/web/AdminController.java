@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
@@ -40,5 +41,13 @@ public class AdminController {
 		List<ModuleVO> mvo = adminService.modListSelect();
 		model.addAttribute("moduleList",mvo);
 		return "admin/adminModList";
+	}
+	@GetMapping("/adminModInsert")
+	public String adminModInsert(Model model) {
+		return "admin/adminModInsert";
+	}
+	@PostMapping("/adminModInsert")
+	public String adminModInsertPro() {
+		return "redirect:/adminModList";
 	}
 }

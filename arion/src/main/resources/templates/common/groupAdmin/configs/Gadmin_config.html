@@ -23,7 +23,27 @@
 <link
 	th:href="@{https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i}"
 	rel="stylesheet">
-
+	
 <!-- Custom styles for this template-->
-<link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // 회사 코드를 로컬 스토리지에서 가져옵니다.
+            let companyCode = window.localStorage.getItem('companyCode');
+            //console.log(companyCode);
+
+            if (companyCode) {
+                // 각 링크에 companyCode를 추가합니다.
+                document.querySelectorAll('a[href="/group/GAEmpList"]').forEach(link => {
+                    link.setAttribute('href', `/group/GAEmpList?companyCode=${companyCode}`);
+                });
+                document.querySelectorAll('a[href="/group/register"]').forEach(link => {
+                    link.setAttribute('href', `/group/register?companyCode=${companyCode}`);
+                });
+                document.querySelectorAll('a[href="/group/login"]').forEach(link => {
+                    link.setAttribute('href', `/group/login?companyCode=${companyCode}`);
+                });
+                // 추가적인 링크에 대해서도 동일한 방식으로 설정
+            }
+        });
+    </script>
 </html>

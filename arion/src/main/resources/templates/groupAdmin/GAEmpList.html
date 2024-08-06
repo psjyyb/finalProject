@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">사원목록</h6>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%"
+						cellspacing="0">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>이름</th>
+								<th>아이디</th>
+								<th>직급</th>
+								<th>부서</th>
+								<th>입사일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="emp :${empList}">
+								<tr>
+									<td th:text="${emp.employeeNo}"></td>
+									<td th:text="${emp.employeeName}"></td>
+									<td th:text="${emp.employeeId}"></td>
+									<td th:text="${emp.rankName}"></td>
+									<td th:text="${emp.departmentName}"></td>
+									<td th:text="${#dates.format(emp.hireDate,'yyyy-MM-dd')}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/demo/datatables-demo.js}"></script>
+</body>
+</html>

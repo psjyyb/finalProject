@@ -41,7 +41,13 @@ public class SpringSecurityConfig {
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .permitAll();
+                .permitAll()
+                .and()
+        	.logout()
+        		.logoutUrl("/logout")
+        		.logoutSuccessUrl("/login?logout=true")
+        		.invalidateHttpSession(true)  // 세션 무효화
+        		.permitAll();
         return http.build();
     }
 }

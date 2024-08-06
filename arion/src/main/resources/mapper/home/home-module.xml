@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.security.mapper.HomeModuleMapper">
+	<select id="selectModule" resultType="HomeModuleVO">
+		SELECT module_no
+		      ,module_name
+		      ,module_price
+		      ,module_notice
+		      ,module_icon
+		FROM module
+	</select>
+</mapper>

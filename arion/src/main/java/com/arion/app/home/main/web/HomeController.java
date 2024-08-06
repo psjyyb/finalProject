@@ -1,5 +1,7 @@
 package com.arion.app.home.main.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.arion.app.security.service.CompanyService;
 import com.arion.app.security.service.CompanyVO;
+import com.arion.app.security.service.HomeModuleService;
+import com.arion.app.security.service.HomeModuleVO;
 import com.arion.app.security.service.LoginUserVO;
 
 @Controller
@@ -16,6 +20,9 @@ public class HomeController {
 	
 	@Autowired
 	CompanyService csvc;
+	
+	@Autowired
+	HomeModuleService msvc;
 	
     @GetMapping("/")
     public String redirectToLogin() {
@@ -28,7 +35,9 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Model model) {
+    	List<HomeModuleVO> mvo = msvc.selectModule();
+    	model.addAttribute("moduleList", mvo);
         return "home/home";
     }
     
@@ -58,6 +67,20 @@ public class HomeController {
         return "home/signup/signUp";
     }
     
+    @GetMapping("/home/module")
+    public String module(Model model) {
+    	List<HomeModuleVO> mvo = msvc.selectModule();
+    	model.addAttribute("moduleList", mvo);
+        return "home/module/module";
+    }
+    
+    @GetMapping("/home/service")
+    public String service(Model model) {
+    	List<HomeModuleVO> mvo = msvc.selectModule();
+    	model.addAttribute("moduleList", mvo);
+        return "home/module/service";
+    }
+    
 //    @PostMapping("/signUpForm")
 //    public String signUpProcess(CompanyVO companyVO) {
 //    	csvc.insertCompany(companyVO);
@@ -70,4 +93,6 @@ public class HomeController {
         model.addAttribute("companyCode", companyCode);
         return "home/signup/success";
     }
+    
+    
 }

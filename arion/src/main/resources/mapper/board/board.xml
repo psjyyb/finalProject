@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.board.mapper.BoardMapper">
+	<!-- 전체조회 -->
+	<select id="selectBoardAll" resultType="BoardVO">
+		SELECT b.board_no AS board_no, 
+			   b.board_title AS board_title, 
+			   b.board_content AS board_content, 
+               b.write_date AS write_date, 
+               b.employee_no AS employee_no, 
+               b.viewcnt AS viewcnt, 
+               e.employee_name AS employee_name
+        FROM board b
+        JOIN employees e ON b.employee_no = e.employee_no
+		ORDER BY board_no DESC
+	</select>
+
+	<!-- 상세조회 -->
+	<select id="selectBoardInfo" resultType="BoardVO">
+
+	</select>
+</mapper>

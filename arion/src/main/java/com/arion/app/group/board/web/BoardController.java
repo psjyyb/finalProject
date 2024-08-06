@@ -21,11 +21,11 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 	
-	// 전체조회 URI - boardList / RETURN - board/boardList
-	@GetMapping("boardList")
+	// 전체조회 
+	@GetMapping("/group/freeboardList")	// 주소를 어디로 할건지 정해야됨
 	public String boardList(Model model) {
 		List<BoardVO> list = boardService.boardList();
 		model.addAttribute("boards", list);
-		return "board/boardList";
+		return "board/freeboardList";	// RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 }

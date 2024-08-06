@@ -7,7 +7,7 @@
 <body>
 	<div>
 		<h2>자유게시판</h2>
-		<table>
+		<table class="table">
 			<thead>
 				<tr>
 					<th>번호</th>
@@ -18,14 +18,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<th:block th:each="board, sts : ${boards}"> <!-- th: each="info, sts : ${boards}" -->
-					<tr th:name="${sts.count}"
-						th:onclick="|location.href='@{boardInfo(boardNo=${board.boardNo})}'|"> 
-						<!-- <tr:name="${sts.count}" , "${sts.first}" , "${sts.index}"-->
+				<th:block th:each="board, sts : ${boards}"> 
 						<td th:text="${board.boardNo}"></td>
 						<td th:text="${board.boardTitle}"></td>
 						<td th:text="${board.employeeName}"></td>
-						<td>[[${#dates.format(board.regdate, 'yyyy.MM.dd')}]] </td>				
+						<td th:text="${#dates.format(board.regdate, 'yyyy.MM.dd')}"></td>			
 						<td th:text="${board.viewcnt}"></td>		<!-- 조회수 -->
 					<tr>
 				</th:block>

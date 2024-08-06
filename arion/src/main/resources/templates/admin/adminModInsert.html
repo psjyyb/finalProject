@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+		rel="stylesheet">
+	<style>
+.form-container {
+	margin-top: 20px;
+}
+
+.form-header {
+	background-color: #f8f9fa;
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.form-body {
+	padding: 20px;
+	background-color: #ffffff;
+	border: 1px solid #dee2e6;
+}
+
+.form-footer {
+	background-color: #f8f9fa;
+	padding: 10px;
+	border-top: 1px solid #dee2e6;
+	text-align: right;
+}
+</style>
+</head>
+<body>
+	<div class="container form-container">
+		<div class="form-header">
+			<h5>모듈등록</h5>
+		</div>
+		<form name="insertForm" class="form-body" method="post" th:action
+			enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="moduleName" class="form-label">모듈이름</label> <input
+					type="text" class="form-control" id="moduleName" name="moduleName"
+					required>
+			</div>
+			<div class="mb-3">
+				<label for="modulePrice" class="form-label">모듈가격</label> <input
+					type="number" class="form-control" id="modulePrice" name="modulePrice"
+					required>
+			</div>
+			<div class="mb-3">
+				<label for="moduleNotice" class="form-label">모듈설명</label>
+				<textarea class="form-control" id="moduleNotice" name="moduleNotice"
+					rows="5" required></textarea>
+			</div>
+			<div class="mb-3" id="fileInputs">
+				<label for="files" class="form-label">첨부 파일</label> <input
+					type="file" class="form-control" id="files" name="uploadFiles">
+			</div>
+			<button type="button" class="btn btn-success" id="addFile">첨부파일추가</button>
+			
+			<div class="form-footer">
+				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
+				<button type="button" class="btn btn-secondary">취소</button>
+			</div>
+		</form>
+		<!-- <form action="uploadForm" method="post" enctype="multipart/form-data">
+			<input type="file" name="images" multiple>
+			<button type="submit">저장</button>
+		</form> -->
+	</div>
+	<script>
+	 $(document).ready(function() {
+         let formData = new FormData();
+         let fileArr = [];
+
+         $('#addBtn').on('click', function() {
+             let sendData = getData();
+
+             $.ajax({
+                 url: '/adminModInsert',
+                 type: 'POST',
+                 data: formData,
+                 processData: false,
+                 contentType: false,
+             })
+             .done(result=>{
+            	 alert('등록완료@@@@');
+             })
+             .fail(err=>{
+            	 alert('오류발생@@@');
+             })
+         });
+
+         $('#addFile').click(function() {
+             let newFileInputWrapper = $('<div class="input-group mt-2"></div>');
+             let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
+             let removeButton = $('<button type="button" class="btn btn-danger">X</button>');
+
+             removeButton.click(function(e) {
+                 let inputElement = $(e.target).parent().children('input');
+                 let fileToRemove = inputElement[0].files[0];
+
+                 fileArr = fileArr.filter(file => file.name !== fileToRemove.name);
+
+                 newFileInputWrapper.remove();
+             });
+
+             newFileInputWrapper.append(newFileInput);
+             newFileInputWrapper.append(removeButton);
+             $('#fileInputs').append(newFileInputWrapper);
+
+             newFileInput.on('change', function(e) {
+                 let files = e.currentTarget.files;
+                 for (let i = 0; i < files.length; i++) {
+                     fileArr.push(files[i]);
+                 }
+             });
+         });
+
+         $('#files').on('change', function(e) {
+             let files = e.currentTarget.files;
+             for (let i = 0; i < files.length; i++) {
+                 fileArr.push(files[i]);
+             }
+         });
+
+         function getData() {
+             formData = new FormData();
+             fileArr.forEach((file, index) => {
+                 formData.append('files', file);
+             });
+             let mname = $('#moduleName').val();
+             let content = $('#moduleNotice').val();
+             let price = $('#modulePrice').val();
+             formData.append('modulePrice',price);
+             formData.append('moduleName', mname);
+             formData.append('moduleNotice', content);
+         }
+     });
+	 </script>
+</body>
+</html>

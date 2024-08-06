@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +24,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		// TODO Auto-generated method stub
 		String redirectUrl = "/login";
 		
+        HttpSession session = request.getSession(true);
+                
 		LoginUserVO userDetail = (LoginUserVO) authentication.getPrincipal();
 		
-		request.getSession().setAttribute("companyCode", userDetail.getCompanyCode());
-		request.getSession().setAttribute("loginId", userDetail.getUsername());
+		session.setAttribute("companyCode", userDetail.getCompanyCode());
+	    session.setAttribute("loginId", userDetail.getUsername());
+	    session.setAttribute("rankName", userDetail.getRankName());
+	    session.setAttribute("department", userDetail.getDepartmentName());
+	    session.setAttribute("empName", userDetail.getEmpName());
 		
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (GrantedAuthority authority : authorities) {

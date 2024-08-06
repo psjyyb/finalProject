@@ -37,16 +37,11 @@ public class SpringSecurityConfig {
             .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
-                .successHandler(customAuthenticationSuccessHandler) // 로그인 성공 시 처리 핸들러 설정
+                .successHandler(customAuthenticationSuccessHandler) 
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll();
-//                .and()
-//            .logout()
-//                .logoutUrl("/perform_logout")
-//                .logoutSuccessUrl("/")
-//                .permitAll();
         return http.build();
     }
 }

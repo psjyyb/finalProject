@@ -10,4 +10,8 @@ public class UserVO {
     private String siteResp;
     private String employeeResp;
     private String loginType;
+    private String departmentName;
+    private String rankName;
+    private String empName;
+    
 }

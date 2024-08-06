@@ -42,6 +42,18 @@ public class LoginUserVO implements UserDetails {
         return userVO.getCompanyCode();
     }
     
+    public String getDepartmentName() {
+        return userVO.getDepartmentName();
+    }
+    
+    public String getRankName() {
+        return userVO.getRankName();
+    }
+    
+    public String getEmpName() {
+        return userVO.getEmpName();
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;

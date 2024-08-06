@@ -17,9 +17,11 @@
         SELECT e.company_code AS companyCode, 
                e.employee_id AS loginId, 
                e.employee_pw AS loginPw, 
-               e.employee_resp AS employeeResp, 
+               e.employee_resp AS employeeResp,
+               e.rank_name AS rankName,
+               e.department_name AS departmentName, 
                'employee' AS loginType
-        FROM employees2 e
+        FROM employees e 
         WHERE e.company_code = #{companyCode} 
           AND e.employee_id = #{userId}
     </select>

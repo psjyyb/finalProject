@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/home/layouts/home_layout}"
+    layout:fragment="content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+</head>
+<body>
+	<h1>회원가입 성공</h1>
+    <p>회사 코드: <span th:text="${companyCode}"></span></p>
+    <a th:href="@{/login}">로그인 하러 가기</a>
+</body>
+</html>

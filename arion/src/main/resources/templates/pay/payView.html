@@ -1,20 +1,285 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/home/layouts/home_layout}"
-	  layout:fragment="content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
 <head>
 <meta charset="UTF-8">
-<title>ARION</title>
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<style>
+.container2 {
+	max-width: 600px;
+	margin: 120px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+input[type="text"], input[type="password"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+button {
+	display: inline-block;
+	padding: 10px 15px;
+	margin-top: 10px;
+	border: none;
+	border-radius: 4px;
+	background-color: #007bff;
+	color: white;
+	cursor: pointer;
+}
+
+button[type="button"] {
+	background-color: #6c757d;
+	margin-left: 10px;
+}
+
+button:disabled {
+	background-color: #ccc;
+}
+
+.flex-container {
+	display: flex;
+	align-items: center;
+}
+
+.flex-container input[type="text"] {
+	flex: 2;
+}
+
+.flex-container button {
+	flex: 1;
+}
+
+.button-group {
+	text-align: center;
+}
+
+h1, h2, h3 {
+	text-align: center;
+}
+
+.section {
+	margin-bottom: 20px;
+}
+
+.section-title {
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.party {
+	margin-bottom: 20px;
+}
+
+.signature {
+	margin-top: 50px;
+}
+
+.signature div {
+	display: inline-block;
+	width: 45%;
+	text-align: center;
+}
+
+.contract-container {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	margin: auto;
+}
+
+.contract-header {
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.contract-header h1 {
+	font-size: 24px;
+	margin: 0;
+}
+
+
+.contract-section {
+	margin-bottom: 20px;
+}
+
+.contract-section h2 {
+	font-size: 18px;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.contract-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+.contract-table th, .contract-table td {
+	border: 1px solid #ddd;
+	padding: 10px;
+	text-align: left;
+}
+
+.contract-table th {
+	background-color: #f2f2f2;
+}
+
+.contract-details, .contract-payment {
+	display: flex;
+	justify-content: space-between;
+}
+
+.contract-details div, .contract-payment div {
+	width: 48%;
+}
+
+.contract-details p, .contract-payment p {
+	margin: 5px 0;
+}
+</style>
 </head>
 <body>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
-	<h1>아아아아 ㅋㅋㅋㅋ</h1>
+	<div class="container2">
+		<div class="contract-container">
+			<div class="contract-header">
+				<h1>
+					구독형 그룹웨어 계약서 작성
+				</h1>
+			</div>
+
+			<div class="contract-section">
+				<h2>계약 정보</h2>
+				<div class="contract-details">
+					<div>
+						<p>
+							<strong>계약 번호:</strong> t.contract_no
+						</p>
+						<p>
+							<strong>시작 날짜:</strong> t.start_date
+						</p>
+						<p>
+							<strong>종료 날짜:</strong> t.final_date
+						</p>
+						<p>
+							<strong>사용자 수:</strong> t.users_cnt
+						</p>
+					</div>
+					<div>
+						<p>
+							<strong>월 구독료:</strong> t.month_pay_price 원
+						</p>
+						<p>
+							<strong>총 금액:</strong> t.total_pay_price 원
+						</p>
+						<p>
+							<strong>계약 상태:</strong> t.contract_state
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="contract-section">
+				<h2>회사 정보</h2>
+				<div class="contract-details">
+					<div>
+						<p>
+							<strong>회사 코드:</strong> c.company_code
+						</p>
+						<p>
+							<strong>회사명:</strong> c.company_name
+						</p>
+						<p>
+							<strong>전화번호:</strong> c.company_tel
+						</p>
+					</div>
+					<div>
+						<p>
+							<strong>사업자 번호:</strong> c.company_business_number
+						</p>
+						<p>
+							<strong>회사 유형:</strong> c.company_type
+						</p>
+						<p>
+							<strong>우편번호:</strong> c.company_post
+						</p>
+						<p>
+							<strong>CEO 이메일:</strong> c.ceo_email
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="contract-section">
+				<h2>결제 내역</h2>
+				<table class="contract-table">
+					<thead>
+						<tr>
+							<th>회수</th>
+							<th>금액</th>
+							<th>일시</th>
+							<th>내역</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>342,660 원</td>
+							<td>2024-07-25</td>
+							<td>1231</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="contract-section">
+				<h2>계약 조항</h2>
+				<p>제1조 (서비스 제공 내용)</p>
+				<p>1. 계약자는 그룹웨어 서비스를 이용할 수 있습니다.</p>
+				<p>2. 서비스 내용은 계약서에 명시된 바에 따릅니다.</p>
+				<p>3. 서비스 변경 사항이 있을 경우 계약자는 사전에 통보를 받습니다.</p>
+				<!-- 추가적인 조항을 여기에 작성할 수 있습니다 -->
+			</div>
+			<div class="signature">
+        <div>
+            <p>갑</p>
+            <p><img th:src="@{/images/말.jpg}"  width="200" height="200" style="border: 1px solid black;"></p>
+            <p>서명</p>
+        </div>
+        <div>
+            <p>을</p>
+            <p><canvas id="signature-pad" width="200" height="200" style="border: 1px solid black;"></canvas></p>
+            <p>서명</p>
+        </div>
+		</div>
+	</div>
+	<script>
+    var canvas = document.getElementById('signature-pad');
+    var signaturePad = new SignaturePad(canvas);
+	</script>
 </body>
 </html>

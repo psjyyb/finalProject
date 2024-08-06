@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.admin.mapper.AdminMapper">
+	<select id="selectsubList" resultType="AdminVO">
+		SELECT c.company_code
+		      ,c.company_name
+		      ,c.ceo_name
+		      ,t.start_date
+		      ,t.final_date
+		      ,t.users_cnt
+		FROM company c 
+		JOIN contract t
+		ON c.company_code = t.company_code
+	</select>
+	<select id="selectSubInfo" parameterType="AdminVO">
+		SELECT t.contract_no
+		      ,t.start_date
+		      ,t.final_date
+		      ,t.users_cnt
+		      ,t.month_pay_price
+		      ,t.total_pay_price
+		      ,t.contract_state
+		      ,c.company_code
+		      ,c.company_name
+		      ,c.company_tel
+		      ,c.company_business_number
+		      ,c.company_type
+		      ,c.company_address
+		      ,c.company_post
+		      ,c.ceo_email
+		FROM contract t 
+		JOIN company c
+		ON t.company_code = c.company_code
+		WHERE c.company_code = #{companyCode}
+	</select>
+	
+	<select id="selectModList" resultType="ModuleVO">
+		SELECT module_no
+		      ,module_name
+		      ,module_price
+		      ,module_notice
+		      ,module_icon
+		FROM module
+	</select>
+	
+</mapper>

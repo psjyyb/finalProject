@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mail</title>
+</head>
+<body>
+    <h1>보낸메일함</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>받은사람</th>
+				<th>제목</th>
+				<th>발송일</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="">
+				<td th:text=""></td>
+				<td th:text=""></td>
+				<td>[[${#dates.format(,'yyyy년MM월dd일')}]]</td>
+			</th:block>
+		</tbody>	
+	</table>
+	<button>삭제</button>
+
+</body>
+</html>

@@ -1,14 +1,22 @@
 package com.arion.app.home.main.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.arion.app.security.service.CompanyService;
+import com.arion.app.security.service.CompanyVO;
 import com.arion.app.security.service.LoginUserVO;
 
 @Controller
 public class HomeController {
+	
+	@Autowired
+	CompanyService csvc;
+	
     @GetMapping("/")
     public String redirectToLogin() {
         return "redirect:/login";
@@ -48,5 +56,18 @@ public class HomeController {
     @GetMapping("/home/signUp")
     public String signUp() {
         return "home/signup/signUp";
+    }
+    
+//    @PostMapping("/signUpForm")
+//    public String signUpProcess(CompanyVO companyVO) {
+//    	csvc.insertCompany(companyVO);
+//    	return "redirect:/login";
+//    }
+    
+    @PostMapping("/signUpForm")
+    public String signUpProcess(CompanyVO companyVO, Model model) {
+        String companyCode = csvc.insertCompany(companyVO);
+        model.addAttribute("companyCode", companyCode);
+        return "home/signup/success";
     }
 }

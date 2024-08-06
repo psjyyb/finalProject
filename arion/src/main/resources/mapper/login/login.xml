@@ -19,10 +19,82 @@
                e.employee_pw AS loginPw, 
                e.employee_resp AS employeeResp,
                e.rank_name AS rankName,
-               e.department_name AS departmentName, 
+               e.department_name AS departmentName,
+               e.employee_name AS empName,
                'employee' AS loginType
         FROM employees e 
         WHERE e.company_code = #{companyCode} 
           AND e.employee_id = #{userId}
     </select>
+    
+    
+   <!--  <insert id="insertCompany" parameterType="CompanyVO">
+		<selectKey keyProperty="companyCode" resultType="Integer" order="BEFORE">
+			SELECT 'YD' 
+         			|| TO_CHAR(TO_DATE(sysdate,'yyyy-MM-dd'), 'yyMM')
+         			|| LPAD((NVL(MAX(TO_NUMBER(SUBSTR(company_code, -1))),0) + 1), 3, '0')
+        	FROM company
+		</selectKey>
+		INSERT INTO company(company_code
+                    , company_name
+                    , company_tel
+                    , company_id
+                    , company_pw
+                    , company_business_number
+                    , company_type
+                    , ceo_name
+                    , ceo_email
+                    , company_address
+                    , ceo_phone
+                    , company_post
+		) VALUES((SELECT 'YD' 
+         			|| TO_CHAR(TO_DATE(sysdate,'yyyy-MM-dd'), 'yyMM')
+         			|| LPAD((NVL(MAX(TO_NUMBER(SUBSTR(company_code, -1))),0) + 1), 3, '0')
+        			FROM company)
+				 , #{companyName}
+				 , #{companyTel}
+				 , #{companyId}
+				 , #{companyPw}
+				 , #{companyBusinessNumber}
+				 , #{companyType}
+				 , #{ceoName}
+				 , #{ceoEmail}
+				 , #{companyAddress}
+				 , #{ceoPhone}
+				 , #{companyPost}
+		)
+	</insert> -->
+	<insert id="insertCompany" parameterType="CompanyVO">
+    	<selectKey keyProperty="companyCode" resultType="String" order="BEFORE">
+        	SELECT 'YD' 
+            	|| TO_CHAR(TO_DATE(sysdate,'yyyy-MM-dd'), 'yyMM')
+            	|| LPAD((NVL(MAX(TO_NUMBER(SUBSTR(company_code, -1))),0) + 1), 3, '0')
+        	FROM company
+    	</selectKey>
+    	INSERT INTO company(company_code
+        	        , company_name
+            	    , company_tel
+                	, company_id
+                	, company_pw
+                	, company_business_number
+                	, company_type
+                	, ceo_name
+                	, ceo_email
+                	, company_address
+                	, ceo_phone
+                	, company_post
+    	) VALUES(#{companyCode}
+             	, #{companyName}
+             	, #{companyTel}
+             	, #{companyId}
+             	, #{companyPw}
+             	, #{companyBusinessNumber}
+             	, #{companyType}
+             	, #{ceoName}
+             	, #{ceoEmail}
+             	, #{companyAddress}
+             	, #{ceoPhone}
+             	, #{companyPost}
+    	)
+	</insert>
 </mapper>

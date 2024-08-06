@@ -34,6 +34,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    session.setAttribute("department", userDetail.getDepartmentName());
 	    session.setAttribute("empName", userDetail.getEmpName());
 		
+	    System.out.println("세션에 저장되는 정보들");
+	    System.out.println("회사코드 : " + userDetail.getCompanyCode());
+	    System.out.println("아이디 : " + userDetail.getUsername());
+	    System.out.println("직급 : " + userDetail.getRankName());
+	    System.out.println("부서이름 : " + userDetail.getDepartmentName());
+	    System.out.println("사원이름 : " + userDetail.getEmpName());
+	    
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (GrantedAuthority authority : authorities) {
 			String roleName = authority.getAuthority();

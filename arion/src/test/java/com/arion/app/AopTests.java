@@ -13,7 +13,7 @@ public class AopTests {
 
 	@Test
 	public void testEncoder() {
-		String password = "1234";
+		String password = "com2";
 
 		// DB에 저장된 암호화된 비밀번호
 		String enPwd = passwordE.encode(password);

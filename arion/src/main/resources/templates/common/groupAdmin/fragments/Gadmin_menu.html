@@ -8,7 +8,7 @@
 		<!-- Sidebar - Brand -->
 		<a
 			class="sidebar-brand d-flex align-items-center justify-content-center"
-			href="groupAdmin">
+			href="/groupAdmin">
 			<div class="sidebar-brand-icon rotate-n-15">
 				<i class="fas fa-laugh-wink"></i>
 			</div>
@@ -28,10 +28,9 @@
 				data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">Employees</h6>
-					<a class="collapse-item" href="/group/GAEmpList">사원목록</a> 
-					<a class="collapse-item" href="/register">사원등록</a>
-					<a class="collapse-item" href="/login">사원수정</a>
-					<a class="collapse-item" href="/login">직급수정</a>
+					<a class="collapse-item" th:href="@{/groupAdmin/GAEmpList}">사원목록</a> 
+					<a class="collapse-item" th:href="@{/groupAdmin/GAEmpInsert}">사원등록</a>
+					<a class="collapse-item" th:href="@{/groupAdmin/GARank}">직급수정</a>
 				</div>
 			</div></li>
 				<!-- Nav Item - Pages Collapse Menu -->

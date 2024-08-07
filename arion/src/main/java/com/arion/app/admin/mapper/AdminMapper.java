@@ -2,10 +2,13 @@ package com.arion.app.admin.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.arion.app.admin.service.AdminVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 
+@Mapper
 public interface AdminMapper {
 	
 	List<AdminVO> selectsubList(); // 구독중인회사목록.

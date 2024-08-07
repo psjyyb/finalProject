@@ -77,26 +77,26 @@ tr:nth-child(even) {
 				</tr>
 			</thead>
 			<tbody>
-				<!-- <th:block th:each="board : ${boardList}">
-					<tr th:data-board-no="${board.boardNo}">
-						<td th:text="${board.boardNo}"></td>
-						<td th:text="${board.boardTitle}"></td>
-						<td th:text="${board.boardWriter}"></td>
-						<td th:text="${#calendars.format(board.regdate, 'yy년MM월dd일')}"></td>
-						
+				<th:block th:each="qna : ${qnaList}">
+					<tr th:data-board-no="${qna.qnaNo}">
+						<td th:text="${qna.qnaNo}"></td>
+						<td th:text="${qna.qnaTitle}"></td>
+						<td th:text="${qna.qnaWriter}"></td>
+						<td th:text="${#calendars.format(qna.qnaDate, 'yy년MM월dd일')}"></td>
+						<td th:text="${qna.qnaState}"></td>
 					</tr>
-				</th:block> -->
+				</th:block>
 			</tbody>
 		</table>
-		<!-- <div class="content-footer">
+		<div class="content-footer">
 			<button type="button" class="btn btn-primary"
-				th:onclick="|location.href='@{boardInsert}' |">등록</button>
-		</div> -->
+				th:onclick="|location.href='@{/home/qnaInsert}' |">등록</button>
+		</div>
 	</div>
 	<script>
 		$('tbody > tr').on('click', function() {
-			let boardNo = $(this).data('board-no');
-			location.href = '/boardInfo?boardNo=' + boardNo;
+			let qnaNo = $(this).data('qna-no');
+			location.href = '/qnaInfo?qnaNo=' + qnaNo;
 		});
 	</script>
 </body>

@@ -13,4 +13,7 @@ public class EmployeeVO {
 	private String employeePw;
 	private String departmentName;
 	private String rankName;
+	private String employeeResp;
+	private String companyCode;
+	
 }

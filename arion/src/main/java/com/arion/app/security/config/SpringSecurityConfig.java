@@ -27,6 +27,10 @@ public class SpringSecurityConfig {
     // 2. 인증 및 인가
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	
+    	//csrf 설정
+    	http.csrf().disable();
+    	http.headers().frameOptions().disable();
         http.authorizeHttpRequests()
                 .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
@@ -46,7 +50,7 @@ public class SpringSecurityConfig {
         	.logout()
         		.logoutUrl("/logout")
         		.logoutSuccessUrl("/login?logout=true")
-        		.invalidateHttpSession(true)  // 세션 무효화
+        		.invalidateHttpSession(true) 
         		.permitAll();
         return http.build();
     }

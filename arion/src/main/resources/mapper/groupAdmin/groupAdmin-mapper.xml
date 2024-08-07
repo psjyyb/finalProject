@@ -11,4 +11,36 @@
 		FROM employees
 		WHERE company_code = #{companyCode}
 	</select>
+	<select id="selectDeptList">
+		SELECT department_name,department_no,manager 
+		FROM departments 
+		WHERE company_code = #{companyCode}
+	</select>
+	<select id="selectRankList">
+		SELECT rank_name,rank_id,rank_ranking 
+		FROM rank 
+		WHERE company_code = #{companyCode}
+	</select>
+	<insert id="insertEmp">
+		INSERT INTO employees (
+			employee_no
+			,employee_name
+			,employee_resp
+			,company_code
+			,employee_id
+			,employee_pw
+			,department_name
+			,rank_name
+			)
+		VALUES(
+			emp_seq.NEXTVAL
+			,#{employeeName}
+			,#{employeeResp}
+			,#{companyCode}
+			,#{employeeId}
+			,#{employeePw}
+			,#{departmentName}
+			,#{rankName}
+			)
+	</insert>
 </mapper>

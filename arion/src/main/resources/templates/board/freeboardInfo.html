@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div>
+		<h3>자유게시판</h3>
+		<table>
+			<tr>
+				<th>번호</th>
+				<td th:text="${board.boardNo}"></td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td>[[${board.boardTitle}]]</td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td>[[${board.employeeName}]]</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td style="height:100px; width:200px;">
+					[[${board.boardContent}]]
+				</td>
+			</tr>
+			<tr>
+				<th>작성일자</th>
+				<td>[[${#dates.format(board.writeDate, 'yyyy.MM.dd')}]]</td>
+			</tr>
+		</table>
+		<div>
+			<button type="button" th:onclick="|location.href='@{freeboardUpdate(boardNo=${board.boardNo})}'|">수정</button>
+			<button type="button" th:onclick="|location.href='@{freeboardList}'|">목록</button>
+			<button type="button" th:onclick="|location.href='@{freeboardDelete(boardNo=${board.boardNo})}'|">삭제</button>
+		</div>
+	</div>
+</body>
+</html>

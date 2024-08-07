@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.home.board.mapper.QnaMapper">
+	<select id="selectQnAList" resultType="HomeQnaVO">
+		SELECT qna_no
+			   , qna_title
+			   , qna_writer
+			   , qna_company
+			   , qna_state
+			   , qna_date
+		FROM qna
+        ORDER BY qna_no DESC
+	</select>
+
+
+
+
+</mapper>

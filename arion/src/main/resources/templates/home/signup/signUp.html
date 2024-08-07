@@ -111,9 +111,12 @@ button:disabled {
                 <input type="text" name="companyAddressDetail" />
             </div>
             <h5>관리자 정보</h5>
-            <div class="form-group">
+             <div class="form-group">
                 <label>ID</label>
-                <input type="text" name="companyId" />
+                <div class="flex-container">
+                    <input type="text" id="companyId" name="companyId"/>
+                    <button type="button" id="IdCheck">중복체크</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>비밀번호</label>

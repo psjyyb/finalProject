@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.common.mapper.FileMapper">
+	<insert id="insertFiles" parameterType="fileVO">	
+		INSERT INTO files (file_no
+							, file_name 
+							, file_original_name
+							, file_path
+							, file_turn
+							, file_type
+							, company_code 
+							, table_name
+							, key_no
+		)VALUES (
+					file_seq.nextval, 
+					#{fileName}, 
+					<choose>
+                		<when test="fileOriginalName != null">
+                    		#{fileOriginalName}
+                		</when>
+                		<otherwise>
+                    		NULL
+                		</otherwise>
+            		</choose>,
+					#{filePath}, 
+					#{fileTurn},
+					#{fileType}, 
+					#{companyCode}, 
+					#{tableName}, 
+					#{keyNo}
+				)
+	</insert>
+	
+	<select id="selectFiles" parameterType="map" resultType="fileVO">
+		SELECT * 
+		FROM files
+		WHERE table_name = #{tableName} 
+		AND key_no = #{keyNo}
+		AND company_code = #{companyCode}
+		ORDER BY file_turn ASC
+	</select>
+			
+	<delete id="deleteFiles">
+		DELETE 
+		FROM files
+		WHERE table_name = #{tableName} 
+		AND key_no = #{keyNo}
+		AND company_code = #{companyCode}
+	</delete>
+</mapper>

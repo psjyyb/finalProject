@@ -51,7 +51,10 @@ public class SpringSecurityConfig {
         		.logoutUrl("/logout")
         		.logoutSuccessUrl("/login?logout=true")
         		.invalidateHttpSession(true) 
+        		.clearAuthentication(true)
         		.permitAll();
         return http.build();
     }
+    
+    
 }

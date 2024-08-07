@@ -90,23 +90,20 @@ public class MailController {
     }
 
     // 메일 보내기
-    @PostMapping("/group/writemail")
-    public String mailSend(MailVO mailVO, @RequestParam("receivers") List<MailReceiveVO> receivers,
-                           @RequestParam("files") List<MailFileVO> files) {
-        String companyCode = (String) httpSession.getAttribute("companyCode");
-        String employeeId = (String) httpSession.getAttribute("employeeId");
-
-        mailVO.setCompanyCode(companyCode);
-        mailVO.setSenderId(employeeId);
-
-        int mailNo = mailService.mailSend(mailVO, receivers, files);
-        if (mailNo > 0) {
-            return "redirect:/mail/group/Mymail";  // 수정된 부분
-        } else {
-            // 실패 처리 로직
-            return "redirect:/mail/group/Mymail";  // 수정된 부분
-        }
-    }
+	/*
+	 * @PostMapping("/group/writemail") public String mailSend(MailVO
+	 * mailVO, @RequestParam("receivers") List<MailReceiveVO> receivers,
+	 * 
+	 * @RequestParam("files") List<MailFileVO> files) { String companyCode =
+	 * (String) httpSession.getAttribute("companyCode"); String employeeId =
+	 * (String) httpSession.getAttribute("employeeId");
+	 * 
+	 * mailVO.setCompanyCode(companyCode); mailVO.setSenderId(employeeId);
+	 * 
+	 * int mailNo = mailService.mailSend(mailVO, receivers, files); if (mailNo > 0)
+	 * { return "redirect:/mail/group/Mymail"; // 수정된 부분 } else { // 실패 처리 로직 return
+	 * "redirect:/mail/group/Mymail"; // 수정된 부분 } }
+	 */
 
     // 메일 상세 조회
     @GetMapping("/detailmail")

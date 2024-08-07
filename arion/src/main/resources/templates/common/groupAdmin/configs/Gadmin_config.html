@@ -25,7 +25,7 @@
 	rel="stylesheet">
 	
 <!-- Custom styles for this template-->
-<script>
+<!-- <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             // 회사 코드를 로컬 스토리지에서 가져옵니다.
             let companyCode = window.localStorage.getItem('companyCode');
@@ -33,17 +33,17 @@
 
             if (companyCode) {
                 // 각 링크에 companyCode를 추가합니다.
-                document.querySelectorAll('a[href="/group/GAEmpList"]').forEach(link => {
-                    link.setAttribute('href', `/group/GAEmpList?companyCode=${companyCode}`);
+                document.querySelectorAll('a[href="/groupAdmin/GAEmpList"]').forEach(link => {
+                    link.setAttribute('href', `/groupAdmin/GAEmpList?companyCode=${companyCode}`);
                 });
-                document.querySelectorAll('a[href="/group/register"]').forEach(link => {
-                    link.setAttribute('href', `/group/register?companyCode=${companyCode}`);
+                document.querySelectorAll('a[href="/groupAdmin/GAEmpUpdate"]').forEach(link => {
+                    link.setAttribute('href', `/groupAdmin/GAEmpUpdate?companyCode=${companyCode}`);
                 });
-                document.querySelectorAll('a[href="/group/login"]').forEach(link => {
-                    link.setAttribute('href', `/group/login?companyCode=${companyCode}`);
+                document.querySelectorAll('a[href="/groupAdmin/GARank"]').forEach(link => {
+                    link.setAttribute('href', `/groupAdmin/GARank?companyCode=${companyCode}`);
                 });
                 // 추가적인 링크에 대해서도 동일한 방식으로 설정
             }
         });
-    </script>
+    </script> -->
 </html>

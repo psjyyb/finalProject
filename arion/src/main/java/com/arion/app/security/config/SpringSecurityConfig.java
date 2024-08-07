@@ -30,7 +30,7 @@ public class SpringSecurityConfig {
     	
     	//csrf 설정
     	http.csrf().disable();
-
+    	http.headers().frameOptions().disable();
         http.authorizeHttpRequests()
                 .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")

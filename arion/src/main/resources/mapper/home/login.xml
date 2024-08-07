@@ -26,13 +26,20 @@
         WHERE e.company_code = #{companyCode} 
           AND e.employee_id = #{userId}
     </select>
+        
+    <select id="checkId" resultType="int">
+        SELECT COUNT(*) 
+        FROM company 
+        WHERE company_id = #{companyId}
+    </select>
     
 	<insert id="insertCompany" parameterType="CompanyVO">
     	<selectKey keyProperty="companyCode" resultType="String" order="BEFORE">
         	SELECT 'YD' 
-            	|| TO_CHAR(TO_DATE(sysdate,'yyyy-MM-dd'), 'yyMM')
-            	|| LPAD((NVL(MAX(TO_NUMBER(SUBSTR(company_code, -1))),0) + 1), 3, '0')
+               || TO_CHAR(SYSDATE, 'YYMM')
+               || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(company_code, -3))), 0) + 1, 3, '0')
         	FROM company
+        	WHERE SUBSTR(company_code, 3, 4) = TO_CHAR(SYSDATE, 'YYMM')
     	</selectKey>
     	INSERT INTO company(company_code
         	        , company_name
@@ -60,4 +67,11 @@
              	, #{companyPost}
     	)
 	</insert>
+	
+	<select id="selectCompanyName" resultType="String">
+        SELECT company_name
+        FROM company 
+        WHERE company_code = #{companyCode}
+    </select>
+    
 </mapper>

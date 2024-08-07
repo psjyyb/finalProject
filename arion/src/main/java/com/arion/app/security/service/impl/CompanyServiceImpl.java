@@ -26,4 +26,14 @@ public class CompanyServiceImpl implements CompanyService {
 	     return cvo.getCompanyCode();
 	}
 
+	@Override
+	public boolean IdCheck(String companyId) {
+		return mapper.checkId(companyId) > 0;
+	}
+
+	@Override
+	public String selectCompanyName(String companyCode) {
+		return mapper.selectCompanyName(companyCode);
+	}
+
 }

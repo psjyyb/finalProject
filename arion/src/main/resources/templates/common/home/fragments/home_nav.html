@@ -40,7 +40,9 @@
                     </ul>
                     <span class="nav-item">
                 		<a th:if="${#authentication.name == 'anonymousUser'}" class="btn-outline-sm" th:href="@{/home/signCheck}">가입하기</a>
-                		<a th:if="${#authentication.name != 'anonymousUser'}" class="btn-outline-sm" th:href="@{/}">로그아웃</a>
+                		<a th:if="${#authentication.name == 'anonymousUser'}" class="btn-outline-sm" th:href="@{/}">로그인</a>
+                		<a th:if="${#authentication.name != 'anonymousUser'}" class="btn-outline-sm" th:href="@{/groupAdmin}">그룹웨어 가기</a>
+                		<a th:if="${#authentication.name != 'anonymousUser'}" class="btn-outline-sm" th:href="@{/logout}">로그아웃</a>
             		</span>
                 </div> <!-- end of navbar-collapse -->
             </div> <!-- end of container -->

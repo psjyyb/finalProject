@@ -48,7 +48,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 				redirectUrl = "/admin";
 				break;
 			} else if (roleName.equals("ROLE_USER")) {
-				redirectUrl = "/groupAdmin";
+				redirectUrl = "/groupAdmin/choice";
 				break;
 			} else if (roleName.equals("ROLE_일반사원") || roleName.equals("ROLE_사원관리자")) {
 				redirectUrl = "/group";

@@ -12,5 +12,7 @@ public interface UserMapper {
     UserVO getEmployeeUserInfo(@Param("companyCode") String companyCode, @Param("userId") String userId);
 
     int insertCompany(CompanyVO cvo);
+    int checkId(@Param("companyId") String companyId);
+    String selectCompanyName(@Param("companyCode") String companyCode);
 
 }

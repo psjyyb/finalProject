@@ -1,18 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.home.board.mapper.QnaMapper">
-	<select id="selectQnAList" resultType="HomeQnaVO">
-		SELECT qna_no
-			   , qna_title
-			   , qna_writer
-			   , qna_company
-			   , qna_state
-			   , qna_date
-		FROM qna
+    <select id="selectQnAList" resultType="HomeQnaVO">
+        SELECT qna_no,
+               qna_title,
+               qna_writer,
+               qna_company,
+               qna_state,
+               qna_date
+        FROM qna
         ORDER BY qna_no DESC
-	</select>
+    </select>
 
+    <select id="selectCompany" resultType="CompanyVO">
+        SELECT company_name, ceo_name
+        FROM company 
+        WHERE company_code = #{companyCode}
+    </select>
 
+    <insert id="insertQna" parameterType="HomeQnaVO">
+        <selectKey keyProperty="qnaNo" resultType="Integer" order="BEFORE">
+            SELECT NVL(MAX(qna_no), 0) + 1
+            FROM qna
+        </selectKey>
+        INSERT INTO qna (qna_no,
+                         qna_title,
+                         qna_content,
+                         qna_writer,
+                         qna_date,
+                         qna_company,
+                         qna_pw
+       ) VALUES (
+            #{qnaNo},
+            #{qnaTitle},
+            #{qnaContent},
+            #{qnaWriter},
+            <choose>
+                <when test="qnaDate != null">
+                    #{qnaDate}
+                </when>
+                <otherwise>
+                    sysdate
+                </otherwise>
+            </choose>,
+            <choose>
+                <when test="qnaCompany != null">
+                    #{qnaCompany}
+                </when>
+                <otherwise>
+                    NULL
+                </otherwise>
+            </choose>,
+            <choose>
+            	<when test="qnaPw != null">
+		            #{qnaPw}
+            	</when>
+            	<otherwise>
+            		NULL
+            	</otherwise>
+            </choose>
+        )
+    </insert>
 
+    <select id="selectQnaInfo" resultType="HomeQnaVO">
+        SELECT qna_no,
+               qna_title,
+               qna_content,
+               qna_writer,
+               qna_date,
+               qna_company,
+               qna_pw
+        FROM qna
+        WHERE qna_no = #{qnaNo}
+    </select>
+    
+    <select id="selectPw" parameterType="int" resultType="String">
+        SELECT qna_pw
+        FROM qna
+        WHERE qna_no = #{qnaNo}
+    </select>
+    
+    <update id="updateQna">
+        UPDATE qna
+        SET
+            qna_title = #{qnaTitle},
+            qna_content = #{qnaContent},
+            qna_date = sysdate
+        WHERE qna_no = #{qnaNo}
+    </update>
 
+    <delete id="deleteQna" parameterType="int">
+        DELETE
+        FROM qna
+        WHERE qna_no = #{qnaNo}
+    </delete>
 </mapper>

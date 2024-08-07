@@ -206,7 +206,7 @@ select {
 	</div>
 	<h1>사용료 견적</h1>
 	<div class="container2">
-		<form>
+		<form th:action="@{/home/payView}">
 			<div class="form-group">
 				<label for="accountNumber">계정 수</label>
 				<select id="accountNumber" name="accountNumber">
@@ -258,7 +258,7 @@ select {
 			</div>
 			<div class="form-group">
 				<label for="regularPaymentDate">정기 결제일</label>
-				<input type="text" id="regularPaymentDate" name="regularPaymentDate" >
+				<input type="text" id="regularPaymentDate" name="regularPaymentDate" disabled>
 			</div>
 			<div class="summary">
 				<div class="summary-item">
@@ -273,12 +273,16 @@ select {
 					<span>월 금액</span>
 					<span id="monthlyAmount">0원</span>
 				</div>
+				<div class="summary-item">
+					<span>첫 달 금액</span>
+					<span id="firstmonthAmount">0원</span>
+				</div>
 				<div class="summary-total">
 					<span>합계 금액</span>
 					<span id="totalAmount">0원</span>
 				</div>
 			</div>
-			<a href="#" class="btn">계약하기</a>
+			<button type="submit">계약하기</button>
 		</form>
 	</div>
 	<script th:src="@{/js/home/service.js}"></script>

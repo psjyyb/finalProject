@@ -1,6 +1,8 @@
 package com.arion.app.group.board.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
@@ -38,14 +40,33 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public long insertBoard(BoardVO boardVO) {
 		int result = boardMapper.insertBoardInfo(boardVO);
-		
 		return result == 1 ? boardVO.getBoardNo() : -1;
 	}
 
+	// 게시글 수정
+	@Override
+	public Map<String, Object> updateBoard(BoardVO boardVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+
+		int result = boardMapper.updateBoardInfo(boardVO);
+		if(result == 1) {
+			isSuccessed = true;
+		}		
+		
+		map.put("result", isSuccessed);
+		map.put("target", boardVO);
+		
+		return map;
+	}
+	
+	// 게시글 삭제
 	@Override
 	public int deleteBoard(int boardNO) {
 		return boardMapper.deleteBoardInfo(boardNO);
 	}
+
+
 
 	
 	

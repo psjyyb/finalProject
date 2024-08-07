@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.board.mapper.BoardMapper">
+	
 	<!-- 전체조회 -->
 	<select id="selectBoardAll" resultType="BoardVO">
 	SELECT b.board_no AS board_no, 
@@ -26,7 +27,7 @@
 		WHERE board_no = #{boardNo} 
 	</select>
 	
-	<!-- 등록 -->
+	<!-- 글 등록 -->
  	<insert id="insertBoardInfo" parameterType="BoardVO">
 	<selectKey keyProperty="boardNo"
 				   resultType="Integer"
@@ -52,7 +53,18 @@
 		)
 	</insert>
 	
-	<!-- 삭제 -->
+	<!-- 수정 -->
+	<update id="updateBoardInfo" parameterType="BoardVO">
+		UPDATE board
+		   SET
+		   		board_title = #{boardTitle}
+		   		, board_content = #{boardContent}
+		   		, employeeNo = #{employeeNo}
+		   		, write_date = sysdate
+		 WHERE board_no = #{boardNo}
+	</update>
+	
+	<!-- 글 삭제 -->
 	<delete id="deleteBoardInfo" parameterType="int">
 		DELETE FROM board
 		WHERE board_no = #{boardNo}
@@ -64,8 +76,5 @@
 	FROM board
 	</select>
 
-	
-	
-	
 	
 </mapper>

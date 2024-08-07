@@ -71,10 +71,23 @@ public class GroupAdminController {
 		return "groupAdmin/GAEmpUpdate";
 	}
 	@PostMapping("/groupAdmin/GAEmpUpdate")
-	public String GAEmpupdatePro() {
-		return "";
+	public String GAEmpupdatePro(EmployeeVO employeeVO){
+		int result = gaService.empUpdate(employeeVO);
+		String url = null;
+		if (result > -1) {
+			url = "redirect:/groupAdmin/GAEmpList";
+		} else {
+			url = "redirect:GAEmpUpdate?employeeNo=" + result;
+		}
+		return url;
 	}
-
+	
+	@GetMapping("/groupAdmin/GAEmpDelete")
+	public String GAEmpDelete(EmployeeVO empVO) {
+		gaService.empDelete(empVO);
+		return "redirect:/groupAdmin/GAEmpList";
+	}
+	
 	@GetMapping("/groupAdmin/GARank")
 	public String GAEmpRank() {
 		return "groupAdmin/GARank";

@@ -72,4 +72,28 @@
 		FROM employees
 		WHERE employee_no = #{employeeNo}
 	</select>
+	<update id="updateEmp">
+		UPDATE employees
+		SET
+		     employee_name = #{employeeName}
+		    ,employee_id = #{employeeId}
+		     <if test="employeePw!=null and employeePw!='' ">
+		    ,employee_pw = #{employeePw}
+		    </if>
+		    <if test="departmentName != null and departmentName!=''">
+		    ,department_name = #{departmentName}
+		    </if>
+		    <if test="rankName !=null and rankName !=''">
+		    ,rank_name = #{rankName}
+		    </if>
+		    <if test="employeeResp != null and employeeResp != ''">
+		    ,employee_resp = #{employeeResp}
+		    </if>
+		    
+		WHERE employee_no = #{employeeNo}
+	</update>
+	<delete id="deleteEmp" parameterType="EmployeeVO">
+		DELETE FROM employees
+		WhERE employee_no = #{employeeNo}
+	</delete>
 </mapper>

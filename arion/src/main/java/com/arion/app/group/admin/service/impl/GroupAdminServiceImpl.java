@@ -37,6 +37,8 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	}
 	@Override
 	public int empUpdate(EmployeeVO empVO) {
+		String encodedPassword = passwordEncoder.encode(empVO.getEmployeePw());
+        empVO.setEmployeePw(encodedPassword);
 		int result = gaMapper.updateEmp(empVO);
 		return result == 1 ? empVO.getEmployeeNo() : -1;
 	}
@@ -51,5 +53,9 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	@Override
 	public List<RankVO> rankListSelect(String companyCode) {
 		return gaMapper.selectRankList(companyCode);
+	}
+	@Override
+	public int empDelete(EmployeeVO empVO) {
+		return gaMapper.deleteEmp(empVO);
 	}
 }

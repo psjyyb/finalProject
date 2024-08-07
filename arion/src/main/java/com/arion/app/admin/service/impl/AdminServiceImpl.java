@@ -1,4 +1,4 @@
-package com.arion.app.admin.service.impl;
+         package com.arion.app.admin.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,6 @@ public class AdminServiceImpl implements AdminService{
 	            	String saveName = uploadPath + File.separator + fileName;
 	            	Path savePath = Paths.get(saveName);
 	    			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
-	    			System.out.println("path : " + saveName+i);
 	    			try {
 	    				file.transferTo(savePath);
 	    				// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)

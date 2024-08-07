@@ -60,6 +60,19 @@ button {
 button:hover {
 	background-color: #0056b3;
 }
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+button.delete {
+	background-color: #dc3545;
+}
+
+button.delete:hover {
+	background-color: #c82333;
+}
 </style>
 </head>
 <body>
@@ -112,7 +125,10 @@ button:hover {
 						th:text="${dept.departmentName}"></option>
 				</select>
 			</div>
-			<button type="submit">수정</button>
+			<div class="button-group">
+				<button type="submit">수정</button>
+				<button type="button" class="delete" id="deleteBtn" th:onclick="|location.href='@{/groupAdmin/GAEmpDelete(employeeNo=${empInfo.employeeNo})}'|">삭제</button>
+			</div>
 		</form>
 	</div>
 	<script>
@@ -130,16 +146,12 @@ button:hover {
     		eid.focus();
     		return;
     	}
-    	let epw = $('input[name=employeePw]');
-    	if(epw.val()==''){
-    		alert('사원비밀번호는 필수입니다.');
-    		epw.focus();
-    		return;
-    	}
-    	if(confirm('사원을 등록하시겠습니까?')){
+    	if(confirm('사원을 수정하시겠습니까?')){
     		insertEmp.submit();
     	}
-        
+    })
+    $('#deleteBtn').on('click',function(e){
+    	console.log(e);
     })
     </script>
 </body>

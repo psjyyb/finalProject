@@ -15,4 +15,6 @@ public interface GroupAdminService {
 	int empUpdate(EmployeeVO empVO); // 사원수정
 	
 	EmployeeVO empInfoSelect(EmployeeVO empVO); // 사원상세보기
+	
+	int empDelete(EmployeeVO empVO); // 사원삭제
 }

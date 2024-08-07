@@ -21,6 +21,8 @@ public interface GroupAdminMapper {
 	
 	int updateEmp(EmployeeVO empVO); // 사원수정
 	
+	int deleteEmp(EmployeeVO empVO); // 사원삭제
+	
 	
 	
 }

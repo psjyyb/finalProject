@@ -88,4 +88,49 @@
 		    qna_reply = #{qnaReply}
 		WHERE qna_no = #{qnaNo}
 	</update>
+	<insert id="insertModule" parameterType="ModuleVO">
+		<selectKey keyProperty="moduleNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(module_no), 0) + 1
+			FROM module
+		</selectKey>
+			INSERT INTO module(
+			     module_no
+			    ,module_name
+			    ,module_price
+			    			   )
+			VALUES(
+					 #{moduleNo}
+					,#{moduleName}
+					,#{modulePrice}
+				   )
+	</insert>
+	
+	<insert id="insertModuleFile" parameterType="ModuleFileVO">
+		<selectKey keyProperty="modFileNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(mod_file_no), 0) + 1
+			FROM mod_file
+		</selectKey>
+		INSERT INTO mod_file(
+                     mod_file_no
+                    ,mod_file_name
+                    ,mod_file_content
+                    ,mod_file_path
+                    ,mod_file_turn
+                    ,mod_file_type
+                    ,qna_no
+                    )
+		VALUES(
+				 #{modFileNo}
+				,#{modFileName}
+				,#{modFileContent}
+				,#{modFilePath}
+				,#{modFileTurn}
+				,#{modFileType}
+				,#{qnaNo}
+				)
+	</insert>
 </mapper>

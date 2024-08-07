@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.arion.app.admin.service.AdminVO;
+import com.arion.app.admin.service.ModuleFileVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 
@@ -24,4 +25,8 @@ public interface AdminMapper {
 	QnAVO selectQnAInfo(QnAVO qnaVO); // QnA 상세
 	
 	int insertReply(QnAVO qnaVO); // QnA 답변
+	
+	int insertModule(ModuleVO moduleVO); // 모듈등록
+	
+	int insertModuleFile(ModuleFileVO moduleFileVO); // 모듈파일등록
 }

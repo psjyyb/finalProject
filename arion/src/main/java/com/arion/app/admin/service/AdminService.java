@@ -2,6 +2,8 @@ package com.arion.app.admin.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 public interface AdminService {
 	
 	List<AdminVO> subListSelect(); // 구독중인 회사목록.
@@ -17,4 +19,6 @@ public interface AdminService {
 	QnAVO qnaInfoSelect(QnAVO qnaVO); // qna 상세.
 	
 	int qnaReply(QnAVO qnaVO); // qna 답변
+	
+	int moduleInsert(@ModelAttribute ModuleVO moduleVO); // 모듈등록 
 }

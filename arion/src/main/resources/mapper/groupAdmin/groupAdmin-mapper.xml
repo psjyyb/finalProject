@@ -23,7 +23,7 @@
 		WHERE company_code = #{companyCode}
 	</select>
 	<insert id="insertEmp" parameterType="EmployeeVO">
-	<selectKey keyProperty="employeeNo"
+		<selectKey keyProperty="employeeNo"
 				   resultType="Integer"
 				   order="BEFORE">
 			SELECT NVL(MAX(employee_no), 0) + 1

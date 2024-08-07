@@ -34,6 +34,10 @@
 	border-top: 1px solid #dee2e6;
 	text-align: right;
 }
+
+.input-group {
+	margin-bottom: 1rem;
+}
 </style>
 </head>
 <body>
@@ -41,108 +45,110 @@
 		<div class="form-header">
 			<h5>모듈등록</h5>
 		</div>
-		<form name="insertForm" class="form-body" method="post" th:action
-			enctype="multipart/form-data">
+		<form name="insertForm" class="form-body" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
-				<label for="moduleName" class="form-label">모듈이름</label> <input
-					type="text" class="form-control" id="moduleName" name="moduleName"
-					required>
+				<label for="moduleName" class="form-label">모듈이름</label>
+				<input type="text" class="form-control" id="moduleName" name="moduleName" required>
 			</div>
 			<div class="mb-3">
-				<label for="modulePrice" class="form-label">모듈가격</label> <input
-					type="number" class="form-control" id="modulePrice" name="modulePrice"
-					required>
+				<label for="modulePrice" class="form-label">모듈가격</label>
+				<input type="number" class="form-control" id="modulePrice" name="modulePrice" required>
 			</div>
-			<div class="mb-3">
-				<label for="moduleNotice" class="form-label">모듈설명</label>
-				<textarea class="form-control" id="moduleNotice" name="moduleNotice"
-					rows="5" required></textarea>
-			</div>
-			<div class="mb-3" id="fileInputs">
-				<label for="files" class="form-label">첨부 파일</label> <input
-					type="file" class="form-control" id="files" name="uploadFiles">
+			<div id="fileInputs">
+				<div class="mb-3">
+					<label for="files" class="form-label">첨부 파일</label>
+					<input type="file" class="form-control" id="files" name="uploadFiles">
+					<div class="mt-2">
+						<label for="moduleNotice" class="form-label">모듈설명</label>
+						<textarea class="form-control moduleNotice" id="moduleNotice" name="moduleNotice" rows="5" required></textarea>
+					</div>
+				</div>
 			</div>
 			<button type="button" class="btn btn-success" id="addFile">첨부파일추가</button>
-			
+
 			<div class="form-footer">
 				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
 				<button type="button" class="btn btn-secondary">취소</button>
 			</div>
 		</form>
-		<!-- <form action="uploadForm" method="post" enctype="multipart/form-data">
-			<input type="file" name="images" multiple>
-			<button type="submit">저장</button>
-		</form> -->
 	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-	 $(document).ready(function() {
-         let formData = new FormData();
-         let fileArr = [];
+	$(document).ready(function() {
+		let fileArr = [];
 
-         $('#addBtn').on('click', function() {
-             let sendData = getData();
+		$('#addBtn').on('click', function() {
+			let formData = new FormData();
+			let mname = $('#moduleName').val();
+			let price = $('#modulePrice').val();
+			let noticeArr = [];
 
-             $.ajax({
-                 url: '/adminModInsert',
-                 type: 'POST',
-                 data: formData,
-                 processData: false,
-                 contentType: false,
-             })
-             .done(result=>{
-            	 alert('등록완료@@@@');
-             })
-             .fail(err=>{
-            	 alert('오류발생@@@');
-             })
-         });
+			// 파일과 설명을 추가
+			fileArr.forEach((file, index) => {
+				formData.append('uploadFiles', file);
+				//console.log(file);
+			});
 
-         $('#addFile').click(function() {
-             let newFileInputWrapper = $('<div class="input-group mt-2"></div>');
-             let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
-             let removeButton = $('<button type="button" class="btn btn-danger">X</button>');
+			$('textarea.moduleNotice').each(function() {
+				//console.log($(this).val());
+				noticeArr.push($(this).val());
+				formData.append('moduleNotice', $(this).val());
+			});
+			//console.log(fileArr);
+			//console.log(noticeArr);
+			formData.append('moduleName', mname);
+			formData.append('modulePrice', price);
+			//formData.append('moduleNotice', JSON.stringify(noticeArr));
 
-             removeButton.click(function(e) {
-                 let inputElement = $(e.target).parent().children('input');
-                 let fileToRemove = inputElement[0].files[0];
+			$.ajax({
+				url: '/adminModInsert',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+			})
+			.done(result => {
+				alert('등록완료@@@@');
+			})
+			.fail(err => {
+				alert('오류발생@@@');
+			});
+		});
 
-                 fileArr = fileArr.filter(file => file.name !== fileToRemove.name);
+		$('#addFile').click(function() {
+			let newFileInputWrapper = $('<div class="mb-3 file-input-wrapper"></div>');
+			let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
+			let fileDescription = $('<div class="mt-2"><label for="moduleNotice" class="form-label">모듈설명</label><textarea class="form-control moduleNotice" name="moduleNotice[]" rows="5" placeholder="모듈설명" required></textarea></div>');
+			let removeButton = $('<button type="button" class="btn btn-danger mt-2">X</button>');
 
-                 newFileInputWrapper.remove();
-             });
+			removeButton.click(function(e) {
+				let inputElement = $(e.target).parent().find('input')[0];
+				let fileToRemove = inputElement.files[0];
 
-             newFileInputWrapper.append(newFileInput);
-             newFileInputWrapper.append(removeButton);
-             $('#fileInputs').append(newFileInputWrapper);
+				fileArr = fileArr.filter(file => file.name !== fileToRemove.name);
+				newFileInputWrapper.remove();
+			});
 
-             newFileInput.on('change', function(e) {
-                 let files = e.currentTarget.files;
-                 for (let i = 0; i < files.length; i++) {
-                     fileArr.push(files[i]);
-                 }
-             });
-         });
+			newFileInputWrapper.append(newFileInput);
+			newFileInputWrapper.append(fileDescription);
+			newFileInputWrapper.append(removeButton);
+			$('#fileInputs').append(newFileInputWrapper);
 
-         $('#files').on('change', function(e) {
-             let files = e.currentTarget.files;
-             for (let i = 0; i < files.length; i++) {
-                 fileArr.push(files[i]);
-             }
-         });
+			newFileInput.on('change', function(e) {
+				let files = e.currentTarget.files;
+				for (let i = 0; i < files.length; i++) {
+					fileArr.push(files[i]);
+				}
+			});
+		});
 
-         function getData() {
-             formData = new FormData();
-             fileArr.forEach((file, index) => {
-                 formData.append('files', file);
-             });
-             let mname = $('#moduleName').val();
-             let content = $('#moduleNotice').val();
-             let price = $('#modulePrice').val();
-             formData.append('modulePrice',price);
-             formData.append('moduleName', mname);
-             formData.append('moduleNotice', content);
-         }
-     });
-	 </script>
+		$('#files').on('change', function(e) {
+			let files = e.currentTarget.files;
+			for (let i = 0; i < files.length; i++) {
+				fileArr.push(files[i]);
+			}
+		});
+	});
+	</script>
 </body>
 </html>

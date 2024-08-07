@@ -1,17 +1,31 @@
 package com.arion.app.admin.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.admin.mapper.AdminMapper;
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
+import com.arion.app.admin.service.ModuleFileVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 
 @Service
 public class AdminServiceImpl implements AdminService{
+	@Value("${file.upload.path}") // 실행되는 시점에 환경변수에 접근하여 값을 가져온다 (운영체제에 따라 바뀌는값을 알아서 찾아 넣어준다)
+	private String uploadPath; 
+	
 	
 	private AdminMapper adminMapper;
 	
@@ -36,15 +50,52 @@ public class AdminServiceImpl implements AdminService{
 		return adminMapper.selectEndSubList();
 	}
 	@Override
-	public List<QnAVO> qnaListSelect() {
+	public List<QnAVO> qnaListSelect(){
 		return adminMapper.selectQnAList();
 	}
 	@Override
-	public QnAVO qnaInfoSelect(QnAVO qnaVO) {
+	public QnAVO qnaInfoSelect(QnAVO qnaVO){
 		return adminMapper.selectQnAInfo(qnaVO);
 	}
 	@Override
-	public int qnaReply(QnAVO qnaVO) {
+	public int qnaReply(QnAVO qnaVO){
 		return adminMapper.insertReply(qnaVO);
+	}
+	@Transactional
+	@Override
+	public int moduleInsert(@ModelAttribute ModuleVO moduleVO){
+		int result = adminMapper.insertModule(moduleVO);
+		MultipartFile[] files = moduleVO.getUploadFiles();
+		String [] contents = moduleVO.getModuleNotice();
+		UUID uuid = UUID.randomUUID();
+		 if (files != null) {
+			 int i = 1;
+	            for (MultipartFile file : files) {
+	            	ModuleFileVO mvo = new ModuleFileVO();
+	            	String fileName = uuid + "_" + file.getOriginalFilename();
+	            	mvo.setModFileName(fileName);
+	            	mvo.setQnaNo(moduleVO.getModuleNo());
+	            	mvo.setModFileType(file.getContentType());
+	            	mvo.setModFilePath(uploadPath);
+	            	mvo.setModFileTurn(i);
+	            	mvo.setModFileContent(contents[i-1]);
+	            	i++;
+	            	int fileResult = adminMapper.insertModuleFile(mvo);
+	            	String saveName = uploadPath + File.separator + fileName;
+	            	Path savePath = Paths.get(saveName);
+	    			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
+	    			System.out.println("path : " + saveName+i);
+	    			try {
+	    				file.transferTo(savePath);
+	    				// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+	    			} catch (IOException e) {
+	    				e.printStackTrace();
+	    			}
+	            }
+	        } else {
+	            System.out.println("No files uploaded");
+	        }
+		
+		return result;
 	}
 }

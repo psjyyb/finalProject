@@ -33,11 +33,16 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 		String encodedPassword = passwordEncoder.encode(empVO.getEmployeePw());
         empVO.setEmployeePw(encodedPassword);
         int result = gaMapper.insertEmp(empVO);
-		return result;
+		return result == 1 ? empVO.getEmployeeNo() : -1;
 	}
 	@Override
 	public int empUpdate(EmployeeVO empVO) {
-		return 0;
+		int result = gaMapper.updateEmp(empVO);
+		return result == 1 ? empVO.getEmployeeNo() : -1;
+	}
+	 @Override
+	public EmployeeVO empInfoSelect(EmployeeVO empVO) {
+		return gaMapper.selectEmpInfo(empVO);
 	}
 	@Override
 	public List<DepartmentVO> deptListSelect(String companyCode) {

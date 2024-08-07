@@ -177,28 +177,26 @@ h1, h2, h3 {
 				<div class="contract-details">
 					<div>
 						<p>
-							<strong>계약 번호:</strong> t.contract_no
+							<strong>계약 번호:</strong>
 						</p>
 						<p>
-							<strong>시작 날짜:</strong> t.start_date
+							<strong>시작 날짜:</strong> 
 						</p>
 						<p>
-							<strong>종료 날짜:</strong> t.final_date
+							<strong>종료 날짜:</strong>
 						</p>
 						<p>
-							<strong>사용자 수:</strong> t.users_cnt
+							<strong>사용자 수:</strong>[[${payInfo.accountNumber}]] 명
 						</p>
 					</div>
 					<div>
 						<p>
-							<strong>월 구독료:</strong> t.month_pay_price 원
+							<strong>월 구독료:</strong> [[${payInfo.monthlyAmount}]] 원
 						</p>
 						<p>
-							<strong>총 금액:</strong> t.total_pay_price 원
+							<strong>총 금액:</strong> [[${payInfo.totalAmount}]] 원
 						</p>
-						<p>
-							<strong>계약 상태:</strong> t.contract_state
-						</p>
+						
 					</div>
 				</div>
 			</div>

@@ -50,7 +50,7 @@
 	<script>
 	$('tbody tr').on('click',function(e){
 		let empNo =  $(e.currentTarget).children().first().text();
-		let url = '/groupAdmin/GAEmpUpdate?empNo='+empNo;
+		let url = '/groupAdmin/GAEmpUpdate?employeeNo='+empNo;
 		console.log(empNo);
 		if(confirm('사원상세보기를 하시겠습니까 ?')){
 			location.href=url;

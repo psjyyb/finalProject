@@ -15,7 +15,12 @@ $(document).ready(function() {
 		let monthlyAmount = accountAmount + moduleAmount;
 		let firstmonthAmount;
 		let totalAmount = monthlyAmount * (period / 30);
-
+		
+		$('input[name=accountAmount]').val(accountAmount);
+		$('input[name=monthlyAmount]').val(monthlyAmount);
+		$('input[name=moduleAmount]').val(moduleAmount);
+		$('input[name=totalAmount]').val(totalAmount);
+		
 		$('#accountAmount').text(accountAmount.toLocaleString().split(".")[0] + '원');
 		$('#monthlyAmount').text(monthlyAmount.toLocaleString().split(".")[0] + '원');
 		$('#totalAmount').text(totalAmount.toLocaleString().split(".")[0] + '원');

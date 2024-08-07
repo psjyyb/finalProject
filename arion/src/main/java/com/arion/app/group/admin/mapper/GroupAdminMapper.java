@@ -17,6 +17,8 @@ public interface GroupAdminMapper {
 	
 	int insertEmp(EmployeeVO empVO); // 사원등록
 	
+	EmployeeVO selectEmpInfo(EmployeeVO empVO); // 사원 상세보기
+	
 	int updateEmp(EmployeeVO empVO); // 사원수정
 	
 	

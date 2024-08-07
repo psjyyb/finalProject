@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.attendance.mapper.AttendanceMapper">
+
+
+<select id="aEmployee" parameterType="AEmployeeVO" resultType="AEmployeeVO">
+      
+ 		SELECT employee_no,
+               employee_name,
+               hire_Date,
+               employee_resp,
+               department_name,
+               rank_name 
+        FROM employees
+        WHERE employee_no=#{employeeno}
+	</select>
+
+<select id="aEmployeeList" resultType="AEmployeeVO">
+    
+        SELECT employee_no,
+               employee_name,
+               hire_Date,
+               employee_resp,
+               department_name,
+               e.rank_name,
+               rank_ranking,
+               e.company_code
+        FROM employees e JOIN RANK r 
+        ON e.rank_name=r.rank_name 
+        AND e.company_code=r.company_code
+        WHERE e.company_code = #{companycode} AND rank_ranking>(
+        select rank_ranking
+        from RANK
+        WHERE rank_name = {rankname} AND company_code = #{companycode}
+        );
+    
+	</select>
+	
+	<select id="attendance" parameterType="AEmployeeVO" resultType="AttendanceVO">
+    
+        SELECT att_no ,
+               employee_no ,
+               start_time,
+               end_time,
+               state,
+               att_date,
+               half_off
+        FROM attendance
+        WHERE employee_no = #{employeeno}
+	</select>
+	
+	
+	<select id="worktime" parameterType="AEmployeeVO" resultType="WorkTimeVO">
+    
+	    SELECT att_date,
+               employee_no , 
+               ROUND((end_time-start_time)* 24 * 60) as work_time
+        FROM attendance
+        WHERE employee_no = #{employeeno}
+	</select>
+
+
+</mapper>

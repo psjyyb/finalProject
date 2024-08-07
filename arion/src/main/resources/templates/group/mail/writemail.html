@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<title>Mail</title>
+</head>
+<body>
+
+	<form action="/mail/send" method="post" enctype="multipart/form-data">
+		<input type="text" name="mailTitle" placeholder="메일 제목" required />
+		<textarea name="mailContent" placeholder="메일 내용" required></textarea>
+
+		<!-- 수신자 입력 -->
+		<input type="text" name="receivers" placeholder="수신자 IDs (콤마로 구분)"
+			required />
+
+		<!-- 파일 업로드 -->
+		<input type="file" name="files" multiple />
+
+		<button type="submit">메일 보내기</button>
+	</form>
+
+
+</body>
+</html>

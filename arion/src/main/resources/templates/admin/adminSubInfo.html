@@ -56,11 +56,11 @@
 	            </tr>
 	            <tr>
 	                <th>시작일</th>
-	                <td id="start_date" th:text="${#dates.format(suncon.startDate,'yyyy--MM-dd')}"></td>
+	                <td id="start_date" th:text="${#dates.format(suncon.startDate,'yyyy-MM-dd')}"></td>
 	            </tr>
 	            <tr>
 	                <th>종료일</th>
-	                <td id="final_date" th:text="${#dates.format(suncon.finalDate,'yyyy--MM-dd')}"></td>
+	                <td id="final_date" th:text="${#dates.format(suncon.finalDate,'yyyy-MM-dd')}"></td>
 	            </tr>
 	            <tr>
 	                <th>사용자 수</th>
@@ -68,11 +68,11 @@
 	            </tr>
 	            <tr>
 	                <th>월 납입금</th>
-	                <td id="month_pay_price" th:text="${#numbers.formatInteger(suncon.monthPayPrice, 3, 'COMMA')}"></td>
+	                <td id="month_pay_price">[[${#numbers.formatInteger(suncon.monthPayPrice, 3, 'COMMA')}]]원</td>
 	            </tr>
 	            <tr>
 	                <th>총 납입금</th>
-	                <td id="total_pay_price" th:text="${#numbers.formatInteger(suncon.totalPayPrice, 3, 'COMMA')}"></td>
+	                <td id="total_pay_price">[[${#numbers.formatInteger(suncon.totalPayPrice, 3, 'COMMA')}]]원</td>
 	            </tr>
 	            <tr>
 	                <th>계약 상태</th>

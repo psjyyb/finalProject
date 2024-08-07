@@ -1,27 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.board.mapper.BoardMapper">
+	
 	<!-- 전체조회 -->
 	<select id="selectBoardAll" resultType="BoardVO">
 	SELECT b.board_no AS board_no, 
 		board_title, 
 		board_content, 
         write_date, 
-        employee_no, 
+        employee_no,
         viewcnt,
     	find_emp_name(b.employee_no)  AS employee_name
     FROM board b
 	ORDER BY board_no DESC
 	</select>
-
-	<!--  -->
+	
+	<!-- 글 상세조회 -->
+	<select id="selectBoardInfo" resultType="BoardVO">
+		SELECT board_no
+        		, board_title
+        		, board_content
+        		, write_date
+        		, employee_no
+        		, find_emp_name(employee_no)  AS employee_name
+		FROM board
+		WHERE board_no = #{boardNo} 
+	</select>
+	
+	<!-- 글 등록 -->
+ 	<insert id="insertBoardInfo" parameterType="BoardVO">
+	<selectKey keyProperty="boardNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(board_no),0) + 1
+			FROM board
+		</selectKey>
+	INSERT INTO board
+		(
+			board_no
+			, board_title
+			, board_content
+			, employee_no
+			, write_date
+			)	
+		VALUES
+		(
+			#{boardNo}
+			, #{boardTitle}
+			, #{boardContent}
+			, #{employeeNo}
+			, sysdate
+		)
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateBoardInfo" parameterType="BoardVO">
+		UPDATE board
+		   SET
+		   		board_title = #{boardTitle}
+		   		, board_content = #{boardContent}
+		   		, employeeNo = #{employeeNo}
+		   		, write_date = sysdate
+		 WHERE board_no = #{boardNo}
+	</update>
+	
+	<!-- 글 삭제 -->
+	<delete id="deleteBoardInfo" parameterType="int">
+		DELETE FROM board
+		WHERE board_no = #{boardNo}
+	</delete>
+	
+	<!-- 게시글 수 -->
 	<select id="getCount" resultType="int">
 	SELECT COUNT(*)
 	FROM board
 	</select>
-	
-	
-	
-	
+
 	
 </mapper>

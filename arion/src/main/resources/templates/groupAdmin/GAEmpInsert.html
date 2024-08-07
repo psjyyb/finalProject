@@ -96,15 +96,15 @@ button:hover {
 			<div class="form-group">
 				<label for="rank">직급:</label> <select id="rank" name="rankName">
 					<option value="">없음</option>
-					<option th:each=" rank :${rankList}" th:value="${rank.rankId}"
+					<option th:each=" rank :${rankList}" th:value="${rank.rankName}"
 						th:text="${rank.rankName}">없음</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label for="department">부서:</label> <select id="department"
-					name="department">
+					name="departmentName">
 					<option value="없음">없음</option>
-					<option th:each="dept :${deptList}" th:value="${dept.departmentNo}"
+					<option th:each="dept :${deptList}" th:value="${dept.departmentName}"
 						th:text="${dept.departmentName}"></option>
 				</select>
 			</div>

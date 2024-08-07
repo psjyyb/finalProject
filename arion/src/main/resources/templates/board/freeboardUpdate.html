@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div>
+		<h3>글 수정</h3>
+		<form name="UpdateForm" th:object="${board}">
+		<table>
+			<tr>
+				<th>번호</th>
+				<td><input type="text" th:field="*{boardNo}" readonly></td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" th:field="*{boardTitle}"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td width="100%" height="100%"><textarea name="boardContent" id="boardContent"></textarea></td>
+			</tr>
+		</table>
+		<button type="submit">수정</button>
+		<button>취소</button>
+		</form>
+	</div>
+	<script>
+	$(function(){
+		var oEditors = [];
+		nhn.husky.EZCreator.createInIFrame({
+			  oAppRef : oEditors,
+			  elPlaceHolder : "boardContent",
+			  sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
+			  fCreator : "createSEditor2"
+			});
+	})
+	</script>
+</body>
+</html>

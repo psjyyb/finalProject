@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>받은 메일함</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        #sidebar {
+            width: 200px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            height: 100vh;
+        }
+        #sidebar h2 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        #sidebar ul li {
+            margin: 10px 0;
+        }
+        #sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        #content {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-right: 10px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .checkbox-cell {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>메일함</h2>
+        <ul>
+            <li><a href="#" th:href="@{/group/writemail}">메일쓰기</a></li>
+            <li><a href="#" th:href="@{/group/Mymail}">받은메일함</a></li>
+            <li><a href="#" th:href="@{/group/sendmail}" class="active">보낸메일함</a></li>
+            <li><a href="#" th:href="@{/group/importmail}">중요메일함</a></li>
+            <li><a href="#" th:href="@{/group/trashmail}">휴지통</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <h1>휴지통</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"><input type="checkbox" id="select-all"></th>
+                    <th>보낸사람</th>
+                    <th>제목</th>
+                    <th>수신일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="mail : ${deleteMailList}">
+                    <td class="checkbox-cell"><input type="checkbox" th:value="${mail.mailNo}"></td>
+                    <td th:text="${mail.senderId}"></td>
+                    <td th:text="${mail.mailTitle}"></td>
+                    <td th:text="${#dates.format(mail.sendDate, 'yyyy년 MM월 dd일')}"></td>
+                </tr>
+            </tbody>  
+        </table>
+        <button type="button" id="move-to-trash">영구삭제</button>
+        <button type="button" id="move-to-important">복원하기</button>
+    </div>
+
+    <script>
+   
+        document.getElementById('select-all').addEventListener('click', function(event) {
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = event.target.checked;
+            });
+        });
+
+        // 중요 메일함으로 이동
+        document.getElementById('move-to-important').addEventListener('click', function() {
+            const selected = getSelectedMails();
+            if (selected.length > 0) {
+           
+                alert('중요메일함으로 이동합니다: ' + selected.join(', '));
+            } else {
+                alert('이동할 메일을 선택해주세요.');
+            }
+        });
+
+        // 휴지통으로 이동
+        document.getElementById('move-to-trash').addEventListener('click', function() {
+            const selected = getSelectedMails();
+            if (selected.length > 0) {
+              
+                alert('휴지통으로 이동합니다: ' + selected.join(', '));
+            } else {
+                alert('삭제할 메일을 선택해주세요.');
+            }
+        });
+
+        // 선택된 메일 번호 목록 가져오기
+        function getSelectedMails() {
+            const selected = [];
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selected.push(checkbox.value);
+            });
+            return selected;
+        }
+    </script>
+</body>
+</html>

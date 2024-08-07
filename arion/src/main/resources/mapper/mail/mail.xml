@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.arion.app.group.main.mail.mapper.MailMapper">
-	
-	<select id="recieveMailAll" resultType="MailVO">
- 		SELECT sender_id ,
-               mail_title ,
-               send_date 
-        FROM mail
-    
-	</select>
-	
-	
+<mapper
+	namespace="com.arion.app.group.main.mail.mapper.MailMapper">
+
+<select id="recieveMailAll" parameterType="MailVO" resultType="MailVO">
+    SELECT
+        FIND_EMP_NAME(m.sender_id) AS sender_name,
+        m.send_date,
+        m.mail_title
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{employeeId}
+    AND m.mail_status = 'RECEIVED'
+</select>
 </mapper>

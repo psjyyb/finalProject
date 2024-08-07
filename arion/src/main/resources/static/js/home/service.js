@@ -3,15 +3,15 @@ $(document).ready(function() {
 		let accountNumber = parseInt($('#accountNumber').val());
 		let period = parseInt($('#subscriptionPeriod').val());
 		let checkedModules = $('.module-checkbox:checked');
-		let accountAmount = accountNumber * 1200 * (period/30);
+		let accountAmount = accountNumber * 1200 * (period / 30);
 		let payDate = ($('#regularPaymentDate').val());
-		let moduleAmount = 0 ;
+		let moduleAmount = 0;
 
 
 		checkedModules.each(function() {
 			moduleAmount += parseInt($(this).data('price') * (period / 30));
 		});
-	
+
 		let monthlyAmount = accountAmount + moduleAmount;
 		let firstmonthAmount;
 		let totalAmount = monthlyAmount * (period / 30);
@@ -20,11 +20,11 @@ $(document).ready(function() {
 		$('#monthlyAmount').text(monthlyAmount.toLocaleString().split(".")[0] + '원');
 		$('#totalAmount').text(totalAmount.toLocaleString().split(".")[0] + '원');
 		$('#moduleAmount').text(moduleAmount.toLocaleString().split(".")[0] + '원');
-		
+
 	}
-		
+
 	$('#accountNumber').change(function() {
-		if($(this).val() > 100){
+		if ($(this).val() > 100) {
 			Swal.fire({
 				icon: "error",
 				text: "100인 초과는 상담직원에게 문의하세요."
@@ -32,16 +32,16 @@ $(document).ready(function() {
 			$(this).val() == 100;
 		}
 		calculateAmounts();
-   	});
+	});
 
 	$('#subscriptionPeriod').change(function() {
-		if($(this).val() > 30) {
+		if ($(this).val() > 30) {
 			$('#regularPaymentDate').prop('disabled', false).val(10);
-		}else{
+		} else {
 			$('#regularPaymentDate').prop('disabled', true).val('');
 		}
-		
-		if($(this).val() > 1825) {
+
+		if ($(this).val() > 1825) {
 			Swal.fire({
 				icon: "error",
 				text: "5년 초과는 상담직원에게 문의하세요."
@@ -50,8 +50,20 @@ $(document).ready(function() {
 		}
 		calculateAmounts();
 	});
-	
+
+	$('#regularPaymentDate').on('input', function() {
+		let value = parseInt($(this).val());
+		if (value < 1 || value > 30) {
+			Swal.fire({
+				icon: "error",
+				text: "결제일은 1~30 사이만 기입이 가능합니다."
+			})
+			$(this).val('');
+		}
+	});
+
+
 	$('.module-checkbox').change(calculateAmounts);
-	
+
 	calculateAmounts();
 })

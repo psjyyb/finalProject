@@ -28,4 +28,9 @@ public class HomeBoardController {
 		return "home/board/qna";
 	}
 	
+	@GetMapping("/home/qnaInsert")
+	public String qnaInsert() {	
+		return "home/board/qnaInsert";
+	}
+	
 }

@@ -1,10 +1,145 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="utf-8">
+<title>ARION</title>
 </head>
-<body>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 50px auto;
+    text-align: center;
+    padding: 0;
+}
 
+.container2 {
+	width: 1200px;
+	background-color: white;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 170px auto;
+}
+
+h3 {
+	background-color: #ffa500;
+	color: white;
+	margin: 0;
+	padding: 20px;
+	text-align: center;
+}
+
+label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: bold;
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 15px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:hover {
+	background-color: #f5f5f5;
+	cursor: pointer;
+}
+
+tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+.content-footer {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+    text-align: right;
+}
+</style>
+<body>
+<div class="container2">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content-header">
+					<h3>게시물 상세보기</h3>
+				</div>
+				<div class="content-body">
+					<div class="row">
+						<div class="col-md-2">
+							<strong>번호:</strong>
+						</div>
+						<div class="col-md-10" th:text="${boardInfo.boardNo}"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<strong>제목:</strong>
+						</div>
+						<div class="col-md-10" th:text="${boardInfo.boardTitle}"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<strong>작성자:</strong>
+						</div>
+						<div class="col-md-10" th:text="${boardInfo.boardWriter}"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<strong>작성일:</strong>
+						</div>
+						<div class="col-md-10"
+							th:text="${#dates.format(boardInfo.regdate, 'yyyy/MM/dd')}"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<strong>내용:</strong>
+						</div>
+						<div class="col-md-10">
+							<p th:text="${boardInfo.boardContent}">게시물의 내용이 여기에 표시됩니다.
+								여기에 게시물의 상세 내용이 들어갑니다.</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<strong>이미지:</strong>
+						</div>
+						<div class="col-md-10">
+							<img th:src="@{/images/{fileName}(fileName=${boardInfo.image})}" style="width: 50%;">
+							<!-- <img th:src="|${#httpServletRequest.getContextPath()}/images/${boardInfo.image}| -->
+						</div>
+					</div>
+				</div>
+				<div class="content-footer">
+					<button type="button" class="btn btn-primary"
+						th:onclick="|location.href='@{/boardUpdate(boardNo=${boardInfo.boardNo})}' |">수정</button>
+					<button type="button" class="btn btn-primary"
+						th:onclick="|location.href='@{boardList}'|">목록으로</button>
+					<button type="button" class="btn btn-danger"
+						th:onclick="|location.href='@{/boardDelete(boardNo=${boardInfo.boardNo})}'|">삭제</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

@@ -7,6 +7,7 @@ import com.arion.app.group.board.service.BoardVO;
 
 public interface BoardMapper {
 
+	// 자유게시판 freeboard //
 	// 전체조회
 	public List<BoardVO> selectBoardAll();
 	
@@ -22,10 +23,19 @@ public interface BoardMapper {
 	// 글 삭제
 	public int deleteBoardInfo(int boardNO);
 	
-	// 게시글 수
+	// 게시글 수 (검색할때써야될듯)
 	public int getCount(BoardVO boardVO);
 	
 	public List<BoardVO> getBoardList(BoardVO boardVo);
 
-
+	// 조회수
+	public int ViewCnt(int viewCnt);
+	
+	
+	// 공지사항 notice //
+	
+	
+	// 부서게시판 deptboard //
+	
+	
 }

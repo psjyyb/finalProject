@@ -16,4 +16,8 @@ public class UserVO {
     private int employeeNo;
     
 
+
+    
+
+
 }

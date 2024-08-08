@@ -10,6 +10,7 @@ import com.arion.app.group.admin.mapper.GroupAdminMapper;
 import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
+import com.arion.app.group.admin.service.GroupAdminVO;
 import com.arion.app.group.admin.service.RankVO;
 
 @Service
@@ -57,5 +58,13 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	@Override
 	public int empDelete(EmployeeVO empVO) {
 		return gaMapper.deleteEmp(empVO);
+	}
+	@Override
+	public GroupAdminVO userCntSelect(String companyCode) {
+		return gaMapper.selectUserCnt(companyCode);
+	}
+	@Override
+	public List<GroupAdminVO> endSubSelect(String companyCode) {
+		return gaMapper.selectEndSub(companyCode);
 	}
 }

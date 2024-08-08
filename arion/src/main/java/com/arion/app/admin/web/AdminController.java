@@ -38,6 +38,7 @@ public class AdminController {
 	@GetMapping("/adminSubInfo")
 	public String adminSunInfo(AdminVO adminVO, Model model) {
 		AdminVO avo = adminService.subInfoSelect(adminVO);
+		System.out.println(avo);
 		model.addAttribute("suncon", avo);
 		return "admin/adminSubInfo";
 	}

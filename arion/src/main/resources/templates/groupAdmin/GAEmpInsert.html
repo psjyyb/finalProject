@@ -60,10 +60,28 @@ button {
 button:hover {
 	background-color: #0056b3;
 }
+ .message-container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .message-container h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .message-container p {
+            font-size: 16px;
+            color: #555;
+            margin: 0;
+        }
 </style>
 </head>
 <body>
-	<div class="container">
+	<div class="container" th:if="${userInfo.usersCnt >0}">
 		<h2>사원 등록</h2>
 		<form th:action="@{/groupAdmin/GAEmpInsert}" method="POST"
 			name="insertEmp">
@@ -110,6 +128,12 @@ button:hover {
 			</div>
 			<button type="submit">등록</button>
 		</form>
+	</div>
+	<div class="container" th:if="${userInfo.usersCnt <= 0}">
+		 <div class="message-container">
+        <h1>사원을 더이상 등록할 수 없습니다.</h1>
+        <p>서비스를 더 이용하시려면 사용인원수를 추가해주세요!</p>
+    </div>
 	</div>
 	<script>
     $('[name="insertEmp"]').on('submit',function(event){

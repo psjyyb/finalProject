@@ -27,6 +27,7 @@ public class AdminVO {
 	private String companyPost; // 회사우편번호 
 	private String ceoEmail;    // 사장 이메일
 	private String companyAddress; // 회사주소
+	private String moduleNames;
 	
 	
 }

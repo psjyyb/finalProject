@@ -76,10 +76,40 @@ public class HomeBoardController {
     }
 	
 	@GetMapping("/home/qnaDelete")
-	public String boardDelete(@RequestParam Integer qnaNo) {
+	public String qnaDelete(@RequestParam Integer qnaNo) {
 		qsvc.deleteQna(qnaNo);
 		fsvc.deleteFiles("qna", qnaNo);
 		return "redirect:/home/qna";
 	}
 	
+	@GetMapping("/home/qnaUpdate")
+	public String qnaUpdate(@RequestParam Integer qnaNo, Model model, HttpSession session) {
+	    String companyCode = (String) session.getAttribute("companyCode");
+	    if (companyCode != null) {
+	        List<CompanyVO> companyList = qsvc.selectCompany(companyCode);
+	        if (!companyList.isEmpty()) {
+	            model.addAttribute("company", companyList.get(0));
+	        } else {
+	            model.addAttribute("company", new CompanyVO());
+	        }
+	    } else {
+	        model.addAttribute("company", new CompanyVO()); 
+	    }
+	    
+	    HomeQnaVO homeQnaVO = new HomeQnaVO();
+	    homeQnaVO.setQnaNo(qnaNo);
+	    List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
+	    HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
+	    model.addAttribute("fileInfo", fileVOList);
+	    model.addAttribute("qnaUpdate", findVO); // 여기에 qnaUpdate 객체 추가
+	    return "home/board/qnaUpdate";
+	}
+	
+	@PostMapping("/qnaUpdate")
+	public String UpdateQna(HomeQnaVO homeQnaVO, @RequestPart MultipartFile[] files,  HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		homeQnaVO.setQnaCompany(companyCode);
+		qsvc.updateQna(homeQnaVO, files, companyCode);
+		return "redirect:/home/qna";
+	}
 }

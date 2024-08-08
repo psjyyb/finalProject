@@ -90,33 +90,33 @@ tr:nth-child(even) {
 						<div class="col-md-2">
 							<strong>번호:</strong>
 						</div>
-						<div class="col-md-10" th:text="${boardInfo.boardNo}"></div>
+						<div class="col-md-10" th:text="${qnaInfo.qnaNo}"></div>
 					</div>
 					<div class="row">
 						<div class="col-md-2">
 							<strong>제목:</strong>
 						</div>
-						<div class="col-md-10" th:text="${boardInfo.boardTitle}"></div>
+						<div class="col-md-10" th:text="${qnaInfo.qnaTitle}"></div>
 					</div>
 					<div class="row">
 						<div class="col-md-2">
 							<strong>작성자:</strong>
 						</div>
-						<div class="col-md-10" th:text="${boardInfo.boardWriter}"></div>
+						<div class="col-md-10" th:text="${qnaInfo.qnaWriter}"></div>
 					</div>
 					<div class="row">
 						<div class="col-md-2">
 							<strong>작성일:</strong>
 						</div>
 						<div class="col-md-10"
-							th:text="${#dates.format(boardInfo.regdate, 'yyyy/MM/dd')}"></div>
+							th:text="${#dates.format(qnaInfo.qnaDate, 'yyyy/MM/dd')}"></div>
 					</div>
 					<div class="row">
 						<div class="col-md-2">
 							<strong>내용:</strong>
 						</div>
 						<div class="col-md-10">
-							<p th:text="${boardInfo.boardContent}">게시물의 내용이 여기에 표시됩니다.
+							<p th:text="${qnaInfo.qnaContent}">게시물의 내용이 여기에 표시됩니다.
 								여기에 게시물의 상세 내용이 들어갑니다.</p>
 						</div>
 					</div>
@@ -124,10 +124,12 @@ tr:nth-child(even) {
 						<div class="col-md-2">
 							<strong>이미지:</strong>
 						</div>
+						<th:block th:each="file : ${fileInfo}">
 						<div class="col-md-10">
-							<img th:src="@{/images/{fileName}(fileName=${boardInfo.image})}" style="width: 50%;">
+							<img th:src="@{/files/file.filePath}" style="width: 50%;">
 							<!-- <img th:src="|${#httpServletRequest.getContextPath()}/images/${boardInfo.image}| -->
 						</div>
+						</th:block>
 					</div>
 				</div>
 				<div class="content-footer">

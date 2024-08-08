@@ -21,6 +21,7 @@
                e.rank_name AS rankName,
                e.department_name AS departmentName,
                e.employee_name AS empName,
+               e.employee_no AS employeeNo,
                'employee' AS loginType
         FROM employees e 
         WHERE e.company_code = #{companyCode} 

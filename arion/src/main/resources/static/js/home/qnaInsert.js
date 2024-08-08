@@ -21,7 +21,7 @@ $(document).ready(function() {
     });
 
     $('#qnaInsert').on('submit', function(e) {
-       /* e.preventDefault();*/
+       e.preventDefault();
 
         let qnaTitle = $('input[name="qnaTitle"]');
         if (qnaTitle.val().trim() === '') {
@@ -41,20 +41,28 @@ $(document).ready(function() {
         $.each(fileList, function(index, file) {
             formData.append('files', file);
         });
-
-      /*  $.ajax({
-            url: $(this).attr('action'),
+       $.ajax({
+            url: '/qnaInsert',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            success: function(response) {
-                window.location.href = '/home/qna';
-            },
-            error: function(response) {
-                alert('파일 업로드 중 오류가 발생했습니다.');
-            }
-        });*/
-        return true;
-    });
+        })
+        .done(result => {
+			Swal.fire({
+				icon: "sccess",
+				text: "등록되었습니다."
+			});
+			window.location.href = '/home/qna';
+		})
+		.fail(err => {
+			Swal.fire({
+				icon: "erroer",
+				text: "등록 중 오류가 발생했습니다."
+			});
+		})
+		
+      /* return true;*/
+	});
+  
 });

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.FileService;
+import com.arion.app.common.service.FileVO;
 import com.arion.app.home.board.service.HomeQnaVO;
 import com.arion.app.home.board.service.QnaService;
 import com.arion.app.security.service.CompanyVO;
@@ -58,9 +59,19 @@ public class HomeBoardController {
     public String insertQna(HomeQnaVO homeQnaVO, @RequestParam("files") MultipartFile[] files, HttpSession session) {
         String companyCode = (String) session.getAttribute("companyCode");
         homeQnaVO.setQnaCompany(companyCode);
-
         qsvc.insertQna(homeQnaVO, files, companyCode);
-
         return "redirect:/home/qna";
     }
+	
+	@GetMapping("/home/qnaInfo")
+	public String qnaInfo(HomeQnaVO homeQnaVO, Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
+		FileVO fileVO = (FileVO) fsvc.selectFiles("qna", homeQnaVO.getQnaNo(), companyCode);
+		model.addAttribute("qnaInfo", findVO);
+		model.addAttribute("fileInfo", fileVO);
+		return "home/board/qnaInfo";
+	}
+	
+	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
 import com.arion.app.group.admin.service.DepartmentVO;
@@ -70,5 +71,29 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	@Override
 	public GroupAdminVO sunInfoSelect(String companyCode) {
 		return gaMapper.selectSubInfo(companyCode);
+	}
+	@Transactional
+	@Override
+	public int saveDept(List<String> list,String companyCode) {
+		int result= gaMapper.deptDeSave(companyCode);
+		DepartmentVO dvo = new DepartmentVO();
+		list.forEach( i ->{
+			dvo.setCompanyCode(companyCode);
+			dvo.setDepartmentName(i);
+			 gaMapper.deptInSave(dvo);
+		});
+		return result;
+	}
+	@Transactional
+	@Override
+	public int saveRank(List<String> list, String companyCode) {
+		int result = gaMapper.rankDeSave(companyCode);
+		RankVO rvo = new RankVO();
+		list.forEach(i ->{
+			rvo.setRankName(i);
+			rvo.setCompanyCode(companyCode);
+			gaMapper.rankInSave(rvo);
+		});
+		return result;
 	}
 }

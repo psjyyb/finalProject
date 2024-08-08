@@ -12,16 +12,16 @@ import com.arion.app.group.main.mail.service.MailVO;
 @Mapper
 public interface MailMapper {
 
-	 public   List<MailVO> recieveMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
+	 public  List<MailVO> recieveMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
     
     // 중요 메일 조회
-    public List<MailVO> importMailAll(String companyCode, String employeeId);
+    public List<MailVO> importMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
     
     // 휴지통 조회
-    public List<MailVO> deleteMailAll(String companyCode, String employeeId);
+    public List<MailVO> deleteMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
     
     // 보낸 메일 조회
-    public List<MailVO> sendMailAll(String companyCode, String employeeId);
+    public List<MailVO> sendMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
     
     // 상세 메일 조회
     public MailVO selectMailInfo(MailVO mailVO);

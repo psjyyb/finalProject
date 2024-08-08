@@ -6,7 +6,7 @@ import java.util.Map;
 public interface MailService {
 
     // 받은 메일 조회
-    List<MailVO> mailList(MailVO mailVO);
+    public List<MailVO> mailList(MailVO mailVO);
 
     // 상세 메일 조회
     MailVO mailInfo(MailVO mailVO);

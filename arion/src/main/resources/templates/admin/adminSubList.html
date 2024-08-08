@@ -36,7 +36,7 @@
 									<td th:text="${sub.companyCode}"></td>
 									<td th:text="${sub.companyName}"></td>
 									<td th:text="${sub.ceoName}"></td>
-									<td th:text="${sub.usersCnt}">명</td>
+									<td>[[${sub.usersCnt}]]명</td>
 									<td th:text="${#dates.format(sub.startDate,'yyyy-MM-dd')}"></td>
 									<td th:text="${#dates.format(sub.finalDate,'yyyy-MM-dd')}"></td>
 								</tr>
@@ -53,9 +53,18 @@
 		$('tbody tr').on('click',function(e){
 			let code =  $(e.currentTarget).children().first().text();
 			let url = '/adminSubInfo?contractNo='+code;
-			if(confirm('계약서를 보시겠습니까 ?')){
-				location.href=url;
-			}
+			Swal.fire({
+				  title: "계약서를 상세 보시겠습니까 ?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아뇽`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					  location.href=url;
+				  } 
+				});
+			
 		})
 	</script>
 </body>

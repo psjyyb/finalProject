@@ -27,5 +27,7 @@ public interface GroupAdminMapper {
 	
 	List<GroupAdminVO> selectEndSub(String companyCode);// 지난 계약조회
 	
+	GroupAdminVO selectSubInfo(String companyCode); // 현재 계약정보조회
+	
 	
 }

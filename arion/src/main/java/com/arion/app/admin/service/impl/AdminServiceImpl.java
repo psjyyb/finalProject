@@ -64,10 +64,26 @@ public class AdminServiceImpl implements AdminService{
 	@Transactional
 	@Override
 	public int moduleInsert(@ModelAttribute ModuleVO moduleVO){
+		UUID uuid = UUID.randomUUID();
+		MultipartFile icon = moduleVO.getModuleIcons();
+		String iconName = uuid + "_" + icon.getOriginalFilename();
+		moduleVO.setModuleIcon(iconName);
+		System.out.println(moduleVO.getModuleIcon()+"내게 혼자하는 사랑이란");
 		int result = adminMapper.insertModule(moduleVO);
+		
+		String saveNames = uploadPath + '/' + iconName;
+    	Path savePaths = Paths.get(saveNames);
+		// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
+		try {
+			icon.transferTo(savePaths);
+			// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		MultipartFile[] files = moduleVO.getUploadFiles();
 		String [] contents = moduleVO.getModuleNotice();
-		UUID uuid = UUID.randomUUID();
+		
 		 if (files != null) {
 			 int i = 1;
 	            for (MultipartFile file : files) {
@@ -81,7 +97,7 @@ public class AdminServiceImpl implements AdminService{
 	            	mvo.setModFileContent(contents[i-1]);
 	            	i++;
 	            	int fileResult = adminMapper.insertModuleFile(mvo);
-	            	String saveName = uploadPath + File.separator + fileName;
+	            	String saveName = uploadPath + '/' + fileName;
 	            	Path savePath = Paths.get(saveName);
 	    			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
 	    			try {

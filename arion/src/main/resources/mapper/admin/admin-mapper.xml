@@ -104,11 +104,13 @@
 			     module_no
 			    ,module_name
 			    ,module_price
+			    ,module_icon
 			    			   )
 			VALUES(
 					 #{moduleNo}
 					,#{moduleName}
 					,#{modulePrice}
+					,#{moduleIcon}
 				   )
 	</insert>
 	

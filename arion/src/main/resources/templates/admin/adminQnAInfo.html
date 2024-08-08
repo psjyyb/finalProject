@@ -65,7 +65,8 @@ button:hover {
             <p><strong>작성일:</strong> <span id="qna_date" th:text="${#dates.format(qna.qnaDate,'yyyy-MM-dd')}">2024-08-06</span></p>
             <p><strong>회사:</strong> <span id="qna_company" th:text="${qna.qnaCompany}">없음</span></p>
             <p><strong>상태:</strong> <span id="qna_state" th:text="${qna.qnaState}">답변 대기중</span></p>
-            <p><strong>첨부 이미지:</strong></p>
+            <th:block th:each="file : ${fileList}">
+            <p><strong>첨부 이미지:</strong><img th:src="@{'/files/' + ${file.fileName}}" alt="이미지" style="width:200px; height:200px"></p>
         </div>
         <div class="reply-section">
             <h2>답변</h2>

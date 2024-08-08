@@ -125,4 +125,19 @@
 		WHERE final_date < sysdate AND company_code = #{companyCode}
 							]]>
 	</select>
+	<select id="selectSubInfo" resultType="GroupAdminVO">
+		SELECT DISTINCT contract_no
+					   ,start_date
+					   ,final_date
+					   ,users_cnt
+					   ,month_pay_price
+					   ,total_pay_price
+					   ,contract_state
+					   ,regular_date
+					   ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
+        				 FROM usemodule u
+        				 WHERE u.contract_no = contract_no) AS module_names
+		FROM contract
+		WHERE contract_state = '계약중' AND company_code= #{companyCode}
+	</select>
 </mapper>

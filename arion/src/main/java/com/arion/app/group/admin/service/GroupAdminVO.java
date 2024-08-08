@@ -17,4 +17,7 @@ public class GroupAdminVO {
 	private Date finalDate;
 	private String contractState;
 	private int totalPayPrice;
+	private int monthPayPrice;
+	private int regularDate;
+	private String moduleNames;
 }

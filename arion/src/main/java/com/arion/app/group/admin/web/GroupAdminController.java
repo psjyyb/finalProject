@@ -116,7 +116,10 @@ public class GroupAdminController {
 		return "groupAdmin/GASubInfo";
 	}
 	@GetMapping("/groupAdmin/GANowContract")
-	public String GANowContract() {
+	public String GANowContract(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		GroupAdminVO gvo = gaService.sunInfoSelect(comCode);
+		model.addAttribute("subInfo",gvo);
 		return "groupAdmin/GANowContract";
 	}
 	

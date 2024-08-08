@@ -47,8 +47,12 @@
 		</div>
 		<form name="insertForm" class="form-body" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
-				<label for="moduleName" class="form-label">모듈이름</label>
+				<label for="moduleName" class="form-label">모듈 이름</label>
 				<input type="text" class="form-control" id="moduleName" name="moduleName" required>
+			</div>
+			<div class="mb-3">
+					<label for="files" class="form-label">모듈 아이콘</label>
+					<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
 			</div>
 			<div class="mb-3">
 				<label for="modulePrice" class="form-label">모듈가격</label>
@@ -56,7 +60,7 @@
 			</div>
 			<div id="fileInputs">
 				<div class="mb-3">
-					<label for="files" class="form-label">첨부 파일</label>
+					<label for="files" class="form-label">모듈 설명</label>
 					<input type="file" class="form-control" id="files" name="uploadFiles">
 					<div class="mt-2">
 						<label for="moduleNotice" class="form-label">모듈설명</label>
@@ -76,30 +80,32 @@
 	<script>
 	$(document).ready(function() {
 		let fileArr = [];
+		let formData = new FormData(); // FormData를 전역 변수로 선언
 
 		$('#addBtn').on('click', function() {
-			let formData = new FormData();
 			let mname = $('#moduleName').val();
 			let price = $('#modulePrice').val();
-			let noticeArr = [];
 
-			// 파일과 설명을 추가
+			// 폼 데이터에 모듈 이름과 가격 추가
+			formData.append('moduleName', mname);
+			formData.append('modulePrice', price);
+
+			// 모듈 아이콘 추가
+			let moduleIcons = $('#moduleIcons')[0].files[0];
+			if (moduleIcons) {
+				formData.append('moduleIcons', moduleIcons);
+			}
+
+			// 각 파일과 설명을 폼 데이터에 추가
 			fileArr.forEach((file, index) => {
 				formData.append('uploadFiles', file);
-				//console.log(file);
 			});
 
 			$('textarea.moduleNotice').each(function() {
-				//console.log($(this).val());
-				noticeArr.push($(this).val());
 				formData.append('moduleNotice', $(this).val());
 			});
-			//console.log(fileArr);
-			//console.log(noticeArr);
-			formData.append('moduleName', mname);
-			formData.append('modulePrice', price);
-			//formData.append('moduleNotice', JSON.stringify(noticeArr));
 
+			// AJAX 요청 보내기
 			$.ajax({
 				url: '/adminModInsert',
 				type: 'POST',
@@ -108,13 +114,14 @@
 				contentType: false,
 			})
 			.done(result => {
-				alert('등록완료@@@@');
+				Swal.fire("등록완료@@@@");
 			})
 			.fail(err => {
-				alert('오류발생@@@');
+				Swal.fire('오류발생@@@');
 			});
 		});
 
+		// 파일 추가 로직
 		$('#addFile').click(function() {
 			let newFileInputWrapper = $('<div class="mb-3 file-input-wrapper"></div>');
 			let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
@@ -138,17 +145,27 @@
 				let files = e.currentTarget.files;
 				for (let i = 0; i < files.length; i++) {
 					fileArr.push(files[i]);
+					console.log(fileArr);
 				}
 			});
+		});
+
+		$('#moduleIcons').on('change', function(e){
+			let moduleIcons = e.currentTarget.files[0];
+			if (moduleIcons) {
+				formData.append('moduleIcons', moduleIcons);
+			}
 		});
 
 		$('#files').on('change', function(e) {
 			let files = e.currentTarget.files;
 			for (let i = 0; i < files.length; i++) {
 				fileArr.push(files[i]);
+				console.log(fileArr);
 			}
 		});
 	});
+
 	</script>
 </body>
 </html>

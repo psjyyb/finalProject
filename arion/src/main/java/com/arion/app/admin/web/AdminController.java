@@ -2,25 +2,29 @@ package com.arion.app.admin.web;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
+import com.arion.app.common.service.FileService;
+import com.arion.app.common.service.FileVO;
 
 @Controller
 public class AdminController {
 
 	private AdminService adminService;
-
-	public AdminController(AdminService adminService) {
+	private FileService fileService;
+	@Autowired
+	public AdminController(AdminService adminService,FileService fileService) {
 		this.adminService = adminService;
+		this.fileService = fileService;
 	}
 
 	@GetMapping("/admin")
@@ -57,8 +61,8 @@ public class AdminController {
 
 	@PostMapping("/adminModInsert")
 	public String adminModInsertPro(@ModelAttribute ModuleVO moduleVO) {
+		System.out.println(moduleVO+"뭐하냐 발냄새나게 생겨서");
 		int result = adminService.moduleInsert(moduleVO);
-		System.out.println("결과~~~~~~~~~"+result);
 		String url = null;
 				if(result > 0) {
 					url = "redirect:/adminModList";
@@ -85,6 +89,8 @@ public class AdminController {
 	@GetMapping("/adminQnAInfo")
 	public String adminQnAInfo(QnAVO qnaVO, Model model) {
 		QnAVO qvo = adminService.qnaInfoSelect(qnaVO);
+		List<FileVO> fileList = fileService.selectFiles("qna", qnaVO.getQnaNo());
+		model.addAttribute("fileList",fileList);
 		model.addAttribute("qna", qvo);
 		return "admin/adminQnAInfo";
 	}

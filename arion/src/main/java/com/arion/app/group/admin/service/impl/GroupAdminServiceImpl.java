@@ -67,4 +67,8 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	public List<GroupAdminVO> endSubSelect(String companyCode) {
 		return gaMapper.selectEndSub(companyCode);
 	}
+	@Override
+	public GroupAdminVO sunInfoSelect(String companyCode) {
+		return gaMapper.selectSubInfo(companyCode);
+	}
 }

@@ -13,7 +13,7 @@ public class webMvcConfig implements WebMvcConfigurer{
 	//경로 등록
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		String path = "file:///"+uploadPath;
+		String path = "file:///"+uploadPath + '/';
 		System.out.println(path);
 		registry
 			.addResourceHandler("/files/**")    // URL

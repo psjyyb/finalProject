@@ -20,4 +20,6 @@ public interface GroupAdminService {
 	int empDelete(EmployeeVO empVO); // 사원삭제
 	
 	List<GroupAdminVO> endSubSelect(String companyCode); // 지난계약목록조회
+	
+	GroupAdminVO sunInfoSelect(String companyCode); // 현재 구독중인 계약정보
 }

@@ -51,9 +51,20 @@
 			let qnaNo =  $(e.currentTarget).children().first().text();
 			let url = '/adminQnAInfo?qnaNo='+qnaNo;
 			console.log(qnaNo);
-			if(confirm('질문을 상세 보시겠습니까 ?')){
+			/* if(confirm('질문을 상세 보시겠습니까 ?')){
 				location.href=url;
-			}
+			} */
+			Swal.fire({
+				  title: "질문을 상세 보시겠습니까 ?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아뇽`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					  location.href=url;
+				  } 
+				});
 		})
 	</script>
 </body>

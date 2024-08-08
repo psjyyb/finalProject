@@ -4,11 +4,95 @@
 	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
 	layout:fragment="GContent">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<style>
+h1, h2, h3 {
+	text-align: center;
+}
+
+.info-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+.info-table th, .info-table td {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+.info-table th {
+	background-color: #f2f2f2;
+	text-align: left;
+}
+
+.status {
+	color: green;
+	font-size: 16px;
+}
+</style>
 </head>
 <body>
-
-	<h1>안녕하새우~</h1>
+	<div class="section">
+		<div class="section-title">
+			<h3>계약 정보</h3>
+			<span class="status"></span>
+		</div>
+		<table class="info-table">
+			<tr>
+				<th>계약번호</th>
+				<td id="contract_no" th:text="${subInfo.contractNo}"></td>
+			</tr>
+			<tr>
+				<th>시작일</th>
+				<td id="start_date"
+					th:text="${#dates.format(subInfo.startDate,'yyyy-MM-dd')}"></td>
+			</tr>
+			<tr>
+				<th>종료일</th>
+				<td id="final_date"
+					th:text="${#dates.format(subInfo.finalDate,'yyyy-MM-dd')}"></td>
+			</tr>
+			<tr>
+				<th>사용자 수</th>
+				<td id="users_cnt" th:text="${subInfo.usersCnt}"></td>
+			</tr>
+			<tr>
+				<th>모듈</th>
+				<td id="module" th:text="${subInfo.moduleNames}"></td>
+			</tr>
+			<tr>
+				<th>월 납입금</th>
+				<td id="month_pay_price">[[${#numbers.formatInteger(subInfo.monthPayPrice,
+					3, 'COMMA')}]]원</td>
+			</tr>
+			<tr>
+				<th>총 납입금</th>
+				<td id="total_pay_price">[[${#numbers.formatInteger(subInfo.totalPayPrice,
+					3, 'COMMA')}]]원</td>
+			</tr>
+			<tr>
+				<th>계약 상태</th>
+				<td id="contract_state" th:text="${subInfo.contractState}"></td>
+			</tr>
+			<tr>
+				<th>매달 결제일</th>
+				<td id="regular_date">매월 [[${subInfo.regularDate}]]일</td>
+			</tr>
+		</table>
+		<button type="button" class="btn btn-primary" id="conMode">계약 수정</button>
+		<button type="button" class="btn btn-danger" id="conCan">계약 철회</button>
+	</div>
+	<script>
+		$('#conMode').on('click',function(){
+			
+		})
+		$('#conCan').on('click',function(){
+			if(confirm('계약을 철회하시겠습니까?')){
+				if(confirm('계약을 철회하면 되돌릴수없습니다.')){
+					console.log('네네네')
+				}
+			}
+		})
+	</script>
 </body>
 </html>

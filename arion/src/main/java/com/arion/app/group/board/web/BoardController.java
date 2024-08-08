@@ -34,30 +34,34 @@ public class BoardController {
 	public String boardList(Model model) {
 		List<BoardVO> list = boardService.boardList();
 		model.addAttribute("boards", list);
-		return "board/freeboardList";	// RETURN은 html 경로로 꼭 맞춰줘야됨
+		return "group/board/freeboardList";	// RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 	
 	// 게시글 상세조회
 	@GetMapping("/group/freeboardInfo")
 	public String boardInfo(BoardVO boardVO, Model model) {
 		BoardVO findVO = boardService.boardInfo(boardVO);
+		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);
-		return "board/freeboardInfo";
+		return "group/board/freeboardInfo";
 	}
 	
 	// 게시글 등록 (페이지)
 	@GetMapping("/group/freeboardInsert")
 	public String boardInsertForm() {
-		return "board/freeboardInsert";
+		return "group/board/freeboardInsert";
 	}
 	
 	// 게시글 등록 (처리)
-	@PostMapping("boardInsert")
+	@PostMapping("/freeboardInsert")
 	public String boardInsertProcess(BoardVO boardVO, HttpSession session) { 
-		Long employeeNo = (Long) session.getAttribute("loginId"); //HttpSession
+		int employeeNo = (int) session.getAttribute("employeeNo"); //HttpSession
+		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setEmployeeNo(employeeNo); //로그인세션 받아와서 작성자로
+		boardVO.setBoardCategory("Y02"); //글 등록하기위해선 어떤게시판에 등록할것인지 정해야함
+		boardVO.setCompanyCode(companyCode); //회사코드를 받아서 그룹웨어를 사용하기 때문에 회사코드를 받아야됨
 		long bno = boardService.insertBoard(boardVO);
-		return "redirect:boardInfo?boardNo=" + bno;
+		return "redirect:/group/freeboardInfo?boardNo=" + bno;
 	}
 	
 	// 게시글 수정 (페이지)
@@ -65,14 +69,13 @@ public class BoardController {
 	public String boardUpdateForm(BoardVO boardVo, Model model) {
 		BoardVO findVO = boardService.boardInfo(boardVo);
 		model.addAttribute("board", findVO);
-		return "board/boardUpdate";
+		return "group/board/freeboardUpdate";
 	}
 	
 	// 게시글 수정 (처리)
-	@PostMapping("boardUpdate")
+	@PostMapping("/group/freeboardUpdate")
 	@ResponseBody
-	public Map<String, Object> boardUpdateProcess(
-							@RequestBody BoardVO boardVO) {
+	public Map<String, Object> boardUpdateProcess(@RequestBody BoardVO boardVO) {
 		return boardService.updateBoard(boardVO);
 	}
 	
@@ -82,6 +85,8 @@ public class BoardController {
 		boardService.deleteBoard(boardNo);
 		return "redirect:freeboardList";
 	}
+	
+	
 	
 	
 }

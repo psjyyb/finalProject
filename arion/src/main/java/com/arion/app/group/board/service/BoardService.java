@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface BoardService {
 	
+	// 자유게시판 freeboard //
 	// 전체조회
 	public List<BoardVO> boardList();
 	
@@ -19,4 +20,7 @@ public interface BoardService {
 	
 	// 글 삭제
 	public int deleteBoard(int boardNO);
+	
+	// 조회수
+	public int ViewCnt(int BoardVO);
 }

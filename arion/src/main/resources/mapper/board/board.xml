@@ -9,7 +9,7 @@
 		board_content, 
         write_date, 
         employee_no,
-        viewcnt,
+        viewCnt,
     	find_emp_name(b.employee_no)  AS employee_name
     FROM board b
 	ORDER BY board_no DESC
@@ -22,6 +22,7 @@
         		, board_content
         		, write_date
         		, employee_no
+        		, viewCnt
         		, find_emp_name(employee_no)  AS employee_name
 		FROM board
 		WHERE board_no = #{boardNo} 
@@ -42,6 +43,9 @@
 			, board_content
 			, employee_no
 			, write_date
+			, viewCnt
+			, board_category
+			, company_code
 			)	
 		VALUES
 		(
@@ -49,7 +53,10 @@
 			, #{boardTitle}
 			, #{boardContent}
 			, #{employeeNo}
-			, sysdate
+			, sysDate
+			, #{viewCnt}
+			, #{boardCategory}
+			, #{companyCode}
 		)
 	</insert>
 	
@@ -59,8 +66,6 @@
 		   SET
 		   		board_title = #{boardTitle}
 		   		, board_content = #{boardContent}
-		   		, employeeNo = #{employeeNo}
-		   		, write_date = sysdate
 		 WHERE board_no = #{boardNo}
 	</update>
 	
@@ -69,6 +74,13 @@
 		DELETE FROM board
 		WHERE board_no = #{boardNo}
 	</delete>
+	
+	<!-- 조회수 -->
+	<update id="ViewCnt" parameterType="int">
+		UPDATE board
+		SET viewCnt = viewCnt + 1
+		WHERE board_no = #{boardNo}
+	</update>
 	
 	<!-- 게시글 수 -->
 	<select id="getCount" resultType="int">

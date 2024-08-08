@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
+<title></title>
+</head>
+<body>
+	<div>
+		<h3>자유게시판 등록</h3>
+		<form name="insertForm" th:action="@{/freeboardInsert}" method="POST">
+			<table>
+				<tr>
+					<th>제목</th>
+					<td><input type="text" name="boardTitle"></td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td width="100%" height="100%"><textarea name="boardContent" id="boardContent" 
+					    placeholder="내용을 입력해주세요" rows="10px" cols="75px" ></textarea>
+					</td>
+				</tr>
+			</table>
+			<button type="submit">등록</button>
+			<button type="button" th:onclick="|location.href='@{freeboardList}'|">취소</button>
+		</form>
+	</div>
+	<script>
+		$(function() {
+			var oEditors = [];
+			nhn.husky.EZCreator.createInIFrame({
+				oAppRef : oEditors,
+				elPlaceHolder : "boardContent",
+				sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
+				fCreator : "createSEditor2"
+			});
+		
+
+		$('form[name=insertForm]').on('submit', boardInsertHandler);
+		function boardInsertHandler(event) {
+			event.preventDefault();
+			
+			 // 에디터의 내용이 textarea에 적용된다.
+			 oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+			 
+			let title = $('input[name="boardTitle"]');
+			let Content = $('input[name="boardContent"]');
+
+			if (title.val() == '') {
+				alert('제목가 입력되지 않았습니다.');
+				title.focus();
+				return;
+			}
+			if (Content.val() == '') {
+				alert('내용이 입력되지 않았습니다.');
+				Content.focus();
+				return;
+			}
+
+			alert('게시글 등록 완료');
+			insertForm.submit();
+		}
+		})
+	</script>
+</body>
+</html>

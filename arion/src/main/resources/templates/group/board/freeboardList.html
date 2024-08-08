@@ -28,14 +28,14 @@
 						<td th:text="${board.boardTitle}"></td>
 						<td th:text="${board.employeeName}"></td>
 						<td th:text="${#dates.format(board.writeDate, 'yyyy.MM.dd')}"></td>
-						<td th:text="${board.viewcnt}"></td>		<!-- 조회수 -->
+						<td th:text="${board.viewCnt}"></td>		<!-- 조회수 -->
 					<tr>
 				</th:block>
 			</tbody>
 		</table>
-		
-		<!-- 페이징 시작 -->
-		
+		<div>
+			<button type="button" th:onclick="|location.href='@{freeboardInsert}'|">글쓰기</button>
+		</div>
 	</div>
 </body>
 </html>

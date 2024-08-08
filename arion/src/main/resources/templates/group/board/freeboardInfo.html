@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title></title>
+<link rel="stylesheet" th:href="@{/smarteditor2/css/smart_editor2_items.css}">
 </head>
 <body>
 	<div>
@@ -25,13 +26,17 @@
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td style="height:100px; width:200px;">
-					[[${board.boardContent}]]
+				<td style="height:300px; width:500px;" th:utext="${board.boardContent}"	>
+
 				</td>
 			</tr>
 			<tr>
 				<th>작성일자</th>
 				<td>[[${#dates.format(board.writeDate, 'yyyy.MM.dd')}]]</td>
+			</tr>
+			<tr>
+				<th>조회수</th>
+				<td>[[${board.viewCnt}]]</td>
 			</tr>
 		</table>
 		<div>
@@ -40,5 +45,8 @@
 			<button type="button" th:onclick="|location.href='@{freeboardDelete(boardNo=${board.boardNo})}'|">삭제</button>
 		</div>
 	</div>
+	<script>
+		
+	</script>
 </body>
 </html>

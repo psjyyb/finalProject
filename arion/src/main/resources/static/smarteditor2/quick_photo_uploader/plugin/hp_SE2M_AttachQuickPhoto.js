@@ -100,5 +100,9 @@ nhn.husky.SE2M_AttachQuickPhoto = jindo.$Class({
 		sTag = jindo.$Template(sTag).process(htPhotoInfo);
 		
 		return sTag;
-	}
+	},
+	
+	
+
+
 });

@@ -24,6 +24,7 @@ public class BoardServiceImpl implements BoardService{
 		this.boardMapper = boardMapper;
 	}
 	
+	// 자유게시판
 	// 전체 게시글 조회
 	@Override
 	public List<BoardVO> boardList() {
@@ -39,7 +40,7 @@ public class BoardServiceImpl implements BoardService{
 	// 게시글 등록
 	@Override
 	public long insertBoard(BoardVO boardVO) {
-		int result = boardMapper.insertBoardInfo(boardVO);
+		long result = boardMapper.insertBoardInfo(boardVO);
 		return result == 1 ? boardVO.getBoardNo() : -1;
 	}
 
@@ -53,7 +54,6 @@ public class BoardServiceImpl implements BoardService{
 		if(result == 1) {
 			isSuccessed = true;
 		}		
-		
 		map.put("result", isSuccessed);
 		map.put("target", boardVO);
 		
@@ -66,9 +66,16 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.deleteBoardInfo(boardNO);
 	}
 
-
-
+	// 게시글 조회수
+	@Override
+	public int ViewCnt(int viewCnt) {
+		return boardMapper.ViewCnt(viewCnt);
+	}
 	
 	
+
+	
+
+
 	
 }

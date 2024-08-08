@@ -10,5 +10,5 @@ public class ModuleFileVO {
 	private String modFilePath;
 	private int modFileTurn;
 	private String modFileType;
-	private int qnaNo;
+	private int modNo;
 }

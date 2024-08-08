@@ -8,9 +8,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<link
-		href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
-		rel="stylesheet">
 	<style>
 .form-container {
 	margin-top: 20px;
@@ -153,7 +150,7 @@
 		$('#moduleIcons').on('change', function(e){
 			let moduleIcons = e.currentTarget.files[0];
 			if (moduleIcons) {
-				formData.append('moduleIcons', moduleIcons);
+				formData.set('moduleIcons', moduleIcons);
 			}
 		});
 

@@ -90,7 +90,7 @@ public class AdminServiceImpl implements AdminService{
 	            	ModuleFileVO mvo = new ModuleFileVO();
 	            	String fileName = uuid + "_" + file.getOriginalFilename();
 	            	mvo.setModFileName(fileName);
-	            	mvo.setQnaNo(moduleVO.getModuleNo());
+	            	mvo.setModNo(moduleVO.getModuleNo());
 	            	mvo.setModFileType(file.getContentType());
 	            	mvo.setModFilePath(uploadPath);
 	            	mvo.setModFileTurn(i);

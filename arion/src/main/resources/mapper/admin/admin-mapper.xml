@@ -128,7 +128,7 @@
                     ,mod_file_path
                     ,mod_file_turn
                     ,mod_file_type
-                    ,qna_no
+                    ,mod_no
                     )
 		VALUES(
 				 #{modFileNo}
@@ -137,7 +137,7 @@
 				,#{modFilePath}
 				,#{modFileTurn}
 				,#{modFileType}
-				,#{qnaNo}
+				,#{modNo}
 				)
 	</insert>
 </mapper>

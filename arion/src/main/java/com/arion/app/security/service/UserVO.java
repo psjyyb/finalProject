@@ -13,11 +13,7 @@ public class UserVO {
     private String departmentName;
     private String rankName;
     private String empName;
-<<<<<<< HEAD
     private int employeeNo;
     
-=======
-    //추가
-    private Integer employeeNo;
->>>>>>> refs/heads/Kim-sung-hun
+
 }

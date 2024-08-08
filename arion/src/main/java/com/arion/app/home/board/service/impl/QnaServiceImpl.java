@@ -53,11 +53,16 @@ public class QnaServiceImpl implements QnaService{
         return result;
     }
 
+	@Transactional
 	@Override
-	public Map<String, Object> updateQna(HomeQnaVO homeQnaVO) {
+	public Map<String, Object> updateQna(HomeQnaVO homeQnaVO, MultipartFile[] files, String companyCode) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = mapper.updateQna(homeQnaVO);
+		
+		if (files != null && files.length > 0) {
+	        fsvc.updateFiles(files, "qna", homeQnaVO.getQnaNo(), companyCode);
+	    }
 		if(result == 1) {
 			isSuccessed = true;
 		}

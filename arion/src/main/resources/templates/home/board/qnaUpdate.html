@@ -1,13 +1,73 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/home/layouts/home_layout}"
-	layout:fragment="content">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/home/layouts/home_layout}"
+    layout:fragment="content">
 <head>
 <meta charset="utf-8">
 <title>ARION</title>
+<link th:href="@{/css/home/qnaInsert.css}" rel="stylesheet">
 </head>
 <body>
+    <div class="container2">
+        <h3>게시글 수정</h3>
+        <form name="qnaUpdate" id="qnaUpdate" th:object="${qnaUpdate}"
+            method="post" enctype="multipart/form-data">
+            <div class="form-group-inline">
+                <div class="form-group">
+                    <label>번호</label> 
+                    <input type="text" class="form-control" th:field="*{qnaNo}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>제목</label> 
+                    <input type="text" class="form-control" th:field="*{qnaTitle}">
+                </div>
+            </div>
+            <div class="form-group-inline">
+                <div class="form-group">
+                    <label>작성자</label> 
+                    <input type="text" class="form-control" th:field="*{qnaWriter}" readonly>
+                </div>
+                <div class="form-group" th:if="${#authentication.name != 'anonymousUser'}">
+                    <label>회사명</label> <input type="text" class="form-control"
+                        th:field="*{qnaCompany}" th:value="${company.companyName}" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>내용</label>
+                <textarea class="form-control" th:field="*{qnaContent}" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>첨부파일</label> <label for="files" class="custom-file-upload">파일선택</label> 
+                <input type="file" id="files" name="files" multiple>
+                <table id="fileListTable">
+                    <thead>
+                        <tr>
+                            <th>파일명</th>
+                            <th>삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="file : ${fileInfo}">
+                            <td th:text="${file.fileOriginalName}"></td>
+                            <td><span class="remove-file" onclick="removeFile(this)">x</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="content-footer">
+                <button type="submit" class="btn btn-primary">수정</button>
+                <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/home/qna}'|">목록으로</button>
+            </div>
+        </form>
+    </div>
 
+    <script th:src="@{/js/home/qnaUpdate.js}"></script>
+    <script>
+        function removeFile(button) {
+            var row = button.closest('tr');
+            row.remove();
+        }
+    </script>
 </body>
 </html>

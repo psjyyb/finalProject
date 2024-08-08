@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.mapper.MainMapper">
+
+
+	<!-- 상위 모듈 조회 쿼리 -->
+	<select id="getModules" parameterType="String"
+		resultType="getModuleVO">
+		SELECT
+		M.MODULE_NAME
+		FROM USEMODULE UM
+		JOIN MODULE M ON
+		UM.MODULE_NO = M.MODULE_NO
+		WHERE UM.COMPANY_CODE = #{companyCode}
+	</select>
+
+	<!-- 하위 모듈 조회 쿼리 -->
+	<select id="getSubModules" parameterType="String"
+		resultType="SubModuleVO">
+		SELECT
+		SM.SUB_MODULE_NAME AS subModuleName,
+		SM.URL_PATTERN AS urlPattern,
+		SM.MODULE_NO AS moduleNo
+		FROM SUB_MODULE SM
+		WHERE SM.MODULE_NO IN (
+		SELECT DISTINCT UM.MODULE_NO
+		FROM USEMODULE UM
+		WHERE UM.COMPANY_CODE = #{companyCode}
+		)
+	</select>
+</mapper>

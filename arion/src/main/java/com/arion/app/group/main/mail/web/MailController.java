@@ -44,6 +44,37 @@ public class MailController {
         return "group/mail/Mymail";
     }
 
+    // 중요 메일 조회
+    @GetMapping("/importmail")
+    
+    public String importMailList(Model model) {
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        String employeeId = (String) httpSession.getAttribute("employeeId");
+      
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setEmployeeId(employeeId);
+
+        System.out.println(employeeId+"ㅎㅇㅎㅇㅎㅇㅇ");
+        List<MailVO> importantMails = mailService.importMailList(mailVO);
+        model.addAttribute("importantMails", importantMails);
+        return "group/mail/importmail";
+    }
+    // 휴지통 메일 조회
+    @GetMapping("/trashmail")
+    public String deleteMailList(Model model) {
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        String employeeId = (String) httpSession.getAttribute("employeeId");
+
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setEmployeeId(employeeId);
+
+        List<MailVO> trashMails = mailService.deleteMailList(mailVO);
+        model.addAttribute("trashMails", trashMails);
+        return "group/mail/trashmail";
+    }
+
     // 보낸 메일 조회
     @GetMapping("/group/sendmail")
     public String sendMailList(Model model) {
@@ -59,35 +90,7 @@ public class MailController {
         return "group/mail/sendmail";
     }
 
-    // 중요 메일 조회
-    @GetMapping("/group/importmail")
-    public String importMailList(Model model) {
-        String companyCode = (String) httpSession.getAttribute("companyCode");
-        String employeeId = (String) httpSession.getAttribute("employeeId");
 
-        MailVO mailVO = new MailVO();
-        mailVO.setCompanyCode(companyCode);
-        mailVO.setEmployeeId(employeeId);
-
-        List<MailVO> importantMails = mailService.importMailList(mailVO);
-        model.addAttribute("importantMails", importantMails);
-        return "group/mail/importmail";
-    }
-
-    // 휴지통 메일 조회
-    @GetMapping("/group/trashmail")
-    public String deleteMailList(Model model) {
-        String companyCode = (String) httpSession.getAttribute("companyCode");
-        String employeeId = (String) httpSession.getAttribute("employeeId");
-
-        MailVO mailVO = new MailVO();
-        mailVO.setCompanyCode(companyCode);
-        mailVO.setEmployeeId(employeeId);
-
-        List<MailVO> trashMails = mailService.deleteMailList(mailVO);
-        model.addAttribute("trashMails", trashMails);
-        return "group/mail/trashmail";
-    }
 
     // 메일 보내기
 	/*

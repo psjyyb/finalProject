@@ -76,7 +76,7 @@
     </style>
 </head>
 <body>
-    <h1>받은 메일함</h1>
+    <h1>휴지통</h1>
  
     <table>
         <thead>
@@ -90,7 +90,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="mail : ${receivedMails}">
+            <tr th:each="mail : ${trashMails}">
                 <td class="checkbox-container">
                     <input type="checkbox" name="mailIds" value="${mail.id}"> <!-- 각 메일의 ID를 값으로 설정 -->
                 </td>
@@ -101,8 +101,8 @@
         </tbody>
     </table>
    <div class="actions-container">
-    <button  id="importSelected">중요메일함</button>
-    <button  id="deleteSelected">휴지통</button>
+    <button  id="importSelected">복원</button>
+    <button  id="deleteSelected">영구 삭제</button>
     </div>
     <script>
 

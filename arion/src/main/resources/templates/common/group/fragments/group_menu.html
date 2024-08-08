@@ -1,103 +1,99 @@
 <!DOCTYPE html>
-<th:block xmlns:th="http://www.thymeleaf.org"
-		  th:fragment="GroupMenuFragment">
-<!-- Sidebar -->
-<ul
-	class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-	id="accordionSidebar">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Menu</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <style>
+        .collapse {
+            display: none;
+        }
+    </style>
+</head>
+<body id="page-top">
+    <th:block th:fragment="GroupMenuFragment">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">
+                    Arion <sup></sup>
+                </div>
+            </a>
 
-	<!-- Sidebar - Brand -->
-	<a
-		class="sidebar-brand d-flex align-items-center justify-content-center"
-		href="index.html">
-		<div class="sidebar-brand-icon rotate-n-15">
-			<i class="fas fa-laugh-wink"></i>
-		</div>
-		<div class="sidebar-brand-text mx-3">
-			Arion <sup></sup>
-		</div>
-	</a>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-	<!-- Divider -->
-	<hr class="sidebar-divider my-0">
+            <!-- Sidebar items -->
+            <li class="nav-item" th:each="module : ${modules}">
+                <a class="nav-link collapsed" href="javascript:void(0);" 
+                   data-toggle="collapse" 
+                   data-target="#collapse${module.moduleNo}" 
+                   aria-expanded="false" 
+                   aria-controls="collapse${module.moduleNo}"
+                   data-module-no="${module.moduleNo}">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span th:text="${module.moduleName}"></span>
+                </a>
+                <div id="collapse${module.moduleNo}" class="collapse">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Submodules:</h6>
+                        <!-- Dynamic Submodules -->
+                        <ul class="nav flex-column submodules-list">
+                            <!-- Submodules will be dynamically inserted here -->
+                        </ul>
+                    </div>
+                </div>
+            </li>
 
-	<!-- Nav Item - Dashboard -->
-	<li class="nav-item"><a class="nav-link" th:href="@{/boardList}"> <i
-			class="fas fa-fw fa-tachometer-alt"></i> <span>목록</span></a></li>
-	<!-- Nav Item - Dashboard -->
-	<li class="nav-item"><a class="nav-link" th:href="@{/boardInsert}"> <i
-			class="fas fa-fw fa-tachometer-alt"></i> <span>등록</span></a></li>
-				<!-- Nav Item - Dashboard -->
-	<li class="nav-item"><a class="nav-link" th:href="@{/payTest}"> <i
-			class="fas fa-fw fa-tachometer-alt"></i> <span>토스</span></a></li>
-				<!-- Nav Item - Dashboard -->
-								<!-- Nav Item - Dashboard -->
-	<li class="nav-item"><a class="nav-link" th:href="@{/success}"> <i
-			class="fas fa-fw fa-tachometer-alt"></i> <span>주문</span></a></li>
-	<li class="nav-item"><a class="nav-link" th:href="@{/subscription}"> <i
-			class="fas fa-fw fa-tachometer-alt"></i> <span>구독</span></a></li>
-	<!-- Divider -->
-	<hr class="sidebar-divider">
+            <!-- Divider -->
+            <hr class="sidebar-divider">
 
-	<!-- Heading -->
-	<div class="sidebar-heading">Interface</div>
+            <!-- Heading -->
+            <div class="sidebar-heading">Interface</div>
+        </ul>
+    </th:block>
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.nav-link.collapsed').on('click', function() {
+                var moduleNo = $(this).data('module-no');
+                var targetCollapse = $(this).attr('data-target');
+                
+                // Toggle collapse
+                $(targetCollapse).collapse('toggle');
 
-	<!-- Nav Item - Pages Collapse Menu -->
-	<li class="nav-item"><a class="nav-link collapsed" href="#"
-		data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-		aria-controls="collapseTwo"> <i class="fas fa-fw fa-cog"></i> <span>회원</span>
-	</a>
-		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-			data-parent="#accordionSidebar">
-			<div class="bg-white py-2 collapse-inner rounded">
-				<h6 class="collapse-header">회원:</h6>
-				<a class="collapse-item" th:href="@{/login}">로그인</a> <a
-					class="collapse-item" th:href="@{/register}">회원가입</a>
-			</div>
-		</div></li>
-
-	<!-- Nav Item - Utilities Collapse Menu -->
-	<li class="nav-item"><a class="nav-link collapsed" href="#"
-		data-toggle="collapse" data-target="#collapseUtilities"
-		aria-expanded="true" aria-controls="collapseUtilities"> <i
-			class="fas fa-fw fa-wrench"></i> <span>Utilities</span>
-	</a>
-		<div id="collapseUtilities" class="collapse"
-			aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-			<div class="bg-white py-2 collapse-inner rounded">
-				<h6 class="collapse-header">Custom Utilities:</h6>
-				<a class="collapse-item" href="utilities-color.html">Colors</a> <a
-					class="collapse-item" href="utilities-border.html">Borders</a> <a
-					class="collapse-item" href="utilities-animation.html">Animations</a>
-				<a class="collapse-item" href="utilities-other.html">Other</a>
-			</div>
-		</div></li>
-
-	<!-- Divider -->
-	<hr class="sidebar-divider">
-
-	<!-- Heading -->
-	<div class="sidebar-heading">Addons</div>
-
-	<!-- Nav Item - Pages Collapse Menu -->
-
-
-	<!-- Nav Item - Charts -->
-	<li class="nav-item"><a class="nav-link" href="charts.html"> <i
-			class="fas fa-fw fa-chart-area"></i> <span>Charts</span></a></li>
-
-	<!-- Nav Item - Tables -->
-	<li class="nav-item"><a class="nav-link" href="tables.html"> <i
-			class="fas fa-fw fa-table"></i> <span>Tables</span></a></li>
-
-	<!-- Divider -->
-	<hr class="sidebar-divider d-none d-md-block">
-
-	<!-- Sidebar Toggler (Sidebar) -->
-	<div class="text-center d-none d-md-inline">
-		<button class="rounded-circle border-0" id="sidebarToggle"></button>
-	</div>
-
-</ul>
-<!-- End of Sidebar -->
+                // Fetch submodules if not already fetched
+                var submoduleList = $(targetCollapse).find('.submodules-list');
+                if (submoduleList.children().length === 0) {
+                    $.ajax({
+                        url: '/api/submodules/' + moduleNo, // Adjust the URL according to your API
+                        method: 'GET',
+                        success: function(subModules) {
+                            submoduleList.empty();
+                            subModules.forEach(function(subModule) {
+                                var listItem = $('<li class="nav-item"></li>');
+                                var link = $('<a class="nav-link"></a>')
+                                    .attr('href', subModule.url)
+                                    .text(subModule.subModuleName);
+                                listItem.append(link);
+                                submoduleList.append(listItem);
+                            });
+                        },
+                        error: function() {
+                            console.error('Failed to load submodules');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
 </html>

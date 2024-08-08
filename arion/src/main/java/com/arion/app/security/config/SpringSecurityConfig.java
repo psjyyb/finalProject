@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
     	http.csrf().disable();
     	http.headers().frameOptions().disable();
         http.authorizeHttpRequests()
-                .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**").permitAll()
+                .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/group/**").hasAnyRole("일반사원", "사원관리자")

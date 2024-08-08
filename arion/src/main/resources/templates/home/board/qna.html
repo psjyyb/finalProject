@@ -78,7 +78,7 @@ tr:nth-child(even) {
 			</thead>
 			<tbody>
 				<th:block th:each="qna : ${qnaList}">
-					<tr th:data-board-no="${qna.qnaNo}">
+					<tr th:data-qna-no="${qna.qnaNo}">
 						<td th:text="${qna.qnaNo}"></td>
 						<td th:text="${qna.qnaTitle}"></td>
 						<td th:text="${qna.qnaWriter}"></td>
@@ -96,7 +96,7 @@ tr:nth-child(even) {
 	<script>
 		$('tbody > tr').on('click', function() {
 			let qnaNo = $(this).data('qna-no');
-			location.href = '/qnaInfo?qnaNo=' + qnaNo;
+			location.href = '/home/qnaInfo?qnaNo=' + qnaNo;
 		});
 	</script>
 </body>

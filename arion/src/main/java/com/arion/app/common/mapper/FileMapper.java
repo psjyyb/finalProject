@@ -12,7 +12,7 @@ public interface FileMapper {
 	
 	 void insertFiles(FileVO file);
 	 
-	 List<FileVO> selectFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo, @Param("companyCode") String companyCode);
+	 List<FileVO> selectFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo);
 	 
-	 int deleteFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo, @Param("companyCode") String companyCode);
+	 int deleteFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo);
 }

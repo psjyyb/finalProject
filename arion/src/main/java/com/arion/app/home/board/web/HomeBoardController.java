@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.FileService;
@@ -56,22 +57,29 @@ public class HomeBoardController {
 	}
 	
 	@PostMapping("/qnaInsert")
-    public String insertQna(HomeQnaVO homeQnaVO, @RequestParam("files") MultipartFile[] files, HttpSession session) {
+    public String insertQna(HomeQnaVO homeQnaVO, @RequestPart MultipartFile[] files,  HttpSession session) {
         String companyCode = (String) session.getAttribute("companyCode");
         homeQnaVO.setQnaCompany(companyCode);
+        System.out.println(">>>>>>>>>>>"+files[0].getOriginalFilename());
+       // System.out.println(">>>>>>>>>>>"+files2[0].getOriginalFilename());
         qsvc.insertQna(homeQnaVO, files, companyCode);
         return "redirect:/home/qna";
     }
 	
 	@GetMapping("/home/qnaInfo")
 	public String qnaInfo(HomeQnaVO homeQnaVO, Model model, HttpSession session) {
-		String companyCode = (String) session.getAttribute("companyCode");
-		HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
-		FileVO fileVO = (FileVO) fsvc.selectFiles("qna", homeQnaVO.getQnaNo(), companyCode);
-		model.addAttribute("qnaInfo", findVO);
-		model.addAttribute("fileInfo", fileVO);
-		return "home/board/qnaInfo";
-	}
+        HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
+        List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
+        model.addAttribute("qnaInfo", findVO);
+        model.addAttribute("fileInfo", fileVOList);
+        return "home/board/qnaInfo";
+    }
 	
+	@GetMapping("/home/qnaDelete")
+	public String boardDelete(@RequestParam Integer qnaNo) {
+		qsvc.deleteQna(qnaNo);
+		fsvc.deleteFiles("qna", qnaNo);
+		return "redirect:/home/qna";
+	}
 	
 }

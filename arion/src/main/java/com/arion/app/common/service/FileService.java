@@ -11,7 +11,7 @@ public interface FileService {
 
 	public String updateFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode);
 
-	List<FileVO> selectFiles(String tableName, int keyNo, String companyCode);
+	List<FileVO> selectFiles(String tableName, int keyNo);
 	
-	public int deleteFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo, @Param("companyCode") String companyCode);
+	public int deleteFiles(@Param("tableName") String tableName, @Param("keyNo") int keyNo);
 }

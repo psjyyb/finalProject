@@ -36,7 +36,6 @@
 		FROM files
 		WHERE table_name = #{tableName} 
 		AND key_no = #{keyNo}
-		AND company_code = #{companyCode}
 		ORDER BY file_turn ASC
 	</select>
 			
@@ -45,6 +44,5 @@
 		FROM files
 		WHERE table_name = #{tableName} 
 		AND key_no = #{keyNo}
-		AND company_code = #{companyCode}
 	</delete>
 </mapper>

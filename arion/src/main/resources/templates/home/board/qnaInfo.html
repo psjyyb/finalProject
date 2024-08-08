@@ -6,7 +6,6 @@
 <head>
 <meta charset="utf-8">
 <title>ARION</title>
-</head>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -78,6 +77,7 @@ tr:nth-child(even) {
     text-align: right;
 }
 </style>
+</head>
 <body>
 <div class="container2">
 		<div class="row">
@@ -122,23 +122,37 @@ tr:nth-child(even) {
 					</div>
 					<div class="row">
 						<div class="col-md-2">
-							<strong>이미지:</strong>
+							<strong>첨부파일:</strong>
 						</div>
-						<th:block th:each="file : ${fileInfo}">
-						<div class="col-md-10">
-							<img th:src="@{/files/file.filePath}" style="width: 50%;">
-							<!-- <img th:src="|${#httpServletRequest.getContextPath()}/images/${boardInfo.image}| -->
-						</div>
-						</th:block>
+						 <div class="col-md-10">
+							<div th:each="file : ${fileInfo}">
+								<div th:if="${file.fileType.startsWith('image/')}">
+									<img th:src="@{/files/{fileName}(fileName=${file.filePath})}" style="width: 50%;" />
+								</div>
+								<div th:if="${!file.fileType.startsWith('image/')}">
+									<a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+								</div>
+							</div>
+						</div> 
+						<!-- <div class="col-md-10">
+							<div th:each="file : ${fileInfo}">
+								<div th:if="${file.fileType.startsWith('image/')}">
+									<img th:src="@{'/files/' + ${file.filePath}}" style="width: 50%;" />
+								</div>
+								<div th:if="${!file.fileType.startsWith('image/')}">
+									<a th:href="@{'/files/' + ${file.filePath}}" th:text="${file.fileOriginalName}"></a>
+								</div>
+							</div>
+						</div> -->
 					</div>
 				</div>
 				<div class="content-footer">
 					<button type="button" class="btn btn-primary"
-						th:onclick="|location.href='@{/boardUpdate(boardNo=${boardInfo.boardNo})}' |">수정</button>
+						th:onclick="|location.href='@{/home/qnaUpdate(qnaNo=${qnaInfo.qnaNo})}' |">수정</button>
 					<button type="button" class="btn btn-primary"
-						th:onclick="|location.href='@{boardList}'|">목록으로</button>
+						th:onclick="|location.href='@{/home/qna}'|">목록으로</button>
 					<button type="button" class="btn btn-danger"
-						th:onclick="|location.href='@{/boardDelete(boardNo=${boardInfo.boardNo})}'|">삭제</button>
+						th:onclick="|location.href='@{/home/qnaDelete(qnaNo=${qnaInfo.qnaNo})}'|">삭제</button>
 				</div>
 			</div>
 		</div>

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.admin.mapper.AdminMapper">
 	<select id="selectsubList" resultType="AdminVO">
-		SELECT c.company_code
+		SELECT t.contract_no
+			  ,c.company_code
 		      ,c.company_name
 		      ,c.ceo_name
 		      ,t.start_date
@@ -30,11 +31,14 @@
 		      ,c.company_type
 		      ,c.company_address
 		      ,c.company_post
+		      ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
+		        FROM usemodule u
+		        WHERE u.contract_no = t.contract_no) AS module_names
 		      ,c.ceo_email
 		FROM contract t 
 		JOIN company c
 		ON t.company_code = c.company_code
-		WHERE c.company_code = #{companyCode}
+		WHERE t.contract_no = #{contractNo}
 	</select>
 	
 	<select id="selectModList" resultType="ModuleVO">
@@ -46,7 +50,8 @@
 		FROM module
 	</select>
 	<select id="selectEndSubList" resultType="AdminVO">
-		SELECT c.company_code
+		SELECT t.contract_no
+			  ,c.company_code
 		      ,c.company_name
 		      ,c.ceo_name
 		      ,t.start_date

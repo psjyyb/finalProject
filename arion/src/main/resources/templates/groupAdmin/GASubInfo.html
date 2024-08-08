@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/admin/layouts/admin_layout}"
-	layout:fragment="Content">
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
 <head>
 <style>
 h1, h2, h3 {
@@ -84,13 +84,13 @@ h1, h2, h3 {
 					3, 'COMMA')}]]원</td>
 			</tr>
 			<tr>
-				<th>모듈</th>
-				<td id="module" th:text="${suncon.moduleNames}"></td>
-			</tr>
-			<tr>
 				<th>총 납입금</th>
 				<td id="total_pay_price">[[${#numbers.formatInteger(suncon.totalPayPrice,
 					3, 'COMMA')}]]원</td>
+			</tr>
+			<tr>
+				<th>모듈</th>
+				<td id="module" th:text="${suncon.moduleName}"></td>
 			</tr>
 			<tr>
 				<th>계약 상태</th>

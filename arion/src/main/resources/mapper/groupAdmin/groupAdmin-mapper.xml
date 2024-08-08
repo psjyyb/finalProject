@@ -96,4 +96,33 @@
 		DELETE FROM employees
 		WhERE employee_no = #{employeeNo}
 	</delete>
+	
+	<select id="selectUserCnt" resultType="GroupAdminVO">
+		 SELECT DISTINCT
+		    c.company_code, 
+		    c.users_cnt - COALESCE(e.emp_count, 0) AS users_cnt 
+		FROM 
+		    contract c
+		LEFT JOIN 
+		    (SELECT company_code, COUNT(*) AS emp_count 
+		     FROM employees 
+		     WHERE company_code = #{companyCode}
+		     GROUP BY company_code) e
+		ON 
+		    c.company_code = e.company_code
+		WHERE 
+		    c.company_code =#{companyCode}
+	</select>
+	
+	<select id="selectEndSub" resultType="GroupAdminVO">
+		SELECT contract_no
+		      ,start_date
+		      ,final_date
+		      ,total_pay_price
+		      ,contract_state
+		FROM contract
+					<![CDATA[
+		WHERE final_date < sysdate AND company_code = #{companyCode}
+							]]>
+	</select>
 </mapper>

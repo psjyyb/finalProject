@@ -9,16 +9,12 @@ import com.arion.app.group.board.service.BoardVO;
 import lombok.Data;
 
 @Data
-public class AttendanceVO {
+public class AttendanceVO {	
 	
-	private Integer attno;
-	private Integer employeeno;	
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date starttime;
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date endtime;
+	private String starttime;	
+	private String endtime;
 	private String state;	
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date attdate;
+	
+	private String attdate;
 	private String halfoff;	
 }

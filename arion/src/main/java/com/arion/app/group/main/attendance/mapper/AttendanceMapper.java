@@ -15,7 +15,7 @@ public interface AttendanceMapper {
 	
 	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname);
 	
-	public List<AttendanceVO> attendance();
+	public List<AttendanceVO> attendance(int employeeno,String start, String end);
 	
 	public List<WorkTimeVO> worktime();
 	

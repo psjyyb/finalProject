@@ -25,15 +25,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 	
 	
 	@Override
-	public List<AEmployeeVO> aEmployeeList(String companyCode, String rankName) {
+	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname) {
 		// TODO Auto-generated method stub
-		return attendancemapper.aEmployeeList(companyCode,rankName);
+		return attendancemapper.aEmployeeList(companycode,rankname);
 	}
 	
 	@Override
-	public List<AttendanceVO> attendance() {
+	public List<AttendanceVO> attendance(int employeeno,String start,String end) {
 		// TODO Auto-generated method stub
-		return attendancemapper.attendance();
+		return attendancemapper.attendance(employeeno,start,end);
 	}
 	
 	@Override

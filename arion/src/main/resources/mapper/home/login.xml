@@ -14,7 +14,8 @@
     </select>
 
     <select id="getEmployeeUserInfo" resultType="UserVO">
-        SELECT e.company_code AS companyCode, 
+        SELECT e.employee_no AS employeeNo,
+               e.company_code AS companyCode, 
                e.employee_id AS loginId, 
                e.employee_pw AS loginPw, 
                e.employee_resp AS employeeResp,

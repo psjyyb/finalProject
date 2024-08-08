@@ -54,6 +54,11 @@ public class LoginUserVO implements UserDetails {
         return userVO.getEmpName();
     }
     
+    //추가
+    public int getemployeeNo() {
+        return userVO.getEmployeeNo();
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;

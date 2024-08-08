@@ -31,22 +31,23 @@
         WHERE e.company_code = #{companycode} AND rank_ranking>(
         select rank_ranking
         from RANK
-        WHERE rank_name = {rankname} AND company_code = #{companycode}
-        );
+        WHERE rank_name = #{rankname} AND company_code = #{companycode}
+        )
     
 	</select>
 	
 	<select id="attendance" parameterType="AEmployeeVO" resultType="AttendanceVO">
     
-        SELECT att_no ,
-               employee_no ,
-               start_time,
-               end_time,
+        SELECT 
+               TO_CHAR(start_time,'HH24:MI') AS start_time,
+               TO_CHAR(end_time,'HH24:MI') AS end_time,
                state,
-               att_date,
+               TO_CHAR(att_date,'dd') AS att_date,
                half_off
         FROM attendance
         WHERE employee_no = #{employeeno}
+        AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
 	</select>
 	
 	

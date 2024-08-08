@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+
+table {
+	width: 60%;
+	border-collapse: collapse;
+	margin: 20px auto;
+	background-color: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: #4CAF50;
+	color: white;
+}
+
+td input {
+	width: 90%;
+	padding: 5px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.button {
+	cursor: pointer;
+	padding: 5px 10px;
+	font-size: 16px;
+	margin: 2px;
+	border: none;
+	border-radius: 4px;
+	color: white;
+}
+
+.button.up {
+	background-color: #4CAF50;
+}
+
+.button.down {
+	background-color: #2196F3;
+}
+
+.button.delete {
+	background-color: #f44336;
+}
+
+.add-button {
+	display: block;
+	width: 60%;
+	margin: 20px auto;
+	padding: 10px;
+	font-size: 18px;
+	background-color: #008CBA;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	text-align: center;
+}
+
+.add-button:hover {
+	background-color: #007B9A;
+}
+</style>
+</head>
+<body>
+	<table id="rankTable">
+		<thead>
+			<tr>
+				<th>순서</th>
+				<th>직책</th>
+				<th>작업</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="rank,status : ${rankList}">
+				<tr>
+					<td th:text="${status.count}"></td>
+					<td><input type="text" th:value="${rank.rankName}"></td>
+					<td>
+						<button class="button up" onclick="moveUp(this)">▲</button>
+						<button class="button down" onclick="moveDown(this)">▼</button>
+						<button class="button delete" onclick="deleteRow(this)">삭제</button>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<button class="add-button" onclick="addRow()">+ 직급 추가</button>
+
+	<script>
+        function moveUp(btn) {
+            let row = btn.parentNode.parentNode;
+            if (row.previousElementSibling) {
+                row.parentNode.insertBefore(row, row.previousElementSibling);
+                updateOrder();
+            }
+        }
+
+        function moveDown(btn) {
+            let row = btn.parentNode.parentNode;
+            if (row.nextElementSibling) {
+                row.parentNode.insertBefore(row.nextElementSibling, row);
+                updateOrder();
+            }
+        }
+
+        function deleteRow(btn) {
+            let row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateOrder();
+        }
+
+        function addRow() {
+            let table = document.getElementById("rankTable").getElementsByTagName("tbody")[0];
+            let rowCount = table.rows.length + 1;
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            cell1.innerHTML = rowCount;
+            cell2.innerHTML = `<input type="text" value="">`;
+            cell3.innerHTML = `
+                <button class="button up" onclick="moveUp(this)">▲</button>
+                <button class="button down" onclick="moveDown(this)">▼</button>
+                <button class="button delete" onclick="deleteRow(this)">삭제</button>`;
+        }
+
+        function updateOrder() {
+            let table = document.getElementById("rankTable").getElementsByTagName("tbody")[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].cells[0].innerHTML = i + 1;
+            }
+        }
+    </script>
+</body>
+</html>

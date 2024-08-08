@@ -98,10 +98,6 @@ public class GroupAdminController {
 		return "redirect:/groupAdmin/GAEmpList";
 	}
 	
-	@GetMapping("/groupAdmin/GARank")
-	public String GAEmpRank() {
-		return "groupAdmin/GARank";
-	}
 	@GetMapping("/groupAdmin/GAEndSubList")
 	public String GAEndSubList(Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
@@ -121,6 +117,20 @@ public class GroupAdminController {
 		GroupAdminVO gvo = gaService.sunInfoSelect(comCode);
 		model.addAttribute("subInfo",gvo);
 		return "groupAdmin/GANowContract";
+	}
+	@GetMapping("/groupAdmin/GADeptList")
+	public String GADeptList(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		List<DepartmentVO> deptList = gaService.deptListSelect(comCode);
+		model.addAttribute("deptList",deptList);
+		return "groupAdmin/GADeptList";
+	}
+	@GetMapping("/groupAdmin/GARankList")
+	public String GARankList(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		List<RankVO> rankList = gaService.rankListSelect(comCode);
+		model.addAttribute("rankList", rankList);
+		return "groupAdmin/GARankList";
 	}
 	
 }

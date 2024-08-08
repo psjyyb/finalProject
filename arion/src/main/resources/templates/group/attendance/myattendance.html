@@ -1,24 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+<meta name="_csrf" th:content="${_csrf.token}">
 <title>myattendance</title>
 </head>
-<body>
-
-<select id="year-select">
-  
-</select>
-
-<select id="month-select">
-  
-</select>
-
-<div class="calendarBox">
-  <div id="month"></div>
-  <div id="calendar"></div>
-</div>
-
-<script th:src="@{/js/group/attendance/myattendance.js}"></script>
+<body onload="autoReload();">
+	<table align="center" id="calendar">
+		<tr>
+			<td>
+			<button id="before"></button>
+			</td>
+			<td colspan="4" align="center">
+			<div id="yearmonth"></div>
+			</td>
+			<td>
+			<button id="next"></button>
+			</td>
+			<td>
+			<button id="today">오늘</button>
+			</td>
+		</tr>
+		<tr>
+			<td width="14%"> 월 </td>
+			<td width="14%"> 화 </td>
+			<td width="14%"> 수 </td>
+			<td width="14%"> 목 </td>
+			<td width="14%"> 금 </td>
+			<td width="14%"><font color="#009de0">토</font></td>
+			<td width="14%"><font color="#ed5353">일</font></td>
+		</tr>
+	</table>
+	<script th:src="@{/js/group/attendance/myattendance.js}"></script>
 </body>
-</html>
+</html >

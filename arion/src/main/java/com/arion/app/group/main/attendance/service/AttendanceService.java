@@ -6,9 +6,9 @@ public interface AttendanceService {
 
 	public AEmployeeVO aEmployee();
 	
-	public List<AEmployeeVO> aEmployeeList(String companyCode, String rankName);
+	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname);
 	
-	public List<AttendanceVO> attendance();
+	public List<AttendanceVO> attendance(int employeeno,String start,String end);
 	
 	public List<WorkTimeVO> worktime();
 }

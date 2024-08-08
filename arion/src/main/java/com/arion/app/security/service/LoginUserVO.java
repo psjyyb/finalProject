@@ -54,8 +54,14 @@ public class LoginUserVO implements UserDetails {
         return userVO.getEmpName();
     }
     
+<<<<<<< HEAD
     public int getEmployeeNo() {
     	return userVO.getEmployeeNo();
+=======
+    //추가
+    public int getemployeeNo() {
+        return userVO.getEmployeeNo();
+>>>>>>> refs/heads/Kim-sung-hun
     }
     
     @Override

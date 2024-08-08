@@ -33,12 +33,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    session.setAttribute("rankName", userDetail.getRankName());
 	    session.setAttribute("department", userDetail.getDepartmentName());
 	    session.setAttribute("empName", userDetail.getEmpName());
-<<<<<<< HEAD
-		session.setAttribute("employeeNo", userDetail.getEmployeeNo());
-=======
+
+		session.setAttribute("employeeNo", userDetail.getemployeeNo());
+
 	    //추가
 	    session.setAttribute("EmployeeNo", userDetail.getemployeeNo());
->>>>>>> refs/heads/Kim-sung-hun
+
 		
 	    System.out.println("세션에 저장되는 정보들");
 	    System.out.println("회사코드 : " + userDetail.getCompanyCode());
@@ -46,12 +46,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    System.out.println("직급 : " + userDetail.getRankName());
 	    System.out.println("부서이름 : " + userDetail.getDepartmentName());
 	    System.out.println("사원이름 : " + userDetail.getEmpName());
-<<<<<<< HEAD
-	    System.out.println("사원번호 : " + userDetail.getEmployeeNo());
-=======
-	    //추가
+
 	    System.out.println("사원번호 : " + userDetail.getemployeeNo());
->>>>>>> refs/heads/Kim-sung-hun
+
+	    
+
 	    
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (GrantedAuthority authority : authorities) {

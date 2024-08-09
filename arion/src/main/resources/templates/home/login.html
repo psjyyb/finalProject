@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f7f7;
+ 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -167,10 +167,24 @@
                 <p>회사코드 또는 Id 나 비밀번호가 일치하지 않습니다.</p>
             </div>
             <div class="form-actions">
-                <a href="/find-username">아이디 찾기</a>
-                <a href="/find-password">비밀번호 찾기</a>
+                <a href="#" id="findIdModal">회사코드/아이디 찾기</a>
+                <a href="#" id="findPwModal">비밀번호 찾기</a>
             </div>
         </form>
+        <div id="findModal" hidden>
+        	<div class ="container">
+        		<label>대표자 명</label>
+        		<input type="text" name="ceoName"/>
+        	</div>
+        	<div class ="container">
+        		<label>사업자 등록번호</label>
+        		<input type="text" name="businessNumber"/>
+        	</div>
+        	<button type="button" id="findBtn">확인</button>
+        	<button type="button" onclick="closeModal()">취소</button>
+        </div>
+        
+        
     </div>
     <script>
         $(document).ready(function() {
@@ -202,7 +216,14 @@
                     localStorage.setItem("remember", false);
                 }
             });
+            $('#findModal').click(function(){
+            	
+            })
+            
         });
+        
+  		
+        
     </script>
 </body>
 </html>

@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>myworktime</title>
 </head>
-<body>
-
+<body onload="autoReload();">
+		
+			<button id="before"></button>
+			
+			
+			<div id="month/week"></div>
+			
+		
+			<button id="next"></button>
+		
+					
+	<table >
+	 <thead>
+	      <tr >
+	        <th>일자</th>
+	        <th>사원명</th>
+	        <th>표준근무시간(시간단위)</th>
+	        <th>표준근무시간(분단위)</th>
+	        <th>차이(시간단위)</th>
+	        <th>차이(분단위)</th>
+	      </tr>
+	    </thead>
+	    <tbody/>
+	    
+		
+	</table>
+	<script th:src="@{/js/group/attendance/mytime.js}"></script>
 </body>
-</html>
+</html >

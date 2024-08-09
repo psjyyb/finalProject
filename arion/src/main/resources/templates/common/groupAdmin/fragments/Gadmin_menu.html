@@ -30,10 +30,23 @@
 					<h6 class="collapse-header">Employees</h6>
 					<a class="collapse-item" th:href="@{/groupAdmin/GAEmpList}">사원목록</a> 
 					<a class="collapse-item" th:href="@{/groupAdmin/GAEmpInsert}">사원등록</a>
-					<a class="collapse-item" th:href="@{/groupAdmin/GARank}">직급수정</a>
+					
 				</div>
 			</div></li>
 				<!-- Nav Item - Pages Collapse Menu -->
+		<li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>회사관리</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">company manage</h6>
+                        <a class="collapse-item" th:href="@{/groupAdmin/GADeptList}">부서수정</a>
+                        <a class="collapse-item" th:href="@{/groupAdmin/GARankList}">직급수정</a>
+                    </div>
+                </div>
+            </li>
 		
 		<li class="nav-item"><a class="nav-link collapsed" href="#"
 			data-toggle="collapse" data-target="#collapseUtilities"
@@ -48,7 +61,7 @@
 					<a class="collapse-item" th:href="@{/groupAdmin/GANowContract}">현재계약정보</a>
 				</div>
 			</div></li>
-
+			
 	</ul>
 	<!-- End of Sidebar -->
 	</html>

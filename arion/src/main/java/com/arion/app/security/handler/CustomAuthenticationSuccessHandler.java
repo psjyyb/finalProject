@@ -33,10 +33,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    session.setAttribute("rankName", userDetail.getRankName());
 	    session.setAttribute("department", userDetail.getDepartmentName());
 	    session.setAttribute("empName", userDetail.getEmpName());
-
 		session.setAttribute("employeeNo", userDetail.getEmployeeNo());
 
 	 
+
+	
 
 		
 	    System.out.println("세션에 저장되는 정보들");
@@ -45,7 +46,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    System.out.println("직급 : " + userDetail.getRankName());
 	    System.out.println("부서이름 : " + userDetail.getDepartmentName());
 	    System.out.println("사원이름 : " + userDetail.getEmpName());
-
 	    System.out.println("사원번호 : " + userDetail.getEmployeeNo());
 
 

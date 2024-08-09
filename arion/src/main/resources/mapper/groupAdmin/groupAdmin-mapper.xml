@@ -140,4 +140,48 @@
 		FROM contract
 		WHERE contract_state = '계약중' AND company_code= #{companyCode}
 	</select>
+	
+	<insert id="deptInSave" parameterType="DepartmentVO">
+		<selectKey keyProperty="departmentNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(department_no), 0) + 1
+			FROM departments
+		</selectKey>
+		INSERT INTO departments(
+								 department_no
+								,department_name
+								,company_code)
+		VALUES (
+				 #{departmentNo}
+				,#{departmentName}
+				,#{companyCode})
+	</insert>
+	
+	<delete id="deptDeSave">
+		DELETE 
+		FROM departments 
+		WHERE company_code = #{companyCode}
+	</delete>
+	
+	<insert id="rankInSave" parameterType="rankVO">
+		<selectKey keyProperty="rankId"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(rank_id), 0) + 1
+			FROM rank
+		</selectKey>
+		INSERT INTO rank(
+						 rank_id
+						,rank_name
+						,company_code)
+		VALUES(
+				 #{rankId}
+				,#{rankName}
+				,#{companyCode} )
+	</insert>
+	
+	<delete id="rankDeSave">
+		DELETE FROM rank WHERE company_code = #{companyCode}
+	</delete>
 </mapper>

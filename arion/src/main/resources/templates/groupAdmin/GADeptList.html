@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+table {
+	width: 60%;
+	border-collapse: collapse;
+	margin: 20px auto;
+	background-color: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: #4CAF50;
+	color: white;
+}
+
+td input {
+	width: 90%;
+	padding: 5px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.button {
+	cursor: pointer;
+	padding: 5px 10px;
+	font-size: 16px;
+	margin: 2px;
+	border: none;
+	border-radius: 4px;
+	color: white;
+}
+
+.button.up {
+	background-color: #4CAF50;
+}
+
+.button.down {
+	background-color: #2196F3;
+}
+
+.button.delete {
+	background-color: #f44336;
+}
+
+.action-buttons {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.action-buttons button {
+	display: inline-block;
+	width: 25%;
+	padding: 10px;
+	font-size: 18px;
+	background-color: #008CBA;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	text-align: center;
+	margin-right: 10px;
+}
+
+.action-buttons button:last-child {
+	margin-right: 0;
+}
+
+.action-buttons button:hover {
+	background-color: #007B9A;
+}
+</style>
+</head>
+<body>
+	<form th:action="@{/groupAdmin/GADeptSave}" method="POST" name="deptForm">
+	<table id="deptTable">
+		<thead>
+			<tr>
+				<th>순서</th>
+				<th>부서</th>
+				<th>작업</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="dept, status : ${deptList}">
+				<tr>
+					<td th:text="${status.count}">1</td>
+					<td><input name="departmentName" type="text" th:value="${dept.departmentName}"></td>
+					<td>
+						<button class="button delete" onclick="deleteRow(this)">삭제</button>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+
+	<div class="action-buttons">
+		<button type="button" class="add-button" onclick="addRow()">+ 부서 추가</button>
+		<button class="save-button" onclick="saveChanges()">저장</button>
+	</div>
+</form>
+	<script>
+        function deleteRow(btn) {
+            let row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateOrder();
+        }
+
+        function addRow() {
+            let table = document.getElementById("deptTable").getElementsByTagName("tbody")[0];
+            let rowCount = table.rows.length + 1;
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            cell1.innerHTML = rowCount;
+            cell2.innerHTML = `<input name="departmentName" type="text" value="">`;
+            cell3.innerHTML = `
+                <button class="button delete" onclick="deleteRow(this)">삭제</button>`;
+        }
+
+        function updateOrder() {
+            let table = document.getElementById("deptTable").getElementsByTagName("tbody")[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].cells[0].innerHTML = i + 1;
+            }
+        }
+
+        function saveChanges(e) {
+        	deptForm.submit();
+            alert("변경사항이 저장되었습니다.");
+            // 여기에 저장 기능을 구현할 수 있습니다.
+        }
+    </script>
+</body>
+</html>

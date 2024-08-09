@@ -1,5 +1,6 @@
 package com.arion.app.group.admin.web;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -98,10 +99,6 @@ public class GroupAdminController {
 		return "redirect:/groupAdmin/GAEmpList";
 	}
 	
-	@GetMapping("/groupAdmin/GARank")
-	public String GAEmpRank() {
-		return "groupAdmin/GARank";
-	}
 	@GetMapping("/groupAdmin/GAEndSubList")
 	public String GAEndSubList(Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
@@ -122,5 +119,47 @@ public class GroupAdminController {
 		model.addAttribute("subInfo",gvo);
 		return "groupAdmin/GANowContract";
 	}
-	
+	@GetMapping("/groupAdmin/GADeptList")
+	public String GADeptList(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		List<DepartmentVO> deptList = gaService.deptListSelect(comCode);
+		model.addAttribute("deptList",deptList);
+		return "groupAdmin/GADeptList";
+	}
+	@PostMapping("/groupAdmin/GADeptSave")
+	public String GADeptSave (DepartmentVO deptVO,HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		String depts = deptVO.getDepartmentName();
+		String[] deptArr = depts.split(","); // 콤마를 기준으로 배열로 담아준다
+		List<String> list = Arrays.asList(deptArr); // 배열에 담긴 값을 리스트로 
+		gaService.saveDept(list,comCode);		
+		return "redirect:/groupAdmin/GADeptList";
+	}
+	@GetMapping("/groupAdmin/GARankList")
+	public String GARankList(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		List<RankVO> rankList = gaService.rankListSelect(comCode);
+		model.addAttribute("rankList", rankList);
+		return "groupAdmin/GARankList";
+	}
+	@PostMapping("/groupAdmin/GARankSave")
+	public String GARankSave (RankVO rankVO,HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		String ranks = rankVO.getRankName();
+		String rankArr[] = ranks.split(",");
+		List<String> list = Arrays.asList(rankArr);
+		gaService.saveRank(list, comCode);
+		int result = 0;
+		String url = null;
+		if(result > 0) {
+			url="redirect:/groupAdmin/GARankList";
+		}else {
+			url="redirect:/groupAdmin/GARankList";
+		}
+		return url;
+	}
+	@GetMapping("/groupAdmin/GAConCan")
+	public String GAConCan() {
+		return"/groupAdmin/GAConCan";
+	}
 }

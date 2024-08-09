@@ -29,5 +29,10 @@ public interface GroupAdminMapper {
 	
 	GroupAdminVO selectSubInfo(String companyCode); // 현재 계약정보조회
 	
+	int deptInSave(DepartmentVO dvo); // 부서저장
+	int deptDeSave(String companyCode); // 부서저장
+	
+	int rankInSave(RankVO rankVO); // 직급저장
+	int rankDeSave(String companyCode); // 직급저장
 	
 }

@@ -80,7 +80,7 @@ h1, h2, h3 {
 			</tr>
 		</table>
 		<button type="button" class="btn btn-primary" id="conMode">계약 수정</button>
-		<button type="button" class="btn btn-danger" id="conCan">계약 철회</button>
+		<button type="button" class="btn btn-danger" id="conCan" th:onclick="|location.href='@{/groupAdmin/GAConCan}'|">계약 철회</button>
 	</div>
 	<script>
 		$('#conMode').on('click',function(){
@@ -89,7 +89,6 @@ h1, h2, h3 {
 		$('#conCan').on('click',function(){
 			if(confirm('계약을 철회하시겠습니까?')){
 				if(confirm('계약을 철회하면 되돌릴수없습니다.')){
-					console.log('네네네')
 				}
 			}
 		})

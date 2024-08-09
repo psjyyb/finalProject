@@ -22,4 +22,8 @@ public interface GroupAdminService {
 	List<GroupAdminVO> endSubSelect(String companyCode); // 지난계약목록조회
 	
 	GroupAdminVO sunInfoSelect(String companyCode); // 현재 구독중인 계약정보
+	
+	int saveDept(List<String> list,String companyCode); // 부서저장
+	
+	int saveRank(List<String> list, String companyCode); // 직급저장
 }

@@ -55,9 +55,9 @@ public class LoginUserVO implements UserDetails {
     }
     
 
+
     public int getEmployeeNo() {
     	return userVO.getEmployeeNo();
-
     }
     
     @Override

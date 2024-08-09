@@ -33,8 +33,51 @@
 				</th:block>
 			</tbody>
 		</table>
+		<!-- 페이징 -->
+		<div th:object="${page}">
+			<nav aria-label="Page navigation"
+				class="d-flex justify-content-center">
+				<ul class="pagination">
+					<li class="page-item" th:if="*{prev}"><a
+						class="page-link changePage" th:href="*{startPage - 1}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+					<th:block
+						th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
+						<li class="page-item"
+							th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
+							<a class="page-link changePage"
+							th:href="@{/group/freeboardList (pageNum=${num})}" th:text="${num}"
+							th:unless="${page.criteria.getPageNum() == num}"></a> <span
+							class="page-link" th:if="${page.criteria.getPageNum() == num}"
+							th:text="${num}"></span>
+						</li>
+					</th:block>
+					<li class="page-item" th:if="*{next}"><a
+						class="page-link changePage" th:href="*{endPage + 1}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
+			<form action="/group/freeboardList" th:object="${criteria}" name="pageForm">
+				<input type="hidden" name="pageNum" th:field="*{pageNum}"> <input
+					type="hidden" name="amount" th:field="*{amount}">
+			</form>
+		</div>
 		<div>
 			<button type="button" th:onclick="|location.href='@{freeboardInsert}'|">글쓰기</button>
+		</div>
+		<div>
+			<form name="search-form" autocomplete="off">
+				<select name="searchType">
+						<option selected value="">선택</option>
+						<option value="boardTitle">제목</option>
+						<option value="boardContent">내용</option>
+						<option value="employeeName">작성자</option>
+				</select>
+				<input type="text" name="keyword" th:value="${criteria.keyword}"></input>
+				<input type="submit" value="검색"></input>
+			</form>			
 		</div>
 	</div>
 </body>

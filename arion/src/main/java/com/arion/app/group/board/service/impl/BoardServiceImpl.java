@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.arion.app.group.board.mapper.BoardMapper;
 import com.arion.app.group.board.service.BoardService;
 import com.arion.app.group.board.service.BoardVO;
+import com.arion.app.group.board.service.Criteria;
+
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -27,8 +26,8 @@ public class BoardServiceImpl implements BoardService{
 	// 자유게시판
 	// 전체 게시글 조회
 	@Override
-	public List<BoardVO> boardList() {
-		return boardMapper.selectBoardAll();
+	public List<BoardVO> boardList(Criteria cri) {
+		return boardMapper.selectBoardAll(cri);
 	}
 
 	// 게시글 상세조회
@@ -71,11 +70,10 @@ public class BoardServiceImpl implements BoardService{
 	public int ViewCnt(int viewCnt) {
 		return boardMapper.ViewCnt(viewCnt);
 	}
-	
-	
 
-	
+	@Override
+	public int getTotal(Criteria cri) {
+		return boardMapper.getTotal(cri);
+	}
 
-
-	
 }

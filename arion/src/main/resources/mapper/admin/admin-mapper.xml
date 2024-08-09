@@ -131,6 +131,7 @@
                     ,mod_file_turn
                     ,mod_file_type
                     ,mod_no
+                    ,mod_file_originalname
                     )
 		VALUES(
 				 #{modFileNo}
@@ -140,6 +141,28 @@
 				,#{modFileTurn}
 				,#{modFileType}
 				,#{modNo}
+				,#{modFileOriginalname}
 				)
 	</insert>
+	
+	<select id="selectMod" resultType="ModuleVO">
+		SELECT module_no
+		      ,module_name
+		      ,module_price
+		      ,module_notice
+		      ,module_icon 
+		FROM module WHERE module_no = #{moduleNo}
+	</select>
+
+	<select id="selectModFile" resultType="ModuleFileVO">
+		SELECT mod_file_no
+		      ,mod_file_name
+		      ,mod_file_content
+		      ,mod_file_path
+		      ,mod_file_turn
+		      ,mod_file_type
+		      ,mod_no
+		      ,mod_file_originalname
+		FROM mod_file WHERE mod_no = #{moduleNo}
+	</select>
 </mapper>

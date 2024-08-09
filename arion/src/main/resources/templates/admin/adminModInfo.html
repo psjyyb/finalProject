@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/admin/layouts/admin_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+</head>
+<body>
+	<style>
+	.form-container {
+		margin-top: 20px;
+	}
+
+	.form-header {
+		background-color: #f8f9fa;
+		padding: 10px;
+		border-bottom: 1px solid #dee2e6;
+	}
+
+	.form-body {
+		padding: 20px;
+		background-color: #ffffff;
+		border: 1px solid #dee2e6;
+	}
+
+	.form-footer {
+		background-color: #f8f9fa;
+		padding: 10px;
+		border-top: 1px solid #dee2e6;
+		text-align: right;
+	}
+
+	.input-group {
+		margin-bottom: 1rem;
+	}
+
+	.image-preview {
+		margin-top: 10px;
+		max-width: 100%;
+		max-height: 200px;
+		border: 1px solid #dee2e6;
+		border-radius: 5px;
+		background-color: #f8f9fa;
+		display: none;
+	}
+
+	.previous-description {
+		margin-top: 10px;
+		padding: 10px;
+		background-color: #f8f9fa;
+		border: 1px solid #dee2e6;
+		border-radius: 5px;
+	}
+
+	.module-card {
+		border: 1px solid #dee2e6;
+		border-radius: 5px;
+		margin-bottom: 20px;
+		padding: 15px;
+		background-color: #f8f9fa;
+	}
+
+	.module-card img {
+		width: 100%;
+		max-height: 200px;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	}
+	</style>
+</head>
+<body>
+	<div class="container form-container">
+		<div class="form-header">
+			<h5>모듈수정</h5>
+		</div>
+		<form name="insertForm" class="form-body" method="post" enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="moduleName" class="form-label">모듈 이름</label>
+				<input type="text" class="form-control" id="moduleName" name="moduleName" th:value="${modInfo.moduleName}" required>
+			</div>
+			
+			<!-- 기존 모듈 이미지 미리보기 -->
+			<div class="mb-3">
+				<label class="form-label">기존 모듈 아이콘</label>
+				<img th:src="@{'/files/' + ${modInfo.moduleIcon}}" style="width:200px; height:200px">
+			</div>
+			
+			<div class="mb-3">
+				<label for="moduleIcons" class="form-label">모듈 아이콘 변경시 선택</label>
+				<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
+				<img src="" alt="모듈 아이콘 미리보기" class="image-preview" id="iconPreview">
+			</div>
+			
+			<div class="mt-2">
+				<label for="moduleNotice" class="form-label">모듈 머리말</label>
+				<textarea class="form-control moduleNotice" id="moduleNotice" name="moduleNotice" rows="5" th:text="${modInfo.moduleNotice}" required></textarea>
+			</div>
+			
+			<!-- 기존 모듈 설명과 이미지들 -->
+			<div class="previous-description" th:if="${fileList}">
+				<strong>기존 모듈 설명:</strong>
+				<div th:each="file : ${fileList}">
+					<div class="module-card">
+						<img th:src="@{'/files/' + ${file.modFileName}}" alt="모듈 설명 이미지" style="width:200px; height:200px">
+						<p th:text="${file.modFileContent}"></p>
+					</div>
+				</div>
+			</div>
+			
+			<div id="fileInputs">
+				<div class="mb-3">
+					<label for="files" class="form-label">모듈 설명 이미지</label>
+					<input type="file" class="form-control" id="files" name="uploadFiles">
+					<div class="mt-2">
+						<label for="moduleNotices" class="form-label">모듈 설명</label>
+						<textarea class="form-control moduleNotices" id="moduleNotices" name="moduleNotices" rows="5" required></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<button type="button" class="btn btn-success" id="addFile">첨부파일 추가</button>
+
+			<div class="form-footer">
+				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
+				<button type="button" class="btn btn-secondary">취소</button>
+			</div>
+		</form>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			// 미리보기 기능 추가
+			$('#moduleIcons').on('change', function(e){
+				let reader = new FileReader();
+				reader.onload = function(event) {
+					$('#iconPreview').attr('src', event.target.result).show();
+				};
+				reader.readAsDataURL(e.target.files[0]);
+			});
+		});
+	</script>
+</body>
+</html>

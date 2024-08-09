@@ -29,4 +29,8 @@ public interface AdminMapper {
 	int insertModule(ModuleVO moduleVO); // 모듈등록
 	
 	int insertModuleFile(ModuleFileVO moduleFileVO); // 모듈파일등록
+	
+	// 모듈수정화면.
+	ModuleVO selectMod(ModuleVO moduleVO); // 모듈정보
+	List<ModuleFileVO> selectModFile(ModuleVO moduleVO); // 모듈 설명사진
 }

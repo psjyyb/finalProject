@@ -1,14 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/home/layouts/home_layout}"
-	layout:fragment="content">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/home/layouts/home_layout}"
+      layout:fragment="content">
 <head>
-<meta charset="utf-8">
-<title>ARION</title>
+    <meta charset="utf-8">
+    <title>ARION</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.moduleNav {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    margin: 150px auto;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.moduleNav a {
+    color: #333;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.moduleNav a:hover {
+    color: #ff9800; 
+}
+
+.moduleNav a.active {
+    color: #ff9800; 
+}
+
+</style>
 </head>
 <body>
 
+<div class="moduleNav">
+    <th:block th:each="module : ${moduleList}">
+        <a href="#" th:text="${module.moduleName}" class="moduleBtn" th:data-mod-no="${module.moduleNo}"></a>
+    </th:block>
+</div>
 
+<div id="moduleInfo">
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $(".moduleBtn").click(function(event){
+         event.preventDefault(); 
+         
+         let moduleNo = $(this).data("mod-no");
+         
+         $.ajax({
+             url: '/home/module',
+             type: 'POST',
+             data: { moduleNo: moduleNo },
+             dataType: 'json' 
+         })
+         .done(function(result){
+             moduleDiv(result);
+         })
+         .fail(function(err) {
+            console.log(err);
+         });
+    });
+    
+    function moduleDiv(result) {
+        $('#moduleInfo').empty(); // 이전 내용을 지움
+
+        result.forEach(function(module) {
+            let div = $('<div/>');
+            let img = $('<img>').attr('src', '/files/' + module.modFileName);
+            let p = $('<p/>').text(module.modFileContent);
+            
+            div.append(img);
+            div.append(p);
+            $('#moduleInfo').append(div);
+        });
+    }
+});
+</script>
 </body>
 </html>

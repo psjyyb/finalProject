@@ -1,6 +1,8 @@
 package com.arion.app.home.main.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -85,6 +88,30 @@ public class HomeController {
     	model.addAttribute("moduleList", mvo);
         return "home/module/module";
     }
+    
+    /* @PostMapping("/home/module")
+    @ResponseBody
+    public String moduleInfo(Model model, @RequestParam int moduleNo) {
+    	List<HomeModuleVO> mvo = msvc.explanModule(moduleNo);
+    	model.addAttribute("module", mvo);
+    	return "home/module/module";
+    } */
+    
+    @PostMapping("/home/module")
+    @ResponseBody
+    public List<HomeModuleVO> moduleInfo(@RequestParam int moduleNo) {
+    	return msvc.explanModule(moduleNo);
+    } 
+    /* @PostMapping("/home/module")
+    @ResponseBody
+    public Map<String, String> moduleInfo(@RequestParam int moduleNo) {
+        HomeModuleVO module = msvc.explanModule(moduleNo).get(0);
+        Map<String, String> response = new HashMap<>();
+        response.put("modFileName", module.getModFileName());
+        response.put("modFileContent", module.getModFileContent());
+        System.out.println("결과 : " + response);
+        return response;
+    } */
     
     @GetMapping("/home/service")
     public String service(Model model) {

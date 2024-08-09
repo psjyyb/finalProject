@@ -6,6 +6,7 @@ import lombok.Data;
 public class RankVO {
 	private int rankId;
 	private String rankName;
-	private int rankRangking;
+	private int rankRankKing;
 	private String companyCode;
+	private String rankRangkings;
 }

@@ -5,7 +5,7 @@
 	layout:fragment="GContent">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ARION</title>
 <style>
 table {
 	width: 60%;
@@ -97,8 +97,8 @@ td input {
 		<tbody>
 			<th:block th:each="rank, status : ${rankList}">
 				<tr>
-					<td th:text="${status.count}">1</td>
-					<td><input name="rankName" type="text" th:value="${rank.rankName}"></td>
+					<td th:text="${status.count}"></td>
+					<td><input type="hidden" name="rankRangkings" th:value="${status.count}"><input name="rankName" type="text" th:value="${rank.rankName}"></td>
 					<td>
 						<button class="button delete" onclick="deleteRow(this)">삭제</button>
 					</td>

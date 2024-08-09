@@ -1,161 +1,278 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/home/layouts/home_layout}"
-	layout:fragment="content">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/home/layouts/home_layout}"
+    layout:fragment="content">
 <head>
 <meta charset="utf-8">
 <title>ARION</title>
 <style>
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+ 
     margin: 50px auto;
     text-align: center;
     padding: 0;
 }
 
 .container2 {
-	width: 1200px;
-	background-color: white;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
-	overflow: hidden;
-	margin: 170px auto;
+    width: 1200px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 170px auto;
 }
 
 h3 {
-	background-color: #ffa500;
-	color: white;
-	margin: 0;
-	padding: 20px;
-	text-align: center;
+    background-color: #ffa500;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
 }
 
 label {
-	display: block;
-	margin-bottom: 0.5rem;
-	font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
 }
 
 input[type="text"] {
-	width: 100%;
-	padding: 0.5rem;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	box-sizing: border-box;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-
 table {
-	width: 100%;
-	border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 th, td {
-	padding: 15px;
-	text-align: left;
-	border-bottom: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
 th {
-	background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 
 tr:hover {
-	background-color: #f5f5f5;
-	cursor: pointer;
+    background-color: #f5f5f5;
+    cursor: pointer;
 }
 
 tr:nth-child(even) {
-	background-color: #f9f9f9;
+    background-color: #f9f9f9;
 }
 .content-footer {
     background-color: #f8f9fa;
     padding: 10px;
     border-top: 1px solid #dee2e6;
     text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#passwordModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+#modalContent {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#modalContent label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#modalContent input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#modalContent button {
+    background-color: #ffa500;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#modalContent button:hover {
+    background-color: #e69500;
+}
+
+#modalContent .cancel-btn {
+    background-color: #ccc;
+    color: black;
+}
+
+#modalContent .cancel-btn:hover {
+    background-color: #999;
 }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container2">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="content-header">
-					<h3>게시물 상세보기</h3>
-				</div>
-				<div class="content-body">
-					<div class="row">
-						<div class="col-md-2">
-							<strong>번호:</strong>
-						</div>
-						<div class="col-md-10" th:text="${qnaInfo.qnaNo}"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-2">
-							<strong>제목:</strong>
-						</div>
-						<div class="col-md-10" th:text="${qnaInfo.qnaTitle}"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-2">
-							<strong>작성자:</strong>
-						</div>
-						<div class="col-md-10" th:text="${qnaInfo.qnaWriter}"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-2">
-							<strong>작성일:</strong>
-						</div>
-						<div class="col-md-10"
-							th:text="${#dates.format(qnaInfo.qnaDate, 'yyyy/MM/dd')}"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-2">
-							<strong>내용:</strong>
-						</div>
-						<div class="col-md-10">
-							<p th:text="${qnaInfo.qnaContent}">게시물의 내용이 여기에 표시됩니다.
-								여기에 게시물의 상세 내용이 들어갑니다.</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-2">
-							<strong>첨부파일:</strong>
-						</div>
-						 <div class="col-md-10">
-							<div th:each="file : ${fileInfo}">
-								<div th:if="${file.fileType.startsWith('image/')}">
-									<img th:src="@{/files/{fileName}(fileName=${file.filePath})}" style="width: 50%;" />
-								</div>
-								<div th:if="${!file.fileType.startsWith('image/')}">
-									<a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
-								</div>
-							</div>
-						</div> 
-						<!-- <div class="col-md-10">
-							<div th:each="file : ${fileInfo}">
-								<div th:if="${file.fileType.startsWith('image/')}">
-									<img th:src="@{'/files/' + ${file.filePath}}" style="width: 50%;" />
-								</div>
-								<div th:if="${!file.fileType.startsWith('image/')}">
-									<a th:href="@{'/files/' + ${file.filePath}}" th:text="${file.fileOriginalName}"></a>
-								</div>
-							</div>
-						</div> -->
-					</div>
-				</div>
-				<div class="content-footer">
-					<button type="button" class="btn btn-primary"
-						th:onclick="|location.href='@{/home/qnaUpdate(qnaNo=${qnaInfo.qnaNo})}' |">수정</button>
-					<button type="button" class="btn btn-primary"
-						th:onclick="|location.href='@{/home/qna}'|">목록으로</button>
-					<button type="button" class="btn btn-danger"
-						th:onclick="|location.href='@{/home/qnaDelete(qnaNo=${qnaInfo.qnaNo})}'|">삭제</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="content-header">
+                <h3>게시물 상세보기</h3>
+            </div>
+            <div class="content-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>번호:</strong>
+                    </div>
+                    <div class="col-md-10" th:text="${qnaInfo.qnaNo}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>제목:</strong>
+                    </div>
+                    <div class="col-md-10" th:text="${qnaInfo.qnaTitle}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>작성자:</strong>
+                    </div>
+                    <div class="col-md-10" th:text="${qnaInfo.qnaWriter}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>작성일:</strong>
+                    </div>
+                    <div class="col-md-10" th:text="${#dates.format(qnaInfo.qnaDate, 'yyyy/MM/dd')}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>내용:</strong>
+                    </div>
+                    <div class="col-md-10">
+                        <p th:text="${qnaInfo.qnaContent}">게시물의 내용이 여기에 표시됩니다.
+                            여기에 게시물의 상세 내용이 들어갑니다.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>첨부파일:</strong>
+                    </div>
+                    <div class="col-md-10">
+                        <div th:each="file : ${fileInfo}">
+                            <div th:if="${file.fileType.startsWith('image/')}">
+                                <img th:src="@{/files/{fileName}(fileName=${file.filePath})}" style="width: 50%;" />
+                            </div>
+                            <div th:if="${!file.fileType.startsWith('image/')}">
+                                <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="content-footer">
+                <div th:if="${isOwner}">
+                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/home/qnaUpdate(qnaNo=${qnaInfo.qnaNo})}' |">수정</button>
+                    <button type="button" class="btn btn-danger" th:onclick="|location.href='@{/home/qnaDelete(qnaNo=${qnaInfo.qnaNo})}' |">삭제</button>
+                </div>
+                <div th:if="${!isOwner}">
+                    <button type="button" class="btn btn-primary" id="updateButton" th:data-qna-no="${qnaInfo.qnaNo}">수정</button>
+                    <button type="button" class="btn btn-danger" id="deleteButton" th:data-qna-no="${qnaInfo.qnaNo}">삭제</button>
+                </div>
+                <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/home/qna}'|">목록으로</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 비밀번호 입력 모달 -->
+<div id="passwordModal">
+    <div id="modalContent">
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" />
+        <button type="button" id="passwordConfirmBtn">확인</button>
+        <button type="button" onclick="closePasswordModal()">취소</button>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#updateButton').click(function() {
+        showPasswordModal(this, 'update');
+    });
+
+    $('#deleteButton').click(function() {
+        showPasswordModal(this, 'delete');
+    });
+});
+
+function showPasswordModal(element, action) {
+    var qnaNo = $(element).data('qna-no');
+    $('#passwordModal').data('action', action).data('qnaNo', qnaNo).show();
+}
+
+function closePasswordModal() {
+    $('#passwordModal').hide();
+}
+
+$('#passwordConfirmBtn').click(function() {
+    var action = $('#passwordModal').data('action');
+    var qnaNo = $('#passwordModal').data('qnaNo');
+    var enteredPassword = $('#password').val();
+
+    $.ajax({
+        url: '/qnaPw',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            qnaNo: qnaNo,
+            password: enteredPassword
+        }),
+        success: function(data) {
+            if (data.success) {
+                if (action === 'update') {
+                    location.href = '/home/qnaUpdate?qnaNo=' + qnaNo;
+                } else if (action === 'delete') {
+                    location.href = '/home/qnaDelete?qnaNo=' + qnaNo;
+                }
+            } else {
+                Swal.fire({
+                	icon: "error",
+                	text: "비밀번호가 틀렸습니다."
+                });
+            }
+        }
+    });
+});
+</script>
+
 </body>
 </html>

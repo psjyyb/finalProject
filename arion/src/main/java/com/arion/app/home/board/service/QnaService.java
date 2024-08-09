@@ -17,5 +17,5 @@ public interface QnaService {
 	public int insertQna(HomeQnaVO homeQnaVO, MultipartFile[] files, String companyCode);
 	public Map<String, Object> updateQna(HomeQnaVO homeQnaVO, MultipartFile[] files, String companyCode);
 	public int deleteQna(int qnaNo);
-	public String selectPw(int qnaNo);
+	public boolean selectPw(Integer qnaNo, String password);
 }

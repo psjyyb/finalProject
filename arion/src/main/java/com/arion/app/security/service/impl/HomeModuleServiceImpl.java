@@ -21,5 +21,11 @@ public class HomeModuleServiceImpl implements HomeModuleService {
 		return mapper.selectModule();
 	}
 
+	@Override
+	public List<HomeModuleVO> explanModule(int moduleNo) {
+
+		return mapper.explanModule(moduleNo);
+	}
+
 
 }

@@ -54,6 +54,7 @@
 			<div class="mb-3">
 					<label for="files" class="form-label">모듈 아이콘</label>
 					<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
+					<img src="" alt="모듈 아이콘 미리보기" class="image-preview" id="iconPreview">
 			</div>
 			<div class="mb-3">
 				<label for="modulePrice" class="form-label">모듈가격</label>
@@ -73,13 +74,20 @@
 
 			<div class="form-footer">
 				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
-				<button type="button" class="btn btn-secondary">취소</button>
+				<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/admin}'|">취소</button>
 			</div>
 		</form>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
 	$(document).ready(function() {
+		// 미리보기 기능 추가
+		$('#moduleIcons').on('change', function(e){
+			let reader = new FileReader();
+			reader.onload = function(event) {
+				$('#iconPreview').attr('src', event.target.result).show();
+			};
+			reader.readAsDataURL(e.target.files[0]);
+		});
 		let fileArr = [];
 		let formData = new FormData(); // FormData를 전역 변수로 선언
 

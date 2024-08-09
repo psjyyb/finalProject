@@ -75,12 +75,16 @@
 		<div class="form-header">
 			<h5>모듈수정</h5>
 		</div>
-		<form name="insertForm" class="form-body" method="post" enctype="multipart/form-data">
+		<form name="updateForm" class="form-body" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
 				<label for="moduleName" class="form-label">모듈 이름</label>
 				<input type="text" class="form-control" id="moduleName" name="moduleName" th:value="${modInfo.moduleName}" required>
+				<input type="hidden" th:value="${modInfo.moduleNo}" id="moduleNo" name="moduleNo">
 			</div>
-			
+				<div class="mb-3">
+				<label for="modulePrice" class="form-label">모듈가격</label>
+				<input type="number" class="form-control" id="modulePrice" name="modulePrice" th:value="${modInfo.modulePrice}" required>
+			</div>
 			<!-- 기존 모듈 이미지 미리보기 -->
 			<div class="mb-3">
 				<label class="form-label">기존 모듈 아이콘</label>
@@ -99,19 +103,11 @@
 			</div>
 			
 			<!-- 기존 모듈 설명과 이미지들 -->
-			<div class="previous-description" th:if="${fileList}">
-				<strong>기존 모듈 설명:</strong>
-				<div th:each="file : ${fileList}">
-					<div class="module-card">
-						<img th:src="@{'/files/' + ${file.modFileName}}" alt="모듈 설명 이미지" style="width:200px; height:200px">
-						<p th:text="${file.modFileContent}"></p>
-					</div>
-				</div>
-			</div>
+			
 			
 			<div id="fileInputs">
 				<div class="mb-3">
-					<label for="files" class="form-label">모듈 설명 이미지</label>
+					<label for="files" class="form-label">모듈 설명 이미지 수정(수정시 기존 사진은 저장되지않음)</label>
 					<input type="file" class="form-control" id="files" name="uploadFiles">
 					<div class="mt-2">
 						<label for="moduleNotices" class="form-label">모듈 설명</label>
@@ -121,25 +117,122 @@
 			</div>
 			
 			<button type="button" class="btn btn-success" id="addFile">첨부파일 추가</button>
-
+			<div class="previous-description" th:if="${fileList}">
+				<strong>기존 모듈 설명:</strong>
+				<div th:each="file : ${fileList}">
+					<div class="module-card">
+						<img th:src="@{'/files/' + ${file.modFileName}}" alt="모듈 설명 이미지" style="width:200px; height:200px">
+						<p th:text="${file.modFileContent}"></p>
+					</div>
+				</div>
+			</div>
 			<div class="form-footer">
-				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
-				<button type="button" class="btn btn-secondary">취소</button>
+				<button type="button" class="btn btn-primary" id="addBtn">수정</button>
+				<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/adminModList}'|">목록으로</button>
 			</div>
 		</form>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-		$(document).ready(function() {
-			// 미리보기 기능 추가
-			$('#moduleIcons').on('change', function(e){
-				let reader = new FileReader();
-				reader.onload = function(event) {
-					$('#iconPreview').attr('src', event.target.result).show();
-				};
-				reader.readAsDataURL(e.target.files[0]);
+	$(document).ready(function() {
+		// 미리보기 기능 추가
+		$('#moduleIcons').on('change', function(e){
+			let reader = new FileReader();
+			reader.onload = function(event) {
+				$('#iconPreview').attr('src', event.target.result).show();
+			};
+			reader.readAsDataURL(e.target.files[0]);
+		});
+		let fileArr = [];
+		let formData = new FormData(); // FormData를 전역 변수로 선언
+
+		$('#addBtn').on('click', function() {
+			let name = $('#moduleName').val();
+			let price = $('#modulePrice').val();
+			let notice = $('#moduleNotice').val();
+			let no = $('#moduleNo').val();
+
+			// 폼 데이터에 모듈 이름과 가격 추가
+			formData.append('moduleName', name);
+			formData.append('modulePrice', price);
+			formData.append('moduleNotice',notice)
+			formData.append('moduleNo',no);
+
+			// 모듈 아이콘 추가
+			let moduleIcons = $('#moduleIcons')[0].files[0];
+			if (moduleIcons) {
+				formData.append('moduleIcons', moduleIcons);
+			}
+
+			// 각 파일과 설명을 폼 데이터에 추가
+			fileArr.forEach((file, index) => {
+				formData.append('uploadFiles', file);
+			});
+
+			$('textarea.moduleNotices').each(function() {
+				formData.append('moduleNotices', $(this).val());
+			});
+
+			// AJAX 요청 보내기
+			$.ajax({
+				url: '/adminModUpdate',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+			})
+			.done(result => {
+				Swal.fire("등록완료@@@@");
+			})
+			.fail(err => {
+				Swal.fire('오류발생@@@');
 			});
 		});
+
+		// 파일 추가 로직
+		$('#addFile').click(function() {
+			let newFileInputWrapper = $('<div class="mb-3 file-input-wrapper"></div>');
+			let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
+			let fileDescription = $('<div class="mt-2"><label for="moduleNotices" class="form-label">모듈설명</label><textarea class="form-control moduleNotices" name="moduleNotices[]" rows="5" placeholder="모듈설명" required></textarea></div>');
+			let removeButton = $('<button type="button" class="btn btn-danger mt-2">X</button>');
+
+			removeButton.click(function(e) {
+				let inputElement = $(e.target).parent().find('input')[0];
+				let fileToRemove = inputElement.files[0];
+
+				fileArr = fileArr.filter(file => file.name !== fileToRemove.name);
+				newFileInputWrapper.remove();
+			});
+
+			newFileInputWrapper.append(newFileInput);
+			newFileInputWrapper.append(fileDescription);
+			newFileInputWrapper.append(removeButton);
+			$('#fileInputs').append(newFileInputWrapper);
+
+			newFileInput.on('change', function(e) {
+				let files = e.currentTarget.files;
+				for (let i = 0; i < files.length; i++) {
+					fileArr.push(files[i]);
+					console.log(fileArr);
+				}
+			});
+		});
+
+		$('#moduleIcons').on('change', function(e){
+			let moduleIcons = e.currentTarget.files[0];
+			if (moduleIcons) {
+				formData.set('moduleIcons', moduleIcons);
+			}
+		});
+
+		$('#files').on('change', function(e) {
+			let files = e.currentTarget.files;
+			for (let i = 0; i < files.length; i++) {
+				fileArr.push(files[i]);
+				console.log(fileArr);
+			}
+		});
+	});
+
 	</script>
 </body>
 </html>

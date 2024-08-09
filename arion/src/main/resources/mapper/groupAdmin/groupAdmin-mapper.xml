@@ -11,16 +11,19 @@
 		,rank_name
 		FROM employees
 		WHERE company_code =  #{companyCode}
+		ORDER BY employee_no
 	</select>
 	<select id="selectDeptList" resultType="DepartmentVO">
 		SELECT department_name,department_no,manager
 		FROM departments
 		WHERE company_code = #{companyCode}
+		ORDER BY department_no
 	</select>
 	<select id="selectRankList" resultType="RankVO">
 		SELECT rank_name,rank_id,rank_ranking
 		FROM rank
 		WHERE company_code = #{companyCode}
+		ORDER BY rank_id
 	</select>
 	<insert id="insertEmp" parameterType="EmployeeVO">
 		<selectKey keyProperty="employeeNo"
@@ -124,6 +127,7 @@
 					<![CDATA[
 		WHERE final_date < sysdate AND company_code = #{companyCode}
 							]]>
+		ORDER BY final_date
 	</select>
 	<select id="selectSubInfo" resultType="GroupAdminVO">
 		SELECT DISTINCT contract_no

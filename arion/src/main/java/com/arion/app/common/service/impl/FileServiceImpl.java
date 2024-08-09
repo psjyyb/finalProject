@@ -34,7 +34,6 @@ public class FileServiceImpl implements FileService {
 	@Transactional
 	@Override
 	public String insertFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode) {
-		List<FileVO> fileVOList = new ArrayList<>();
 
 		UUID uuid = UUID.randomUUID();
 		String folderPath = makeFolder();
@@ -105,7 +104,5 @@ public class FileServiceImpl implements FileService {
 		return str;
 	}
 
-	private String setImagePath(String uploadFileName) {
-		return uploadFileName.replace(File.separator, "/");
-	}
+
 }

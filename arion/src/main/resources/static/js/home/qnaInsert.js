@@ -53,7 +53,7 @@ $(document).ready(function() {
 				icon: "sccess",
 				text: "등록되었습니다."
 			});
-			//window.location.href = '/home/qna';
+			window.location.href = '/home/qna';
 		})
 		.fail(err => {
 			Swal.fire({

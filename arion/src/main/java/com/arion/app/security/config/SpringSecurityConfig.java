@@ -31,6 +31,10 @@ public class SpringSecurityConfig {
     	//csrf 설정
     	http.csrf().disable();
     	http.headers().frameOptions().disable();
+    	
+    	// 캐시 비활성화 설정
+        // http.headers().cacheControl().disable();
+        
         http.authorizeHttpRequests()
                 .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")

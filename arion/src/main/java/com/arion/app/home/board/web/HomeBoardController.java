@@ -1,6 +1,8 @@
 package com.arion.app.home.board.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.FileService;
@@ -72,6 +76,13 @@ public class HomeBoardController {
         List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
         model.addAttribute("qnaInfo", findVO);
         model.addAttribute("fileInfo", fileVOList);
+        
+        String username = (String) session.getAttribute("ceoName");
+        if (username != null && username.equals(findVO.getQnaWriter())) {
+            model.addAttribute("isOwner", true);
+        } else {
+            model.addAttribute("isOwner", false);
+        }  
         return "home/board/qnaInfo";
     }
 	
@@ -111,5 +122,17 @@ public class HomeBoardController {
 		homeQnaVO.setQnaCompany(companyCode);
 		qsvc.updateQna(homeQnaVO, files, companyCode);
 		return "redirect:/home/qna";
+	}
+	
+	@PostMapping("/qnaPw")
+	@ResponseBody
+	public Map<String, Object> QnaPw(@RequestBody Map<String, String> request) {
+		Integer qnaNo = Integer.valueOf(request.get("qnaNo"));
+		String password = request.get("password");
+		
+		boolean isValid = qsvc.selectPw(qnaNo, password);
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", isValid);
+		return response;
 	}
 }

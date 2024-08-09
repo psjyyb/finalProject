@@ -54,10 +54,14 @@ public class LoginUserVO implements UserDetails {
         return userVO.getEmpName();
     }
     
-
-
     public int getEmployeeNo() {
     	return userVO.getEmployeeNo();
+
+    }
+    
+    public String getCeoName() {
+    	return userVO.getCeoName();
+
     }
     
     @Override

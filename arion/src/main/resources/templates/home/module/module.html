@@ -7,8 +7,37 @@
 <meta charset="utf-8">
 <title>ARION</title>
 </head>
-<body>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	margin: 150px auto;
+	text-align: center;
+	padding: 0;
+}
 
+.container2 {
+	max-width: 1200px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>
+<body>
+	<div class="container2">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title" th:text="${module.moduleName}"></h4>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 </body>
 </html>

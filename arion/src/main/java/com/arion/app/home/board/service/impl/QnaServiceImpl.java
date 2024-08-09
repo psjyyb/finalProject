@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,42 +17,51 @@ import com.arion.app.home.board.service.QnaService;
 import com.arion.app.security.service.CompanyVO;
 
 @Service
-public class QnaServiceImpl implements QnaService{
+public class QnaServiceImpl implements QnaService {
 	@Autowired
 	QnaMapper mapper;
-	
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Autowired
 	FileService fsvc;
-	
+
 	@Override
 	public List<HomeQnaVO> selectQnAList() {
-		
+
 		return mapper.selectQnAList();
 	}
 
 	@Override
 	public List<CompanyVO> selectCompany(String companyCode) {
-		
+
 		return mapper.selectCompany(companyCode);
 	}
 
 	@Override
 	public HomeQnaVO QnaInfo(HomeQnaVO homeQnaVO) {
-		
+
 		return mapper.selectQnaInfo(homeQnaVO);
 	}
 
 	@Transactional
-    @Override
-    public int insertQna(HomeQnaVO homeQnaVO, MultipartFile[] files, String companyCode) {
-        int result = mapper.insertQna(homeQnaVO);
+	@Override
+	public int insertQna(HomeQnaVO homeQnaVO, MultipartFile[] files, String companyCode) {
 
-        if (files != null && files.length > 0) {
-            fsvc.insertFiles(files, "qna", homeQnaVO.getQnaNo(), companyCode);
-        }
+		if (homeQnaVO.getQnaPw() != null && !homeQnaVO.getQnaPw().isEmpty()) {
+			String encodedPassword = passwordEncoder.encode(homeQnaVO.getQnaPw());
+			homeQnaVO.setQnaPw(encodedPassword);
+		}
 
-        return result;
-    }
+		int result = mapper.insertQna(homeQnaVO);
+
+		if (files != null && files.length > 0) {
+			fsvc.insertFiles(files, "qna", homeQnaVO.getQnaNo(), companyCode);
+		}
+
+		return result;
+	}
 
 	@Transactional
 	@Override
@@ -59,11 +69,11 @@ public class QnaServiceImpl implements QnaService{
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = mapper.updateQna(homeQnaVO);
-		
+
 		if (files != null && files.length > 0) {
-	        fsvc.updateFiles(files, "qna", homeQnaVO.getQnaNo(), companyCode);
-	    }
-		if(result == 1) {
+			fsvc.updateFiles(files, "qna", homeQnaVO.getQnaNo(), companyCode);
+		}
+		if (result == 1) {
 			isSuccessed = true;
 		}
 		map.put("result", isSuccessed);
@@ -73,14 +83,15 @@ public class QnaServiceImpl implements QnaService{
 
 	@Override
 	public int deleteQna(int qnaNo) {
-		
+
 		return mapper.deleteQna(qnaNo);
 	}
 
 	@Override
-	public String selectPw(int qnaNo) {
+	public boolean selectPw(Integer qnaNo, String password) {
+		String pw = mapper.selectPw(qnaNo);
+		boolean matches = passwordEncoder.matches(password, pw);
+		return matches;
 		
-		return mapper.selectPw(qnaNo);
 	}
-
 }

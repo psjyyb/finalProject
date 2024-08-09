@@ -184,4 +184,8 @@ public class GroupAdminController {
 		String comCode = (String) session.getAttribute("companyCode");
 		return gaService.companyPw(comCode,pw);
 	}
+	@PostMapping("/groupAdmin/contractCancle")
+	public String contractCancle() {
+		return"";
+	}
 }

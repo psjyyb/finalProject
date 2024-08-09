@@ -125,8 +125,10 @@
 		      ,contract_state
 		FROM contract
 					<![CDATA[
-		WHERE final_date < sysdate AND company_code = #{companyCode}
+		WHERE final_date < sysdate 
 							]]>
+		AND company_code = #{companyCode} 
+		AND contract_state NOT LIKE '계약중'
 		ORDER BY final_date
 	</select>
 	<select id="selectSubInfo" resultType="GroupAdminVO">

@@ -1,6 +1,9 @@
 package com.arion.app.group.admin.service;
 
 import java.util.List;
+import java.util.Map;
+
+import com.arion.app.security.service.CompanyVO;
 
 public interface GroupAdminService {
 	
@@ -26,4 +29,10 @@ public interface GroupAdminService {
 	int saveDept(List<String> list,String companyCode); // 부서저장
 	
 	int saveRank(RankVO rankVO, String companyCode); // 직급저장
+	
+	CompanyVO comSelect(String companyCode); // 회사정보 조회
+	
+	int saveCompany(CompanyVO companyVO); // 회사 정보수정
+
+	Map<String, Object> companyPw(String companyCode,String password); // 비밀번호
 }

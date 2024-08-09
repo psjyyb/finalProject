@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ARION</title>
+<style>
+.form-section {
+	margin-bottom: 30px;
+}
+
+.form-section h5 {
+	background-color: #f8f9fa;
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+	margin-bottom: 20px;
+}
+
+.form-section .form-group {
+	margin-bottom: 15px;
+}
+
+.form-footer {
+	text-align: right;
+	margin-top: 20px;
+}
+</style>
+</head>
+<body>
+	<div class="container mt-5">
+		<h2 class="mb-4">회사 정보</h2>
+
+		<form th:action="@{/groupAdmin/GAComSave}" th:object="${comInfo}"
+			method="POST" name="comForm">
+			<!-- 기본 정보 -->
+			<div class="form-section">
+				<h5>기본 정보</h5>
+				<div class="form-group row">
+					<label for="companyCode" class="col-sm-2 col-form-label">회사
+						코드</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyCode"
+							name="companyCode" th:field="*{companyCode}" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyName" class="col-sm-2 col-form-label">회사
+						이름</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyName"
+							name="companyName" th:field="*{companyName}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyId" class="col-sm-2 col-form-label">회사
+						ID</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyId"
+							name="companyId" th:field="*{companyId}" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyPw" class="col-sm-2 col-form-label">회사
+						비밀번호</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control" id="companyPw"
+							name="companyPw">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyBusinessNumber" class="col-sm-2 col-form-label">사업자
+						등록번호</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyBusinessNumber"
+							name="companyBusinessNumber" th:field="*{companyBusinessNumber}" readonly>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyType" class="col-sm-2 col-form-label">회사
+						업종</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyType"
+							name="companyType" th:field="*{companyType}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyTel" class="col-sm-2 col-form-label">전화
+						번호</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyTel"
+							name="companyTel" th:field="*{companyTel}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="companyAddress" class="col-sm-2 col-form-label">회사
+						주소</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="companyAddress"
+							name="companyAddress" th:field="*{companyAddress}">
+					</div>
+				</div>
+			</div>
+
+			<!-- CEO 정보 -->
+			<div class="form-section">
+				<h5>CEO 정보</h5>
+				<div class="form-group row">
+					<label for="ceoName" class="col-sm-2 col-form-label">CEO 이름</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="ceoName"
+							name="ceoName" th:field="*{ceoName}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="ceoEmail" class="col-sm-2 col-form-label">CEO
+						이메일</label>
+					<div class="col-sm-10">
+						<input type="email" class="form-control" id="ceoEmail"
+							name="ceoEmail" th:field="*{ceoEmail}">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="ceoPhone" class="col-sm-2 col-form-label">CEO
+						전화번호</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="ceoPhone"
+							name="ceoPhone" th:field="*{ceoPhone}">
+					</div>
+				</div>
+			</div>
+			<div class="form-footer">
+				<button type="submit" class="btn btn-primary">저장</button>
+				<button type="button" class="btn btn-secondary">취소</button>
+			</div>
+		</form>
+	</div>
+	<script>
+		comForm.addEventListener('submit', function() {
+			event.preventDefault();
+			
+			if(checkObj()== true){
+				if(confirm('회사정보를 수정하시겠습니까?')){
+					comForm.submit();
+				}
+			}
+			function checkObj(){
+				let comName=$('input[name=companyName]');
+				if(comName.val()==''){
+					alert('회사명은 필수값입니다.');
+					comName.focus();
+					return false;
+				}
+				let comTel = $('input[name=companyTel]');
+				if(comTel.val()==''){
+					alert('전화번호는은 필수값입니다.');
+					comTel.focus();
+					return false;
+				}
+				let comType = $('input[name=companyType]');
+				if(comType.val()==''){
+					alert('회사업종은 필수값입니다.');
+					comType.focus();
+					return false;
+				}
+				let comAddress = $('input[name=companyAddress]');
+				if(comAddress.val()==''){
+					alert('회사주소는 필수값입니다.');
+					comAddress.focus();
+					return false;
+				}
+				let ceoName = $('input[name=ceoName]');
+				if(ceoName.val()==''){
+					alert('CEO이름은 필수값입니다.');
+					ceoName.focus();
+					return false;
+				}
+				let ceoEmail = $('input[name=ceoEmail]');
+				if(ceoEmail.val()==''){
+					alert('CEO메일은 필수값입니다.');
+					ceoEmail.focus();
+					return false;
+				}
+				let ceoPhone = $('input[name=ceoPhone]');
+				if(ceoPhone.val()==''){
+					alert('CEO번호는 필수값입니다.');
+					ceoPhone.focus();
+					return false;
+				}
+				return true;
+			} 
+		})
+	</script>
+</body>
+</html>

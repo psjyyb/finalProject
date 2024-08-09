@@ -188,4 +188,39 @@
 	<delete id="rankDeSave">
 		DELETE FROM rank WHERE company_code = #{companyCode}
 	</delete>
+	<select id="selectCom" resultType="CompanyVO">
+		SELECT company_code
+		      ,company_name
+		      ,company_tel
+		      ,ceo_name
+		      ,company_id
+		      ,company_pw
+		      ,company_business_number
+		      ,company_type
+		      ,ceo_email
+		      ,company_address
+		      ,ceo_phone
+		FROM company
+		WHERE company_code = #{companyCode}
+	</select>
+	<update id="companySave" parameterType="CompanyVO">
+		UPDATE company
+		SET	   company_name = #{companyName}
+		      ,company_tel = #{companyTel}
+		      ,ceo_name = #{ceoName}
+		      <if test="companyPw != null and companyPw != '' ">
+		      ,company_pw = #{companyPw}
+		      </if>
+		      ,company_type = #{companyType}
+		      ,ceo_email = #{ceoEmail}
+		      ,company_address = #{companyAddress}
+		      ,ceo_phone = #{ceoPhone}
+		WHERE company_code = #{companyCode}
+	</update>
+	
+	<select id="companyPw">
+		SELECT company_pw 
+		FROM company
+		WHERE company_code = #{companyCode}
+	</select>
 </mapper>

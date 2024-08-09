@@ -1,15 +1,15 @@
 package com.arion.app.group.board.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import com.arion.app.group.board.service.BoardVO;
+import com.arion.app.group.board.service.Criteria;
 
 public interface BoardMapper {
 
 	// 자유게시판 freeboard //
 	// 전체조회
-	public List<BoardVO> selectBoardAll();
+	public List<BoardVO> selectBoardAll(Criteria criteria);
 	
 	// 글 상세조회
 	public BoardVO selectBoardInfo(BoardVO boardVO);
@@ -22,14 +22,14 @@ public interface BoardMapper {
 	
 	// 글 삭제
 	public int deleteBoardInfo(int boardNO);
-	
-	// 게시글 수 (검색할때써야될듯)
-	public int getCount(BoardVO boardVO);
-	
-	public List<BoardVO> getBoardList(BoardVO boardVo);
 
 	// 조회수
 	public int ViewCnt(int viewCnt);
+	
+	// total
+	public int getTotal(Criteria cri);
+
+	
 	
 	
 	// 공지사항 notice //
@@ -38,4 +38,4 @@ public interface BoardMapper {
 	// 부서게시판 deptboard //
 	
 	
-}
+}//end

@@ -63,22 +63,6 @@
 		})
 		.fail(err => console.log(err));			
 	};
-		
-	function validationCheck(){
-		let btitle = $('[name="boardTitle"]');
-		if(btitle.val()==''){
-			alert('제목을 입력하세요');
-			btitle.focus();
-			return false;
-		}
-		let bcont = $('[name="boardContent"]')
-		if(bcont.val()==''){
-			alert('내용을 입력하세요');
-			bcont.focus();
-			return false;
-		}
-		return true;
-	}
 	
 	function getBoardInfo(){
 		let formData= $('form[name="UpdateForm"]').serializeArray();

@@ -82,7 +82,7 @@ public class AdminServiceImpl implements AdminService{
 		}
 		
 		MultipartFile[] files = moduleVO.getUploadFiles();
-		String [] contents = moduleVO.getModuleNotice();
+		String [] contents = moduleVO.getModuleNotices();
 		
 		 if (files != null) {
 			 int i = 1;

@@ -1,5 +1,6 @@
 package com.arion.app.group.admin.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,8 +87,13 @@ public class GroupAdminServiceImpl implements GroupAdminService{
 	}
 	@Transactional
 	@Override
-	public int saveRank(List<String> list, String companyCode) {
+	public int saveRank(RankVO rankVO, String companyCode) {
 		int result = gaMapper.rankDeSave(companyCode);
+		System.out.println(rankVO.getRankRangkings()+"직급순서 ?ㅋㅋㅋ 이거");
+		System.out.println(rankVO.getRankName()+"직급명 직급명 직급명");
+		String ranks = rankVO.getRankName();
+		String rankArr[] = ranks.split(",");
+		List<String> list = Arrays.asList(rankArr);
 		RankVO rvo = new RankVO();
 		list.forEach(i ->{
 			rvo.setRankName(i);

@@ -25,5 +25,5 @@ public interface GroupAdminService {
 	
 	int saveDept(List<String> list,String companyCode); // 부서저장
 	
-	int saveRank(List<String> list, String companyCode); // 직급저장
+	int saveRank(RankVO rankVO, String companyCode); // 직급저장
 }

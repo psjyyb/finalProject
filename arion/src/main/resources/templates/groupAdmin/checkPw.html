@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ARION</title>
+</head>
+<body>
+
+	<!-- 비밀번호 확인 모달 -->
+	<div class="modal fade" id="passwordModal" tabindex="-1"
+		aria-labelledby="passwordModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="passwordModalLabel">비밀번호 확인</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="inputPassword">비밀번호를 입력하세요:</label> <input
+							type="password" class="form-control" id="inputPassword"
+							placeholder="비밀번호">
+					</div>
+					<div id="passwordFeedback" class="mt-2"
+						style="color: red; display: none;">비밀번호가 일치하지 않습니다.</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary" id="checkPw">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+    // 페이지 로드 시 모달 자동 표시
+    window.onload = function() {
+        var passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+        passwordModal.show();
+    }
+    const feedback = document.getElementById('passwordFeedback');
+    $('#checkPw').on('click',function(){
+    	let pw = $('#inputPassword').val();
+    	$.ajax('/groupAdmin/checkPw',{
+    		type:'POST',
+    		contentType:'application/json',
+    		data: JSON.stringify(pw)
+    	})
+    	.done(result=>{
+    		console.log(result);
+    		if(result.result==1){
+    		location.href='/groupAdmin/GAComMod';
+    		}else{
+    			feedback.style.display = 'block';
+    		}
+    	})
+    	.fail(err=>{
+    		console.log(err);
+    		
+    	})
+    	
+    	
+    })
+</script>
+
+</body>
+</html>

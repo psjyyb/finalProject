@@ -2,6 +2,7 @@ package com.arion.app.group.admin.web;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
@@ -19,6 +22,7 @@ import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
 import com.arion.app.group.admin.service.GroupAdminVO;
 import com.arion.app.group.admin.service.RankVO;
+import com.arion.app.security.service.CompanyVO;
 
 @Controller
 public class GroupAdminController {
@@ -151,5 +155,33 @@ public class GroupAdminController {
 	@GetMapping("/groupAdmin/GAConCan")
 	public String GAConCan() {
 		return"/groupAdmin/GAConCan";
+	}
+	@GetMapping("/groupAdmin/GAComMod")
+	public String GAComMod(Model model, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		CompanyVO cvo = gaService.comSelect(comCode);
+		model.addAttribute("comInfo",cvo);
+		return "/groupAdmin/GAComMod";
+	}
+	@PostMapping("/groupAdmin/GAComSave")
+	public String GAcomSave(CompanyVO companyVO) {
+		int result = gaService.saveCompany(companyVO);
+		String url = null;
+		if (result > -1) {
+			url = "redirect:/groupAdmin/GAEmpList";
+		} else {
+			url = "redirect:/groupAdmin/GAComMod";
+		}
+		return url;
+	}
+	@GetMapping("/groupAdmin/checkPw")
+	public String checkPw() {
+		return"/groupAdmin/checkPw";
+	}
+	@PostMapping("/groupAdmin/checkPw")
+	@ResponseBody
+	public Map<String, Object> checkPwPro(@RequestBody String pw, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		return gaService.companyPw(comCode,pw);
 	}
 }

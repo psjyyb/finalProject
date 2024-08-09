@@ -6,6 +6,7 @@ import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminVO;
 import com.arion.app.group.admin.service.RankVO;
+import com.arion.app.security.service.CompanyVO;
 
 public interface GroupAdminMapper {
 	
@@ -35,4 +36,9 @@ public interface GroupAdminMapper {
 	int rankInSave(RankVO rankVO); // 직급저장
 	int rankDeSave(String companyCode); // 직급저장
 	
+	CompanyVO selectCom(String companyCode); // 회사정보
+	
+	int companySave(CompanyVO companyVO); // 회사 정보수정
+	
+	String companyPw(String companyCode); // 비밀번호
 }

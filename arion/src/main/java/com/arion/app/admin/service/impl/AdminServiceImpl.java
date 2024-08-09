@@ -89,6 +89,8 @@ public class AdminServiceImpl implements AdminService{
 	            for (MultipartFile file : files) {
 	            	ModuleFileVO mvo = new ModuleFileVO();
 	            	String fileName = uuid + "_" + file.getOriginalFilename();
+	            	mvo.setModFileOriginalname(file.getOriginalFilename());
+	            	System.out.println(mvo.getModFileOriginalname());
 	            	mvo.setModFileName(fileName);
 	            	mvo.setModNo(moduleVO.getModuleNo());
 	            	mvo.setModFileType(file.getContentType());
@@ -112,5 +114,13 @@ public class AdminServiceImpl implements AdminService{
 	        }
 		
 		return result;
+	}
+	@Override
+	public List<ModuleFileVO> modFileSelect(ModuleVO moduleVO) {
+		return adminMapper.selectModFile(moduleVO);
+	}
+	@Override
+	public ModuleVO modSelect(ModuleVO moduleVO) {
+		return adminMapper.selectMod(moduleVO);
 	}
 }

@@ -3,38 +3,122 @@
 <mapper
 	namespace="com.arion.app.group.main.mail.mapper.MailMapper">
 
-<select id="recieveMailAll" parameterType="MailVO" resultType="MailVO">
-    SELECT
-        FIND_EMP_NAME(m.sender_id) AS sender_name,
-        m.send_date,
-        m.mail_title
-    FROM mail m
-    JOIN mail_receive mr ON m.mail_no = mr.mail_no
-    WHERE mr.employee_id = #{employeeId}
-    AND m.mail_status = 'RECEIVED'
-</select>
+	<select id="recieveMailAll" parameterType="MailVO"
+		resultType="MailVO">
+		SELECT
+		FIND_EMP_NAME(m.sender_id) AS sender_name,
+		m.send_date,
+		m.mail_title
+		FROM mail m
+		JOIN mail_receive mr ON m.mail_no =
+		mr.mail_no
+		WHERE mr.employee_id = #{employeeId}
+		AND m.mail_status =
+		'RECEIVED'
+	</select>
 
-<select id="importMailAll" parameterType="MailVO" resultType="MailVO">
-    SELECT
-        FIND_EMP_NAME(m.sender_id) AS sender_name,
-        m.send_date,
-        m.mail_title
-    FROM mail m
-    JOIN mail_receive mr ON m.mail_no = mr.mail_no
-    WHERE mr.employee_id = #{employeeId}
-    AND m.mail_status = 'IMPORT'
-</select>
+	<select id="importMailAll" parameterType="MailVO"
+		resultType="MailVO">
+		SELECT
+		FIND_EMP_NAME(m.sender_id) AS sender_name,
+		m.send_date,
+		m.mail_title
+		FROM mail m
+		JOIN mail_receive mr ON m.mail_no =
+		mr.mail_no
+		WHERE mr.employee_id = #{employeeId}
+		AND m.mail_status =
+		'IMPORT'
+	</select>
 
-<select id="deleteMailAll" parameterType="MailVO" resultType="MailVO">
-    SELECT
-        FIND_EMP_NAME(m.sender_id) AS sender_name,
-        m.send_date,
-        m.mail_title
-    FROM mail m
-    JOIN mail_receive mr ON m.mail_no = mr.mail_no
-    WHERE mr.employee_id = #{employeeId}
-    AND m.mail_status = 'TRASH'
-</select>
+	<select id="deleteMailAll" parameterType="MailVO"
+		resultType="MailVO">
+		SELECT
+		FIND_EMP_NAME(m.sender_id) AS sender_name,
+		m.send_date,
+		m.mail_title
+		FROM mail m
+		JOIN mail_receive mr ON m.mail_no =
+		mr.mail_no
+		WHERE mr.employee_id = #{employeeId}
+		AND m.mail_status =
+		'TRASH'
+	</select>
+
+	<select id="selectMailInfo" parameterType="MailVO"
+		resultType="MailVO">
+		SELECT
+		FIND_EMP_NAME(m.sender_id) AS sender_name,
+		m.send_date,
+		m.mail_title,
+		m.mail_content,
+		mr.employee_id AS recipient_id
+		FROM mail m
+		JOIN mail_receive mr ON m.mail_no = mr.mail_no
+		WHERE m.mail_no = #{mailNo}
+		AND mr.employee_id = #{employeeId}
+	</select>
+
+	<!-- 시퀀스 값 가져오기 -->
+	<select id="getMailNoSequence" resultType="int">
+		SELECT MAIL_NO_SEQ.NEXTVAL FROM DUAL
+	</select>
+
+	<!-- 메일 데이터 삽입 -->
+	<insert id="sendMail" parameterType="MailVO">
+		INSERT INTO MAIL (
+		MAIL_NO,
+		SENDER_ID,
+		COMPANY_CODE,
+		MAIL_CONTENT,
+		SEND_DATE,
+		MAIL_TITLE,
+		MAIL_STATUS
+		)
+		VALUES (
+		#{mailNo},
+		#{employeeId},
+		#{companyCode},
+		#{mailContent},
+		SYSDATE,
+		#{mailTitle},
+		'SEND'
+		)
+	</insert>
+
+	<!-- 메일 수신자 데이터 삽입 -->
+	<insert id="insertMailReceive" parameterType="MailReceiveVO">
+		INSERT INTO MAIL_RECEIVE (
+		RECEIVE_NO,
+		MAIL_NO,
+		EMPLOYEE_ID,
+		FILE_NO
+		)
+		VALUES (
+		#{receiveNo},
+		#{mailNo},
+		#{employeeId},
+		#{fileNo}
+		)
+	</insert>
+
+	<!-- 메일 파일 데이터 삽입 -->
+	<insert id="insertMailFile" parameterType="MailFileVO">
+		INSERT INTO MAIL_FILE (
+		FILE_NO,
+		MAIL_NO,
+		FILE_NAME,
+		COMPANY_CODE,
+		FILE_TYPE
+		)
+		VALUES (
+		#{fileNo},
+		#{mailNo},
+		#{fileName},
+		#{companyCode},
+		#{filetype}
+		)
+	</insert>
 
 
 </mapper>

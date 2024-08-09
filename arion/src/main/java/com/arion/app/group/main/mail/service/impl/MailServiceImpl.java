@@ -3,15 +3,18 @@ package com.arion.app.group.main.mail.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.group.main.mail.mapper.MailMapper;
+import com.arion.app.group.main.mail.service.MailFileVO;
+import com.arion.app.group.main.mail.service.MailReceiveVO;
 import com.arion.app.group.main.mail.service.MailService;
 import com.arion.app.group.main.mail.service.MailVO;
-import com.arion.app.group.main.mail.service.MailReceiveVO;
-import com.arion.app.group.main.mail.service.MailFileVO;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -49,48 +52,64 @@ public class MailServiceImpl implements MailService {
     public List<MailVO> deleteMailList(MailVO mailVO) {
         return mailMapper.deleteMailAll(mailVO.getCompanyCode(), mailVO.getEmployeeId());
     }
-
-    // 메일 보내기
-    @Override
-    public int mailSend(MailVO mailVO, List<MailReceiveVO> receivers, List<MailFileVO> files) {
-        int result = mailMapper.sendMail(mailVO);
-        int mailNo = mailVO.getMailNo();
-
-        if (result == 1) {
-            // 수신자 데이터베이스 삽입
-            for (MailReceiveVO receiver : receivers) {
-                receiver.setMailNo(mailNo);
-                mailMapper.insertMailReceive(receiver);
-            }
-
-            // 첨부파일 데이터베이스 삽입
-            for (MailFileVO file : files) {
-                file.setMailNo(mailNo);
-                mailMapper.insertMailFile(file);
-            }
-
-            return mailNo;
-        }
-        return -1;
-    }
-
-    // 메일 삭제
+//    @Transactional
+//    @Override
+//    public int mailSend(MailVO mailVO, List<String> receiverIds, List<MultipartFile> files) {
+//        int mailNo = mailMapper.getMailNoSequence();
+//        mailVO.setMailNo(mailNo);
+//
+//        // 메일 저장
+//        int result = mailMapper.sendMail(mailVO);
+//
+//        if (result == 1) {
+//            // 수신자 정보 저장
+//            List<MailReceiveVO> receivers = receiverIds.stream()
+//                .map(receiverId -> {
+//                    MailReceiveVO receiver = new MailReceiveVO();
+//                    receiver.setMailNo(mailNo);
+//                    receiver.setEmployeeId(receiverId);
+//                    receiver.setReceiveNo(mailMapper.getMailNoSequence()); // 시퀀스 값
+//                    return receiver;
+//                })
+//                .collect(Collectors.toList());
+//            
+//            for (MailReceiveVO receiver : receivers) {
+//                mailMapper.insertMailReceive(receiver);
+//            }
+//
+//            // 파일 정보 저장
+//            List<MailFileVO> fileVOs = files.stream()
+//                .map(file -> {
+//                    MailFileVO fileVO = new MailFileVO();
+//                    fileVO.setMailNo(mailNo);
+//                    fileVO.setFileName(file.getOriginalFilename());
+//                    fileVO.setFiletype(file.getContentType());
+//                    fileVO.setFileNo(mailMapper.getMailNoSequence()); // 시퀀스 값
+//                    fileVO.setCompanyCode(mailVO.getCompanyCode()); // 회사 코드 설정
+//                    return fileVO;
+//                })
+//                .collect(Collectors.toList());
+//
+//            for (MailFileVO fileVO : fileVOs) {
+//                mailMapper.insertMailFile(fileVO);
+//            }
+//
+//            return mailNo;
+//        }
+//
+//        return -1;
+//    }
     @Override
     public Map<String, Object> deleteMail(MailVO mailVO) {
         Map<String, Object> map = new HashMap<>();
+        boolean isSuccessed = mailMapper.mailDelete(mailVO.getMailNo()) == 1;
 
-        int result = mailMapper.mailDelete(mailVO.getMailNo());
+        map.put("result", isSuccessed);
+        map.put("target", mailVO);
 
-        if (result == 1) {
-            map.put("status", "success");
-            map.put("mailNo", mailVO.getMailNo());
-        } else {
-            map.put("status", "failure");
-        }
         return map;
     }
 
-    // 메일 상태 변경
     @Override
     public int mailStatus(MailVO mailVO) {
         return mailMapper.statusMail(mailVO.getMailNo());

@@ -28,9 +28,7 @@ public class GroupEmployeeController {
         String employeeId = (String) httpSession.getAttribute("loginId");
 
         System.out.println(companyCode+"여기왔니?");
-        System.out.println(employeeId+"어림도없지 ㅋㅋ");
-        
-  
+
             getModuleVO moduleVO = new getModuleVO();
             moduleVO.setCompanyCode(companyCode);
             moduleVO.setEmployeeId(employeeId);
@@ -38,6 +36,9 @@ public class GroupEmployeeController {
             List<getModuleVO> modules = mainService.getmoduleList(moduleVO);
             model.addAttribute("modules", modules);
             System.out.println("나이탕");
+            model.addAttribute("mailPageUrl", "/group/mail/received");
+            
         return "group/main/groupMain";
     }
+    
 }

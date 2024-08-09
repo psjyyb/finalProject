@@ -21,12 +21,11 @@ public interface MailService {
     List<MailVO> deleteMailList(MailVO mailVO);
 
     // 메일 보내기
-    int mailSend(MailVO mailVO, List<MailReceiveVO> receivers, List<MailFileVO> files);
+//    int mailSend(MailVO mailVO, List<MailReceiveVO> receivers, List<MailFileVO> files);
 
     // 메일 삭제
     Map<String, Object> deleteMail(MailVO mailVO);
 
     // 메일 상태 변경
     int mailStatus(MailVO mailVO);
-
 }

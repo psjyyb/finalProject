@@ -21,4 +21,8 @@ public interface AdminService {
 	int qnaReply(QnAVO qnaVO); // qna 답변
 	
 	int moduleInsert(@ModelAttribute ModuleVO moduleVO); // 모듈등록 
+	
+	// 모듈수정화면.
+	ModuleVO modSelect(ModuleVO moduleVO); // 모듈정보
+	List<ModuleFileVO> modFileSelect(ModuleVO moduleVO); // 모듈 설명사진
 }

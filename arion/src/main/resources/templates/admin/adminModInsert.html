@@ -47,6 +47,10 @@
 				<label for="moduleName" class="form-label">모듈 이름</label>
 				<input type="text" class="form-control" id="moduleName" name="moduleName" required>
 			</div>
+			<div class="mt-2">
+						<label for="moduleNotice" class="form-label">모듈 머리말</label>
+						<textarea class="form-control moduleNotice" id="moduleNotice" name="moduleNotice" rows="5" required></textarea>
+					</div>
 			<div class="mb-3">
 					<label for="files" class="form-label">모듈 아이콘</label>
 					<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
@@ -60,8 +64,8 @@
 					<label for="files" class="form-label">모듈 설명</label>
 					<input type="file" class="form-control" id="files" name="uploadFiles">
 					<div class="mt-2">
-						<label for="moduleNotice" class="form-label">모듈설명</label>
-						<textarea class="form-control moduleNotice" id="moduleNotice" name="moduleNotice" rows="5" required></textarea>
+						<label for="moduleNotices" class="form-label">모듈설명</label>
+						<textarea class="form-control moduleNotices" id="moduleNotices" name="moduleNotices" rows="5" required></textarea>
 					</div>
 				</div>
 			</div>
@@ -80,12 +84,14 @@
 		let formData = new FormData(); // FormData를 전역 변수로 선언
 
 		$('#addBtn').on('click', function() {
-			let mname = $('#moduleName').val();
+			let name = $('#moduleName').val();
 			let price = $('#modulePrice').val();
+			let notice = $('#moduleNotice').val();
 
 			// 폼 데이터에 모듈 이름과 가격 추가
-			formData.append('moduleName', mname);
+			formData.append('moduleName', name);
 			formData.append('modulePrice', price);
+			formData.append('moduleNotice',notice)
 
 			// 모듈 아이콘 추가
 			let moduleIcons = $('#moduleIcons')[0].files[0];
@@ -98,8 +104,8 @@
 				formData.append('uploadFiles', file);
 			});
 
-			$('textarea.moduleNotice').each(function() {
-				formData.append('moduleNotice', $(this).val());
+			$('textarea.moduleNotices').each(function() {
+				formData.append('moduleNotices', $(this).val());
 			});
 
 			// AJAX 요청 보내기
@@ -122,7 +128,7 @@
 		$('#addFile').click(function() {
 			let newFileInputWrapper = $('<div class="mb-3 file-input-wrapper"></div>');
 			let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
-			let fileDescription = $('<div class="mt-2"><label for="moduleNotice" class="form-label">모듈설명</label><textarea class="form-control moduleNotice" name="moduleNotice[]" rows="5" placeholder="모듈설명" required></textarea></div>');
+			let fileDescription = $('<div class="mt-2"><label for="moduleNotices" class="form-label">모듈설명</label><textarea class="form-control moduleNotices" name="moduleNotices[]" rows="5" placeholder="모듈설명" required></textarea></div>');
 			let removeButton = $('<button type="button" class="btn btn-danger mt-2">X</button>');
 
 			removeButton.click(function(e) {

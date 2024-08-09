@@ -145,18 +145,8 @@ public class GroupAdminController {
 	@PostMapping("/groupAdmin/GARankSave")
 	public String GARankSave (RankVO rankVO,HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
-		String ranks = rankVO.getRankName();
-		String rankArr[] = ranks.split(",");
-		List<String> list = Arrays.asList(rankArr);
-		gaService.saveRank(list, comCode);
-		int result = 0;
-		String url = null;
-		if(result > 0) {
-			url="redirect:/groupAdmin/GARankList";
-		}else {
-			url="redirect:/groupAdmin/GARankList";
-		}
-		return url;
+		gaService.saveRank(rankVO, comCode);
+		return "redirect:/groupAdmin/GARankList";
 	}
 	@GetMapping("/groupAdmin/GAConCan")
 	public String GAConCan() {

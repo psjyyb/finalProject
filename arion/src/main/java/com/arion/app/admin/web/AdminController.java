@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
+import com.arion.app.admin.service.ModuleFileVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 import com.arion.app.common.service.FileService;
@@ -104,5 +105,14 @@ public class AdminController {
 			url = "redirect:adminQnAList";
 		}
 		return url;
+	}
+	@GetMapping("/adminModInfo")
+	public String adminModInfo(ModuleVO moduleVO, Model model) {
+		ModuleVO mvo = adminService.modSelect(moduleVO);
+		List<ModuleFileVO> list = adminService.modFileSelect(moduleVO);
+		model.addAttribute("fileList",list);
+		model.addAttribute("modInfo",mvo);
+		System.out.println(moduleVO);
+		return "admin/adminModInfo";
 	}
 }

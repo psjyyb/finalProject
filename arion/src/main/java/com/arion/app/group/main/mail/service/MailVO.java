@@ -14,9 +14,7 @@ public class MailVO {
     private Date sendDate;
     private String mailTitle;
     private String mailStatus;
+    private String mailContent;
     private String companyCode;
+    private String recipientId;
 }
-
-
-
-

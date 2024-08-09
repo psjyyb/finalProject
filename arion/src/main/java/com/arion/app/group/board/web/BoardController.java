@@ -11,12 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.group.board.service.BoardService;
 import com.arion.app.group.board.service.BoardVO;
+import com.arion.app.group.board.service.Criteria;
+import com.arion.app.group.board.service.PageDTO;
 
 @Controller
 public class BoardController {
@@ -31,9 +32,10 @@ public class BoardController {
 	
 	// 전체조회 
 	@GetMapping("/group/freeboardList")	// 주소를 어디로 할건지 정해야됨
-	public String boardList(Model model) {
-		List<BoardVO> list = boardService.boardList();
+	public String boardList(Model model, Criteria cri) {
+		List<BoardVO> list = boardService.boardList(cri);
 		model.addAttribute("boards", list);
+		model.addAttribute("page", new PageDTO(10, boardService.getTotal(cri), cri));
 		return "group/board/freeboardList";	// RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 	

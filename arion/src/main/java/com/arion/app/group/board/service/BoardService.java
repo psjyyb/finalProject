@@ -7,7 +7,7 @@ public interface BoardService {
 	
 	// 자유게시판 freeboard //
 	// 전체조회
-	public List<BoardVO> boardList();
+	public List<BoardVO> boardList(Criteria cri);
 	
 	// 글 상세조회
 	public BoardVO boardInfo(BoardVO boardVO);
@@ -23,4 +23,8 @@ public interface BoardService {
 	
 	// 조회수
 	public int ViewCnt(int BoardVO);
+	
+	// 토탈
+	public int getTotal(Criteria cri);
+
 }

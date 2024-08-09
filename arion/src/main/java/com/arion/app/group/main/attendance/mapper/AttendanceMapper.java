@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.arion.app.group.main.attendance.service.AEmployeeVO;
+import com.arion.app.group.main.attendance.service.AttendanceDownloadVO;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
 
@@ -19,5 +20,5 @@ public interface AttendanceMapper {
 	
 	public List<WorkTimeVO> worktime();
 	
-	
+	public List<AttendanceDownloadVO> attendancedownload(int employeeno,String start, String end);
 }

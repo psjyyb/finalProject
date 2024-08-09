@@ -50,6 +50,19 @@
                     AND TO_DATE(#{end}, 'YYYY-MM-DD')
 	</select>
 	
+	<select id="attendancedownload" parameterType="AEmployeeVO" resultType="AttendanceDownloadVO">
+    
+        SELECT 
+               att_date,
+               TO_CHAR(start_time,'HH24:MI') AS start_time,
+               TO_CHAR(end_time,'HH24:MI') AS end_time,
+               state
+        FROM attendance
+        WHERE employee_no = #{employeeno}
+        AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
+	</select>
+	
 	
 	<select id="worktime" parameterType="AEmployeeVO" resultType="WorkTimeVO">
     

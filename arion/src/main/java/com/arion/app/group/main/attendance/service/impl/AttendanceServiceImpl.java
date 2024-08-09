@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.arion.app.group.main.attendance.mapper.AttendanceMapper;
 import com.arion.app.group.main.attendance.service.AEmployeeVO;
+import com.arion.app.group.main.attendance.service.AttendanceDownloadVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
@@ -40,6 +41,13 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public List<WorkTimeVO> worktime() {
 		// TODO Auto-generated method stub
 		return attendancemapper.worktime();
+	}
+
+
+	@Override
+	public List<AttendanceDownloadVO> attendancedownload(int employeeno,String start,String end) {
+		
+		return attendancemapper.attendancedownload(employeeno,start,end);
 	}
 	
 }

@@ -33,4 +33,8 @@ public interface AdminMapper {
 	// 모듈수정화면.
 	ModuleVO selectMod(ModuleVO moduleVO); // 모듈정보
 	List<ModuleFileVO> selectModFile(ModuleVO moduleVO); // 모듈 설명사진
+	
+	int updateMod(ModuleVO moduleVO); // 모듈정보 수정
+	int deleteModFile(ModuleVO moduleVO); // 모듈 사진 삭제
+	
 }

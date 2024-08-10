@@ -8,6 +8,7 @@
 		      ,module_notice
 		      ,module_icon
 		FROM module
+		ORDER BY module_no ASC
 	</select>
 	
 	<select id="explanModule" resultType="HomeModuleVO">

@@ -85,7 +85,12 @@ public class HomeController {
     @GetMapping("/home/module")
     public String module(Model model) {
     	List<HomeModuleVO> mvo = msvc.selectModule();
+    	
+    	int firstModuleNo = mvo.get(0).getModuleNo();
+    	System.out.println(firstModuleNo);
+    	List<HomeModuleVO> fmvo = msvc.explanModule(firstModuleNo);
     	model.addAttribute("moduleList", mvo);
+    	model.addAttribute("moduleInfo", fmvo);
         return "home/module/module";
     }
     
@@ -139,6 +144,31 @@ public class HomeController {
         return csvc.IdCheck(companyId);
     }
     
+    @PostMapping("/findId")
+    @ResponseBody
+    public Map<String, String> findCompanyId(@RequestParam("ceoName") String ceoName, @RequestParam("companyBusinessNumber") int companyBusinessNumber, Model model) {
+    	CompanyVO companyVO = csvc.findId(ceoName, companyBusinessNumber);
+    	Map<String, String> response = new HashMap<>();
+		if(companyVO != null) {
+			response.put("message","회사코드와 아이디가 이메일로 전송되었습니다." );  				
+		} else {
+			response.put("message", "해당 정보가 없습니다.");
+		}
+    	return response; 	
+    }
     
-    
+    @PostMapping("/resetPassword")
+    @ResponseBody
+    public Map<String, String> resetPassword(@RequestParam("companyCode") String companyCode, 
+                                @RequestParam("companyId") String companyId, 
+                                Model model) {
+        int result = csvc.updatePw(companyCode, companyId);
+        Map<String, String> response = new HashMap<>();
+        if (result > 0) {
+        	response.put("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+        } else {
+        	response.put("message", "비밀번호 재설정에 실패했습니다.");
+        }
+        return response; 
+    }
 }

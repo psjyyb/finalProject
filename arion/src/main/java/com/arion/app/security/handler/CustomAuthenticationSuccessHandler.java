@@ -35,21 +35,18 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    session.setAttribute("empName", userDetail.getEmpName());
 	    session.setAttribute("ceoName", userDetail.getCeoName());
 		session.setAttribute("employeeNo", userDetail.getEmployeeNo());
-
+		session.setAttribute("siteResp", userDetail.getSiteResp());
 	 
 
-	
-
-		
 	    System.out.println("세션에 저장되는 정보들");
 	    System.out.println("회사코드 : " + userDetail.getCompanyCode());
 	    System.out.println("아이디 : " + userDetail.getUsername());
 	    System.out.println("직급 : " + userDetail.getRankName());
 	    System.out.println("부서이름 : " + userDetail.getDepartmentName());
 	    System.out.println("사원이름 : " + userDetail.getEmpName());
-	    System.out.println("대표이름 : + " + userDetail.getCeoName());
+	    System.out.println("대표이름 : " + userDetail.getCeoName());
 	    System.out.println("사원번호 : " + userDetail.getEmployeeNo());
-
+	    System.out.println("사이트권한 : " + userDetail.getSiteResp());
 
 
 	    
@@ -61,6 +58,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 				break;
 			} else if (roleName.equals("ROLE_USER")) {
 				redirectUrl = "/groupAdmin/choice";
+				break;
+			} else if (roleName.equals("ROLE_No")) {
+				redirectUrl = "/home";
 				break;
 			} else if (roleName.equals("ROLE_일반사원") || roleName.equals("ROLE_사원관리자")) {
 				redirectUrl = "/group";

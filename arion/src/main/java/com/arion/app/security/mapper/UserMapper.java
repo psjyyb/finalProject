@@ -1,5 +1,7 @@
 package com.arion.app.security.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,5 +16,9 @@ public interface UserMapper {
     int insertCompany(CompanyVO cvo);
     int checkId(@Param("companyId") String companyId);
     String selectCompanyName(@Param("companyCode") String companyCode);
+    
+    CompanyVO findId (@Param("ceoName") String ceoName, @Param("companyBusinessNumber") int companyBusinessNumber);
+    int updatePw (@Param("companyCode") String companyCode, @Param("companyId") String companyId, @Param("companyPw") String companyPw);
+    String selectEmail (@Param("companyCode") String companyCode, @Param("companyId") String companyId);
 
 }

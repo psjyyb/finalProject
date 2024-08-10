@@ -35,6 +35,10 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public String insertFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode) {
 
+		if(files == null || files.length == 0) {
+			return null;
+		}
+		
 		UUID uuid = UUID.randomUUID();
 		String folderPath = makeFolder();
 		String saveName = "";

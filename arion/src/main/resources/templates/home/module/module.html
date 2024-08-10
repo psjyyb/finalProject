@@ -38,6 +38,43 @@ body {
     color: #ff9800; 
 }
 
+#moduleInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+
+}
+
+.moduleItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.moduleItem img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.moduleItem p {
+    flex: 1;
+    margin: 0 20px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.moduleItem:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
 </style>
 </head>
 <body>
@@ -49,7 +86,12 @@ body {
 </div>
 
 <div id="moduleInfo">
-
+	<th:block th:each="module : ${moduleInfo}">
+   		<div class ="moduleItem">
+   			<img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
+   			<p th:text="${module.modFileContent}"></p>
+   		</div>
+	</th:block>   
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -75,11 +117,11 @@ $(document).ready(function() {
     });
     
     function moduleDiv(result) {
-        $('#moduleInfo').empty(); // 이전 내용을 지움
+        $('#moduleInfo').empty(); 
 
         result.forEach(function(module) {
-            let div = $('<div/>');
-            let img = $('<img>').attr('src', '/files/' + module.modFileName);
+            let div = $('<div/>').addClass('moduleItem');
+            let img = $('<img/>').attr('src', '/files/' + module.modFileName).attr('alt', module.modFileName);
             let p = $('<p/>').text(module.modFileContent);
             
             div.append(img);

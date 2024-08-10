@@ -1,0 +1,162 @@
+@charset "EUC-KR";
+body {
+    font-family: Arial, sans-serif;
+    margin: 50px auto;
+    text-align: center;
+    padding: 0;
+}
+
+.container2 {
+    width: 1200px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 150px auto;
+    overflow: hidden;
+    padding: 20px;
+    text-align: left;
+}
+
+h3 {
+    background-color: #ffa500;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+.info-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.info-section div {
+    width: 48%;
+}
+
+.info-section strong {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.content-section {
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.content-section h4 {
+    margin-bottom: 10px;
+}
+
+.content-section p {
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.file-section img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+img {
+	width: 300px;
+    height: 300px;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.file-links {
+    margin: 10px 0;
+}
+
+.file-links a {
+    display: inline-block;
+    margin-right: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.file-links a:hover {
+    text-decoration: underline;
+}
+
+.reply-section {
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.content-footer {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#passwordModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#modalContent {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#modalContent label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#modalContent input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#modalContent button {
+    background-color: #ffa500;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#modalContent button:hover {
+    background-color: #e69500;
+}
+
+#modalContent .cancel-btn {
+    background-color: #ccc;
+    color: black;
+}
+
+#modalContent .cancel-btn:hover {
+    background-color: #999;
+}

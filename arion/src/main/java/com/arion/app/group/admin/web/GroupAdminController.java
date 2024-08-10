@@ -153,7 +153,10 @@ public class GroupAdminController {
 		return "redirect:/groupAdmin/GARankList";
 	}
 	@GetMapping("/groupAdmin/GAConCan")
-	public String GAConCan() {
+	public String GAConCan(Model model, HttpSession session) {
+		String comCode = (String)session.getAttribute("companyCode");
+		int result = gaService.contractNo(comCode);
+		model.addAttribute("contractNo",result);
 		return"/groupAdmin/GAConCan";
 	}
 	@GetMapping("/groupAdmin/GAComMod")
@@ -185,7 +188,8 @@ public class GroupAdminController {
 		return gaService.companyPw(comCode,pw);
 	}
 	@PostMapping("/groupAdmin/contractCancle")
-	public String contractCancle() {
-		return"";
+	public String contractCancle(int contractNo, HttpSession session) {
+		String comCode = (String) session.getAttribute("companyCode");
+		return gaService.cancleContract(contractNo,comCode);
 	}
 }

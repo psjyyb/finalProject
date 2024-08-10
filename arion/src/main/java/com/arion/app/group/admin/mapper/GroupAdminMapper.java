@@ -41,4 +41,10 @@ public interface GroupAdminMapper {
 	int companySave(CompanyVO companyVO); // 회사 정보수정
 	
 	String companyPw(String companyCode); // 비밀번호
+	
+	int contractNo(String companyCode); // 계약중인 계약서 번호
+	
+	// 계약해지
+	int cancleContract(int contractNo, String companyCode); // 계약서 해지
+	int cancleCompany(String companyCode); // 권한 변경
 }

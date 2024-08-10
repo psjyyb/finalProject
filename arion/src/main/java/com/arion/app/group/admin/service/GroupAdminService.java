@@ -35,4 +35,9 @@ public interface GroupAdminService {
 	int saveCompany(CompanyVO companyVO); // 회사 정보수정
 
 	Map<String, Object> companyPw(String companyCode,String password); // 비밀번호
+	
+	int contractNo(String companyCode); // 계약중인 계약서 번호
+	
+	// 계약해지
+	String cancleContract(int contractNo, String companyCode); // 계약서 해지
 }

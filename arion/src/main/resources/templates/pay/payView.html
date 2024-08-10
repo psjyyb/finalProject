@@ -191,10 +191,10 @@ h1, h2, h3 {
 					</div>
 					<div>
 						<p>
-							<strong>월 구독료:</strong> [[${payInfo.monthlyAmount}]] 원
+							<strong>월 구독료:</strong> [[${#numbers.formatInteger(payInfo.monthlyAmount,3, 'COMMA')}]]원
 						</p>
 						<p>
-							<strong>총 금액:</strong> [[${payInfo.totalAmount}]] 원
+							<strong>총 금액:</strong> [[${#numbers.formatInteger(payInfo.totalAmount,3, 'COMMA')}]]원
 						</p>
 						
 					</div>
@@ -240,15 +240,13 @@ h1, h2, h3 {
 							<th>회수</th>
 							<th>금액</th>
 							<th>일시</th>
-							<th>내역</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>1</td>
-							<td>342,660 원</td>
-							<td>2024-07-25</td>
-							<td>1231</td>
+							<td>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원</td>
+							<td th:text="${#dates.format(comInfo.sysdate,'yyyy-MM-dd')}"></td>
 						</tr>
 					</tbody>
 				</table>

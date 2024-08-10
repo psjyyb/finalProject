@@ -93,8 +93,9 @@
 	</select>
 	<update id="insertReply" parameterType="QnAVO">
 		UPDATE qna
-		SET qna_state = '답변',
-		    qna_reply = #{qnaReply}
+		SET qna_state = '답변'
+		   ,qna_reply = #{qnaReply}
+		   ,reply_date = sysdate
 		WHERE qna_no = #{qnaNo}
 	</update>
 	<insert id="insertModule" parameterType="ModuleVO">

@@ -202,6 +202,7 @@
 		      ,ceo_email
 		      ,company_address
 		      ,ceo_phone
+		      ,sysdate
 		FROM company
 		WHERE company_code = #{companyCode}
 	</select>
@@ -225,4 +226,21 @@
 		FROM company
 		WHERE company_code = #{companyCode}
 	</select>
+	<select id="contractNo">
+		SELECT contract_no
+		FROM contract
+		WHERE company_code = #{companyCode} 
+		AND contract_state = '계약중'
+	</select>
+	<update id="cancleContract">
+		UPDATE contract
+		SET contract_state = '계약해지'
+		WHERE company_code = #{companyCode} AND contract_no = #{contractNo}
+	</update>
+	
+	<update id="cancleCompany">
+		UPDATE company 
+		SET site_resp = 'No'
+		WHERE company_code = #{companyCode}
+	</update>
 </mapper>

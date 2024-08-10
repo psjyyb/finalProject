@@ -125,7 +125,8 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	@Override
 	public int saveCompany(CompanyVO companyVO) {
 		String comPw = companyVO.getCompanyPw();
-		if (comPw != null) {
+		System.out.println(comPw+"TLqkf");
+		if (comPw != null && comPw !="") {
 			String encodedPassword = passwordEncoder.encode(companyVO.getCompanyPw());
 			companyVO.setCompanyPw(encodedPassword);
 		}
@@ -143,5 +144,22 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		}
 		map.put("result", isSuccessed);
 		return map;
+	}
+	@Override
+	public int contractNo(String companyCode) {
+		return gaMapper.contractNo(companyCode);
+	}
+	@Transactional
+	@Override
+	public String cancleContract(int contractNo, String companyCode) {
+		int result = gaMapper.cancleCompany(companyCode);
+		result += gaMapper.cancleContract(contractNo, companyCode);
+		String url = null;
+		if(result <= 1) {
+			url = "redirect:/groupAdmin/conCan";
+		}else {
+			url = "redirect:/home";
+		}
+		return url;
 	}
 }

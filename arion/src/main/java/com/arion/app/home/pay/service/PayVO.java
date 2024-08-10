@@ -10,4 +10,6 @@ public class PayVO {
 	private String totalAmount; // 합계금액
 	private String accountNumber; // 사용인원수
 	private String subscriptionPeriod; // 구독기간
+	private String regularPaymentDate; // 정기결제일
+	private String firstMonthAmount; // 첫달 결제일
 }

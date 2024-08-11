@@ -202,7 +202,6 @@
 		      ,ceo_email
 		      ,company_address
 		      ,ceo_phone
-		      ,sysdate
 		FROM company
 		WHERE company_code = #{companyCode}
 	</select>

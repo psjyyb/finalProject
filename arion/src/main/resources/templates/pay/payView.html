@@ -121,7 +121,6 @@ h1, h2, h3 {
 	margin: 0;
 }
 
-
 .contract-section {
 	margin-bottom: 20px;
 }
@@ -165,118 +164,186 @@ h1, h2, h3 {
 </head>
 <body>
 	<div class="container2">
-		<div class="contract-container">
-			<div class="contract-header">
-				<h1>
-					구독형 그룹웨어 계약서 작성
-				</h1>
-			</div>
+		<form id="signature-form" method="post" th:action="@{/home/payView}">
+			<div class="contract-container">
+				<div class="contract-header">
+					<h1>구독형 그룹웨어 계약서 작성</h1>
+				</div>
 
-			<div class="contract-section">
-				<h2>계약 정보</h2>
-				<div class="contract-details">
-					<div>
-						<p>
-							<strong>계약 번호:</strong>
-						</p>
-						<p>
-							<strong>시작 날짜:</strong> 
-						</p>
-						<p>
-							<strong>종료 날짜:</strong>
-						</p>
-						<p>
-							<strong>사용자 수:</strong>[[${payInfo.accountNumber}]] 명
-						</p>
-					</div>
-					<div>
-						<p>
-							<strong>월 구독료:</strong> [[${#numbers.formatInteger(payInfo.monthlyAmount,3, 'COMMA')}]]원
-						</p>
-						<p>
-							<strong>총 금액:</strong> [[${#numbers.formatInteger(payInfo.totalAmount,3, 'COMMA')}]]원
-						</p>
-						
+				<div class="contract-section">
+					<h2>계약 정보</h2>
+
+					<div class="contract-details">
+						<div>
+							<p>
+								<strong>계약 번호:</strong> [[${conNo}]] <input type="hidden"
+									name="contractNo" th:value="${conNo}">
+							</p>
+							<p>
+								<strong>시작 날짜:</strong> [[${comInfo.startDate}]](계약당일) <input
+									type="hidden" name="startDate" th:value="${comInfo.startDate}">
+							</p>
+							<p>
+								<strong>종료 날짜:</strong> [[${comInfo.finalDate}]] <input
+									type="hidden" name="finalDate" th:value="${comInfo.finalDate}">
+							</p>
+							<p>
+								<strong>사용자 수:</strong> [[${payInfo.accountNumber}]] 명 <input
+									type="hidden" name="usersCnt"
+									th:value="${payInfo.accountNumber}">
+							</p>
+							<p>
+								<strong>매월 결제일:</strong> 매월 [[${payInfo.regularPaymentDate}]] 일
+								<input type="hidden" name="regularDate"
+									th:value="${payInfo.regularPaymentDate}">
+							</p>
+						</div>
+						<div>
+							<p>
+								<strong>월 구독료:</strong>
+								[[${#numbers.formatInteger(payInfo.monthlyAmount,3, 'COMMA')}]]원
+								<input type="hidden" name="monthPayPrice"
+									th:value="${payInfo.monthlyAmount}">
+							</p>
+							<p>
+								<strong>총 금액:</strong>
+								[[${#numbers.formatInteger(payInfo.totalAmount,3, 'COMMA')}]]원 <input
+									type="hidden" name="totalPayPrice"
+									th:value="${payInfo.totalAmount}">
+							</p>
+							<p>
+								<strong>첫달 결제 금액:</strong>
+								[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원 <input
+									type="hidden" name="firstMonthAmount"
+									th:value="${payInfo.firstMonthAmount}">
+							</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="contract-section">
-				<h2>회사 정보</h2>
-				<div class="contract-details">
-					<div>
-						<p>
-							<strong>회사 코드:</strong> c.company_code
-						</p>
-						<p>
-							<strong>회사명:</strong> c.company_name
-						</p>
-						<p>
-							<strong>전화번호:</strong> c.company_tel
-						</p>
-					</div>
-					<div>
-						<p>
-							<strong>사업자 번호:</strong>company_business_number
-						</p>
-						<p>
-							<strong>회사 유형:</strong> c.company_type
-						</p>
-						<p>
-							<strong>우편번호:</strong> c.company_post
-						</p>
-						<p>
-							<strong>CEO 이메일:</strong> c.ceo_email
-						</p>
+				<div class="contract-section">
+					<h2>회사 정보</h2>
+					<div class="contract-details">
+						<div>
+							<p>
+								<strong>회사 코드:</strong> [[${comInfo.companyCode}]] <input
+									type="hidden" name="companyCode"
+									th:value="${comInfo.companyCode}">
+							</p>
+							<p>
+								<strong>회사명:</strong> [[${comInfo.companyName}]]
+							</p>
+							<p>
+								<strong>전화번호:</strong> [[${comInfo.companyTel}]]
+							</p>
+						</div>
+						<div>
+							<p>
+								<strong>사업자 번호:</strong> [[${comInfo.companyBusinessNumber}]]
+							</p>
+							<p>
+								<strong>회사 유형:</strong> [[${comInfo.companyType}]]
+							</p>
+							<p>
+								<strong>회사 주소:</strong> ([[${comInfo.companyPost}]])
+								[[${comInfo.companyAddress }]]
+							</p>
+							<p>
+								<strong>CEO 이메일:</strong> [[${comInfo.ceoEmail}]]
+							</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="contract-section">
-				<h2>결제 내역</h2>
-				<table class="contract-table">
-					<thead>
-						<tr>
-							<th>회수</th>
-							<th>금액</th>
-							<th>일시</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>1</td>
-							<td>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원</td>
-							<td th:text="${#dates.format(comInfo.sysdate,'yyyy-MM-dd')}"></td>
-						</tr>
-					</tbody>
-				</table> 
-			</div>
+				<div class="contract-section">
+					<h2>결제 내역</h2>
+					<table class="contract-table">
+						<thead>
+							<tr>
+								<th>회수</th>
+								<th>금액</th>
+								<th>일시</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3,
+									'COMMA')}]]원</td>
+								<td th:text="${comInfo.startDate}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
-			<div class="contract-section">
-				<h2>계약 조항</h2>
-				<p>제1조 (서비스 제공 내용)</p>
-				<p>1. 계약자는 그룹웨어 서비스를 이용할 수 있습니다.</p>
-				<p>2. 서비스 내용은 계약서에 명시된 바에 따릅니다.</p>
-				<p>3. 서비스 변경 사항이 있을 경우 계약자는 사전에 통보를 받습니다.</p>
-				<!-- 추가적인 조항을 여기에 작성할 수 있습니다 -->
+				<div class="contract-section">
+					<h2>계약 조항</h2>
+					<p>제1조 (서비스 제공 내용)</p>
+					<p>1. 계약자는 그룹웨어 서비스를 이용할 수 있습니다.</p>
+					<p>2. 서비스 내용은 계약서에 명시된 바에 따릅니다.</p>
+					<p>3. 서비스 변경 사항이 있을 경우 계약자는 사전에 통보를 받습니다.</p>
+					<!-- 추가적인 조항을 여기에 작성할 수 있습니다 -->
+				</div>
+				<div class="signature">
+					<div>
+						<p>갑</p>
+						<p>
+							<img th:src="@{/images/sign.jpg}" width="200" height="200"
+								style="border: 1px solid black;">
+						</p>
+						<p>서명</p>
+					</div>
+					<div>
+						<p>을</p>
+						<p>
+							<canvas id="signature-pad" width="200" height="200"
+								style="border: 1px solid black;"></canvas>
+						</p>
+						<p>서명</p>
+					</div>
+				</div>
+				<button id="save">계약서 저장</button>
 			</div>
-			<div class="signature">
-        <div>
-            <p>갑</p>
-            <p><img th:src="@{/images/sign.jpg}"  width="200" height="200" style="border: 1px solid black;"></p>
-            <p>서명</p>
-        </div>
-        <div>
-            <p>을</p>
-            <p><canvas id="signature-pad" width="200" height="200" style="border: 1px solid black;"></canvas></p>
-            <p>서명</p>
-        </div>
-		</div>
+			<input type="hidden" id="signature-data" name="signatureData" />
+		</form>
 	</div>
-	</div>
+
+
+
 	<script>
-    var canvas = document.getElementById('signature-pad');
-    var signaturePad = new SignaturePad(canvas);
+		var canvas = document.getElementById('signature-pad');
+		var signaturePad = new SignaturePad(canvas);
+
+		document
+				.getElementById('save')
+				.addEventListener(
+						'click',
+						function(event) {
+							if (confirm('계약서 작성을 완료하시겠습니까?')) {
+								var dataURL = signaturePad
+										.toDataURL('image/png');
+								document.getElementById('signature-data').value = dataURL;
+
+								// 데이터가 제대로 설정되었는지 콘솔에 출력
+								console.log('Data URL:', dataURL);
+								console
+										.log(
+												'Signature data field value:',
+												document
+														.getElementById('signature-data').value);
+
+								if (!dataURL) {
+									alert('서명을 입력해주세요.');
+									event.preventDefault(); // 서명이 없는 경우 폼 제출을 막습니다.
+								} else {
+									document.getElementById('signature-form')
+											.submit();
+									alert('결제 페이지로 이동합니다');
+								}
+							} else {
+								event.preventDefault(); // 사용자가 취소하면 폼 제출을 막습니다.
+							}
+						});
 	</script>
 </body>
 </html>

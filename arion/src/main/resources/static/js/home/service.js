@@ -20,11 +20,11 @@ $(document).ready(function() {
             let remainingMonths = Math.floor((period - 30) / 30);
             let monthlyAmountExcludingFirstMonth = remainingMonths > 0 ? remainingAmount / remainingMonths : monthlyAmount;
 
-            $('input[name=accountAmount]').val(monthlyAccountAmount * (period / 30));
-            $('input[name=moduleAmount]').val(monthlyModuleAmount * (period / 30));
+            $('input[name=accountAmount]').val(Math.trunc(monthlyAccountAmount * (period / 30)));
+            $('input[name=moduleAmount]').val(Math.trunc(monthlyModuleAmount * (period / 30)));
             $('input[name=totalAmount]').val(totalAmount);
-            $('input[name=firstMonthAmount]').val(firstMonthAmount);
-            $('input[name=monthlyAmount]').val(monthlyAmountExcludingFirstMonth);
+            $('input[name=firstMonthAmount]').val(Math.trunc(firstMonthAmount));
+            $('input[name=monthlyAmount]').val(Math.trunc(monthlyAmountExcludingFirstMonth));
             $('input[name=regularPaymentDate]').val(payDate);
 
 

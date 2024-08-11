@@ -23,7 +23,7 @@ public class BoardServiceImpl implements BoardService{
 		this.boardMapper = boardMapper;
 	}
 	
-	// 자유게시판
+	// 자유게시판 //
 	// 전체 게시글 조회
 	@Override
 	public List<BoardVO> boardList(Criteria cri) {
@@ -71,6 +71,7 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.ViewCnt(viewCnt);
 	}
 
+	// 토탈건수
 	@Override
 	public int getTotal(Criteria cri) {
 		return boardMapper.getTotal(cri);

@@ -33,6 +33,7 @@
 				</th:block>
 			</tbody>
 		</table>
+		
 		<!-- 페이징 -->
 		<div th:object="${page}">
 			<nav aria-label="Page navigation"
@@ -59,6 +60,7 @@
 					</a></li>
 				</ul>
 			</nav>
+			
 			<form action="/group/freeboardList" th:object="${criteria}" name="pageForm">
 				<input type="hidden" name="pageNum" th:field="*{pageNum}"> <input
 					type="hidden" name="amount" th:field="*{amount}">

@@ -44,8 +44,10 @@ public class SignController {
 	}
 	
 	@PostMapping("/insertSign")
-	public String insertSign(EmployeeVO empVO, @RequestParam("signatureData") String signatureData) {
+	public String insertSign(EmployeeVO empVO, @RequestParam("signatureData") String signatureData, HttpSession session) {
 		String fileName = null;
+		String companyCode = (String) session.getAttribute("companyCode");
+		String employeeId = (String) session.getAttribute("loginId");
 		try {
 	        // 이미지 데이터에서 Base64 접두사 제거
 	        String base64Image = signatureData.split(",")[1];
@@ -60,11 +62,9 @@ public class SignController {
 	        }
 
 	        UUID uuid = UUID.randomUUID();
-	        // 파일 경로 설정
-	        fileName = uuid + "_" + empVO.getEmployeeId()  + ".png";
+	        fileName = uuid + "_" + employeeId  + ".png";
 	        String filePath = directoryPath + fileName;
 
-	        // 파일 저장
 	        try (OutputStream stream = new FileOutputStream(filePath)) {
 	            stream.write(imageBytes);
 	        }
@@ -72,7 +72,11 @@ public class SignController {
 	        e.printStackTrace();
 	    }
 		empVO.setSignImg(fileName);
+		empVO.setCompanyCode(companyCode);
+		empVO.setEmployeeId(employeeId);
 		
-		return "redirect:group/document/sign/signList";
+		ssvc.insertSign(empVO);
+		
+		return "redirect:group/doc/sign";
 	}
 }

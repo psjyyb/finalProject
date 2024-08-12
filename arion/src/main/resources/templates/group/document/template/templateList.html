@@ -6,16 +6,25 @@
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
+ <link rel="stylesheet" type="text/css" href="/css/smarteditor2.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/SmartEditor2.js"></script>
 </head>
 <body>
+	<h1>기안서</h1>
 	<div>
-		<h1>GangSword.... 조직도</h1>
-		<h1>AlcoholCow.... 주소....</h1>
-		<div>
-			<a th:href="@{/admin}">Admin Page</a>
-			<a th:href="@{/user}">User Page</a> 
-			<a th:href="@{/logout}">Logout</a>
-		</div>
+		<button type="button" th:onclick="|location.href='@{/group/doc/insertTemp}'|" class="btn btn-primary">등록</button>
 	</div>
+	<th:block th:each="temp, iterStat : ${tempList}">
+		<div>
+            <label>문서종류</label>
+            <p th:text="${temp.docType}"></p>
+            <label>파일 이름</label>
+            <p th:text="${temp.docFile}"></p>
+            <label>파일 내용 미리보기</label>
+            <div th:utext="${fileContents[iterStat.index]}"></div>
+           	
+		</div>
+	</th:block>
 </body>
 </html>

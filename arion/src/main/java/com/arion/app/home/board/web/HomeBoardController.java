@@ -121,7 +121,7 @@ public class HomeBoardController {
 	    List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
 	    HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
 	    model.addAttribute("fileInfo", fileVOList);
-	    model.addAttribute("qnaUpdate", findVO); // 여기에 qnaUpdate 객체 추가
+	    model.addAttribute("qnaUpdate", findVO); 
 	    return "home/board/qnaUpdate";
 	}
 	

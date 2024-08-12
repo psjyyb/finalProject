@@ -9,12 +9,12 @@
 		AND company_code = #{companyCode}
 	</select>
 	
-	<update id="insertSign" parameterType="com.arion.app.group.admin.service.EmployeeVO">
+	<update id="insertSign" parameterType="EmployeeVO">
 		UPDATE employees
 		SET
 			sign_img = #{signImg}
 		WHERE 1=1 
 		AND employee_id = #{employeeId}
-		AND company_code = #{companyCode};
+		AND company_code = #{companyCode}
 	</update>
 </mapper>

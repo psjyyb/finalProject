@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+</head>
+<body>
+	<h1>기안서</h1>
+	<form id="insertTemp" th:action="@{/insertTemp}" method="post" enctype="multipart/form-data">
+		<label>문서종류</label>
+		<input type="text" name="docType">
+		<label>파일등록</label>
+		<input type="file" name="docFile">
+		<div>
+			<button type="submit" class="btn btn-primary">등록</button>
+		</div>
+	</form>
+	<div>
+		
+	</div>
+</body>
+</html>

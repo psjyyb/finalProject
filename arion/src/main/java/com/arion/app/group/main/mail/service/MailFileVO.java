@@ -6,7 +6,7 @@ import lombok.Data;
 public class MailFileVO {
 	    private int fileNo;
 	    private int mailNo;
-	    private String senderId;
+	    private String filetype;
 	    private String fileName;
 	    private String companyCode;
 }

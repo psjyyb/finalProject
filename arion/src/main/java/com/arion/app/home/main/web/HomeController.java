@@ -1,6 +1,8 @@
 package com.arion.app.home.main.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -82,9 +85,38 @@ public class HomeController {
     @GetMapping("/home/module")
     public String module(Model model) {
     	List<HomeModuleVO> mvo = msvc.selectModule();
+    	
+    	int firstModuleNo = mvo.get(0).getModuleNo();
+    	System.out.println(firstModuleNo);
+    	List<HomeModuleVO> fmvo = msvc.explanModule(firstModuleNo);
     	model.addAttribute("moduleList", mvo);
+    	model.addAttribute("moduleInfo", fmvo);
         return "home/module/module";
     }
+    
+    /* @PostMapping("/home/module")
+    @ResponseBody
+    public String moduleInfo(Model model, @RequestParam int moduleNo) {
+    	List<HomeModuleVO> mvo = msvc.explanModule(moduleNo);
+    	model.addAttribute("module", mvo);
+    	return "home/module/module";
+    } */
+    
+    @PostMapping("/home/module")
+    @ResponseBody
+    public List<HomeModuleVO> moduleInfo(@RequestParam int moduleNo) {
+    	return msvc.explanModule(moduleNo);
+    } 
+    /* @PostMapping("/home/module")
+    @ResponseBody
+    public Map<String, String> moduleInfo(@RequestParam int moduleNo) {
+        HomeModuleVO module = msvc.explanModule(moduleNo).get(0);
+        Map<String, String> response = new HashMap<>();
+        response.put("modFileName", module.getModFileName());
+        response.put("modFileContent", module.getModFileContent());
+        System.out.println("결과 : " + response);
+        return response;
+    } */
     
     @GetMapping("/home/service")
     public String service(Model model) {
@@ -112,6 +144,31 @@ public class HomeController {
         return csvc.IdCheck(companyId);
     }
     
+    @PostMapping("/findId")
+    @ResponseBody
+    public Map<String, String> findCompanyId(@RequestParam("ceoName") String ceoName, @RequestParam("companyBusinessNumber") int companyBusinessNumber, Model model) {
+    	CompanyVO companyVO = csvc.findId(ceoName, companyBusinessNumber);
+    	Map<String, String> response = new HashMap<>();
+		if(companyVO != null) {
+			response.put("message","회사코드와 아이디가 이메일로 전송되었습니다." );  				
+		} else {
+			response.put("message", "해당 정보가 없습니다.");
+		}
+    	return response; 	
+    }
     
-    
+    @PostMapping("/resetPassword")
+    @ResponseBody
+    public Map<String, String> resetPassword(@RequestParam("companyCode") String companyCode, 
+                                @RequestParam("companyId") String companyId, 
+                                Model model) {
+        int result = csvc.updatePw(companyCode, companyId);
+        Map<String, String> response = new HashMap<>();
+        if (result > 0) {
+        	response.put("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+        } else {
+        	response.put("message", "비밀번호 재설정에 실패했습니다.");
+        }
+        return response; 
+    }
 }

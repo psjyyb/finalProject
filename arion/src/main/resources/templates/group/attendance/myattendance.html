@@ -5,10 +5,12 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<meta name="_csrf_header" th:content="${_csrf.headerName}">
-<meta name="_csrf" th:content="${_csrf.token}">
+
 <title>myattendance</title>
 </head>
+<input type="hidden" id="employeeno" value="6">
+<h2></h2>
+
 <body onload="autoReload();">
 	<table align="center" id="calendar">
 		<tr>
@@ -35,6 +37,9 @@
 			<td width="14%"><font color="#ed5353">일</font></td>
 		</tr>
 	</table>
+	
+			<button id="download">다운로드</button>
+			
 	<script th:src="@{/js/group/attendance/myattendance.js}"></script>
 </body>
 </html >

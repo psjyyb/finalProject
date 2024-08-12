@@ -26,6 +26,7 @@ import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
 import com.arion.app.security.service.LoginUserVO;
 
+
 @Controller
 public class AttendanceController {
 
@@ -36,10 +37,9 @@ public class AttendanceController {
 	@ResponseBody
 	public Map<String, Object> getattendancelist(HttpServletRequest request,@RequestParam(value = "startdate",required = false) String startdate,
 			@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
+		
 		HttpSession session = request.getSession();
-		int EmployeeNo = (int)session.getAttribute("EmployeeNo");
-		//Date startdate = date
-		//Date enddate = 
+		int EmployeeNo = (int)session.getAttribute("employeeNo");
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		 Date start = df.parse(startdate);
 		 Date end = df.parse(enddate);	   
@@ -56,10 +56,15 @@ public class AttendanceController {
 		return result;
 	}
 	
+	
+	
+	
+	
 	@GetMapping("/group/attendance/myattendance")
 	public String myattendance(HttpServletRequest request,Model model) {
 		HttpSession session = request.getSession();
-		int EmployeeNo = (int)session.getAttribute("EmployeeNo");
+		int EmployeeNo = (int)session.getAttribute("employeeNo");
+		
 		//List<AttendanceVO> attendance = attendanceservice.attendance(EmployeeNo);
 		//model.addAttribute("attendance", attendance );
 		

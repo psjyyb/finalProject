@@ -15,6 +15,7 @@
 					<![CDATA[
 		WHERE final_date < sysdate
 							]]>
+		ORDER BY t.contract_no
 	</select>
 	<select id="selectSubInfo" parameterType="AdminVO">
 		SELECT t.contract_no
@@ -48,6 +49,7 @@
 		      ,module_notice
 		      ,module_icon
 		FROM module
+		ORDER BY module_no
 	</select>
 	<select id="selectEndSubList" resultType="AdminVO">
 		SELECT t.contract_no
@@ -63,6 +65,7 @@
 					<![CDATA[
 		WHERE final_date > sysdate
 							]]>
+		ORDER BY t.contract_no
 	</select>
 	
 	<select id="selectQnAList" resultType="QnAVO">
@@ -73,6 +76,7 @@
 	      ,NVL(qna_company,'없음') as qna_company
 	      ,qna_state
 	FROM qna
+	ORDER BY qna_no
 	</select>
 	
 	<select id="selectQnAInfo" resultType="QnAVO">
@@ -89,8 +93,9 @@
 	</select>
 	<update id="insertReply" parameterType="QnAVO">
 		UPDATE qna
-		SET qna_state = '답변',
-		    qna_reply = #{qnaReply}
+		SET qna_state = '답변'
+		   ,qna_reply = #{qnaReply}
+		   ,reply_date = sysdate
 		WHERE qna_no = #{qnaNo}
 	</update>
 	<insert id="insertModule" parameterType="ModuleVO">
@@ -164,5 +169,23 @@
 		      ,mod_no
 		      ,mod_file_originalname
 		FROM mod_file WHERE mod_no = #{moduleNo}
+		ORDER BY mod_file_turn
 	</select>
+	
+	<update id="updateMod">
+		UPDATE module
+		SET module_name = #{moduleName}
+		   ,module_price = #{modulePrice}
+		   ,module_notice = #{moduleNotice}
+		   <if test="moduleIcon != '' and moduleIcon != null">
+		   ,module_icon = #{moduleIcon}
+		   </if>
+		WHERE module_no = #{moduleNo}
+	</update>
+	
+	<delete id="deleteModFile">
+		DELETE 
+		FROM mod_file 
+		WHERE mod_no = #{moduleNo}
+	</delete>
 </mapper>

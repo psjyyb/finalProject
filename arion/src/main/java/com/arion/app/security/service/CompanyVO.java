@@ -1,5 +1,9 @@
 package com.arion.app.security.service;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -17,4 +21,6 @@ public class CompanyVO {
     private String ceoName;
     private String ceoEmail;
     private String ceoPhone;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date sysdate;
 }

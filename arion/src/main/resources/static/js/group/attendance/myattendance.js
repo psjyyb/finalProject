@@ -85,6 +85,7 @@
 			str += "<div id='"+day+"'></div>"; //나중에 원하는 날에 일정을 넣기위해 id값을 날자로 설정
 			cell.innerHTML = str;
 			
+			//
 			cnt = cnt + 1;
 			if (cnt % 7 == 6) {//토요일
 				var str="";
@@ -145,8 +146,7 @@
 			}
 			  
 		}
-		var header = $("meta[name='_csrf_header']").attr('content');
-        var token = $("meta[name='_csrf']").attr('content');
+		
         
         let endday = new Date(today.getFullYear(), today.getMonth()+1, 0);
         
@@ -159,9 +159,7 @@
 		
 		 $.ajax({
 			url : '/attendancelist',
-			beforeSend: function(xhr){
-             xhr.setRequestHeader(header, token);
-            },
+			
            type : 'POST',
            data : {
               'startdate' : startdate,
@@ -174,18 +172,66 @@
 			
 			console.log(attendancelist);
 			$.each(attendancelist, function(key, value) {
-				
+				$('#'+ value.attdate).html("출근"+value.starttime+"<br>퇴근"+value.endtime+"<br>"+value.state);
 				
 			})
 		   }
            });
 			
+}
+
+
+
+document.getElementById("download").addEventListener('click',download);
+	
+	
+	
+	
+	function download(){
+		let endday = new Date(today.getFullYear(), today.getMonth()+1, 0);
+		let month=today.getMonth()+1;
+		var startdate=today.getFullYear()+'-'+month+'-1';
+	    var enddate=today.getFullYear()+'-'+month+'-'+endday.getDate();
+		 
+		 var employeeno =  $('#employeeno').val();
+		 console.log(employeeno);
 		
-				
-		//원하는 날짜 영역에 내용 추가하기
-		var tdId = "01"; //1일
-		var str = "";
-		str += "<br>09:00 일정1";
-		str += "<br>12:00 일정2 \n";
-		document.getElementById(tdId).innerHTML = str;
+          
+           $.ajax({
+			url : '/files/attendancedownload',
+           type : 'POST',
+           data : {
+			   'employeeno' :employeeno,
+              'startdate' : startdate,
+              'enddate': enddate
+              },                     
+            
+            xhrFields: { 
+
+                responseType: 'blob'
+            },
+
+            success: function(blob) { 
+
+                var link = document.createElement('a'); 
+    
+                link.href = window.URL.createObjectURL(blob); 
+           
+                link.download = "boardList_data.xlsx"; 
+
+                link.click(); 
+       
+                alert('엑셀 다운로드에 성공했습니다'); // 성공 메시지를 출력합니다.
+            },
+            error: function(xhr, status, error) { // 요청이 실패했을 때 실행할 함수입니다.
+                console.error('서버 응답:', xhr); // 서버의 응답을 콘솔에 출력합니다.
+                console.error('오류 상태:', status); // 오류 상태를 콘솔에 출력합니다.
+                console.error('오류 메시지:', error); // 오류 메시지를 콘솔에 출력합니다.
+                alert('엑셀 다운로드에 실패했습니다.'); // 실패 메시지를 출력합니다.
+            }
+    
+           });
+           
 	}
+
+

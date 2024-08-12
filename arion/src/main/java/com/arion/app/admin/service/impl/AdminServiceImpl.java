@@ -1,4 +1,4 @@
-         package com.arion.app.admin.service.impl;
+package com.arion.app.admin.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,13 +22,12 @@ import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 
 @Service
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 	@Value("${file.upload.path}") // 실행되는 시점에 환경변수에 접근하여 값을 가져온다 (운영체제에 따라 바뀌는값을 알아서 찾아 넣어준다)
-	private String uploadPath; 
-	
-	
+	private String uploadPath;
+
 	private AdminMapper adminMapper;
-	
+
 	public AdminServiceImpl(AdminMapper adminmapper) {
 		this.adminMapper = adminmapper;
 	}
@@ -37,42 +36,48 @@ public class AdminServiceImpl implements AdminService{
 	public List<AdminVO> subListSelect() {
 		return adminMapper.selectsubList();
 	}
+
 	@Override
 	public AdminVO subInfoSelect(AdminVO adminVO) {
 		return adminMapper.selectSubInfo(adminVO);
 	}
+
 	@Override
 	public List<ModuleVO> modListSelect() {
 		return adminMapper.selectModList();
 	}
+
 	@Override
 	public List<AdminVO> endSunListSelect() {
 		return adminMapper.selectEndSubList();
 	}
+
 	@Override
-	public List<QnAVO> qnaListSelect(){
+	public List<QnAVO> qnaListSelect() {
 		return adminMapper.selectQnAList();
 	}
+
 	@Override
-	public QnAVO qnaInfoSelect(QnAVO qnaVO){
+	public QnAVO qnaInfoSelect(QnAVO qnaVO) {
 		return adminMapper.selectQnAInfo(qnaVO);
 	}
+
 	@Override
-	public int qnaReply(QnAVO qnaVO){
+	public int qnaReply(QnAVO qnaVO) {
 		return adminMapper.insertReply(qnaVO);
 	}
+
 	@Transactional
 	@Override
-	public int moduleInsert(@ModelAttribute ModuleVO moduleVO){
+	public int moduleInsert(@ModelAttribute ModuleVO moduleVO) {
 		UUID uuid = UUID.randomUUID();
 		MultipartFile icon = moduleVO.getModuleIcons();
 		String iconName = uuid + "_" + icon.getOriginalFilename();
 		moduleVO.setModuleIcon(iconName);
-		System.out.println(moduleVO.getModuleIcon()+"내게 혼자하는 사랑이란");
 		int result = adminMapper.insertModule(moduleVO);
-		
+
 		String saveNames = uploadPath + '/' + iconName;
-    	Path savePaths = Paths.get(saveNames);
+		Path savePaths = Paths.get(saveNames);
 		// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
 		try {
 			icon.transferTo(savePaths);
@@ -80,47 +85,77 @@ public class AdminServiceImpl implements AdminService{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		MultipartFile[] files = moduleVO.getUploadFiles();
-		String [] contents = moduleVO.getModuleNotices();
-		
-		 if (files != null) {
-			 int i = 1;
-	            for (MultipartFile file : files) {
-	            	ModuleFileVO mvo = new ModuleFileVO();
-	            	String fileName = uuid + "_" + file.getOriginalFilename();
-	            	mvo.setModFileOriginalname(file.getOriginalFilename());
-	            	System.out.println(mvo.getModFileOriginalname());
-	            	mvo.setModFileName(fileName);
-	            	mvo.setModNo(moduleVO.getModuleNo());
-	            	mvo.setModFileType(file.getContentType());
-	            	mvo.setModFilePath(uploadPath);
-	            	mvo.setModFileTurn(i);
-	            	mvo.setModFileContent(contents[i-1]);
-	            	i++;
-	            	int fileResult = adminMapper.insertModuleFile(mvo);
-	            	String saveName = uploadPath + '/' + fileName;
-	            	Path savePath = Paths.get(saveName);
-	    			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
-	    			try {
-	    				file.transferTo(savePath);
-	    				// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
-	    			} catch (IOException e) {
-	    				e.printStackTrace();
-	    			}
-	            }
-	        } else {
-	            System.out.println("No files uploaded");
-	        }
-		
+		filesPro(moduleVO);
 		return result;
 	}
+	@Transactional
+	@Override
+	public int modUpdate(ModuleVO moduleVO) {
+		MultipartFile icon = moduleVO.getModuleIcons();
+		System.out.println(icon+"이게 뭔데 ? 말해 ?");
+		if(icon != null) {
+			UUID uuid = UUID.randomUUID();
+			String iconName = uuid + "_" + icon.getOriginalFilename();
+			moduleVO.setModuleIcon(iconName);
+
+			String saveNames = uploadPath + '/' + iconName;
+			Path savePaths = Paths.get(saveNames);
+			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
+			try {
+				icon.transferTo(savePaths);
+				// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+			adminMapper.updateMod(moduleVO);
+		
+		if (moduleVO.getUploadFiles() != null) {
+			adminMapper.deleteModFile(moduleVO);
+			filesPro(moduleVO);
+		}
+		return 1;
+	}
+
 	@Override
 	public List<ModuleFileVO> modFileSelect(ModuleVO moduleVO) {
 		return adminMapper.selectModFile(moduleVO);
 	}
+
 	@Override
 	public ModuleVO modSelect(ModuleVO moduleVO) {
 		return adminMapper.selectMod(moduleVO);
 	}
+
+	@Override
+	public int filesPro(ModuleVO moduleVO) {
+		UUID uuid = UUID.randomUUID();
+		MultipartFile[] files = moduleVO.getUploadFiles();
+		String[] contents = moduleVO.getModuleNotices();
+		int i = 1;
+		for (MultipartFile file : files) {
+			ModuleFileVO mvo = new ModuleFileVO();
+			String fileName = uuid + "_" + file.getOriginalFilename();
+			mvo.setModFileOriginalname(file.getOriginalFilename());
+			mvo.setModFileName(fileName);
+			mvo.setModNo(moduleVO.getModuleNo());
+			mvo.setModFileType(file.getContentType());
+			mvo.setModFilePath(uploadPath);
+			mvo.setModFileTurn(i);
+			mvo.setModFileContent(contents[i - 1]);
+			i++;
+			int fileResult = adminMapper.insertModuleFile(mvo);
+			String saveName = uploadPath + '/' + fileName;
+			Path savePath = Paths.get(saveName);
+			// Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
+			try {
+				file.transferTo(savePath);
+				// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return 1;
+	}
+
 }

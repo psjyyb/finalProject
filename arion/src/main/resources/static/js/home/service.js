@@ -25,6 +25,8 @@ $(document).ready(function() {
             $('input[name=totalAmount]').val(totalAmount);
             $('input[name=firstMonthAmount]').val(firstMonthAmount);
             $('input[name=monthlyAmount]').val(monthlyAmountExcludingFirstMonth);
+            $('input[name=regularPaymentDate]').val(payDate);
+
 
             $('#accountAmount').text((monthlyAccountAmount * (period / 30)).toLocaleString().split(".")[0] + '원');
             $('#moduleAmount').text((monthlyModuleAmount * (period / 30)).toLocaleString().split(".")[0] + '원');

@@ -8,5 +8,17 @@
 		      ,module_notice
 		      ,module_icon
 		FROM module
+		ORDER BY module_no ASC
+	</select>
+	
+	<select id="explanModule" resultType="HomeModuleVO">
+		SELECT m.module_name AS moduleName
+			   , mf.mod_file_name AS modFileName
+			   , mf.mod_file_content AS modFileContent
+			   , mf.mod_file_path AS modFilePath
+		FROM module m LEFT JOIN mod_file mf
+              		  ON m.module_no = mf.mod_no
+        WHERE module_no = #{moduleNo}
+		ORDER BY mf.mod_file_turn ASC
 	</select>
 </mapper>

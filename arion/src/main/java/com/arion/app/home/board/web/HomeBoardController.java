@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.FileService;
 import com.arion.app.common.service.FileVO;
+import com.arion.app.group.board.service.Criteria;
+import com.arion.app.group.board.service.PageDTO;
 import com.arion.app.home.board.service.HomeQnaVO;
 import com.arion.app.home.board.service.QnaService;
 import com.arion.app.security.service.CompanyVO;
@@ -38,9 +40,16 @@ public class HomeBoardController {
 	}
 
 	@GetMapping("/home/qna")
-	public String qna(Model model) {
-		List<HomeQnaVO> qvo = qsvc.selectQnAList();
+	public String qna(Model model, Criteria criteria) {
+		List<HomeQnaVO> qvo = qsvc.selectQnAList(criteria);
+	    int totalCount = qsvc.selectQnATotalCount(criteria);
+
+		PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		
 		model.addAttribute("qnaList", qvo);
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("criteria", criteria);
+        
 		return "home/board/qna";
 	}
 

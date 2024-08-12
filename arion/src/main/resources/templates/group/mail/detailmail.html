@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+<head>
+    <title>메일 상세보기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #444;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .mail-info {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .mail-info p {
+            margin: 10px 0;
+        }
+        .mail-info .label {
+            font-weight: bold;
+        }
+        .mail-info .value {
+            margin-left: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-back {
+            background-color: #4CAF50;
+        }
+        .btn-back:hover {
+            background-color: #45a049;
+        }
+        .btn-delete {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>메일 상세보기</h1>
+        <div class="mail-info">
+            <p><span class="label">발송자:</span><span class="value" th:text="${mail.senderName}">발송자 이름</span></p>
+            <p><span class="label">제목:</span><span class="value" th:text="${mail.mailTitle}">메일 제목</span></p>
+            <p><span class="label">발송일:</span><span class="value" th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">발송일</span></p>
+            <p><span class="label">내용:</span><span class="value" th:text="${mail.mailContent}">메일 내용</span></p>
+        </div>
+        <a href="#" th:href="@{/group/mail/Mymail/{employeeId}(employeeId=${mail.recipientId})}" class="btn btn-back">돌아가기</a>
+        <a href="#" th:href="@{/group/mail/delete/{mailNo}(mailNo=${mail.mailNo})}" class="btn btn-delete" onclick="return confirm('정말로 이 메일을 삭제하시겠습니까?');">삭제</a>
+    </div>
+</body>
+</html>

@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div>
-		<h3>자유게시판</h3>
+		<h3><a th:href="@{/group/freeboardList}">자유게시판</a></h3>
 		
 		<table>
 			<tr>
@@ -29,11 +29,12 @@
 			<tr>
 				<th>내용</th>
 <<<<<<< HEAD
-				<td style="height:300px; width:500px;" th:utext="${board.boardContent}"	></td>
+				<td style="height:300px; width:500px;" th:utext="${board.boardContent}"></td>
 =======
+				<td style="height:300px; width:500px;" th:utext="${board.boardContent}"	></td>
 				<td th:text="${board.boardContent}">
 				</td>
->>>>>>> branch 'master' of https://github.com/psjyyb/finalProject.git
+>>>>>>> branch 'Kim-Cheol-Gyu' of https://github.com/psjyyb/finalProject.git
 			</tr>
 			<tr>
 				<th>작성일자</th>
@@ -50,7 +51,37 @@
 			<button type="button" id="deleteButton" data-url="#" th:data-url="@{/group/freeboardDelete(boardNo=${board.boardNo})}">삭제</button>
 		</div>
 	</div>
+	
+	  <!-- 댓글 영역 시작 -->
+    <div>
+        <h4>댓글</h4>
+        <ul>
+            <li th:each="reply : ${replies}">
+                <div>
+                    <p><strong>작성자:</strong> [[${reply.commentWrite}]]</p>
+                    <p><strong>내용:</strong> [[${reply.commentContent}]]</p>
+                    <p><strong>작성일:</strong> [[${#dates.format(reply.commentDate, 'yyyy.MM.dd')}]]</p>
+                    <div>
+                        <button type="button" class="editComment" th:data-url="@{/group/commentUpdate(commentNo=${reply.commentNo})}">수정</button>
+                        <button type="button" class="deleteComment" th:data-url="@{/group/commentDelete(commentNo=${reply.commentNo})}">삭제</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+   <!-- 댓글 입력 폼 -->
+	<div>
+    	<h4>댓글 입력</h4>
+    	<form id="commentForm">
+        	<input type="hidden" id="boardNo" name="boardNo" th:value="${board.boardNo}">
+        	<textarea id="commentContent" name="commentContent" placeholder="댓글을 입력하세요"></textarea>
+        	<button type="button" onclick="submitComment()">댓글 추가</button>
+    	</form>
+	</div>
+    
 	<script>	
+	// 글 삭제 버튼
 	document.getElementById("deleteButton").addEventListener("click", function(event) {
 	    event.preventDefault(); // 기본 동작 방지
 
@@ -69,6 +100,58 @@
 	        }
 	    });
 	});
+	
+	
+	// 댓글 삭제
+	 document.querySelectorAll(".deleteComment").forEach(button => {
+	        button.addEventListener("click", function(event) {
+	            event.preventDefault();
+	            Swal.fire({
+	                title: '댓글을 삭제하시겠습니까?',
+	                icon: 'warning',
+	                showCancelButton: true,
+	                confirmButtonColor: '#3085d6',
+	                cancelButtonColor: '#d33',
+	                confirmButtonText: '삭제',
+	                cancelButtonText: '취소'
+	            }).then((result) => {
+	                if (result.isConfirmed) {
+	                    var deleteUrl = this.getAttribute('data-url');
+	                    window.location.href = deleteUrl; // 댓글 삭제 후 페이지 리다이렉트
+	                }
+	            });
+	        });
+	    });
+
+	    document.querySelectorAll(".editComment").forEach(button => {
+	        button.addEventListener("click", function(event) {
+	            event.preventDefault();
+	            var editUrl = this.getAttribute('data-url');
+	            // 수정 로직 추가 (별도의 팝업 또는 페이지로 이동하여 수정 가능)
+	            window.location.href = editUrl;
+	        });
+	    });
+	    
+	    function submitComment() {
+	        var boardNo = document.getElementById('boardNo').value;
+	        var commentContent = document.getElementById('commentContent').value;
+	        var commentWrite = '작성자'; // 필요에 따라 설정
+
+	        var xhr = new XMLHttpRequest();
+	        xhr.open('POST', '/group/commentInsert', true);
+	        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	        xhr.onreadystatechange = function () {
+	            if (xhr.readyState === XMLHttpRequest.DONE) {
+	                if (xhr.status === 200) {
+	                    alert('댓글이 추가되었습니다.');
+	                    location.reload(); // 페이지 새로고침
+	                } else {
+	                    alert('댓글 추가에 실패했습니다.');
+	                }
+	            }
+	        };
+	        xhr.send('boardNo=' + boardNo + '&commentContent=' + encodeURIComponent(commentContent) + '&commentWrite=' + commentWrite);
+	    }
 	</script>
 </body>
 </html>

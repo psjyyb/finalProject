@@ -17,8 +17,6 @@ public class MainServiceImpl implements MainService {
     @Autowired
     private MainMapper mainMapper;
 
-
-
     @Override
     public List<getModuleVO> getmoduleList(getModuleVO getmoduleVO) {
         // 상위 모듈 리스트 조회
@@ -34,7 +32,6 @@ public class MainServiceImpl implements MainService {
                 if (module.getModuleNo() != null && subModule.getModuleNo() != null 
                         && subModule.getModuleNo().equals(module.getModuleNo())) {
                     
-
                     if (subModule.getUrlPattern() != null) {
                         String dynamicUrl = generateUrl(subModule.getUrlPattern(), getmoduleVO.getEmployeeId());
                         subModule.setUrl(dynamicUrl);
@@ -53,6 +50,8 @@ public class MainServiceImpl implements MainService {
     // 사용자 ID에 따라 동적으로 URL을 생성하는 메서드
     private String generateUrl(String urlPattern, String userId) {
         // URL 패턴에 사용자 ID를 포함하여 동적으로 URL 생성
-        return String.format(urlPattern, userId);
+        String dynamicUrl = String.format(urlPattern, userId);
+        System.out.println("Generated URL: " + dynamicUrl); // 로그 추가
+        return dynamicUrl;
     }
 }

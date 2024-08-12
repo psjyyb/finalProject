@@ -10,6 +10,7 @@ public class getModuleVO {
 	private String companyCode;
 	private Integer moduleNo;
     private String moduleName;
+    private String url;
     private List<SubModuleVO> subModules;
 
 }

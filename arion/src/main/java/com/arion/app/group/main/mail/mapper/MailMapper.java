@@ -40,4 +40,6 @@ public interface MailMapper {
     
     // 첨부파일 삽입
     public int insertMailFile(MailFileVO mailFileVO);
+
+	public int getMailNoSequence();
 }

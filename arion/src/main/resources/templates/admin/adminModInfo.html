@@ -4,140 +4,251 @@
 	layout:decorate="~{common/admin/layouts/admin_layout}"
 	layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-<title>ARION</title>
-</head>
-<body>
+	<meta charset="UTF-8">
+	<title>ARION</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<style>
-	.form-container {
-		margin-top: 20px;
-	}
+		.container {
+			max-width: 800px;
+			margin: 30px auto;
+		}
 
-	.form-header {
-		background-color: #f8f9fa;
-		padding: 10px;
-		border-bottom: 1px solid #dee2e6;
-	}
+		.card {
+			border: none;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+		}
 
-	.form-body {
-		padding: 20px;
-		background-color: #ffffff;
-		border: 1px solid #dee2e6;
-	}
+		.card-header {
+			background-color: #007bff;
+			color: #fff;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 15px;
+			border-bottom: none;
+		}
 
-	.form-footer {
-		background-color: #f8f9fa;
-		padding: 10px;
-		border-top: 1px solid #dee2e6;
-		text-align: right;
-	}
+		.card-body {
+			padding: 30px;
+		}
 
-	.input-group {
-		margin-bottom: 1rem;
-	}
+		.form-label {
+			font-weight: bold;
+			color: #333;
+		}
 
-	.image-preview {
-		margin-top: 10px;
-		max-width: 100%;
-		max-height: 200px;
-		border: 1px solid #dee2e6;
-		border-radius: 5px;
-		background-color: #f8f9fa;
-		display: none;
-	}
+		.image-preview {
+			display: block;
+			margin-top: 15px;
+			max-width: 100%;
+			height: auto;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			background-color: #f8f9fa;
+		}
 
-	.previous-description {
-		margin-top: 10px;
-		padding: 10px;
-		background-color: #f8f9fa;
-		border: 1px solid #dee2e6;
-		border-radius: 5px;
-	}
+		.module-card {
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+			margin-bottom: 20px;
+			padding: 15px;
+			background-color: #f8f9fa;
+		}
 
-	.module-card {
-		border: 1px solid #dee2e6;
-		border-radius: 5px;
-		margin-bottom: 20px;
-		padding: 15px;
-		background-color: #f8f9fa;
-	}
+		.module-card img {
+			width: 100%;
+			height: auto;
+			border-radius: 5px;
+			margin-bottom: 10px;
+		}
 
-	.module-card img {
-		width: 100%;
-		max-height: 200px;
-		border-radius: 5px;
-		margin-bottom: 10px;
-	}
+		.form-footer {
+			text-align: right;
+			margin-top: 20px;
+		}
+
+		.btn-primary {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.btn-danger {
+			background-color: #dc3545;
+			border-color: #dc3545;
+		}
+
+		.btn-secondary {
+			background-color: #6c757d;
+			border-color: #6c757d;
+		}
 	</style>
 </head>
 <body>
-	<div class="container form-container">
-		<div class="form-header">
-			<h5>모듈수정</h5>
-		</div>
-		<form name="insertForm" class="form-body" method="post" enctype="multipart/form-data">
-			<div class="mb-3">
-				<label for="moduleName" class="form-label">모듈 이름</label>
-				<input type="text" class="form-control" id="moduleName" name="moduleName" th:value="${modInfo.moduleName}" required>
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				모듈 수정
 			</div>
-			
-			<!-- 기존 모듈 이미지 미리보기 -->
-			<div class="mb-3">
-				<label class="form-label">기존 모듈 아이콘</label>
-				<img th:src="@{'/files/' + ${modInfo.moduleIcon}}" style="width:200px; height:200px">
-			</div>
-			
-			<div class="mb-3">
-				<label for="moduleIcons" class="form-label">모듈 아이콘 변경시 선택</label>
-				<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
-				<img src="" alt="모듈 아이콘 미리보기" class="image-preview" id="iconPreview">
-			</div>
-			
-			<div class="mt-2">
-				<label for="moduleNotice" class="form-label">모듈 머리말</label>
-				<textarea class="form-control moduleNotice" id="moduleNotice" name="moduleNotice" rows="5" th:text="${modInfo.moduleNotice}" required></textarea>
-			</div>
-			
-			<!-- 기존 모듈 설명과 이미지들 -->
-			<div class="previous-description" th:if="${fileList}">
-				<strong>기존 모듈 설명:</strong>
-				<div th:each="file : ${fileList}">
-					<div class="module-card">
-						<img th:src="@{'/files/' + ${file.modFileName}}" alt="모듈 설명 이미지" style="width:200px; height:200px">
-						<p th:text="${file.modFileContent}"></p>
+			<form name="updateForm" method="post" enctype="multipart/form-data">
+				<div class="card-body">
+					<div class="mb-4">
+						<label for="moduleName" class="form-label">모듈 이름</label>
+						<input type="text" class="form-control" id="moduleName" name="moduleName" th:value="${modInfo.moduleName}" required>
+						<input type="hidden" th:value="${modInfo.moduleNo}" id="moduleNo" name="moduleNo">
 					</div>
-				</div>
-			</div>
-			
-			<div id="fileInputs">
-				<div class="mb-3">
-					<label for="files" class="form-label">모듈 설명 이미지</label>
-					<input type="file" class="form-control" id="files" name="uploadFiles">
-					<div class="mt-2">
-						<label for="moduleNotices" class="form-label">모듈 설명</label>
-						<textarea class="form-control moduleNotices" id="moduleNotices" name="moduleNotices" rows="5" required></textarea>
-					</div>
-				</div>
-			</div>
-			
-			<button type="button" class="btn btn-success" id="addFile">첨부파일 추가</button>
 
-			<div class="form-footer">
-				<button type="button" class="btn btn-primary" id="addBtn">등록</button>
-				<button type="button" class="btn btn-secondary">취소</button>
-			</div>
-		</form>
+					<div class="mb-4">
+						<label for="modulePrice" class="form-label">모듈 가격</label>
+						<input type="number" class="form-control" id="modulePrice" name="modulePrice" th:value="${modInfo.modulePrice}" required>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label">기존 모듈 아이콘</label>
+						<img th:src="@{'/files/' + ${modInfo.moduleIcon}}" style="max-width: 100%; height: auto; border-radius: 5px;">
+					</div>
+
+					<div class="mb-4">
+						<label for="moduleIcons" class="form-label">모듈 아이콘 변경시 선택</label>
+						<input type="file" class="form-control" id="moduleIcons" name="moduleIcons">
+						<img src="" alt="모듈 아이콘 미리보기" class="image-preview" id="iconPreview">
+					</div>
+
+					<div class="mb-4">
+						<label for="moduleNotice" class="form-label">모듈 머리말</label>
+						<textarea class="form-control" id="moduleNotice" name="moduleNotice" rows="4" th:text="${modInfo.moduleNotice}" required></textarea>
+					</div>
+
+					<div id="fileInputs">
+						<div class="mb-4">
+							<label for="files" class="form-label">모듈 설명 이미지 수정 (수정시 기존 사진은 저장되지 않음)</label>
+							<input type="file" class="form-control" id="files" name="uploadFiles">
+							<div class="mt-3">
+								<label for="moduleNotices" class="form-label">모듈 설명</label>
+								<textarea class="form-control moduleNotices" id="moduleNotices" name="moduleNotices" rows="4" required></textarea>
+							</div>
+						</div>
+					</div>
+
+					<button type="button" class="btn btn-outline-success" id="addFile">+ 첨부파일 추가</button>
+
+					<div class="previous-description mt-4" th:if="${fileList}">
+						<strong>기존 모듈 설명:</strong>
+						<div th:each="file : ${fileList}">
+							<div class="module-card">
+								<img th:src="@{'/files/' + ${file.modFileName}}" alt="모듈 설명 이미지" style="width:200px; height:200px">
+								<p th:text="${file.modFileContent}"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card-footer form-footer">
+					<button type="button" class="btn btn-primary" id="addBtn">수정</button>
+					<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/adminModList}'|">목록으로</button>
+				</div>
+			</form>
+		</div>
 	</div>
+
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 		$(document).ready(function() {
-			// 미리보기 기능 추가
-			$('#moduleIcons').on('change', function(e){
+			$('#moduleIcons').on('change', function(e) {
 				let reader = new FileReader();
 				reader.onload = function(event) {
 					$('#iconPreview').attr('src', event.target.result).show();
 				};
 				reader.readAsDataURL(e.target.files[0]);
+			});
+
+			let fileArr = [];
+			let formData = new FormData(); // FormData를 전역 변수로 선언
+
+			$('#addBtn').on('click', function() {
+				let name = $('#moduleName').val();
+				let price = $('#modulePrice').val();
+				let notice = $('#moduleNotice').val();
+				let no = $('#moduleNo').val();
+
+				// 폼 데이터에 모듈 이름과 가격 추가
+				formData.append('moduleName', name);
+				formData.append('modulePrice', price);
+				formData.append('moduleNotice', notice);
+				formData.append('moduleNo', no);
+
+				// 모듈 아이콘 추가
+				let moduleIcons = $('#moduleIcons')[0].files[0];
+				if (moduleIcons) {
+					formData.append('moduleIcons', moduleIcons);
+				}
+
+				// 각 파일과 설명을 폼 데이터에 추가
+				fileArr.forEach((file, index) => {
+					formData.append('uploadFiles', file);
+				});
+
+				$('textarea.moduleNotices').each(function() {
+					formData.append('moduleNotices', $(this).val());
+				});
+
+				// AJAX 요청 보내기
+				$.ajax({
+					url: '/adminModUpdate',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+				})
+				.done(result => {
+					Swal.fire("등록완료");
+				})
+				.fail(err => {
+					Swal.fire('오류발생');
+				});
+			});
+
+			// 파일 추가 로직
+			$('#addFile').click(function() {
+				let newFileInputWrapper = $('<div class="mb-4 file-input-wrapper"></div>');
+				let newFileInput = $('<input type="file" class="form-control" name="uploadFiles[]">');
+				let fileDescription = $('<div class="mt-3"><label for="moduleNotices" class="form-label">모듈 설명</label><textarea class="form-control moduleNotices" name="moduleNotices[]" rows="4" placeholder="모듈 설명" required></textarea></div>');
+				let removeButton = $('<button type="button" class="btn btn-danger mt-3">X</button>');
+
+				removeButton.click(function(e) {
+					let inputElement = $(e.target).parent().find('input')[0];
+					let fileToRemove = inputElement.files[0];
+
+					fileArr = fileArr.filter(file => file.name !== fileToRemove.name);
+					newFileInputWrapper.remove();
+				});
+
+				newFileInputWrapper.append(newFileInput);
+				newFileInputWrapper.append(fileDescription);
+				newFileInputWrapper.append(removeButton);
+				$('#fileInputs').append(newFileInputWrapper);
+
+				newFileInput.on('change', function(e) {
+					let files = e.currentTarget.files;
+					for (let i = 0; i < files.length; i++) {
+						fileArr.push(files[i]);
+						console.log(fileArr);
+					}
+				});
+			});
+
+			$('#moduleIcons').on('change', function(e) {
+				let moduleIcons = e.currentTarget.files[0];
+				if (moduleIcons) {
+					formData.set('moduleIcons', moduleIcons);
+				}
+			});
+
+			$('#files').on('change', function(e) {
+				let files = e.currentTarget.files;
+				for (let i = 0; i < files.length; i++) {
+					fileArr.push(files[i]);
+					console.log(fileArr);
+				}
 			});
 		});
 	</script>

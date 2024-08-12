@@ -22,8 +22,9 @@ public class AdminController {
 
 	private AdminService adminService;
 	private FileService fileService;
+
 	@Autowired
-	public AdminController(AdminService adminService,FileService fileService) {
+	public AdminController(AdminService adminService, FileService fileService) {
 		this.adminService = adminService;
 		this.fileService = fileService;
 	}
@@ -60,19 +61,6 @@ public class AdminController {
 		return "admin/adminModInsert";
 	}
 
-	@PostMapping("/adminModInsert")
-	public String adminModInsertPro(@ModelAttribute ModuleVO moduleVO) {
-		System.out.println(moduleVO+"뭐하냐 발냄새나게 생겨서");
-		int result = adminService.moduleInsert(moduleVO);
-		String url = null;
-				if(result > 0) {
-					url = "redirect:/adminModList";
-				}else {
-					url="redirect:/adminModInsert";
-				}
-		return url;
-	}
-
 	@GetMapping("/adminEndSubList")
 	public String adminEndSubList(Model model) {
 		List<AdminVO> list = adminService.endSunListSelect();
@@ -91,7 +79,7 @@ public class AdminController {
 	public String adminQnAInfo(QnAVO qnaVO, Model model) {
 		QnAVO qvo = adminService.qnaInfoSelect(qnaVO);
 		List<FileVO> fileList = fileService.selectFiles("qna", qnaVO.getQnaNo());
-		model.addAttribute("fileList",fileList);
+		model.addAttribute("fileList", fileList);
 		model.addAttribute("qna", qvo);
 		return "admin/adminQnAInfo";
 	}
@@ -106,13 +94,38 @@ public class AdminController {
 		}
 		return url;
 	}
+
 	@GetMapping("/adminModInfo")
 	public String adminModInfo(ModuleVO moduleVO, Model model) {
 		ModuleVO mvo = adminService.modSelect(moduleVO);
 		List<ModuleFileVO> list = adminService.modFileSelect(moduleVO);
-		model.addAttribute("fileList",list);
-		model.addAttribute("modInfo",mvo);
+		model.addAttribute("fileList", list);
+		model.addAttribute("modInfo", mvo);
 		System.out.println(moduleVO);
 		return "admin/adminModInfo";
+	}
+
+	@PostMapping("/adminModInsert")
+	public String adminModInsertPro(@ModelAttribute ModuleVO moduleVO) {
+		int result = adminService.moduleInsert(moduleVO);
+		String url = null;
+		if (result > 0) {
+			url = "redirect:/adminModList";
+		} else {
+			url = "redirect:/adminModInsert";
+		}
+		return url;
+	}
+
+	@PostMapping("/adminModUpdate")
+	public String adminModUpdate(@ModelAttribute ModuleVO modVO) {
+		int result = adminService.modUpdate(modVO);
+		String url = null;
+		if (result > 0) {
+			url = "redirect:/adminModList";
+		} else {
+			url = "redirect:/adminModUpdate";
+		}
+		return url;
 	}
 }

@@ -33,12 +33,13 @@ public class SpringSecurityConfig {
     	http.headers().frameOptions().disable();
     	
     	// 캐시 비활성화 설정
-        // http.headers().cacheControl().disable();
+        //http.headers().cacheControl().disable();
         
         http.authorizeHttpRequests()
                 .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
+                .antMatchers("/home/**").hasAnyRole("No")
                 .antMatchers("/group/**").hasAnyRole("일반사원", "사원관리자")
                 .anyRequest().authenticated()
                 .and()

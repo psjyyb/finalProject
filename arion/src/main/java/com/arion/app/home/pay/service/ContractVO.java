@@ -1,6 +1,7 @@
 package com.arion.app.home.pay.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,10 +17,14 @@ public class ContractVO {
 	private int monthPayPrice;
 	private int totalPayPrice;
 	private String companyCode;
-	private int regularDate;
+	private Integer regularDate;
 	private String billingkey;
 	private String customerkey;
 	private String contractSign;
 	private int firstMonthAmount;
+	
+	private List<String> moduleNames;
+	
+	
 	
 }

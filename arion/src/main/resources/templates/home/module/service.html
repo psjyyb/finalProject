@@ -227,7 +227,8 @@ select {
 				<div class="checkbox-group">
 					<th:block th:each="module :${moduleList}">
 						<div class="checkbox-card">
-							<input type="checkbox" class="module-checkbox" th:data-price="${module.modulePrice}" th:value="${module.moduleName}">
+							<input type="checkbox" class="module-checkbox" th:data-price="${module.modulePrice}" th:value="${module.moduleName}" name="moduleNames[]">
+							<input type="hidden" name="moduleNos[]" th:value="${module.moduleNo}">
 							<span th:text="${module.moduleName}"></span>
 						</div>
 					</th:block>
@@ -257,7 +258,7 @@ select {
 			</div>
 			<div class="form-group">
 				<label for="regularPaymentDate">정기 결제일</label>
-				<input type="text" id="regularPaymentDate" name="regularPaymentDate" disabled>
+				<input type="text" id="regularPaymentDate" name="regularPaymentDate" disabled >
 			</div>
 			<div class="summary">
 				<div class="summary-item">

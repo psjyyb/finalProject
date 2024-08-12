@@ -24,6 +24,15 @@ import com.arion.app.group.admin.service.GroupAdminVO;
 import com.arion.app.group.admin.service.RankVO;
 import com.arion.app.security.service.CompanyVO;
 
+	/*
+	 * 작성자 : 박성준
+	 * 작성일자 : 2024-08-05
+	 * 그룹웨어 관리자 : 사원목록조회, 사원상세조회/수정/삭제, 사원등록, 부서목록조회/수정/삭제,
+	 *              직급목록조회/수정/삭제, 회사정보수정, 지난계약목록/상세조회,
+	 * 				 현재계약정보조회, 계약해지, 계약수정
+	 * */
+
+
 @Controller
 public class GroupAdminController {
 

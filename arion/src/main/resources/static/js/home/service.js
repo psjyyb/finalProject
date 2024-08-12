@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    function calculateAmounts() {
+  function calculateAmounts() {
         let accountNumber = parseInt($('#accountNumber').val());
         let period = parseInt($('#subscriptionPeriod').val());
         let checkedModules = $('.module-checkbox:checked');
@@ -11,7 +11,8 @@ $(document).ready(function() {
         checkedModules.each(function() {
             monthlyModuleAmount += parseInt($(this).data('price'));
         });
-
+      
+      
         let monthlyAmount = monthlyAccountAmount + monthlyModuleAmount;
         let totalAmount = monthlyAmount * (period / 30);
 
@@ -19,15 +20,13 @@ $(document).ready(function() {
             let remainingAmount = totalAmount - firstMonthAmount;
             let remainingMonths = Math.floor((period - 30) / 30);
             let monthlyAmountExcludingFirstMonth = remainingMonths > 0 ? remainingAmount / remainingMonths : monthlyAmount;
-
-            $('input[name=accountAmount]').val(Math.trunc(monthlyAccountAmount * (period / 30)));
+   
+         $('input[name=accountAmount]').val(Math.trunc(monthlyAccountAmount * (period / 30)));
             $('input[name=moduleAmount]').val(Math.trunc(monthlyModuleAmount * (period / 30)));
             $('input[name=totalAmount]').val(totalAmount);
             $('input[name=firstMonthAmount]').val(Math.trunc(firstMonthAmount));
             $('input[name=monthlyAmount]').val(Math.trunc(monthlyAmountExcludingFirstMonth));
-            $('input[name=regularPaymentDate]').val(payDate);
-
-
+                     
             $('#accountAmount').text((monthlyAccountAmount * (period / 30)).toLocaleString().split(".")[0] + '원');
             $('#moduleAmount').text((monthlyModuleAmount * (period / 30)).toLocaleString().split(".")[0] + '원');
             $('#totalAmount').text(totalAmount.toLocaleString().split(".")[0] + '원');

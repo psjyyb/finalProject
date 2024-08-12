@@ -20,6 +20,12 @@ import com.arion.app.home.pay.service.PayService;
 import com.arion.app.home.pay.service.PayVO;
 import com.arion.app.security.service.CompanyVO;
 
+	/*
+	 * 작성자 : 박성준
+	 * 작성일자 : 2024-08-10
+	 * 결제및계약서 : 계약서작성, 결제카드 등록, 결제
+	 * */
+
 @Controller
 public class PayController {
 		
@@ -41,7 +47,6 @@ public class PayController {
 	}
 	@PostMapping("/home/payView")
 	public String payProcess(@RequestParam("signatureData") String signatureData, ContractVO contractVO,Model model) {
-	    System.out.println(signatureData+"dydydydydydydyyapfmrlslks");
 	    String fileName = null;
 	    try {
 	        // 이미지 데이터에서 Base64 접두사 제거

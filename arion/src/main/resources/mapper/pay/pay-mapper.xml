@@ -30,4 +30,23 @@
               ,#{contractSign}
               )
 	</insert>
+	
+	<insert id="insertSubModule">
+		INSERT INTO sub_module(
+                         sub_module_no
+                        ,module_no
+                        ,sub_module_name
+                        ,company_code
+                       )
+		VALUES(
+		        (SELECT MAX(sub_module_no)+1
+		         FROM sub_module)
+		       ,(SELECT module_no
+		         FROM module
+		         WHERE module_name = #{moduleName}
+		         )
+		       ,#{moduleName}
+		       ,#{companyCode}
+		       )
+	</insert>
 </mapper>

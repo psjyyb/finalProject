@@ -77,4 +77,26 @@
         WHERE company_code = #{companyCode}
     </select>
     
+    <select id="findId" resultType="CompanyVO">
+    	SELECT company_code
+    			,company_id
+    	FROM company
+    	WHERE ceo_name = #{ceoName}
+    	And company_business_number = #{companyBusinessNumber}
+    </select>
+    
+    <update id="updatePw">
+    	UPDATE company
+        SET
+            company_pw = #{companyPw}
+        WHERE company_code = #{companyCode}
+        AND company_id = #{companyId}
+    </update>
+    
+    <select id="selectEmail" resultType="String">
+    	SELECT ceo_email
+    	FROM company
+    	WHERE company_code = #{companyCode}
+    	AND company_id = #{companyId}
+    </select>
 </mapper>

@@ -21,5 +21,6 @@ public class AopTests {
 
 		boolean matchResult = passwordE.matches(password, enPwd);
 		System.out.println("match : " + matchResult);
+		
 	}
 }

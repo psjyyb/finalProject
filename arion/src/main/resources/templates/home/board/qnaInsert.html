@@ -41,12 +41,11 @@
 			</div>
 			<div class="form-group">
 				<label>첨부파일</label> <label for="files" class="custom-file-upload">파일선택</label> 
-				<input type="file" id="files" multiple>
+				<input type="file" id="files" name="files" multiple>
 				<table id="fileListTable">
 					<thead>
 						<tr>
 							<th>파일명</th>
-							<th>파일 타입</th>
 							<th>삭제</th>
 						</tr>
 					</thead>
@@ -58,10 +57,11 @@
 				<button type="submit" class="btn btn-primary">등록</button>
 				<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/home/qna}'|">목록으로</button>
 			</div>
+			<input type="hidden" name="isLoggedIn" th:value="${#authentication.name != 'anonymousUser'}">
 		</form>
 
 	</div>
 
-</body>
 <script th:src="@{/js/home/qnaInsert.js}"></script>
+</body>
 </html>

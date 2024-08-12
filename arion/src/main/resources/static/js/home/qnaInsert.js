@@ -25,15 +25,53 @@ $(document).ready(function() {
 
         let qnaTitle = $('input[name="qnaTitle"]');
         if (qnaTitle.val().trim() === '') {
-            alert("제목은 필수 값 입니다.");
-            qnaTitle.focus();
+				Swal.fire({
+					icon: "error",
+					text: "제목을 입력해 주세요.",
+					didClose: () => {
+						$('.qnaTitle').focus();	
+					}
+				});
             return;
         }
 
         let qnaWriter = $('input[name="qnaWriter"]');
         if (qnaWriter.val().trim() === '') {
-            alert("작성자는 필수 값 입니다.");
-            qnaWriter.focus();
+            	Swal.fire({
+					icon: "error",
+					text: "작성자를 입력해 주세요.",
+					didClose: () => {
+						$('.qnaWriter').focus();	
+					}
+				});
+            return;
+        }
+
+		let isLoggedIn = $('input[name="isLoggedIn"]').val() === 'true';
+
+        if (!isLoggedIn) {
+            let password = $('input[name="qnaPw"]');
+            if (password.val().trim() === '') {
+                	Swal.fire({
+						icon: "error",
+						text: "제목을 입력해 주세요.",
+						didClose: () => {
+							$('.qnaPw').focus();	
+						}
+					});
+                return;
+            }
+        }
+        
+        let qnaContent = $('textarea[name="qnaContent"]');
+        if (qnaContent.val().trim() === '') {
+            	Swal.fire({
+					icon: "error",
+					text: "내용을 입력해 주세요.",
+					didClose: () => {
+						$('.qnaContent').focus();	
+					}
+				});
             return;
         }
 
@@ -50,10 +88,13 @@ $(document).ready(function() {
         })
         .done(result => {
 			Swal.fire({
-				icon: "sccess",
-				text: "등록되었습니다."
+				icon: "success",
+				text: "등록되었습니다.",
+				timer: 3000,
+				willClose: () => {
+                    window.location.href = '/home/qna';
+                }
 			});
-			window.location.href = '/home/qna';
 		})
 		.fail(err => {
 			Swal.fire({

@@ -6,11 +6,13 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.arion.app.group.board.service.Criteria;
 import com.arion.app.security.service.CompanyVO;
 
 public interface QnaService {
 	
-	List<HomeQnaVO> selectQnAList();
+	List<HomeQnaVO> selectQnAList(Criteria criteria);
+	int selectQnATotalCount(Criteria criteria);
 	List<CompanyVO> selectCompany(@Param("companyCode") String companyCode);
 
 	public HomeQnaVO QnaInfo(HomeQnaVO homeQnaVO);

@@ -64,75 +64,85 @@ label {
 <body>
 	<div class="container">
 		<h1>계약 해지</h1>
+		<form th:action="@{/groupAdmin/contractCancle}" method="POST" name="canForm">
+			<!-- 동의사항 1 -->
+			<input type="hidden" name="contractNo" th:value="${contractNo}">
+			<p class="warning">① 계약을 해지하시면 다음과 같은 불이익이 발생할 수 있습니다:</p>
+			<ul class="warning">
+				<li>해지 시 위약금이 발생할 수 있으며, 이는 계약서에 명시된 내용에 따릅니다.</li>
+				<li>남은 서비스 기간에 대한 환불이 불가능할 수 있습니다.</li>
+				<li>계약 해지 이후, 계정을 복구할 수 없으며 모든 데이터가 삭제됩니다.</li>
+				<li>해지 후에는 재가입 시 기존의 혜택을 복구할 수 없습니다.</li>
+			</ul>
+			<p class="warning">이 모든 내용을 충분히 이해하고도 계약을 해지하시겠습니까?</p>
+			<div class="checkbox-group">
+				<label><input type="checkbox" id="agree1"> 동의함</label> <label><input
+					type="checkbox"> 동의하지 않음</label>
+			</div>
 
-		<!-- 동의사항 1 -->
-		<p class="warning">① 계약을 해지하시면 다음과 같은 불이익이 발생할 수 있습니다:</p>
-		<ul class="warning">
-			<li>해지 시 위약금이 발생할 수 있으며, 이는 계약서에 명시된 내용에 따릅니다.</li>
-			<li>남은 서비스 기간에 대한 환불이 불가능할 수 있습니다.</li>
-			<li>계약 해지 이후, 계정을 복구할 수 없으며 모든 데이터가 삭제됩니다.</li>
-			<li>해지 후에는 재가입 시 기존의 혜택을 복구할 수 없습니다.</li>
-		</ul>
-		<p class="warning">이 모든 내용을 충분히 이해하고도 계약을 해지하시겠습니까?</p>
-		<div class="checkbox-group">
-			<label><input type="checkbox" id="agree1"> 동의함</label> <label><input
-				type="checkbox"> 동의하지 않음</label>
-		</div>
+			<!-- 동의사항 2 -->
+			<p class="warning">② 계약 해지 후 다음과 같은 사항을 고려해주십시오:</p>
+			<ul class="warning">
+				<li>해지 후에도 고객님의 계약 및 결제 정보는 법적 의무에 따라 일정 기간 동안 보관될 수 있습니다.</li>
+				<li>보관된 정보는 법적 요청이 있을 경우만 제공되며, 그 외의 용도로는 사용되지 않습니다.</li>
+			</ul>
+			<p class="warning">이와 관련된 모든 사항을 이해하셨습니까?</p>
+			<div class="checkbox-group">
+				<label><input type="checkbox" id="agree2"> 동의함</label> <label><input
+					type="checkbox"> 동의하지 않음</label>
+			</div>
 
-		<!-- 동의사항 2 -->
-		<p class="warning">② 계약 해지 후 다음과 같은 사항을 고려해주십시오:</p>
-		<ul class="warning">
-			<li>해지 후에도 고객님의 계약 및 결제 정보는 법적 의무에 따라 일정 기간 동안 보관될 수 있습니다.</li>
-			<li>보관된 정보는 법적 요청이 있을 경우만 제공되며, 그 외의 용도로는 사용되지 않습니다.</li>
-		</ul>
-		<p class="warning">이와 관련된 모든 사항을 이해하셨습니까?</p>
-		<div class="checkbox-group">
-			<label><input type="checkbox" id="agree2"> 동의함</label> <label><input
-				type="checkbox"> 동의하지 않음</label>
-		</div>
+			<!-- 동의사항 3 -->
+			<p class="warning">③ 계약 해지 후 다음 사항에 동의합니다:</p>
+			<ul class="warning">
+				<li>해지 이후 발생하는 모든 데이터 삭제에 대해 회사는 책임을 지지 않습니다.</li>
+				<li>데이터 복구가 불가능함을 인지하며, 중요한 데이터는 사전에 백업해 두어야 합니다.</li>
+				<li>향후 서비스 재이용 시 신규 계약 조건이 적용됩니다.</li>
+			</ul>
+			<p class="warning">위 사항에 대해 동의하십니까?</p>
+			<div class="checkbox-group">
+				<label><input type="checkbox" id="agree3"> 동의함</label> <label><input
+					type="checkbox"> 동의하지 않음</label>
+			</div>
 
-		<!-- 동의사항 3 -->
-		<p class="warning">③ 계약 해지 후 다음 사항에 동의합니다:</p>
-		<ul class="warning">
-			<li>해지 이후 발생하는 모든 데이터 삭제에 대해 회사는 책임을 지지 않습니다.</li>
-			<li>데이터 복구가 불가능함을 인지하며, 중요한 데이터는 사전에 백업해 두어야 합니다.</li>
-			<li>향후 서비스 재이용 시 신규 계약 조건이 적용됩니다.</li>
-		</ul>
-		<p class="warning">위 사항에 대해 동의하십니까?</p>
-		<div class="checkbox-group">
-			<label><input type="checkbox" id="agree3"> 동의함</label> <label><input
-				type="checkbox"> 동의하지 않음</label>
-		</div>
-
-		<!-- 해지 및 취소 버튼 -->
-		<div class="buttons">
-			<button id="terminate" disabled>해지</button>
-			<button id="cancel" th:onclick="|location.href='@{/groupAdmin}'|">취소</button>
-		</div>
+			<!-- 해지 및 취소 버튼 -->
+			<div class="buttons">
+				<button id="terminate" disabled>해지</button>
+				<button type="button" id="cancel"
+					th:onclick="|location.href='@{/groupAdmin}'|">취소</button>
+			</div>
+		</form>
 	</div>
 
 	<script>
-        // 모든 체크박스의 동의함 항목이 체크되었는지 확인하는 함수
-        function checkAllAgreed() {
-            const agree1 = document.getElementById('agree1').checked;
-            const agree2 = document.getElementById('agree2').checked;
-            const agree3 = document.getElementById('agree3').checked;
+		// 모든 체크박스의 동의함 항목이 체크되었는지 확인하는 함수
+		function checkAllAgreed() {
+			const agree1 = document.getElementById('agree1').checked;
+			const agree2 = document.getElementById('agree2').checked;
+			const agree3 = document.getElementById('agree3').checked;
 
-            const terminateButton = document.getElementById('terminate');
-            if (agree1 && agree2 && agree3) {
-                terminateButton.disabled = false;
-            } else {
-                terminateButton.disabled = true;
-            }
-        }
+			const terminateButton = document.getElementById('terminate');
+			if (agree1 && agree2 && agree3) {
+				terminateButton.disabled = false;
+			} else {
+				terminateButton.disabled = true;
+			}
+		}
 
-        // 체크박스 클릭 이벤트에 함수 연결
-        document.getElementById('agree1').addEventListener('change', checkAllAgreed);
-        document.getElementById('agree2').addEventListener('change', checkAllAgreed);
-        document.getElementById('agree3').addEventListener('change', checkAllAgreed);
-        $('#terminate').on('click',function(){
-        	console.log('버튼이벤트 먹음 ...')
-        })
-    </script>
+		// 체크박스 클릭 이벤트에 함수 연결
+		document.getElementById('agree1').addEventListener('change',
+				checkAllAgreed);
+		document.getElementById('agree2').addEventListener('change',
+				checkAllAgreed);
+		document.getElementById('agree3').addEventListener('change',
+				checkAllAgreed);
+		$('[name="canForm"]').on('submit',function(event){
+			event.preventDefault();
+			if(confirm('정말 계약을 해지 하시겠습니까?')){
+				canForm.submit();
+			}
+		})
+		
+	</script>
 </body>
 </html>

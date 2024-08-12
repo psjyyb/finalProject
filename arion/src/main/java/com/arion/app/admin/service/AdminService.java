@@ -25,4 +25,8 @@ public interface AdminService {
 	// 모듈수정화면.
 	ModuleVO modSelect(ModuleVO moduleVO); // 모듈정보
 	List<ModuleFileVO> modFileSelect(ModuleVO moduleVO); // 모듈 설명사진
+	
+	int modUpdate(@ModelAttribute ModuleVO moduleVO); // 모듈ㄴ수정
+	
+	int filesPro(ModuleVO moduleVO); // 다중파일처리
 }

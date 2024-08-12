@@ -22,35 +22,22 @@ public class MainServiceImpl implements MainService {
         // 상위 모듈 리스트 조회
         List<getModuleVO> modules = mainMapper.getModules(getmoduleVO.getCompanyCode(), getmoduleVO.getEmployeeId());
         // 하위 모듈 리스트 조회
-        List<SubModuleVO> subModules = mainMapper.getSubModules(getmoduleVO.getCompanyCode(), getmoduleVO.getEmployeeId());
+        List<SubModuleVO> subModules = mainMapper.getSubModules();
 
         // 상위 모듈과 하위 모듈을 조합
-        for (getModuleVO module : modules) {
+        for (getModuleVO module : modules) {  // 각 모듈에 대해 빈 하위 모듈 리스트를 초기화합니다.
             module.setSubModules(new ArrayList<>()); // 초기화
 
             for (SubModuleVO subModule : subModules) {
+            	 // 현재 모듈의 번호와 하위 모듈의 번호가 일치하는 경우
                 if (module.getModuleNo() != null && subModule.getModuleNo() != null 
                         && subModule.getModuleNo().equals(module.getModuleNo())) {
-                    
-                    if (subModule.getUrlPattern() != null) {
-                        String dynamicUrl = generateUrl(subModule.getUrlPattern(), getmoduleVO.getEmployeeId());
-                        subModule.setUrl(dynamicUrl);
-                    } else {
-                        subModule.setUrl(""); 
-                    }
-
+                    // 해당 하위 모듈을 현재 모듈의 하위 모듈 리스트에 추가합니다.
                     module.getSubModules().add(subModule);
                 }
             }
         }
-
+        // 4. 상위 모듈과 연결된 하위 모듈을 포함한 리스트를 반환합니다.
         return modules;
-    }
-
-    // 사용자 ID에 따라 동적으로 URL을 생성하는 메서드
-    private String generateUrl(String urlPattern, String userId) {
-        // URL 패턴에 사용자 ID를 포함하여 동적으로 URL 생성
-        String dynamicUrl = String.format(urlPattern, userId);
-        return dynamicUrl;
     }
 }

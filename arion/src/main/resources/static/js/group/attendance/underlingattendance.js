@@ -1,4 +1,4 @@
-    var today = new Date(); //오늘 날짜        
+ var today = new Date(); //오늘 날짜        
 	var date = new Date();
 	
 	document.getElementById("before").addEventListener('click',beforem);
@@ -187,10 +187,6 @@
       console.error("Error: " + error);
     }
   });
-  
-        
-        console.log();
-  
 		//특일       
         let endday = new Date(today.getFullYear(), today.getMonth()+1, 0);
         
@@ -206,7 +202,7 @@
 			
            type : 'POST',
            data : {
-			  'employeeno' : $('#employeeno').val(),
+			'employeeno' : $('#employeeno').val(),
               'startdate' : startdate,
               'enddate': enddate
               },
@@ -273,7 +269,3 @@ document.getElementById("download").addEventListener('click',download);
            });
            
 	}
-
-
-
-

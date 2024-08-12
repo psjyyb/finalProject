@@ -2,33 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.main.mapper.MainMapper">
 
-
-	<!-- 상위 모듈 조회 쿼리 -->
-	<select id="getModules" parameterType="String"
+<select id="getModules" parameterType="String"
 		resultType="getModuleVO">
-		SELECT
-		M.MODULE_NO,
-		M.MODULE_NAME
-		FROM USEMODULE UM
-		JOIN MODULE M ON
-		UM.MODULE_NO = M.MODULE_NO
-		WHERE UM.COMPANY_CODE = #{companyCode}
-	</select>
-
-	<!-- 하위 모듈 조회 쿼리 -->
-	<select id="getSubModules" parameterType="String"
-		resultType="SubModuleVO">
-		SELECT
-		SM.SUB_MODULE_NAME AS subModuleName,
-		SM.URL_PATTERN AS urlPattern,
-		SM.MODULE_NO AS moduleNo
-		FROM SUB_MODULE SM
-		WHERE SM.MODULE_NO IN (
-		SELECT DISTINCT UM.MODULE_NO
-		FROM USEMODULE UM
-		JOIN EMPLOYEES E ON UM.COMPANY_CODE = E.COMPANY_CODE
-		WHERE UM.COMPANY_CODE = #{companyCode}
-		AND E.EMPLOYEE_ID = #{employeeId}
-		)
-	</select>
+   SELECT
+      m.module_name,
+      m.module_no
+    FROM usemodule um JOIN module m 
+                      ON um.module_no = m.module_no
+    WHERE um.contract_no IN (SELECT c.contract_no
+                            FROM contract c
+                            WHERE c.contract_state = '계약중'
+                            AND c.company_code = #{companyCode}
+                            )
+</select>
+	 <select id="getSubModules" resultType="SubModuleVO">
+	 SELECT
+            sm.sub_module_name AS subModuleName,
+            sm.url_pattern AS urlPattern,
+            sm.module_no AS moduleNo
+      FROM sub_module sm
+      WHERE sm.module_no IN (SELECT DISTINCT um.module_no
+                               FROM usemodule um)
+        ORDER BY sm.module_no ASC
+        </select>
 </mapper>

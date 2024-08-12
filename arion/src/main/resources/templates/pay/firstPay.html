@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <title>결제 페이지</title>
 <style>
 .container2 {
@@ -77,6 +78,7 @@
 	background-color: #0056b3;
 }
 </style>
+
 </head>
 <body>
 	<div class="container2">
@@ -102,7 +104,10 @@
 				<label for="usersCnt">사용자 수:</label>
 				<p id="usersCnt" class="value">[[${payInfo.usersCnt}]] 명</p>
 			</div>
-
+			<div class="form-group">
+				<label for="usersCnt">이용중인 서비스:</label>
+				<p id="moduleNames" class="value">[[${payInfo.moduleNames}]]</p>
+			</div>
 			<div class="form-group">
 				<label for="monthlyAmount">월 구독료:</label>
 				<p id="monthlyAmount" class="value">
@@ -120,19 +125,30 @@
 				[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원 </p>
 			</div>
 			<div class="button-group">
-				<button id="confirm-payment" onclick="confirmPayment()">결제하기</button>
+				<button id="payment-button">결제하기</button>
 			</div>
 		</div>
 	</div>
-	<script>
-		function confirmPayment() {
-			if (confirm('결제를 진행하시겠습니까?')) {
-				// 결제 처리 로직을 여기에 추가합니다.
-				// 예: form submission or API call
-				alert('결제 요청을 처리합니다.');
-				// window.location.href = '/payment/processing'; // 결제 처리 URL로 리다이렉트
-			}
-		}
-	</script>
+	<script src="https://js.tosspayments.com/v2/standard"></script>
+ 	<script th:inline="javascript">
+    // ------  SDK 초기화 ------
+    const clientKey = "test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq";
+    const tossPayments = TossPayments(clientKey);
+    const customerKey = 'customerkey';
+    // 결제창 인스턴스 생성
+    const payment = tossPayments.payment({ customerKey });
+
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    document.getElementById('payment-button').addEventListener('click', function() {
+      payment.requestBillingAuth({
+        method: "CARD", // 자동결제(빌링)은 카드만 지원합니다
+        successUrl: window.location.origin + "/home/success",
+        failUrl: window.location.origin + "/home/fail",
+        customerEmail: "ass6728@naver.com",
+        customerName: "김토스",
+      });
+    });
+    
+ 	</script>
 </body>
 </html>

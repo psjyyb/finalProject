@@ -19,6 +19,12 @@ import com.arion.app.group.board.service.BoardVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.board.service.PageDTO;
 
+/*
+ * 작성자 : 김철규
+ * 작성일자 : 2024-08-14
+ * 그룹웨어 게시판 : 게시글조회, 게시글상세보기, 글등록, 글삭제, 글수정
+ */
+
 @Controller
 public class BoardController {
 

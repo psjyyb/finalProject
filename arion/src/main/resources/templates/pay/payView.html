@@ -197,6 +197,11 @@ h1, h2, h3 {
 								<input type="hidden" name="regularDate"
 									th:value="${payInfo.regularPaymentDate}">
 							</p>
+							<p>
+								<strong>이용 서비스:</strong> [[${payInfo.moduleNames}]] 
+								<input type="hidden" name="moduleNames"
+									th:value="${payInfo.moduleNames}">
+							</p>
 						</div>
 						<div>
 							<p>

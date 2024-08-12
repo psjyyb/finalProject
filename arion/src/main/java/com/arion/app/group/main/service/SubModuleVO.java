@@ -8,7 +8,7 @@ public class SubModuleVO {
 		private String employeeId;
 		private Integer moduleNo;
 	    private String subModuleName;
-	    private String url;
+	
 	    private String urlPattern;
 	}
 

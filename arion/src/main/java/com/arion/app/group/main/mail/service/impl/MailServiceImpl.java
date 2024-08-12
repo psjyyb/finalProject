@@ -1,17 +1,18 @@
 package com.arion.app.group.main.mail.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.arion.app.common.service.EmailService;
+import com.arion.app.common.service.FileService;
 import com.arion.app.group.main.mail.mapper.MailMapper;
-import com.arion.app.group.main.mail.service.MailFileVO;
 import com.arion.app.group.main.mail.service.MailReceiveVO;
 import com.arion.app.group.main.mail.service.MailService;
 import com.arion.app.group.main.mail.service.MailVO;
@@ -22,96 +23,69 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private MailMapper mailMapper;
 
-    // 받은 메일함 조회
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private FileService fileService;
+
     @Override
     public List<MailVO> mailList(MailVO mailVO) {
-        return mailMapper.recieveMailAll(mailVO.getCompanyCode(), mailVO.getEmployeeId());
+        return mailMapper.receiveMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
 
-    
-    // 상세 메일 조회
-    @Override
-    public MailVO mailInfo(MailVO mailVO) {
-        return mailMapper.selectMailInfo(mailVO);
-    }
-
-    // 보낸 메일함 조회
     @Override
     public List<MailVO> sendMailList(MailVO mailVO) {
-        return mailMapper.sendMailAll(mailVO.getCompanyCode(), mailVO.getEmployeeId());
+        return mailMapper.sendMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
 
-    // 중요 메일함 조회
     @Override
     public List<MailVO> importMailList(MailVO mailVO) {
-        return mailMapper.importMailAll(mailVO.getCompanyCode(), mailVO.getEmployeeId());
+        List<MailVO> mails = mailMapper.importMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
+        System.out.println("중요 메일 조회 결과: " + mails);
+        return mails;
     }
 
-    // 휴지통 조회
     @Override
     public List<MailVO> deleteMailList(MailVO mailVO) {
-        return mailMapper.deleteMailAll(mailVO.getCompanyCode(), mailVO.getEmployeeId());
+        return mailMapper.deleteMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
-//    @Transactional
-//    @Override
-//    public int mailSend(MailVO mailVO, List<String> receiverIds, List<MultipartFile> files) {
-//        int mailNo = mailMapper.getMailNoSequence();
-//        mailVO.setMailNo(mailNo);
-//
-//        // 메일 저장
-//        int result = mailMapper.sendMail(mailVO);
-//
-//        if (result == 1) {
-//            // 수신자 정보 저장
-//            List<MailReceiveVO> receivers = receiverIds.stream()
-//                .map(receiverId -> {
-//                    MailReceiveVO receiver = new MailReceiveVO();
-//                    receiver.setMailNo(mailNo);
-//                    receiver.setEmployeeId(receiverId);
-//                    receiver.setReceiveNo(mailMapper.getMailNoSequence()); // 시퀀스 값
-//                    return receiver;
-//                })
-//                .collect(Collectors.toList());
-//            
-//            for (MailReceiveVO receiver : receivers) {
-//                mailMapper.insertMailReceive(receiver);
-//            }
-//
-//            // 파일 정보 저장
-//            List<MailFileVO> fileVOs = files.stream()
-//                .map(file -> {
-//                    MailFileVO fileVO = new MailFileVO();
-//                    fileVO.setMailNo(mailNo);
-//                    fileVO.setFileName(file.getOriginalFilename());
-//                    fileVO.setFiletype(file.getContentType());
-//                    fileVO.setFileNo(mailMapper.getMailNoSequence()); // 시퀀스 값
-//                    fileVO.setCompanyCode(mailVO.getCompanyCode()); // 회사 코드 설정
-//                    return fileVO;
-//                })
-//                .collect(Collectors.toList());
-//
-//            for (MailFileVO fileVO : fileVOs) {
-//                mailMapper.insertMailFile(fileVO);
-//            }
-//
-//            return mailNo;
-//        }
-//
-//        return -1;
-//    }
+
     @Override
     public Map<String, Object> deleteMail(MailVO mailVO) {
         Map<String, Object> map = new HashMap<>();
-        boolean isSuccessed = mailMapper.mailDelete(mailVO.getMailNo()) == 1;
-
-        map.put("result", isSuccessed);
+        boolean isSuccess = mailMapper.mailDelete(mailVO.getMailNo()) == 1;
+        map.put("result", isSuccess);
         map.put("target", mailVO);
-
         return map;
     }
 
+    @Transactional
     @Override
-    public int mailStatus(MailVO mailVO) {
-        return mailMapper.statusMail(mailVO.getMailNo());
+    public void sendMail(MailVO mailVO, MultipartFile[] attachments) {
+        try {
+            int mailNo = mailMapper.getMailNoSequence();
+            mailVO.setMailNo(mailNo);
+            mailVO.setSendDate(new Date());
+            mailVO.setMailStatus("SEND");
+
+            mailMapper.sendMail(mailVO);
+            System.out.println("메일이 데이터베이스에 저장되었습니다: " + mailVO);
+
+            MailReceiveVO receiveVO = new MailReceiveVO();
+            receiveVO.setMailNo(mailNo);
+            receiveVO.setReceiveEmail(mailVO.getReceiverEmail());
+            receiveVO.setCompanyCode(mailVO.getCompanyCode());
+            mailMapper.insertMailReceive(receiveVO);
+
+            if (attachments != null && attachments.length > 0) {
+                fileService.insertFiles(attachments, "MAIL", mailNo, mailVO.getCompanyCode());
+            }
+
+            emailService.sendEmail(mailVO.getReceiverEmail(), mailVO.getMailTitle(), mailVO.getMailContent());
+        } catch (Exception e) {
+            e.printStackTrace(); // 예외 로그를 출력합니다.
+            throw new RuntimeException("메일 전송 중 오류 발생", e);
+        }
     }
 }

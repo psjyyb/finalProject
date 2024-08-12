@@ -10,10 +10,10 @@
                 <when test="searchType != null and searchType != ''">
                     <choose>
                         <when test="'boardTitle'.equals( searchType )">
-                            AND board_title LIKE CONCAT('%', #{keyword}, '%')
+                            AND board_title LIKE '%' || #{keyword} || '%'
                         </when>
                         <when test="'boardContent'.equals( searchType )">
-                            AND board_content LIKE CONCAT('%', #{keyword}, '%')
+                            AND board_content LIKE '%' || #{keyword} || '%'
                         </when>
                         <when test="'employeeName'.equals( searchType )">
                            AND employee_no in ( select employee_no

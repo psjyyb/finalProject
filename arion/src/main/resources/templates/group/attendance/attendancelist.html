@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>myattendance</title>
+<title>attendancelist</title>
+</head>
 </head>
 <body>
-
+	<div >
+		<!-- DataTales Example -->
+		<a href="/group/attendance/attendances">되돌아가기</a>
+		<div >
+			<div >
+				<h6 >부하직원 목록</h6>
+			</div>
+			<div >
+				<div >
+					<table  id="dataTable" width="100%"
+						cellspacing="0">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>이름</th>
+								<th>직급</th>
+								<th>부서</th>
+								<th>입사일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="emp :${emplist}">
+								<tr>
+									<td th:text="${emp.employeeno}"></td>
+									<td><a th:text="${emp.employeename}" th:href="@{/group/attendance/underlingattendancelist/{employeeNo}(employeeNo=${emp.employeeno})}"></td>
+									<td th:text="${emp.rankname}"></td>
+									<td th:text="${emp.departmentname}"></td>
+									<td th:text="${#dates.format(emp.hireDate,'yyyy-MM-dd')}"></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/demo/datatables-demo.js}"></script>
+	<script>
+	
+	</script>
 </body>
 </html>

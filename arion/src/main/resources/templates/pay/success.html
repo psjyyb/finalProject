@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<title>결제 페이지</title>
+<style>
+.container2 {
+	max-width: 600px;
+	margin: 120px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>
+</head>
+<body>
+	<div class="container2">
+	  <h1>결제 성공</h1>
+	  <p>고객 키: <span id="cus" th:text="${customerKey}"></span></p>
+	  <p>인증 키: <span id="auth" th:text="${authKey}"></span></p>
+	  <p>빌링 키: <span id="bil" th:text="${billingKey}"></span></p>
+	  <a href="/payTest">다시 시도</a>
+	  <button id="testOrder">주문</button>
+	</div>
+  <script>
+  $('#testOrder').on('click', function() {
+	    let customerKey = $('#cus').text();
+	    let authKey = $('#auth').text();
+	    let billingKey = $('#bil').text();
+	    $.ajax({
+	        url: 'https://api.tosspayments.com/v1/billing/' + billingKey,
+	        type: 'POST',
+	        headers: {
+	            'Authorization': 'Basic ' + btoa('test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN:'),
+	            'Content-Type': 'application/json'
+	        },
+	        data: JSON.stringify({
+	            customerKey: customerKey,
+	            amount: 4900,
+	            orderId: "a4CWyWY5m89PNh7xJ12sad",
+	            orderName: "전자결재외2건",
+	            customerEmail: "ass6728@naver.com",
+	            customerName: "박토스",
+	            taxFreeAmount: 0,
+	            taxExemptionAmount: 0
+	        })
+	    })
+	    .done(function(result) {
+	        console.log(result);
+	        alert('결제성공');
+	    })
+	    .fail(function(err) {
+	        console.log(err);
+	        alert('결제실패');
+	    });
+	});
+
+  </script>
+</body>
+</html>

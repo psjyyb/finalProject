@@ -134,7 +134,7 @@
     // ------  SDK 초기화 ------
     const clientKey = "test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq";
     const tossPayments = TossPayments(clientKey);
-    const customerKey = 'customerkey';
+    const customerKey = `[[${payInfo.customerkey}]]`;
     // 결제창 인스턴스 생성
     const payment = tossPayments.payment({ customerKey });
 

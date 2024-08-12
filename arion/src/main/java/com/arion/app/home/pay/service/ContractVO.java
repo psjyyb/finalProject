@@ -22,6 +22,7 @@ public class ContractVO {
 	private String customerkey;
 	private String contractSign;
 	private int firstMonthAmount;
+	private int pCheck;
 	
 	private List<String> moduleNames;
 	

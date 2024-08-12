@@ -29,4 +29,6 @@ public interface AdminService {
 	int modUpdate(@ModelAttribute ModuleVO moduleVO); // 모듈ㄴ수정
 	
 	int filesPro(ModuleVO moduleVO); // 다중파일처리
+	
+	int modDelete(int moduleNo); // 모듈삭제
 }

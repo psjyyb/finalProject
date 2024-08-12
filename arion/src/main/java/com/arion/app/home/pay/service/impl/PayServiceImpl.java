@@ -2,11 +2,22 @@ package com.arion.app.home.pay.service.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
 import com.arion.app.home.pay.mapper.PayMapper;
@@ -14,6 +25,8 @@ import com.arion.app.home.pay.service.ContractVO;
 import com.arion.app.home.pay.service.PayService;
 import com.arion.app.home.pay.service.PayVO;
 import com.arion.app.security.service.CompanyVO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PayServiceImpl implements PayService {
@@ -47,29 +60,145 @@ public class PayServiceImpl implements PayService {
 
 	@Transactional
 	@Override
-	public int contractInsert(ContractVO contractVO) {
+	public int contractInsert(ContractVO contractVO) {	
+
 		List<String> moduleNames = contractVO.getModuleNames();
 		if (moduleNames != null && !moduleNames.isEmpty()) {
-			// 첫 번째 요소에서 "[" 제거
-			String firstModule = moduleNames.get(0).replace("[", "").trim();
-			moduleNames.set(0, firstModule);
-			// 마지막 요소에서 "]" 제거
-			String lastModule = moduleNames.get(moduleNames.size() - 1).replace("]", "").trim();
-			moduleNames.set(moduleNames.size() - 1, lastModule);
+            // 첫 번째 요소에서 "[" 제거
+            String firstModule = moduleNames.get(0).replace("[", "").trim();
+            moduleNames.set(0, firstModule);
+
+            // 마지막 요소에서 "]" 제거
+            String lastModule = moduleNames.get(moduleNames.size() - 1).replace("]", "").trim();
+            moduleNames.set(moduleNames.size() - 1, lastModule);
+        }
+		moduleNames.forEach(a ->{
+			payMapper.insertSubModule(a,contractVO.getCompanyCode(),contractVO.getContractNo());
+		});
+		return payMapper.insertContract(contractVO);
+	}
+
+	@Override
+	public String requestBillingKey(String customerKey, String authKey) {
+		String secretKey = "test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN";
+		String endpoint = "https://api.tosspayments.com/v1/billing/authorizations/" + authKey;
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBasicAuth(secretKey, "");
+		headers.add("Content-Type", "application/json");
+
+		// 필수 파라미터 포함
+		Map<String, String> body = new HashMap<>();
+		body.put("customerKey", customerKey);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String requestBody = "";
+		try {
+			requestBody = objectMapper.writeValueAsString(body);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		contractVO.setPCheck(0);
-		payMapper.insertContract(contractVO);
-		int result = contractVO.getPCheck();
-		if (result == 0) {
-			// 프로시저 호출이 실패했거나 예상치 못한 문제가 발생한 경우
-			throw new RuntimeException("Contract insertion failed or result is null.");
-		} else if (result > 0) {
-			moduleNames.forEach(a -> {
-				payMapper.insertSubModule(a, contractVO.getCompanyCode(), contractVO.getContractNo());
-			});
+
+		HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, String.class);
+
+		if (response.getStatusCode() == HttpStatus.OK) {
+			try {
+				JsonNode root = objectMapper.readTree(response.getBody());
+				return root.path("billingKey").asText();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else {
-			System.out.println("이미 등록된 계약서가 있습니다.");
+			System.out.println("Error: " + response.getBody());
 		}
-		return result;
+		return null;
 	}
 }
+//private final String TOSS_API_URL =
+//"https://api.tosspayments.com/v1/billing/keys"; private final String
+//SECRET_KEY = "test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN"; // TossPayments 비밀키 (환경변수에서 가져오는 것이 좋습니다)
+//
+//private final RestTemplate restTemplate; private final ObjectMapper
+//objectMapper;
+//
+//
+//private GroupAdminMapper gaMapper;
+//private PayMapper payMapper;
+//
+//@Autowired
+//public PayServiceImpl(GroupAdminMapper groupAdminMapper, PayMapper payMapper, RestTemplate restTemplate,
+//		ObjectMapper objectMapper) {
+//	this.gaMapper = groupAdminMapper;
+//	this.payMapper = payMapper;
+//	this.restTemplate = restTemplate;
+//	this.objectMapper = objectMapper;
+//
+//}
+//	@Override
+//	public String requestBillingKey(String comCode) {
+//		CompanyVO comInfo = payMapper.selectComInfo(comCode);
+//		try {
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.set("Authorization", "Basic " + encodeBase64(":" + SECRET_KEY)); // Base64 인코딩
+//			headers.set("Content-Type", "application/json");
+//
+//			String requestBody = "{" + "\"customerEmail\": \"" + comInfo.getCeoEmail() + "\"," + "\"customerName\": \""
+//					+ comInfo.getCeoName() + "\"," + "\"method\": \"CARD\"" + "}";
+//
+//			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+//
+//			ResponseEntity<String> response = restTemplate.exchange(TOSS_API_URL, HttpMethod.POST, requestEntity,
+//					String.class);
+//
+//			if (response.getStatusCode().is2xxSuccessful()) {
+//				JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+//				return jsonResponse.get("billingKey").asText();
+//			} else {
+//				// API의 실패 응답 로깅
+//				System.err.println("API response status code: " + response.getStatusCode());
+//				System.err.println("API response body: " + response.getBody());
+//				throw new RuntimeException("Failed to request billing key: " + response.getStatusCode());
+//			}
+//		} catch (HttpServerErrorException e) {
+//			// 서버 오류 로깅
+//			System.err.println("Server error occurred: " + e.getResponseBodyAsString());
+//			throw new RuntimeException("Server error occurred while requesting billing key", e);
+//		} catch (HttpClientErrorException e) {
+//			// 클라이언트 오류 로깅
+//			System.err.println("Client error occurred: " + e.getResponseBodyAsString());
+//			throw new RuntimeException("Client error occurred while requesting billing key", e);
+//		} catch (Exception e) {
+//			// 일반 오류 로깅
+//			System.err.println("Exception occurred: " + e.getMessage());
+//			throw new RuntimeException("Exception occurred while requesting billing key", e);
+//		}
+//	}
+//
+//	// Base64 인코딩 메서드
+//	private String encodeBase64(String value) {
+//		return Base64.getEncoder().encodeToString(value.getBytes());
+//	}
+//}
+//@Transactional
+//@Override
+//public int contractInsert(ContractVO contractVO) {
+//	// LocalDate localDate = contractVO.getFinalDate();
+//	// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//	// String dateString = localDate.format(formatter); // LocalDate -> String 변환
+//	// contractVO.setFinalDates(dateString);
+//	// System.out.println(dateString+"asdasdasdsa"); // 출력 예시: 2024-08-12
+//	payMapper.insertContract(contractVO);
+//	List<String> moduleNames = contractVO.getModuleNames();
+//	if (moduleNames != null && !moduleNames.isEmpty()) {
+//		// 첫 번째 요소에서 "[" 제거
+//		String firstModule = moduleNames.get(0).replace("[", "").trim();
+//		moduleNames.set(0, firstModule);
+//		// 마지막 요소에서 "]" 제거
+//		String lastModule = moduleNames.get(moduleNames.size() - 1).replace("]", "").trim();
+//		moduleNames.set(moduleNames.size() - 1, lastModule);
+//	}
+//	return 0;
+//}

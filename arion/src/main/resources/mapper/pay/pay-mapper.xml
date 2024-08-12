@@ -6,18 +6,42 @@
 		SELECT MAX(contract_no)+1
 		FROM contract
 	</select>
-	<insert id="insertContract" statementType="CALLABLE" parameterType="ContractVO">
+<!-- 	<select id="insertContract" statementType="CALLABLE" parameterType="ContractVO">
 		 CALL contract_procedure(
-		 						  #{companyCode}
-		 						 ,#{contractNo}
-		 						 ,#{finalDate}
-		 						 ,#{usersCnt}
-		 						 ,#{monthPayPrice}
-		 						 ,#{totalPayPrice}
-		 						 ,#{regularDate}
-		 						 ,#{contractSign}
-		 						 ,#{customerkey}
-		 						 ,#{pCheck, mode=OUT, jdbcType=INTEGER})
+		 						  #{companyCode, mode=IN, jdbcType=VARCHAR}
+		 						 ,#{contractNo, mode=IN, jdbcType=INTEGER}
+		 						 ,#{finalDate, mode=IN, jdbcType=DATE}
+		 						 ,#{usersCnt, mode=IN, jdbcType=INTEGER}
+		 						 ,#{monthPayPrice, mode=IN, jdbcType=INTEGER}
+		 						 ,#{totalPayPrice, mode=IN, jdbcType=INTEGER}
+		 						 ,#{regularDate, mode=IN, jdbcType=INTEGER}
+		 						 ,#{contractSign, mode=IN, jdbcType=VARCHAR}
+		 						 ,#{customerkey, mode=IN, jdbcType=VARCHAR}
+		 						 ,#{firstMonthAmount, mode=IN, jdbcType=INTEGER}
+		 						 ,#{checks, mode=OUT, jdbcType=INTEGER})
+	</select> -->
+	<insert id="insertContract">
+		 INSERT INTO contract(
+                              contract_no
+                             ,final_date
+                             ,users_cnt
+                             ,month_pay_price
+                             ,total_pay_price
+                             ,regular_date
+                             ,contract_state
+                             ,company_code
+                             ,contract_sign)
+        VALUES(
+               #{contractNo}
+              ,#{finalDate}
+              ,#{usersCnt}
+              ,#{monthPayPrice}
+              ,#{totalPayPrice}
+              ,#{regularDate}
+              ,'계약중'
+              ,#{companyCode}
+              ,#{contractSign}
+              )
 	</insert>
 	<insert id="insertSubModule" parameterType="ContractVO">
 		INSERT INTO usemodule(
@@ -43,6 +67,22 @@
 		       ,#{companyCode}
 		       ,#{contractNo}
 		       )
-		       
 	</insert>
+	<select id="selectComInfo">
+		SELECT company_code
+		      ,company_name
+		      ,company_tel
+		      ,company_id
+		      ,company_business_number
+		      ,company_type
+		      ,company_address
+		      ,company_post
+		      ,ceo_name
+		      ,ceo_email
+		      ,ceo_phone
+		      ,site_resp
+		FROM company 
+		WHERE company_code = #{companyCode}
+	
+	</select>
 </mapper>

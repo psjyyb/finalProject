@@ -10,5 +10,7 @@ public interface PayService {
 	
 	int findLastNo(); // 계약서 번호가져오기
 	
-	int contractInsert(ContractVO contractVO);
+	int contractInsert(ContractVO contractVO); // 계약서 등록
+	
+	 public String requestBillingKey(String customerKey, String authKey); // 빌링키 발급
 }

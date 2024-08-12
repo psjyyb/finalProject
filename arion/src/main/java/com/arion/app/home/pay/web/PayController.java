@@ -19,6 +19,9 @@ import com.arion.app.home.pay.service.ContractVO;
 import com.arion.app.home.pay.service.PayService;
 import com.arion.app.home.pay.service.PayVO;
 import com.arion.app.security.service.CompanyVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * 작성자 : 박성준
@@ -79,23 +82,36 @@ public class PayController {
 		contractVO.setContractSign(fileName);
 		String customerKey = UUID.randomUUID().toString();
 		contractVO.setCustomerkey(customerKey);
-		int result = payService.contractInsert(contractVO);
 		model.addAttribute("payInfo", contractVO);
-		String url = null;
-		if (result > 0) {
-			url = "redirect:/pay/firstPay";
-		} else {
-			url = "redirect:/groupAdmin/GASubInfo";
-		}
-		
-		return url;
+		return "pay/firstPay";
 	}
 	
-	@GetMapping("/pay/firstPay")
-	public String firstPay() {
-		return "/pay/firstPay";
-	}
-//	@PostMapping("/home/success")
-//	public String paySuccess();
+
+	@GetMapping("/pay/success")
+	public String successPage(@RequestParam("data") String data,Model model,@RequestParam String customerKey, @RequestParam String authKey) {
+		  // JSON 데이터를 객체로 변환
+		  ObjectMapper objectMapper = new ObjectMapper();
+		  ContractVO contractData = null;
+		  try {
+			contractData = objectMapper.readValue(data, ContractVO.class);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  String billingKey = payService.requestBillingKey(customerKey,authKey);
+		  contractData.setBillingkey(billingKey);
+		  contractData.setCustomerkey(customerKey);
+		  System.out.println(contractData);
+		 model.addAttribute("payInfo",contractData);
+		  return "/pay/success"; // 성공 페이지로 리다이렉트
+		}
+	  @GetMapping("/pay/fail")
+	    public String cardRegistrationFailed(@RequestParam("error") String error, Model model) {
+	        model.addAttribute("errorMessage", error);
+	        return "/pay/fail";
+	    }
 
 }

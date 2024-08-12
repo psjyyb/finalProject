@@ -20,4 +20,5 @@ public class GroupAdminVO {
 	private int monthPayPrice;
 	private int regularDate;
 	private String moduleNames;
+	private String payState;
 }

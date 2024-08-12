@@ -140,6 +140,7 @@
 					   ,total_pay_price
 					   ,contract_state
 					   ,regular_date
+					   ,pay_state
 					   ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
         				 FROM usemodule u
         				 WHERE u.contract_no = c.contract_no) AS module_names

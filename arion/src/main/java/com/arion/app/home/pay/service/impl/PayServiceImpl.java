@@ -1,15 +1,12 @@
 package com.arion.app.home.pay.service.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.UUID;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
 import com.arion.app.home.pay.mapper.PayMapper;
@@ -46,9 +43,22 @@ public class PayServiceImpl implements PayService{
 	public int findLastNo() {
 		return payMapper.findLastNo();
 	}
+	@Transactional
 	@Override
 	public int contractInsert(ContractVO contractVO) {	
-		
+		List<String> moduleNames = contractVO.getModuleNames();
+		if (moduleNames != null && !moduleNames.isEmpty()) {
+            // 첫 번째 요소에서 "[" 제거
+            String firstModule = moduleNames.get(0).replace("[", "").trim();
+            moduleNames.set(0, firstModule);
+
+            // 마지막 요소에서 "]" 제거
+            String lastModule = moduleNames.get(moduleNames.size() - 1).replace("]", "").trim();
+            moduleNames.set(moduleNames.size() - 1, lastModule);
+        }
+		moduleNames.forEach(a ->{
+			payMapper.insertSubModule(a,contractVO.getCompanyCode());
+		});
 		return payMapper.insertContract(contractVO);
 	}
 }

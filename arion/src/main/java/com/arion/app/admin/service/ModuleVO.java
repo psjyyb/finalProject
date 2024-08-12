@@ -1,6 +1,5 @@
 package com.arion.app.admin.service;
 
-import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,5 +15,4 @@ public class ModuleVO {
 		private String[] moduleNotices;
 		private MultipartFile[] uploadFiles;
 		private MultipartFile moduleIcons;
-		//private List<ModuleFileVO> list;
 }

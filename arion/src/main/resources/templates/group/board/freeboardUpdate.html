@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div>
-		<h3>글 수정</h3>
+		<h3>자유게시판 글 수정</h3>
 		<form name="UpdateForm" th:object="${board}">
 		<input type="hidden" th:field="*{boardNo}">
 		<table>
@@ -40,45 +40,74 @@
 			  fCreator : "createSEditor2"
 			});
 		
-	$('#updateBtn').on('click', boardUpdateAjax);	
-	function boardUpdateAjax(event){
+		$('#updateBtn').on('click', boardUpdateAjax);	
 		
-		oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
-		
-		let info = getBoardInfo();
-		console.log(info);
-		
-		$.ajax('freeboardUpdate',{
-			type:'post',
-			contentType : 'application/json',
-			data : JSON.stringify(info)
-		})
-		.done(data => {
-			if(data.result){
-				alert('정상적으로 수정되었습니다.');
-				location.href="/group/freeboardList"
-			}else{
-				alert('수정되지 않았습니다.\n데이터를 확인해주세요.');
+		function boardUpdateAjax(event){
+			event.preventDefault(); // 기본 동작 방지
+			
+			oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+			
+			let title = $('input[name="boardTitle"]').val().trim();
+			let content = $('textarea[name="boardContent"]').val().trim();
+			
+			if (title === '') {
+				Swal.fire({
+					icon: 'warning',
+					title: '제목이 입력되지 않았습니다',
+					text: '제목을 입력해주세요',
+					confirmButtonText: '확인'
+				});
+				return;
 			}
-		})
-		.fail(err => console.log(err));			
-	};
-	
-	function getBoardInfo(){
-		let formData= $('form[name="UpdateForm"]').serializeArray();
-		console.log('1) serializeArray', formData);
+			if (content === '') {
+				Swal.fire({
+					icon: 'warning',
+					title: '내용이 입력되지 않았습니다',
+					text: '내용을 입력해주세요',
+					confirmButtonText: '확인'
+				});
+				return;
+			}
+
+			let info = getBoardInfo();
+			console.log(info);
+			
+			$.ajax({
+				url: 'freeboardUpdate',
+				type: 'post',
+				contentType: 'application/json',
+				data: JSON.stringify(info)
+			})
+			.done(data => {
+				if (data.result) {
+					Swal.fire({
+						icon: 'success',
+						title: '정상적으로 수정되었습니다',
+						confirmButtonText: '확인'
+					}).then(() => {
+						location.href = "/group/freeboardList";
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: '수정되지 않았습니다',
+						text: '값을 입력해주세요',
+						confirmButtonText: '확인'
+					});
+				}
+			})
+			.fail(err => console.log(err));			
+		};
 		
-		let objData = {};
-		$.each(formData, (idx, input) => {
-			console.log('2) input', idx, input);
-			objData[input.name] = input.value;
-		});
-		
-		console.log('3) objData', objData);
-		return objData;
-	};
-	
-	})
+		function getBoardInfo() {
+			let formData = $('form[name="UpdateForm"]').serializeArray();
+			let objData = {};
+			$.each(formData, (idx, input) => {
+				objData[input.name] = input.value;
+			});
+			return objData;
+		};
+	});
 	</script>
 </body>
 </html>

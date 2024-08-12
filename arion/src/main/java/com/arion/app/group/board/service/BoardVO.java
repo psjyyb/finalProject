@@ -15,7 +15,7 @@ public class BoardVO {
 	private Date writeDate;			//작성일	yyyy.MM.dd
 	private String boardContent;	//내용
 	private String boardCategory;	//게시판 카테고리
-	private int employeeNo;		//작성자 번호
+	private int employeeNo;			//사원번호 (게시글 작성자, 댓글 작성자)
 	private String employeeName;	//작성자 이름
 	private String companyCode;		//회사번호
 	private int viewCnt;		    //조회수

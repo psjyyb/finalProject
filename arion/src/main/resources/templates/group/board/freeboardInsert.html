@@ -6,11 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
+<script type="text/javascript" src="@{/smarteditor2/quick_photo_uploader/plugin/hp_SE2M_AttachQuickPhoto.js}" charset="utf-8"> </script>
 <title></title>
 </head>
 <body>
 	<div>
-		<h3>자유게시판 등록</h3>
+		<h3>자유게시판 글 등록</h3>
 		<form name="insertForm" th:action="@{/freeboardInsert}" method="POST">
 			<table>
 				<tr>
@@ -35,7 +36,11 @@
 				oAppRef : oEditors,
 				elPlaceHolder : "boardContent",
 				sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
-				fCreator : "createSEditor2"
+				fCreator : "createSEditor2",
+					fOnAppLoad : function() {	////추가
+		                // 이미지를 업로드 할 때 서버의 경로로 설정합니다.
+		                nhn.husky.SE2M_AttachQuickPhoto.sUploadURL = 'D:/upload';
+		            }	//까지
 			});
 		
 
@@ -43,7 +48,7 @@
 		function boardInsertHandler(event) {
 			event.preventDefault();
 			
-			 // 에디터의 내용이 textarea에 적용된다.
+			 // 제목, 내용 null 알림 (에디터의 내용이 textarea에 적용됨)
 			 oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
 			 
 			let title = $('input[name="boardTitle"]');
@@ -63,7 +68,7 @@
 			alert('게시글 등록 완료');
 			insertForm.submit();
 		}
-		})
+		});
 	</script>
 </body>
 </html>

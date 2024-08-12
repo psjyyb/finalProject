@@ -30,6 +30,11 @@ nhn.husky.SE2M_Configuration.CustomObject = {
 	nMaxWidth			: 548
 };
 
+nhn.husky.SE2M_Configuration.QuickPhoto = {
+    sUploadURL: "D:/upload",  // 서버에 설정한 파일 업로드 URL
+    sLang: "ko-KR"
+};
+
 nhn.husky.SE2M_Configuration.SE2M_ReEditAction = {
 	bUsed : true,
 	nSecDisplayDulationReEditMsg : 3,

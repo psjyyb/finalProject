@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <title>결제 페이지</title>
 <style>
 .container2 {
@@ -119,10 +118,11 @@
 				<p id="totalAmount" class="value">
 					[[${#numbers.formatInteger(payInfo.totalPayPrice,3, 'COMMA')}]]원</p>
 			</div>
-			<div class="form-group">
+			<div class="form-group" th:if="${payInfo.firstMonthAmount > 0}">
 				<label for="totalAmount">이번달 결제금액:</label>
 				<p id="totalAmount" class="value">
-				[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원 </p>
+					[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원
+				</p>
 			</div>
 			<div class="button-group">
 				<button id="payment-button">결제하기</button>
@@ -130,20 +130,50 @@
 		</div>
 	</div>
 	<script src="https://js.tosspayments.com/v2/standard"></script>
- 	<script th:inline="javascript">
+	<script th:inline="javascript">
     // ------  SDK 초기화 ------
-    const clientKey = "test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq";
+    const clientKey = 'test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq';
     const tossPayments = TossPayments(clientKey);
-    const customerKey = `[[${payInfo.customerkey}]]`;
+ 	let customerKey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
+ 	let contractNo = `[[${payInfo.contractNo}]]`.replace(/^"|"$/g, '');
+ 	let startDate = `[[${payInfo.startDate}]]`.replace(/^"|"$/g, '');
+ 	let finalDate = `[[${payInfo.finalDate}]]`.replace(/^"|"$/g, '');
+ 	let usersCnt = `[[${payInfo.usersCnt}]]`.replace(/^"|"$/g, '');
+ 	let monthPayPrice = `[[${payInfo.monthPayPrice}]]`.replace(/^"|"$/g, '');
+ 	let totalPayPrice = `[[${payInfo.totalPayPrice}]]`.replace(/^"|"$/g, '');
+ 	let companyCode = `[[${payInfo.companyCode}]]`.replace(/^"|"$/g, '');
+ 	let regularDate = `[[${payInfo.regularDate}]]`.replace(/^"|"$/g, '');
+ 	let customerkey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
+ 	let contractSign = `[[${payInfo.contractSign}]]`.replace(/^"|"$/g, '');
+ 	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');
+ 	let moduleNames = JSON.parse(`[[${payInfo.moduleNames}]]`);
     // 결제창 인스턴스 생성
-    const payment = tossPayments.payment({ customerKey });
+   const payment = tossPayments.payment({ customerKey });
+    
+   const contractData = {
+		   contractNo: contractNo,
+		   startDate: startDate,
+		   finalDate: new Date(finalDate).toISOString(),
+		   usersCnt: usersCnt,
+		   monthPayPrice: monthPayPrice,
+		   totalPayPrice: totalPayPrice,
+		   companyCode: companyCode,
+		   regularDate: regularDate,
+		   //customerkey: customerkey,
+		   contractSign: contractSign,
+		   firstMonthAmount: firstMonthAmount,
+		   moduleNames: moduleNames,
+		   billingkey:null
+		 };
 
+		 // JSON 데이터를 문자열로 변환하고 URL 인코딩
+		 const encodedData = encodeURIComponent(JSON.stringify(contractData));
     // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
     document.getElementById('payment-button').addEventListener('click', function() {
       payment.requestBillingAuth({
         method: "CARD", // 자동결제(빌링)은 카드만 지원합니다
-        successUrl: window.location.origin + "/home/success",
-        failUrl: window.location.origin + "/home/fail",
+        successUrl: `${window.location.origin}/pay/success?data=${encodedData}`,
+        failUrl: window.location.origin + "/pay/fail",
         customerEmail: "ass6728@naver.com",
         customerName: "김토스",
       });

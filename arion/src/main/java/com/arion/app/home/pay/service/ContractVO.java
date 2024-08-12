@@ -13,7 +13,7 @@ public class ContractVO {
 	private String startDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date finalDate;
-	private String usersCnt;
+	private int usersCnt;
 	private int monthPayPrice;
 	private int totalPayPrice;
 	private String companyCode;
@@ -22,7 +22,6 @@ public class ContractVO {
 	private String customerkey;
 	private String contractSign;
 	private int firstMonthAmount;
-	private int pCheck;
 	
 	private List<String> moduleNames;
 	

@@ -76,6 +76,10 @@ h1, h2, h3 {
 				<td id="contract_state" th:text="${subInfo.contractState}"></td>
 			</tr>
 			<tr>
+				<th>결제 상태</th>
+				<td id="pay_state" th:text="${subInfo.payState}"></td>
+			</tr>
+			<tr>
 				<th>매달 결제일</th>
 				<td id="regular_date">매월 [[${subInfo.regularDate}]]일</td>
 			</tr>

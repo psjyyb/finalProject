@@ -23,7 +23,7 @@ $(document).ready(function() {
    
          $('input[name=accountAmount]').val(Math.trunc(monthlyAccountAmount * (period / 30)));
             $('input[name=moduleAmount]').val(Math.trunc(monthlyModuleAmount * (period / 30)));
-            $('input[name=totalAmount]').val(totalAmount);
+            $('input[name=totalAmount]').val(Math.trunc(totalAmount));
             $('input[name=firstMonthAmount]').val(Math.trunc(firstMonthAmount));
             $('input[name=monthlyAmount]').val(Math.trunc(monthlyAmountExcludingFirstMonth));
       

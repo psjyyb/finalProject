@@ -32,6 +32,7 @@
 		      ,c.company_type
 		      ,c.company_address
 		      ,c.company_post
+		      ,t.contract_sign
 		      ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
 		        FROM usemodule u
 		        WHERE u.contract_no = t.contract_no) AS module_names

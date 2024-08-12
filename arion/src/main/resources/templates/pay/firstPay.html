@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://js.tosspayments.com/v2/standard"></script>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <title>결제 페이지</title>
 <style>
 .container2 {
@@ -129,11 +129,12 @@
 			</div>
 		</div>
 	</div>
- <script th:inline="javascript">
+	<script src="https://js.tosspayments.com/v2/standard"></script>
+ 	<script th:inline="javascript">
     // ------  SDK 초기화 ------
     const clientKey = "test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq";
     const tossPayments = TossPayments(clientKey);
-    const customerKey = /*[[${customerKey}]]*/ 'i5XJLFqrrQj7BT-uQgNv7';
+    const customerKey = 'customerkey';
     // 결제창 인스턴스 생성
     const payment = tossPayments.payment({ customerKey });
 
@@ -141,13 +142,13 @@
     document.getElementById('payment-button').addEventListener('click', function() {
       payment.requestBillingAuth({
         method: "CARD", // 자동결제(빌링)은 카드만 지원합니다
-        /* successUrl: window.location.origin + "/success",
-        failUrl: window.location.origin + "/fail", */
-        customerEmail: "customer123@gmail.com",
+        successUrl: window.location.origin + "/home/success",
+        failUrl: window.location.origin + "/home/fail",
+        customerEmail: "ass6728@naver.com",
         customerName: "김토스",
       });
     });
     
-  </script>
+ 	</script>
 </body>
 </html>

@@ -28,6 +28,7 @@ public class AdminVO {
 	private String ceoEmail;    // 사장 이메일
 	private String companyAddress; // 회사주소
 	private String moduleNames;
+	private String contractSign; // 계약서싸인
 	
 	
 }

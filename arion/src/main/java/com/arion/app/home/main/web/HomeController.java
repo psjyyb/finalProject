@@ -22,6 +22,12 @@ import com.arion.app.security.service.HomeModuleService;
 import com.arion.app.security.service.HomeModuleVO;
 import com.arion.app.security.service.LoginUserVO;
 
+
+/*
+ * 작성자 : 김도겸
+ * 작성일자 : 2024-08-05 ~ 2424-08-11
+ * 홈페이지 구성 : 로그인, 모듈, 회원가입, 아이디 찾기(메일 발송), 비밀번호찾기(메일 발송)
+ */
 @Controller
 public class HomeController {
 	
@@ -93,30 +99,14 @@ public class HomeController {
     	model.addAttribute("moduleInfo", fmvo);
         return "home/module/module";
     }
-    
-    /* @PostMapping("/home/module")
-    @ResponseBody
-    public String moduleInfo(Model model, @RequestParam int moduleNo) {
-    	List<HomeModuleVO> mvo = msvc.explanModule(moduleNo);
-    	model.addAttribute("module", mvo);
-    	return "home/module/module";
-    } */
+
     
     @PostMapping("/home/module")
     @ResponseBody
     public List<HomeModuleVO> moduleInfo(@RequestParam int moduleNo) {
     	return msvc.explanModule(moduleNo);
     } 
-    /* @PostMapping("/home/module")
-    @ResponseBody
-    public Map<String, String> moduleInfo(@RequestParam int moduleNo) {
-        HomeModuleVO module = msvc.explanModule(moduleNo).get(0);
-        Map<String, String> response = new HashMap<>();
-        response.put("modFileName", module.getModFileName());
-        response.put("modFileContent", module.getModFileContent());
-        System.out.println("결과 : " + response);
-        return response;
-    } */
+
     
     @GetMapping("/home/service")
     public String service(Model model) {
@@ -125,11 +115,6 @@ public class HomeController {
         return "home/module/service";
     }
     
-//    @PostMapping("/signUpForm")
-//    public String signUpProcess(CompanyVO companyVO) {
-//    	csvc.insertCompany(companyVO);
-//    	return "redirect:/login";
-//    }
     
     @PostMapping("/signUpForm")
     public String signUpProcess(CompanyVO companyVO, Model model) {

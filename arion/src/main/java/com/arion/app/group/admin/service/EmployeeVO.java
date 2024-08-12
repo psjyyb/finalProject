@@ -12,11 +12,15 @@ public class EmployeeVO {
 	private String employeeName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date hireDate;
+	private Date resignDate;
 	private String employeeId;
 	private String employeePw;
 	private String departmentName;
 	private String rankName;
 	private String employeeResp;
 	private String companyCode;
+	private String signImg;
+	
+	
 	
 }

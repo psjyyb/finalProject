@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+</head>
+<body>
+	<div>
+		<h1>GangSword.... 조직도</h1>
+		<h1>AlcoholCow.... 주소....</h1>
+		<div>
+			<a th:href="@{/admin}">Admin Page</a>
+			<a th:href="@{/user}">User Page</a> 
+			<a th:href="@{/logout}">Logout</a>
+		</div>
+	</div>
+</body>
+</html>

@@ -18,10 +18,12 @@ $(document).ready(function() {
         idField.val(loginType + ":" + companyCode + ":" + userId + ":" + password);
 
         if ($('input[name="remember"]').is(':checked')) {
+			localStorage.setItem("loginType", loginType);
             localStorage.setItem("companyCode", companyCode);
             localStorage.setItem("id", userId);
             localStorage.setItem("remember", true);
         } else {
+			localStorage.removeItem("loginType", loginType);
             localStorage.removeItem("companyCode");
             localStorage.removeItem("id");
             localStorage.setItem("remember", false);

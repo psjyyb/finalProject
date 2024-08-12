@@ -32,10 +32,10 @@ public class MailController {
 	private HttpSession httpSession;
 
 	// 받은 메일 조회 (페이지)
-	@GetMapping("/Mymail/{employeeId}")
-	public String mailList(@PathVariable("employeeId") String employeeId, Model model) {
+	@GetMapping("/Mymail")
+	public String mailList(Model model) {
 		String companyCode = (String) httpSession.getAttribute("companyCode");
-
+		String employeeId = (String) httpSession.getAttribute("loginId");
 		MailVO mailVO = new MailVO();
 		mailVO.setCompanyCode(companyCode);
 		mailVO.setEmployeeId(employeeId);

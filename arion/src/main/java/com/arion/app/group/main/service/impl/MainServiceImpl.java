@@ -51,7 +51,6 @@ public class MainServiceImpl implements MainService {
     private String generateUrl(String urlPattern, String userId) {
         // URL 패턴에 사용자 ID를 포함하여 동적으로 URL 생성
         String dynamicUrl = String.format(urlPattern, userId);
-        System.out.println("Generated URL: " + dynamicUrl); // 로그 추가
         return dynamicUrl;
     }
 }

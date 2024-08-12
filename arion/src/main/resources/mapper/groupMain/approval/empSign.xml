@@ -4,15 +4,17 @@
 	<select id="empSign" resultType="String">
 		SELECT sign_img
 		FROM employees
-		WHERE employee_id = #{employeeId}
-		WHERE company_code = #{companyCode}
+		WHERE 1=1 
+		AND employee_id = #{employeeId}
+		AND company_code = #{companyCode}
 	</select>
 	
-	<update id="insertSign" parameterType="EmployeeVO">
+	<update id="insertSign" parameterType="com.arion.app.group.admin.service.EmployeeVO">
 		UPDATE employees
 		SET
 			sign_img = #{signImg}
-		WHERE employee_id = #{employeeId}
-		AND company_code = #{companyCode};	
+		WHERE 1=1 
+		AND employee_id = #{employeeId}
+		AND company_code = #{companyCode};
 	</update>
 </mapper>

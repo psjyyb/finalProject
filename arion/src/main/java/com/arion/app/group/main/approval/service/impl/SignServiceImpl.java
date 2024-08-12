@@ -18,7 +18,6 @@ public class SignServiceImpl implements SignService {
 	
 	@Override
 	public String empSign(String companyCode, String employeeId) {
-		// TODO Auto-generated method stub
 		return mapper.empSign(companyCode, employeeId);
 	}
 

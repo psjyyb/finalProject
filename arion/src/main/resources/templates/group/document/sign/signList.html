@@ -6,16 +6,89 @@
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 </head>
+<style>
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1000; /* z-index 값을 높게 설정 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+}
+</style>
 <body>
 	<div>
-		<h1>GangSword.... 조직도</h1>
-		<h1>AlcoholCow.... 주소....</h1>
-		<div>
-			<a th:href="@{/admin}">Admin Page</a>
-			<a th:href="@{/user}">User Page</a> 
-			<a th:href="@{/logout}">Logout</a>
+		<button type="button" id="signModalBtn">등록</button>
+	</div>
+
+	<div>
+		<img th:src="@{/files/{fileName}(fileName=${empSign})}" />
+	</div>
+
+
+	<div id="signModal" class="modal">
+		<div class="modal-content">
+			<form id="insertSign" th:action="@{/insertSign}" method="post">
+				<div class="form-group">
+					<label>전자 서명을 등록해주세요</label>
+					<canvas id="signature-pad" width="200" height="200"
+						style="border: 1px solid black;"></canvas>
+					<input type="hidden" id="signature-data" name="signatureData" />
+					<button type="button" class="btn btn-primary" id="saveSign">서명
+						저장</button>
+					<button type="button" class="btn close">취소</button>
+				</div>
+			</form>
 		</div>
 	</div>
+
+	<script>
+	var canvas = document.getElementById('signature-pad');
+	var signaturePad = new SignaturePad(canvas);
+
+		$(document).ready(function() {
+			$("#signModalBtn").on("click", function() {
+				$('#signModal').css('display', 'block');
+			});
+
+			$(".close").on("click", function() {
+				$(this).closest(".modal").css('display', 'none');
+			});
+
+			$(window).on("click", function(event) {
+				if ($(event.target).hasClass("modal")) {
+					$(event.target).css('display', 'none');
+				}
+			});
+			
+			$("#saveSign").on("click", function() {
+		        if (signaturePad.isEmpty()) {
+		            alert("서명을 입력해주세요.");
+		        } else {
+		            // 캔버스의 데이터를 Base64로 변환하여 hidden input에 저장
+		            var signatureData = signaturePad.toDataURL();
+		            $("#signature-data").val(signatureData);
+
+		            // 폼을 제출하여 서명 데이터를 서버로 전송
+		            $("#insertSign").submit();
+		        }
+		    });
+		});
+	</script>
 </body>
 </html>

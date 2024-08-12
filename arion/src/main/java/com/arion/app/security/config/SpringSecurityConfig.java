@@ -40,7 +40,7 @@ public class SpringSecurityConfig {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/home/**").hasAnyRole("No")
-                .antMatchers("/group/**").hasAnyRole("일반사원", "사원관리자")
+                .antMatchers("/group/**").hasAnyRole("임원", "일반사원", "사원관리자")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()

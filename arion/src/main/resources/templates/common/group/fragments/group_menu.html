@@ -30,24 +30,14 @@
                     <h6 class="collapse-header">Submodules:</h6>
                     <ul class="nav flex-column">
                         <li class="nav-item" th:each="subModule : ${module.subModules}">
-                            <a class="collapse-item" th:href="${subModule.url}" th:text="${subModule.subModuleName}"></a>
+                            <a class="collapse-item" th:href="${subModule.urlPattern}" th:text="${subModule.subModuleName}"></a>
                         </li>
                     </ul>
                 </div>
             </div>
         </li>
 
-		<li class="nav-item"><a class="nav-link" th:href="@{/adminSubList}"> <i
-				class="fas fa-fw fa-chart-area"></i> <span>테스트1</span></a></li>
-		<li class="nav-item"><a class="nav-link" th:href="@{/adminModList}"> <i
-				class="fas fa-fw fa-tachometer-alt"></i> <span>테스트2</span></a></li>
-		<li class="nav-item"><a class="nav-link" th:href="@{/adminModInsert}"> <i
-				class="fas fa-fw fa-cog"></i> <span>테스트3</span></a></li>
-		<li class="nav-item"><a class="nav-link" th:href="@{/adminEndSubList}"> <i 
-				class="fas fa-fw fa-table"></i> <span>테스트4</span></a></li>
-		<li class="nav-item"><a class="nav-link" th:href="@{/adminQnAList}"> <i 
-				class="fas fa-fw fa-wrench"></i> <span>Q&A</span></a></li>
-		</a></li>
+		
 		
         <!-- Divider -->
         <hr class="sidebar-divider">

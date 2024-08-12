@@ -1,5 +1,7 @@
 package com.arion.app.group.main.mail.web;
 
+
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,117 +26,96 @@ import com.arion.app.group.main.mail.service.MailVO;
 @RequestMapping("/group/mail")
 public class MailController {
 
-	@Autowired
-	private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
-	@Autowired
-	private HttpSession httpSession;
+    @Autowired
+    private HttpSession httpSession;
 
-	// 받은 메일 조회 (페이지)
-	@GetMapping("/Mymail/{employeeId}")
-	public String mailList(@PathVariable("employeeId") String employeeId, Model model) {
-		String companyCode = (String) httpSession.getAttribute("companyCode");
+    // 받은 메일 조회 (페이지)
+    @GetMapping("/Mymail")
+    public String mailList(Model model) {
+    	String employeeId=(String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
 
-		MailVO mailVO = new MailVO();
-		mailVO.setCompanyCode(companyCode);
-		mailVO.setEmployeeId(employeeId);
-		List<MailVO> receivedMails = mailService.mailList(mailVO);
-		model.addAttribute("receivedMails", receivedMails);
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        List<MailVO> receivedMails = mailService.mailList(mailVO);
+        model.addAttribute("receivedMails", receivedMails);
 
-		return "group/mail/Mymail";
-	}
+        return "group/mail/Mymail";
+    }
+    //중요메일
+    @GetMapping("/importmail")
+    public String importMailList(Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
 
-	// 메일 보내기 (페이지)
-	@GetMapping("/writemail/{employeeId}")
-	public String mailSendForm(@PathVariable("employeeId") String employeeId, Model model) {
-		model.addAttribute("employeeId", employeeId);
-		return "group/mail/writemail";
-	}
+        if (employeeId == null || companyCode == null) {
+            model.addAttribute("error", "Session information is missing.");
+            return "group/mail/importmail";
+        }
 
-	// 메일 보내기 (처리)
-//	@PostMapping("/writemail/{employeeId}")
-//	public String mailSendProcess(@PathVariable("employeeId") String employeeId,
-//	                              @ModelAttribute MailVO mailVO,
-//	                              @RequestParam("receivers") List<String> receivers,
-//	                              @RequestParam("files") List<MultipartFile> files) {
-//	    String companyCode = (String) httpSession.getAttribute("companyCode");
-//	    mailVO.setCompanyCode(companyCode);
-//	    mailVO.setEmployeeId(employeeId);
-//
-//	    // 메일 보내기 서비스 호출
-//	    int mailNo = mailService.mailSend(mailVO, receivers, files);
-//	    if (mailNo > 0) {
-//	        return "redirect:/group/mail/Mymail/" + employeeId;
-//	    } else {
-//	        return "redirect:/group/mail/writemail/" + employeeId;
-//	    }
-//	}
-	//메일상세페이지
-	@GetMapping("/detailmail/{mailNo}/{employeeId}")
-	public String mailInfo(@PathVariable("mailNo") int mailNo, @PathVariable("employeeId") String employeeId,
-	                       Model model) {
-	    System.out.println("Received mailNo: " + mailNo); // 로그 확인
-	    System.out.println("Received employeeId: " + employeeId); // 로그 확인
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        List<MailVO> importMailAll = mailService.importMailList(mailVO);
+        model.addAttribute("importMailAll", importMailAll);
 
-	    MailVO mailVO = new MailVO();
-	    mailVO.setMailNo(mailNo);
-	    mailVO.setEmployeeId(employeeId);
+        return "group/mail/importmail";
+    }
+    
+    // 메일 보내기 폼 페이지
+    @GetMapping("/writemail")
+    public String mailSendForm(Model model) {
+    	String employeeId=(String) httpSession.getAttribute("loginId");
+        model.addAttribute("employeeId", employeeId);
+        
+        return "group/mail/writemail";
+    }
 
-	    MailVO mailInfo = mailService.mailInfo(mailVO);
-	    model.addAttribute("mail", mailInfo);
+    @PostMapping("/writemail")
+    public String sendMail(@RequestParam("receiverId") String receiverId,
+                           @RequestParam("subject") String subject,
+                           @RequestParam("content") String content,
+                           @RequestParam("attachments") MultipartFile[] attachments,
+                           Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        try {
+            if (employeeId == null) {
+                model.addAttribute("error", "Session information is missing.");
+                return "group/mail/writemail";
+            }
 
-	    return "group/mail/detailmail";
-	}
-	// 메일 삭제 (처리)
-	@PostMapping("/delete/{employeeId}")
-	@ResponseBody
-	public Map<String, Object> deleteMail(@PathVariable("employeeId") String employeeId, @RequestBody MailVO mailVO) {
-		mailVO.setCompanyCode((String) httpSession.getAttribute("companyCode"));
-		mailVO.setEmployeeId(employeeId);
+            String companyCode = (String) httpSession.getAttribute("companyCode");
 
-		return mailService.deleteMail(mailVO);
-	}
+            MailVO mailVO = new MailVO();
+            mailVO.setSenderId(employeeId);
+            mailVO.setReceiverEmail(receiverId);
+            mailVO.setMailTitle(subject);
+            mailVO.setMailContent(content);
+            mailVO.setCompanyCode(companyCode);
 
-	// 중요 메일 조회 (페이지)
-	@GetMapping("/importmail/{employeeId}")
-	public String importMailList(@PathVariable("employeeId") String employeeId, Model model) {
-		String companyCode = (String) httpSession.getAttribute("companyCode");
+            mailService.sendMail(mailVO, attachments);
 
-		MailVO mailVO = new MailVO();
-		mailVO.setCompanyCode(companyCode);
-		mailVO.setEmployeeId(employeeId);
+            return "redirect:/group/mail/Mymail";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error: " + e.getMessage());
+            return "group/mail/writemail";
+        }
+    }
 
-		List<MailVO> importantMails = mailService.importMailList(mailVO);
-		model.addAttribute("importantMails", importantMails);
 
-		return "group/mail/importmail";
-	}
 
-	// 휴지통 메일 조회 (페이지)
-	@GetMapping("/trashmail/{employeeId}")
-	public String trashMailList(@PathVariable("employeeId") String employeeId, Model model) {
-		String companyCode = (String) httpSession.getAttribute("companyCode");
+    // 메일 삭제 (처리)
+    @PostMapping("/delete")
+    @ResponseBody
+    public Map<String, Object> deleteMail(MailVO mailVO) {
+    	String employeeId=(String) httpSession.getAttribute("loginId");
+    	mailVO.setCompanyCode((String) httpSession.getAttribute("companyCode"));
+        mailVO.setSenderId(employeeId);
 
-		MailVO mailVO = new MailVO();
-		mailVO.setCompanyCode(companyCode);
-		mailVO.setEmployeeId(employeeId);
-
-		List<MailVO> trashMails = mailService.deleteMailList(mailVO);
-		model.addAttribute("trashMails", trashMails);
-		return "group/mail/trashmail";
-	}
-
-	// 보낸 메일 조회 (페이지)
-	@GetMapping("/sendmail/{employeeId}")
-	public String sendMailList(@PathVariable("employeeId") String employeeId, Model model) {
-		String companyCode = (String) httpSession.getAttribute("companyCode");
-
-		MailVO mailVO = new MailVO();
-		mailVO.setCompanyCode(companyCode);
-		mailVO.setEmployeeId(employeeId);
-
-		List<MailVO> sentMails = mailService.sendMailList(mailVO);
-		model.addAttribute("sentMails", sentMails);
-		return "group/mail/sendmail";
-	}
+        return mailService.deleteMail(mailVO);
+    }
 }

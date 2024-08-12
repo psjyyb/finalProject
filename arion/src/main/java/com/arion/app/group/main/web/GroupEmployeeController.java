@@ -1,17 +1,15 @@
 package com.arion.app.group.main.web;
 
-import java.util.List;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.arion.app.group.main.service.MainService;
-import com.arion.app.group.main.service.getModuleVO;
 
 @Controller
 public class GroupEmployeeController {
@@ -60,5 +58,14 @@ public class GroupEmployeeController {
         String employeeId = (String) httpSession.getAttribute("loginId");
 
         return "group/main/groupMain";
+    }
+    
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
+        return "redirect:/login"; // 로그인 페이지로 리다이렉트
     }
 }

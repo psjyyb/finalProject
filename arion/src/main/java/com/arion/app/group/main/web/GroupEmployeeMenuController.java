@@ -5,7 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.arion.app.group.main.service.MainService;
@@ -31,4 +33,13 @@ public class GroupEmployeeMenuController {
 
 		return mainService.getmoduleList(moduleVO);
 	}
-}
+	
+	 @GetMapping("/topbar")
+	    public String topbar(HttpSession session, Model model) {
+	        model.addAttribute("empName", session.getAttribute("empName"));
+	        model.addAttribute("rankName", session.getAttribute("rankName"));
+	        return "topbar"; 
+	    }
+	}
+	
+

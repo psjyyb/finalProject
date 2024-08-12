@@ -1,6 +1,6 @@
 package com.arion.app.security.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,5 +22,6 @@ public class CompanyVO {
     private String ceoEmail;
     private String ceoPhone;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date sysdate;
+    private String startDate;
+    private LocalDate finalDate;
 }

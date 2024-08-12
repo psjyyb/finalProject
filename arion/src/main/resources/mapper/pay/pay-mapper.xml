@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.home.pay.mapper.PayMapper">
+	
+	<select id="findLastNo" resultType="int">
+		SELECT MAX(contract_no)+1
+		FROM contract
+	</select>
+	
+	<insert id="insertContract">
+		 INSERT INTO contract(
+                              contract_no
+                             ,final_date
+                             ,users_cnt
+                             ,month_pay_price
+                             ,total_pay_price
+                             ,regular_date
+                             ,contract_state
+                             ,company_code
+                             ,contract_sign)
+        VALUES(
+               #{contractNo}
+              ,#{finalDate}
+              ,#{usersCnt}
+              ,#{monthPayPrice}
+              ,#{totalPayPrice}
+              ,#{regularDate}
+              ,'계약중'
+              ,#{companyCode}
+              ,#{contractSign}
+              )
+	</insert>
+	
+	<insert id="insertSubModule">
+		INSERT INTO sub_module(
+                         sub_module_no
+                        ,module_no
+                        ,sub_module_name
+                        ,company_code
+                       )
+		VALUES(
+		        (SELECT MAX(sub_module_no)+1
+		         FROM sub_module)
+		       ,(SELECT module_no
+		         FROM module
+		         WHERE module_name = #{moduleName}
+		         )
+		       ,#{moduleName}
+		       ,#{companyCode}
+		       )
+	</insert>
+</mapper>

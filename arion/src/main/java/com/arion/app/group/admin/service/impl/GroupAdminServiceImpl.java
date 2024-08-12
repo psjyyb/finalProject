@@ -103,8 +103,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	@Override
 	public int saveRank(RankVO rankVO, String companyCode) {
 		int result = gaMapper.rankDeSave(companyCode);
-		System.out.println(rankVO.getRankRangkings() + "직급순서 ?ㅋㅋㅋ 이거");
-		System.out.println(rankVO.getRankName() + "직급명 직급명 직급명");
 		String ranks = rankVO.getRankName();
 		String rankArr[] = ranks.split(",");
 		List<String> list = Arrays.asList(rankArr);

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<title>결제 페이지</title>
+<style>
+.container2 {
+	max-width: 600px;
+	margin: 120px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.payment-summary-container {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 600px;
+}
+
+.payment-summary-container h2 {
+	text-align: center;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 5px;
+	color: #555;
+}
+
+.form-group p {
+	margin: 5px 0;
+	font-size: 16px;
+	color: #333;
+}
+
+.form-group .value {
+	font-weight: bold;
+	color: #007bff;
+}
+
+.button-group {
+	text-align: center;
+}
+
+.button-group button {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	background-color: #007bff;
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+.button-group button:disabled {
+	background-color: #ccc;
+}
+
+.button-group button:hover {
+	background-color: #0056b3;
+}
+</style>
+
+</head>
+<body>
+	<div class="container2">
+		<div class="payment-summary-container">
+			<h2>결제 정보 확인</h2>
+
+			<div class="form-group">
+				<label for="contractNo">계약 번호:</label>
+				<p id="contractNo" class="value">[[${payInfo.contractNo}]]</p>
+			</div>
+
+			<div class="form-group">
+				<label for="startDate">시작 날짜:</label>
+				<p id="startDate" class="value">[[${payInfo.startDate}]](계약당일)</p>
+			</div>
+
+			<div class="form-group">
+				<label for="finalDate">종료 날짜:</label>
+				<p id="finalDate" class="value">[[${#dates.format(payInfo.finalDate,'yyyy-MM-dd')}]]</p>
+			</div>
+
+			<div class="form-group">
+				<label for="usersCnt">사용자 수:</label>
+				<p id="usersCnt" class="value">[[${payInfo.usersCnt}]] 명</p>
+			</div>
+			<div class="form-group">
+				<label for="usersCnt">이용중인 서비스:</label>
+				<p id="moduleNames" class="value">[[${payInfo.moduleNames}]]</p>
+			</div>
+			<div class="form-group">
+				<label for="monthlyAmount">월 구독료:</label>
+				<p id="monthlyAmount" class="value">
+					[[${#numbers.formatInteger(payInfo.monthPayPrice,3, 'COMMA')}]]원</p>
+			</div>
+
+			<div class="form-group">
+				<label for="totalAmount">총 금액:</label>
+				<p id="totalAmount" class="value">
+					[[${#numbers.formatInteger(payInfo.totalPayPrice,3, 'COMMA')}]]원</p>
+			</div>
+			<div class="form-group">
+				<label for="totalAmount">이번달 결제금액:</label>
+				<p id="totalAmount" class="value">
+				[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원 </p>
+			</div>
+			<div class="button-group">
+				<button id="payment-button">결제하기</button>
+			</div>
+		</div>
+	</div>
+	<script src="https://js.tosspayments.com/v2/standard"></script>
+ 	<script th:inline="javascript">
+    // ------  SDK 초기화 ------
+    const clientKey = "test_ck_Z61JOxRQVEGwR75pl6Yg8W0X9bAq";
+    const tossPayments = TossPayments(clientKey);
+    const customerKey = 'customerkey';
+    // 결제창 인스턴스 생성
+    const payment = tossPayments.payment({ customerKey });
+
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    document.getElementById('payment-button').addEventListener('click', function() {
+      payment.requestBillingAuth({
+        method: "CARD", // 자동결제(빌링)은 카드만 지원합니다
+        successUrl: window.location.origin + "/home/success",
+        failUrl: window.location.origin + "/home/fail",
+        customerEmail: "ass6728@naver.com",
+        customerName: "김토스",
+      });
+    });
+    
+ 	</script>
+</body>
+</html>

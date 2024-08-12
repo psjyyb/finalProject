@@ -12,7 +12,7 @@ import com.arion.app.group.main.attendance.service.WorkTimeVO;
 @Mapper
 public interface AttendanceMapper {
 	
-	public AEmployeeVO aEmployee();
+	public AEmployeeVO aEmployee(int iemployeeno);
 	
 	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname);
 	

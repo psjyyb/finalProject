@@ -44,16 +44,10 @@ public class ExcelController {
 			String qstart = df2.format(start);
 			String qend = df2.format(end);
 			List<AttendanceDownloadVO> attendancedownloads = attendanceservice.attendancedownload(iemployeeno,qstart,qend);
-    	/**
-         * excel sheet 생성
-         */
+    	
         Workbook workbook =new SXSSFWorkbook();
         Sheet sheet = workbook.createSheet(); // 엑셀 sheet 이름
         
-
-        /**
-         * header data
-         */
         int rowCount = 0; // 데이터가 저장될 행
         String headerNames[] = new String[]{"날짜", "출근시간", "퇴근시간","상태"};
 
@@ -71,12 +65,6 @@ public class ExcelController {
             headerCell.setCellValue("퇴근시간"); // 데이터 추가
             headerCell = headerRow.createCell(3);
             headerCell.setCellValue("상태"); // 데이터 추가
-            
-
-        /**
-         * body data
-         */
-      
 
         Row bodyRow = null;
         Cell bodyCell = null;
@@ -90,32 +78,19 @@ public class ExcelController {
                 bodyCell.setCellValue(attdate); // 데이터 추가
                 
                 System.out.println(attendancedownload.getAttdate());
-                
-                
-                
+                                             
                 bodyCell = bodyRow.createCell(1);
-                bodyCell.setCellValue(attendancedownload.getStarttime()); // 데이터 추가
-                
-                
+                bodyCell.setCellValue(attendancedownload.getStarttime()); // 데이터 추가                               
                 bodyCell = bodyRow.createCell(2);
-                bodyCell.setCellValue(attendancedownload.getEndtime()); // 데이터 추가
-                
-                
+                bodyCell.setCellValue(attendancedownload.getEndtime()); // 데이터 추가                                
                 bodyCell = bodyRow.createCell(3);
-                bodyCell.setCellValue(attendancedownload.getState()); // 데이터 추가
-               
-            
+                bodyCell.setCellValue(attendancedownload.getState()); // 데이터 추가                          
         }
 
-        /**
-         * download
-         */
         String fileName = "spring_excel_download";
 
         res.setContentType("application/vnd.ms-excel");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-       
-
+        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");       
         workbook.write(res.getOutputStream());
         workbook.close();
         

@@ -3,7 +3,7 @@
 <mapper namespace="com.arion.app.group.main.attendance.mapper.AttendanceMapper">
 
 
-<select id="aEmployee" parameterType="AEmployeeVO" resultType="AEmployeeVO">
+<select id="aEmployee" resultType="AEmployeeVO">
       
  		SELECT employee_no,
                employee_name,
@@ -74,4 +74,5 @@
 	</select>
 
 
+   
 </mapper>

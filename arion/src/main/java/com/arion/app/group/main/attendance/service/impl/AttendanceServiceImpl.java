@@ -19,9 +19,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	private AttendanceMapper attendancemapper;
 
 	@Override
-	public AEmployeeVO aEmployee() {
+	public AEmployeeVO aEmployee(int iemployeeno) {
 		// TODO Auto-generated method stub
-		return attendancemapper.aEmployee();
+		return attendancemapper.aEmployee(iemployeeno);
 	}
 	
 	

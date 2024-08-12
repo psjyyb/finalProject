@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,18 +29,20 @@ import com.arion.app.security.service.LoginUserVO;
 
 
 @Controller
+@RequestMapping("/group/attendance")
 public class AttendanceController {
 
 	@Autowired
 	AttendanceService attendanceservice;
 	
+	//ajax 기록 불러오기
 	@RequestMapping("/attendancelist")
 	@ResponseBody
-	public Map<String, Object> getattendancelist(HttpServletRequest request,@RequestParam(value = "startdate",required = false) String startdate,
+	public Map<String, Object> getattendancelist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
 			@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
 		
-		HttpSession session = request.getSession();
-		int EmployeeNo = (int)session.getAttribute("employeeNo");
+		
+		int EmployeeNo = Integer.parseInt(employeeno);
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		 Date start = df.parse(startdate);
 		 Date end = df.parse(enddate);	   
@@ -56,110 +59,45 @@ public class AttendanceController {
 		return result;
 	}
 	
-	
-	
-	
-	
-	@GetMapping("/group/attendance/myattendance")
-	public String myattendance(HttpServletRequest request,Model model) {
+	@GetMapping("/attendances")
+	public String attendance(HttpServletRequest request,Model model) {
 		HttpSession session = request.getSession();
 		int EmployeeNo = (int)session.getAttribute("employeeNo");
-		
-		//List<AttendanceVO> attendance = attendanceservice.attendance(EmployeeNo);
-		//model.addAttribute("attendance", attendance );
+		model.addAttribute("employeeNo", EmployeeNo);
 		
 		return "group/attendance/myattendance";
 	}
-	
-	@GetMapping("/group/attendance/attendancelist")
+	@GetMapping("/attendancelist")
 	public String attendancelist(HttpServletRequest request,Model model) {
 		HttpSession session = request.getSession();			
 		String companyCode = (String)session.getAttribute("companyCode");
 		String rankName = (String)session.getAttribute("rankName");
-		List<AEmployeeVO> alist = attendanceservice.aEmployeeList(companyCode,rankName);
-		model.addAttribute("alist", alist);
+		List<AEmployeeVO> emplist = attendanceservice.aEmployeeList(companyCode,rankName);
+		model.addAttribute("emplist", emplist);
 		
 		return "group/attendance/attendancelist";
 	}
+	//완
 	
-	@GetMapping("/group/attendance/attendancelist/attendance")
-	public String underattendance(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
+	@GetMapping("/underlingattendancelist/{employeeNo}")
+	public String underlingattendancelist(@PathVariable String employeeNo,Model model) {
 		
-		return "group/attendance/attendancelist/attendance";
+		model.addAttribute("employeeNo", employeeNo);
+		System.out.println(employeeNo);
+		
+		int EmployeeNo = Integer.parseInt(employeeNo);
+		AEmployeeVO underlingname= attendanceservice.aEmployee(EmployeeNo);
+		System.out.println(underlingname.getEmployeename());
+		
+		model.addAttribute("underlingName", underlingname.getEmployeename());
+		
+		
+		return "group/attendance/underlingattendance";
 	}
 	
-	@GetMapping("/group/attendance/myworktime")
-	public String myworktime(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/myworktime";
-	}
 	
-	@GetMapping("/group/attendance/worktimelist")
-	public String worktimelist(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/worktimelist";
-	}
 	
-	@GetMapping("/group/attendance/worktimelist/worktime")
-	public String underworktime(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
 		
-		return "group/attendance/worktimelist/worktime";
-	}
 	
-	@GetMapping("/group/attendance/myvacation")
-	public String myvacation(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/myvacation";
-	}
-	
-	@GetMapping("/group/attendance/vacationlist")
-	public String vacationlist(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/vacationlist";
-	}
-	
-	@GetMapping("/group/attendance/vacationlist/vacation")
-	public String undervacation(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/vacationlist/vacation";
-	}
-	
-	@GetMapping("/group/attendance/myvacationdata")
-	public String myvacationdata(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/myvacationdata";
-	}
-	
-	@GetMapping("/group/attendance/vacationdatalist")
-	public String vacationdatalist(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/vacationdatalist";
-	}
-	
-	@GetMapping("/group/attendance/vacationdatalist/vacationdata")
-	public String undervacationdata(Model model) {
-//		AttendanceVO myattendance = attendanceservice.myattendance();
-//		model.addAttribute("myattendance", myattendance);
-		
-		return "group/attendance/vacationdatalist/vacationdata";
-	}
 	
 }

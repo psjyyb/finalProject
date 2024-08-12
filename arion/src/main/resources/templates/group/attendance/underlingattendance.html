@@ -6,9 +6,10 @@
 <head>
 <meta charset="UTF-8">
 
-<title>myattendance</title>
-<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+<title>underlingattendance</title>
 </head>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+<h2 th:text="${underlingName}+'의 근무 기록'"></h2>
 
 <body onload="autoReload();">
 	<table align="center" id="calendar">
@@ -26,7 +27,7 @@
 			<button id="today">오늘</button>
 			</td>
 			<button id="download">다운로드</button>
-			<a href="/group/attendance/attendancelist">부하직원 근태기록</a>
+			<a href="/group/attendance/attendancelist">되돌아가기</a>
 		</tr>
 		
 		<tr>
@@ -41,6 +42,6 @@
 		</tr>
 	</table>
 			
-	<script th:src="@{/js/group/attendance/myattendance.js}"></script>
+	<script th:src="@{/js/group/attendance/underlingattendance.js}"></script>
 </body>
 </html >

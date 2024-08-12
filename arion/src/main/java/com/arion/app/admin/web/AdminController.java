@@ -137,4 +137,15 @@ public class AdminController {
 		}
 		return url;
 	}
+	@GetMapping("/adminModDel")
+	public String adminModDel(int moduleNo) {
+		int result = adminService.modDelete(moduleNo);
+		String url = null;
+		if(result > 0) {
+			url = "redirect:/adminModList";
+		}else {
+			url = "redirect:/adminModInfo";
+		}
+		return url;
+	}
 }

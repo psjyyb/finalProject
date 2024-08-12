@@ -132,7 +132,7 @@
 		ORDER BY final_date
 	</select>
 	<select id="selectSubInfo" resultType="GroupAdminVO">
-		SELECT DISTINCT contract_no
+		SELECT DISTINCT c.contract_no
 					   ,start_date
 					   ,final_date
 					   ,users_cnt
@@ -142,8 +142,8 @@
 					   ,regular_date
 					   ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
         				 FROM usemodule u
-        				 WHERE u.contract_no = contract_no) AS module_names
-		FROM contract
+        				 WHERE u.contract_no = c.contract_no) AS module_names
+		FROM contract c
 		WHERE contract_state = '계약중' AND company_code= #{companyCode}
 	</select>
 	

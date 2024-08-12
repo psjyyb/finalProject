@@ -37,4 +37,6 @@ public interface AdminMapper {
 	int updateMod(ModuleVO moduleVO); // 모듈정보 수정
 	int deleteModFile(ModuleVO moduleVO); // 모듈 사진 삭제
 	
+	int deleteMod(int moduleNo); // 모듈삭제
+	
 }

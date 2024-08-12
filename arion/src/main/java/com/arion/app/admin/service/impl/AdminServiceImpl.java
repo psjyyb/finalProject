@@ -157,5 +157,9 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return 1;
 	}
+	@Override
+	public int modDelete(int moduleNo) {
+		return adminMapper.deleteMod(moduleNo);
+	}
 
 }

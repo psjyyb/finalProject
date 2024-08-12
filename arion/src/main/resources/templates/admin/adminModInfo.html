@@ -144,6 +144,7 @@
 				<div class="card-footer form-footer">
 					<button type="button" class="btn btn-primary" id="addBtn">수정</button>
 					<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/adminModList}'|">목록으로</button>
+					<button type="button" class="btn btn-danger" th:onclick="|location.href='@{/adminModDel(moduleNo=${modInfo.moduleNo})}'|">삭제</button>
 				</div>
 			</form>
 		</div>

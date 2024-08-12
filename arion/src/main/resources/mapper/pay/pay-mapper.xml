@@ -6,47 +6,43 @@
 		SELECT MAX(contract_no)+1
 		FROM contract
 	</select>
-	
-	<insert id="insertContract">
-		 INSERT INTO contract(
-                              contract_no
-                             ,final_date
-                             ,users_cnt
-                             ,month_pay_price
-                             ,total_pay_price
-                             ,regular_date
-                             ,contract_state
-                             ,company_code
-                             ,contract_sign)
-        VALUES(
-               #{contractNo}
-              ,#{finalDate}
-              ,#{usersCnt}
-              ,#{monthPayPrice}
-              ,#{totalPayPrice}
-              ,#{regularDate}
-              ,'계약중'
-              ,#{companyCode}
-              ,#{contractSign}
-              )
+	<insert id="insertContract" statementType="CALLABLE" parameterType="ContractVO">
+		 CALL contract_procedure(
+		 						  #{companyCode}
+		 						 ,#{contractNo}
+		 						 ,#{finalDate}
+		 						 ,#{usersCnt}
+		 						 ,#{monthPayPrice}
+		 						 ,#{totalPayPrice}
+		 						 ,#{regularDate}
+		 						 ,#{contractSign}
+		 						 ,#{customerkey}
+		 						 ,#{pCheck, mode=OUT, jdbcType=INTEGER})
 	</insert>
-	
-	<insert id="insertSubModule">
-		INSERT INTO sub_module(
+	<insert id="insertSubModule" parameterType="ContractVO">
+		INSERT INTO usemodule(
                          sub_module_no
                         ,module_no
-                        ,sub_module_name
+                        ,module_price
+                        ,module_name
                         ,company_code
+                        ,contract_no
                        )
 		VALUES(
 		        (SELECT MAX(sub_module_no)+1
-		         FROM sub_module)
+		         FROM usemodule)
 		       ,(SELECT module_no
+		         FROM module
+		         WHERE module_name = #{moduleName}
+		         )
+		       ,(SELECT module_price
 		         FROM module
 		         WHERE module_name = #{moduleName}
 		         )
 		       ,#{moduleName}
 		       ,#{companyCode}
+		       ,#{contractNo}
 		       )
+		       
 	</insert>
 </mapper>

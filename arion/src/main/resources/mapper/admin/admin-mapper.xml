@@ -189,4 +189,8 @@
 		FROM mod_file 
 		WHERE mod_no = #{moduleNo}
 	</delete>
+	<delete id="deleteMod" parameterType="int">
+		DELETE FROM module
+		WHERE module_no = #{moduleNo}
+	</delete>
 </mapper>

@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface AttendanceService {
 
-	public AEmployeeVO aEmployee();
+	public AEmployeeVO aEmployee(int iemployeeno);
 	
 	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname);
 	

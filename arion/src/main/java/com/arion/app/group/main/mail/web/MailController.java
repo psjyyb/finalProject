@@ -45,7 +45,7 @@ public class MailController {
         List<MailVO> receivedMails = mailService.mailList(mailVO);
         model.addAttribute("receivedMails", receivedMails);
 
-        return "group/mail/Mymail";
+        return "group/mail/Mymail";	
     }
     //중요메일
     @GetMapping("/importmail")

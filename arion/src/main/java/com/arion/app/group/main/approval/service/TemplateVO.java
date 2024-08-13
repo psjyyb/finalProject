@@ -8,7 +8,9 @@ import lombok.Data;
 public class TemplateVO {
 	private int tempNo;
 	private String docType;
+	private MultipartFile docFileName;
 	private String docFile;
 	private String companyCode;
+	private String docImg;
 	
 }

@@ -24,25 +24,28 @@ WHERE
 
 <!-- 댓글 작성 -->
 <insert id="Replyinsert" parameterType="ReplyVO">
-        INSERT INTO comments 
-    ( 
-        comment_no, 
-        comment_content, 
-        comment_write, 
-        comment_date, 
-        board_no, 
+INSERT INTO comments
+    (
+        comment_no,
+        comment_content,
+        comment_write,
+        comment_date,
+        board_no,
         company_code
     )
-    VALUES 
-    ( 
-        comm_seq.NEXTVAL, 
-        #{replyVO.commentContent}, 
+VALUES
+    (
+        comm_seq.NEXTVAL,
+        #{replyVO.commentContent},
         #{replyVO.commentWrite},
         SYSDATE,
-        #{boardVO.boardNo}, 
+        #{boardVO.boardNo},
         #{replyVO.companyCode}
     );
 </insert>
+
+
+
 <insert id="">
 INSERT INTO comments 
         ( 

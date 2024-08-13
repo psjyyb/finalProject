@@ -46,58 +46,17 @@ public class TemplateController {
 	public String templateList(Model model, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		List<TemplateVO> tempList = tsvc.tempList(companyCode);
-		List<String> fileContents = new ArrayList<>();
-
-		for (TemplateVO temp : tempList) {
-			String fileContent = "";
-			String filePath = "D:/upload/templates/" + temp.getDocFile();
-			File file = new File(filePath);
-
-			if (file.exists()) {
-				if (file.getName().endsWith(".hwp")) {
-					try {
-						HWPFile hwpFile = HWPReader.fromFile(file.getPath());
-						if (hwpFile != null) {
-							fileContent = TextExtractor.extract(hwpFile,
-									TextExtractMethod.InsertControlTextBetweenParagraphText);
-							fileContent = convertToHTML(fileContent);
-
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					try (BufferedReader br = new BufferedReader(
-							new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
-						StringBuilder sb = new StringBuilder();
-						String line;
-						while ((line = br.readLine()) != null) {
-							sb.append(line).append("<br/>");
-						}
-						fileContent = sb.toString();
-					} catch (IOException e) {
-						e.printStackTrace();
-						fileContent = "텍스트 파일을 읽는 중 오류가 발생했습니다.";
-					}
-				}
-			} else {
-				fileContent = "파일을 찾을 수 없습니다.";
-			}
-
-			fileContents.add(fileContent);
-		}
-
 		model.addAttribute("tempList", tempList);
-		model.addAttribute("fileContents", fileContents);
-
 		return "group/document/template/templateList";
 	}
 
 	@GetMapping("/group/doc/tempInfo")
-	public String tempInfo(TemplateVO tempVO, Model model, HttpSession session) {
+	public String tempInfo(TemplateVO templateVO, Model model, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
-
-		return "group/documnet/template/templateInfo";
+		templateVO.setCompanyCode(companyCode);
+		TemplateVO findVO = tsvc.tempInfo(templateVO);
+		model.addAttribute("tempInfo", findVO);
+		return "group/document/template/templateInfo";
 	}
 
 	@GetMapping("/group/doc/insertTemp")
@@ -110,6 +69,8 @@ public class TemplateController {
 	    String companyCode = (String) session.getAttribute("companyCode");
 	    String directoryPath = "D:/upload/templates/";
 	    System.out.println("docType: " + tempVO.getDocType());
+	    System.out.println("files" + files[0]);
+	    System.out.println("files" + files[1]);
 	    
 	    if (files.length > 0) {
 	        MultipartFile docFile = files[0];
@@ -134,13 +95,13 @@ public class TemplateController {
 	    if (files.length > 1) {
 	        MultipartFile docImg = files[1];
 	        if (!docImg.isEmpty()) {
-	            String imageFileName = docImg.getOriginalFilename() + ".png";
+	            String imageFileName = tempVO.getDocType() + ".png";
 	            String imagePath = directoryPath + imageFileName;
 	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "docType: " + tempVO.getDocType());
 	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "imageFileName: " + imageFileName);
 	            try (OutputStream stream = new FileOutputStream(imagePath)) {
 	                stream.write(docImg.getBytes());
-	                tempVO.setDocImg(imagePath);
+	                tempVO.setDocImg(imageFileName);
 	            } catch (IOException e) {
 	                e.printStackTrace();
 	            }

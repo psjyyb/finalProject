@@ -6,10 +6,11 @@ import lombok.Data;
 
 @Data
 public class TemplateVO {
-	private int tempNo;
+	private String tempNo;
 	private String docType;
 	private MultipartFile docFileName;
 	private String docFile;
+	private String docName;
 	private String companyCode;
 	private String docImg;
 	

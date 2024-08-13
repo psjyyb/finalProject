@@ -2,36 +2,67 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.board.mapper.ReplyMapper">
 
+<!-- 댓글 리스트 -->
+<select id="selectReplyAll" parameterType="int" resultType="ReplyVO">
+SELECT 
+    c.board_no, 
+    c.comment_no, 
+    c.comment_content, 
+    e.employee_name AS comment_write, 
+    c.comment_date,
+    e.rank_name AS rankName,
+    e.department_name AS departmentName
+FROM 
+    comments c
+JOIN 
+    board b ON c.board_no = b.board_no
+JOIN 
+    employees e ON b.employee_no = e.employee_no
+WHERE 
+    c.board_no = #{boardNo}
+</select>
+
 <!-- 댓글 작성 -->
-<insert id="insert" parameterType="com.arion.app.group.board.service.ReplyVO">
-INSERT INTO comments (comment_no, board_no, comment_content, employee_no, comment_date)
-VALUES (#{commentNo}, #{boardNo}, #{commentContent}, #{employeeNo}, sysDate)
+<insert id="Replyinsert" parameterType="ReplyVO">
+        INSERT INTO comments 
+    ( 
+        comment_no, 
+        comment_content, 
+        comment_write, 
+        comment_date, 
+        board_no, 
+        company_code
+    )
+    VALUES 
+    ( 
+        comm_seq.NEXTVAL, 
+        #{replyVO.commentContent}, 
+        #{replyVO.commentWrite},
+        SYSDATE,
+        #{boardVO.boardNo}, 
+        #{replyVO.companyCode}
+    );
 </insert>
-
-<!-- 댓글읽기 -->
-<select id="read" resultType="com.arion.app.group.board.service.ReplyVO">
-SELECT *
-FROM comments
-WEHRE comment_no = ${commentNo}
-</select>
-
-<!-- 댓글 삭제 -->
-<delete id="delete">
-DELETE FROM comments
-WHERE comment_no = #{commentNo}
-</delete>
-
-<!-- 댓글 수정 -->
-<update id="update">
-UPDATE comments SET comment_content = #{commentContent}, comment_date = sysDate
-WHERE comment_no = #{commentNo}
-</update>
-
-<select id="getListWithPaging" resultType="com.arion.app.group.board.service.ReplyVO">
-SELECT comment_no, board_no, comment_content, comment_write, comment_date
-FROM comments
-WHERE board_no = #{boardNo}
-ORDER BY comment_no ASC
-</select>
+<insert id="">
+INSERT INTO comments 
+        ( 
+            comment_no, 
+            comment_content, 
+            comment_write, 
+            comment_date, 
+            board_no, 
+            company_code
+        )
+    VALUES 
+        ( 
+            comm_seq.NEXTVAL, 
+            #{commentContent}, 
+            #{commentWrite},
+            sysDate,
+            #{boardNo}, 
+            #{companyCode}
+        )
+        
+        </insert>
 
 </mapper>

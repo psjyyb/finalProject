@@ -5,9 +5,10 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title></title>
 <link rel="stylesheet" th:href="@{/smarteditor2/css/smart_editor2_items.css}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" th:href="@{/css/group/board/reply.css}">
+<title></title>
 </head>
 <body>
 	<div>
@@ -28,7 +29,7 @@
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td style="height:300px; width:500px;" th:utext="${board.boardContent}"></td>
+				<td style="height:300px; width:500px;" th:utext="${board.boardContent}" />
 			</tr>
 			<tr>
 				<th>작성일자</th>
@@ -47,33 +48,36 @@
 	</div>
 	
 	  <!-- 댓글 영역 시작 -->
-    <div>
-        <h4>댓글</h4>
-        <ul>
-            <li th:each="reply : ${replies}">
-                <div>
-                    <p><strong>작성자:</strong> [[${reply.commentWrite}]]</p>
-                    <p><strong>내용:</strong> [[${reply.commentContent}]]</p>
-                    <p><strong>작성일:</strong> [[${#dates.format(reply.commentDate, 'yyyy.MM.dd')}]]</p>
-                    <div>
-                        <button type="button" class="editComment" th:data-url="@{/group/commentUpdate(commentNo=${reply.commentNo})}">수정</button>
-                        <button type="button" class="deleteComment" th:data-url="@{/group/commentDelete(commentNo=${reply.commentNo})}">삭제</button>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
+<div class="comments-section">
+    <h4>댓글</h4>
+    <ul class="comments-list" th:each="reply : ${comments}">
+        <li class="comment-item">
+            <div class="comment-author">
+                <strong>작성자:</strong> [[${reply.commentWrite}]]
+                <span>&#91;[[${reply.departmentName}]]&#93;</span>
+                <span>&#91;[[${reply.rankName}]]&#93;</span>
+            </div>
+            <div class="comment-content">
+                <strong>내용:</strong> [[${reply.commentContent}]]
+            </div>
+            <div class="comment-date">
+                <strong>작성일:</strong> [[${#dates.format(reply.commentDate, 'yyyy.MM.dd')}]]
+            </div>
+        </li>
+    </ul>
+</div>
 
    <!-- 댓글 입력 폼 -->
-	<div>
-    	<h4>댓글 입력</h4>
-    	<form id="commentForm">
-        	<input type="hidden" id="boardNo" name="boardNo" th:value="${board.boardNo}">
-        	<textarea id="commentContent" name="commentContent" placeholder="댓글을 입력하세요"></textarea>
-        	<button type="button" onclick="submitComment()">댓글 추가</button>
-    	</form>
-	</div>
-    
+<div class="comment-container">
+    <h3>댓글 입력</h3>
+    <form id="replyForm" action="/freeboardInfo" method="POST">
+    	<input type="hidden" name="commentNo" id="commentNo" />
+        <textarea name="commentContent" id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
+        <button type="submit">댓글 등록</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>	
 	// 글 삭제 버튼
 	document.getElementById("deleteButton").addEventListener("click", function(event) {
@@ -95,57 +99,35 @@
 	    });
 	});
 	
-	
-	// 댓글 삭제
-	 document.querySelectorAll(".deleteComment").forEach(button => {
-	        button.addEventListener("click", function(event) {
-	            event.preventDefault();
-	            Swal.fire({
-	                title: '댓글을 삭제하시겠습니까?',
-	                icon: 'warning',
-	                showCancelButton: true,
-	                confirmButtonColor: '#3085d6',
-	                cancelButtonColor: '#d33',
-	                confirmButtonText: '삭제',
-	                cancelButtonText: '취소'
-	            }).then((result) => {
-	                if (result.isConfirmed) {
-	                    var deleteUrl = this.getAttribute('data-url');
-	                    window.location.href = deleteUrl; // 댓글 삭제 후 페이지 리다이렉트
-	                }
-	            });
-	        });
-	    });
+	$(document).ready(function() {
+	    $('#replyForm').on('submit', function(event) {
+	        event.preventDefault(); // 기본 폼 제출 동작 방지
 
-	    document.querySelectorAll(".editComment").forEach(button => {
-	        button.addEventListener("click", function(event) {
-	            event.preventDefault();
-	            var editUrl = this.getAttribute('data-url');
-	            // 수정 로직 추가 (별도의 팝업 또는 페이지로 이동하여 수정 가능)
-	            window.location.href = editUrl;
-	        });
-	    });
-	    
-	    function submitComment() {
-	        var boardNo = document.getElementById('boardNo').value;
-	        var commentContent = document.getElementById('commentContent').value;
-	        var commentWrite = '작성자'; // 필요에 따라 설정
-
-	        var xhr = new XMLHttpRequest();
-	        xhr.open('POST', '/group/commentInsert', true);
-	        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	        xhr.onreadystatechange = function () {
-	            if (xhr.readyState === XMLHttpRequest.DONE) {
-	                if (xhr.status === 200) {
-	                    alert('댓글이 추가되었습니다.');
-	                    location.reload(); // 페이지 새로고침
-	                } else {
-	                    alert('댓글 추가에 실패했습니다.');
-	                }
-	            }
+	        // 폼 데이터 수집
+	        var formData = {
+	            commentNo: $('#commentNo').val(),
+	            commentContent: $('#commentContent').val()
 	        };
-	        xhr.send('boardNo=' + boardNo + '&commentContent=' + encodeURIComponent(commentContent) + '&commentWrite=' + commentWrite);
-	    }
+
+	        $.ajax({
+	            url: '/replyInsert', // 서버 요청 URL
+	            type: 'POST', // 요청 방법
+	            data: formData, // 폼 데이터
+	            success: function(response) {
+	                // 성공적으로 응답을 받았을 때 처리
+	                alert('댓글이 성공적으로 등록되었습니다!');
+	                // 추가로 페이지를 새로고침하거나, 폼을 초기화하는 등의 처리를 할 수 있습니다.
+	                $('#replyForm')[0].reset(); // 폼 초기화
+	            },
+	            error: function(xhr, status, error) {
+	                // 요청 실패 시 처리
+	                alert('댓글 등록 중 오류가 발생했습니다: ' + error);
+	            }
+	        });
+	    });
+	});
+	
+	
 	</script>
 </body>
 </html>

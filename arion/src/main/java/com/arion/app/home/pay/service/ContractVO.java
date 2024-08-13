@@ -23,9 +23,10 @@ public class ContractVO {
 	private String contractSign;
 	private int firstMonthAmount;
 	private String finalDates;
-	private List<String> moduleNames;
-	
+	private List<String> moduleNames;	
+	private String paymentStatus;
 	private String orderId;
+	private int payNo;
 	
 	
 	

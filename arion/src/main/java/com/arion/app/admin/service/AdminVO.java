@@ -22,7 +22,7 @@ public class AdminVO {
 	private int totalPayPrice;  // 총결제금액
 	private String contractState; // 계약상태
 	private String companyTel;  // 회사전화번호
-	private int companyBusinessNumber; // 사업자 번호
+	private Long companyBusinessNumber; // 사업자 번호
 	private String companyType; // 업종
 	private String companyPost; // 회사우편번호 
 	private String ceoEmail;    // 사장 이메일

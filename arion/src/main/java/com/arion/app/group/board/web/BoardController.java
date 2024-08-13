@@ -18,6 +18,10 @@ import com.arion.app.group.board.service.BoardService;
 import com.arion.app.group.board.service.BoardVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.board.service.PageDTO;
+import com.arion.app.group.board.service.ReplyService;
+import com.arion.app.group.board.service.ReplyVO;
+
+import lombok.RequiredArgsConstructor;
 
 /*
  * 작성자 : 김철규
@@ -26,16 +30,13 @@ import com.arion.app.group.board.service.PageDTO;
  */
 
 @Controller
+@RequiredArgsConstructor
 public class BoardController {
 
-	private BoardService boardService;
+	private final BoardService boardService;
+	private final ReplyService replyService;
 	
-	// DI
-	@Autowired
-	public BoardController(BoardService boardService) {
-		this.boardService = boardService;
-	}
-	
+
 	// 전체조회 
 	@GetMapping("/group/freeboardList")	// 주소를 어디로 할건지 정해야됨
 	public String boardList(Model model, Criteria cri) {
@@ -51,6 +52,8 @@ public class BoardController {
 		BoardVO findVO = boardService.boardInfo(boardVO);
 		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);
+		List<ReplyVO> list = replyService.replyList(boardVO.getBoardNo());
+        model.addAttribute("comments", list);
 		return "group/board/freeboardInfo";
 	}
 	

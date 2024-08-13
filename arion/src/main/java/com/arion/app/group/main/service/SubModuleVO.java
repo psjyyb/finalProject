@@ -11,5 +11,3 @@ public class SubModuleVO {
 	
 	    private String urlPattern;
 	}
-
-

@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
 	<h1>기안서</h1>
@@ -13,13 +14,41 @@
 		<label>문서종류</label>
 		<input type="text" name="docType">
 		<label>파일등록</label>
-		<input type="file" name="docFile">
+		<input type="file" name="docFileName">
+		<div id="captureArea">
+			<!-- 캡처할 콘텐츠 -->
+			<h2>캡처할 영역</h2>
+			<p>이 영역이 이미지로 캡처되어 서버에 저장됩니다.</p>
+		</div>
 		<div>
-			<button type="submit" class="btn btn-primary">등록</button>
+			<button type="button" class="btn btn-primary" onclick="captureAndSubmit()">등록</button>
 		</div>
 	</form>
-	<div>
-		
-	</div>
+
+	<script>
+		function captureAndSubmit() {
+			html2canvas(document.querySelector("#captureArea")).then(function(canvas) {
+				var imgData = canvas.toDataURL("image/png");
+
+				// AJAX를 통해 캡처된 이미지를 먼저 서버로 전송
+				$.ajax({
+					type: "POST",
+					url: "/saveImage",
+					data: {
+						image: imgData
+					},
+					success: function(response) {
+						alert("이미지가 저장되었습니다.");
+						
+						// 이미지 저장 후, 폼 데이터를 전송
+						$("#insertTemp").submit();
+					},
+					error: function(error) {
+						console.log("이미지 저장 실패", error);
+					}
+				});
+			});
+		}
+	</script>
 </body>
 </html>

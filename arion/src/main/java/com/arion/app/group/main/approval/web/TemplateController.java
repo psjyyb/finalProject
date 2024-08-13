@@ -5,13 +5,22 @@ import kr.dogfoot.hwplib.object.HWPFile;
 import kr.dogfoot.hwplib.tool.textextractor.TextExtractor;
 import kr.dogfoot.hwplib.tool.textextractor.TextExtractMethod;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +29,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.group.main.approval.service.TemplateService;
@@ -50,6 +61,7 @@ public class TemplateController {
 							fileContent = TextExtractor.extract(hwpFile,
 									TextExtractMethod.InsertControlTextBetweenParagraphText);
 							fileContent = convertToHTML(fileContent);
+
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -81,43 +93,66 @@ public class TemplateController {
 		return "group/document/template/templateList";
 	}
 
+	@GetMapping("/group/doc/tempInfo")
+	public String tempInfo(TemplateVO tempVO, Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+
+		return "group/documnet/template/templateInfo";
+	}
+
 	@GetMapping("/group/doc/insertTemp")
 	public String insertTempForm() {
 		return "group/document/template/templateInsert";
 	}
 
 	@PostMapping("/insertTemp")
-	public String insertTemp(TemplateVO tempVO, @RequestParam("docFile") MultipartFile file, HttpSession session) {
-		String fileName = null;
-		String companyCode = (String) session.getAttribute("companyCode");
+	public String insertTemp(TemplateVO tempVO, HttpSession session, @RequestParam("image") String image) {
+	    String companyCode = (String) session.getAttribute("companyCode");
 
-		// 파일이 비어있지 않은 경우 처리
-		if (!file.isEmpty()) {
-			fileName = file.getOriginalFilename();
-			String directoryPath = "D:/upload/templates/";
+	    // 파일 저장 처리
+	    String fileName = null;
+	    String directoryPath = "D:/upload/templates/";
+	    
+	    if (!tempVO.getDocFileName().isEmpty()) {
+	        fileName = tempVO.getDocFileName().getOriginalFilename();
+	        File directory = new File(directoryPath);
+	        
+	        if (!directory.exists()) {
+	            directory.mkdirs();
+	        }
 
-			// 디렉토리 생성
-			File directory = new File(directoryPath);
-			if (!directory.exists()) {
-				directory.mkdirs();
-			}
+	        String saveName = Paths.get(directoryPath + fileName).toString();
+	        try {
+	            tempVO.getDocFileName().transferTo(Paths.get(saveName));
+	            tempVO.setDocFile(fileName);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
-			// 파일 저장
-			File saveFile = new File(directoryPath + fileName);
-			try {
-				file.transferTo(saveFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-				return "error"; // 오류 발생 시 에러 페이지로 이동
-			}
-			tempVO.setDocFile(fileName);
-		}
+	    // 이미지 저장 처리
+	    String base64Image = image.split(",")[1]; // Data URL의 "data:image/png;base64," 부분 제거
+	    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
-		tempVO.setCompanyCode(companyCode);
-		tsvc.insertTemp(tempVO);
+	    String imageFileName = tempVO.getDocType() + "-" + UUID.randomUUID() + ".png";
+	    String imagePath = directoryPath + imageFileName;
 
-		return "redirect:/group/doc/template";
+	    try (OutputStream stream = new FileOutputStream(imagePath)) {
+	        stream.write(imageBytes);
+	        tempVO.setDocImg(imagePath);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+
+	    // 회사 코드 설정
+	    tempVO.setCompanyCode(companyCode);
+
+	    // 데이터베이스에 정보 저장 (파일 경로와 이미지 경로를 포함하여 한 번에 저장)
+	    tsvc.insertTemp(tempVO);
+
+	    return "redirect:/group/doc/template";
 	}
+
 
 	private String convertToHTML(String text) {
 		text = text.replace("\n", "<br/>");

@@ -9,4 +9,6 @@ import com.arion.app.group.main.approval.service.TemplateVO;
 public interface TemplateMapper {
 	public List<TemplateVO> tempList(@Param("companyCode") String companyCode);
 	public int insertTemp(TemplateVO templateVO);
+	public List<TemplateVO> tempInfo(@Param("companyCode") String companyCode, @Param("tempNo") int tempNo);
+	
 }

@@ -1,5 +1,6 @@
 package com.arion.app.group.main.attendance.service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,9 +13,13 @@ import lombok.Data;
 public class WorkTimeVO {
 
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date workdate;
-	private String employeename;
-	private Integer worktime;
+	private LocalDate attdate;
+	private String worktimehour;
+	private Integer worktimeminute;
+	private String standardworktimehour;
+	private Integer standardworktimeminute;
+	private String intervalhour;
+	private Integer intervalminute;
 	
 	
 }

@@ -87,10 +87,10 @@ public class TemplateController {
 	}
 
 	@PostMapping("/insertTemp")
-	public String insertTemp(TemplateVO tempVO, @RequestParam("docFile") MultipartFile file, HttpSession session) {
+	public String insertTemp(TemplateVO templateVO, @RequestParam("docFile") MultipartFile file, HttpSession session) {
 		String fileName = null;
 		String companyCode = (String) session.getAttribute("companyCode");
-
+		String docType = templateVO.getDocType();
 		// 파일이 비어있지 않은 경우 처리
 		if (!file.isEmpty()) {
 			fileName = file.getOriginalFilename();
@@ -110,11 +110,11 @@ public class TemplateController {
 				e.printStackTrace();
 				return "error"; // 오류 발생 시 에러 페이지로 이동
 			}
-			tempVO.setDocFile(fileName);
 		}
 
-		tempVO.setCompanyCode(companyCode);
-		tsvc.insertTemp(tempVO);
+		templateVO.setDocFile(fileName);
+		templateVO.setCompanyCode(companyCode);
+		tsvc.insertTemp(templateVO);
 
 		return "redirect:/group/doc/template";
 	}

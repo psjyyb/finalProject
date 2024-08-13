@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,18 +22,25 @@ public class GroupEmployeeMenuController {
 	@Autowired
 	private HttpSession httpSession;
 
-	@ModelAttribute("modules")
-	@Cacheable(value = "modules", key = "#session.getAttribute('companyCode') + '-' + #session.getAttribute('loginId')")
-	public List<getModuleVO> populateModules() {
-		String companyCode = (String) httpSession.getAttribute("companyCode");
-		String employeeId = (String) httpSession.getAttribute("loginId");
+    @ModelAttribute("modules")
+    public List<getModuleVO> populateModules() {
+        List<getModuleVO> modules = (List<getModuleVO>) httpSession.getAttribute("modules");
 
-		getModuleVO moduleVO = new getModuleVO();
-		moduleVO.setCompanyCode(companyCode);
-		moduleVO.setEmployeeId(employeeId);
+        if (modules == null) {
+            // 세션에 modules가 없으면 새로 로드
+            String companyCode = (String) httpSession.getAttribute("companyCode");
+            String employeeId = (String) httpSession.getAttribute("loginId");
 
-		return mainService.getmoduleList(moduleVO);
-	}
+            getModuleVO moduleVO = new getModuleVO();
+            moduleVO.setCompanyCode(companyCode);
+            moduleVO.setEmployeeId(employeeId);
+
+            modules = mainService.getmoduleList(moduleVO);
+            httpSession.setAttribute("modules", modules);
+        }
+
+        return modules;
+    }
 	
 	 @GetMapping("/topbar")
 	    public String topbar(HttpSession session, Model model) {

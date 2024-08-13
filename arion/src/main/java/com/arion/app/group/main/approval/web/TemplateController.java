@@ -59,11 +59,13 @@ public class TemplateController {
 		return "group/document/template/templateInfo";
 	}
 
+	
 	@GetMapping("/group/doc/insertTemp")
 	public String insertTempForm() {
 		return "group/document/template/templateInsert";
 	}
 
+	
 	@PostMapping("/insertTemp")
 	public String insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO, HttpSession session) {
 	    String companyCode = (String) session.getAttribute("companyCode");

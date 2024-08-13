@@ -1,5 +1,7 @@
 package com.arion.app.home.pay.service;
 
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.arion.app.security.service.CompanyVO;
@@ -13,15 +15,15 @@ public interface PayService {
 	public String requestBillingKey(String customerKey, String authKey); // 빌링키 발급
 	 
 	// 결제시 이루어지는 services
-	int payEnd(ContractVO contractVO); // 결제합체
+	Map<String, Object> payEnd(ContractVO contractVO); // 결제합체
 	
 	int contractInsert(ContractVO contractVO); // 계약서 등록
 	
-	int useModuleInsert(ContractVO contractVO); // 사용모듈 등록
+	int useModuleInsert(String moduleName,String companyCode,int contractNo); // 사용모듈 등록
 	
 	int payInsert(ContractVO contractVO); // 결제 등록
 	
-	int payDetailInsert(ContractVO contractVO); // 결제 상세등록
+	int payDetailInsert(int payNo, String moduleName); // 결제 상세등록
 	
 	int comRespUpdate(ContractVO contractVO); // 회사테이블 권한수정
 	

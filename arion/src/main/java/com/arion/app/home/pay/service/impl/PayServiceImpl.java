@@ -1,14 +1,10 @@
 package com.arion.app.home.pay.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -101,32 +97,58 @@ public class PayServiceImpl implements PayService {
 		}
 		return null;
 	}
-	@Transactional
+	@Transactional // 첫결제 
 	@Override
-	 public int payEnd(ContractVO contractVO) {
-		System.out.println(contractVO+"최종적으로 데이터가 잘 받아지는지 확인 해보자.");
-        return 0;
+	 public Map<String, Object> payEnd(ContractVO contractVO) {
+		System.out.println(contractVO+"첫주문시 결제금액 처리해야돼");
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		int result = 0;
+		result += contractInsert(contractVO);
+		contractVO.setMonthPayPrice(contractVO.getFirstMonthAmount());
+		System.out.println(contractVO+"첫주문 금액 변경");
+		result += payInsert(contractVO);
+		
+		List<String> list = contractVO.getModuleNames();
+		list.forEach(a->{
+			String trimmedValue = a.trim(); // 앞뒤 공백 제거
+			payDetailInsert(contractVO.getPayNo(),trimmedValue);
+			useModuleInsert(trimmedValue,contractVO.getCompanyCode(),contractVO.getContractNo());
+		});
+		if (result > 1) {
+			isSuccessed = true;
+		}
+
+		map.put("result", isSuccessed);
+		map.put("target", contractVO);
+        return map;
     }
 	
 	@Override
 	public int payInsert(ContractVO contractVO) {
-		return 0;
+		return payMapper.insertPay(contractVO);
 	}
 	@Override
-	public int payDetailInsert(ContractVO contractVO) {
-		return 0;
+	public int payDetailInsert(int payNo, String moduleName) {
+		return payMapper.insertPayDetail(payNo, moduleName);
 	}
 	@Override
 	public int contractInsert(ContractVO contractVO) {	
-		return 0;
+		return payMapper.insertContract(contractVO);
 	}
 	@Override
-	public int useModuleInsert(ContractVO contractVO) {
-		return 0;
+	public int useModuleInsert(String moduleName, String companyCode, int contractNo) {
+		return payMapper.insertSubModule(moduleName, companyCode, contractNo);
 	}
 	@Override
 	public int comRespUpdate(ContractVO contractVO) {
-		return 0;
+		return payMapper.updateComResp(contractVO);
+	}
+	
+	public Map<String, Object> schedulePayEnd() {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		return map;
 	}
 }
 //private final String TOSS_API_URL =

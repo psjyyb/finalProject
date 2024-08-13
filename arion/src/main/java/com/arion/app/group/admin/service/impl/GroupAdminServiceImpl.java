@@ -15,6 +15,8 @@ import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
 import com.arion.app.group.admin.service.GroupAdminVO;
+import com.arion.app.group.admin.service.PayDetailVO;
+import com.arion.app.group.admin.service.PayListVO;
 import com.arion.app.group.admin.service.RankVO;
 import com.arion.app.security.service.CompanyVO;
 
@@ -159,5 +161,18 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 			url = "redirect:/home";
 		}
 		return url;
+	}
+	@Override
+	public List<PayListVO> payList(String comcode) {
+		return gaMapper.payList(comcode);
+	}
+	
+	@Override
+	public List<PayDetailVO> payDetailInfo(int payNo) {
+		return gaMapper.payDetailInfo(payNo);
+	}
+	@Override
+	public PayListVO payInfo(int payNo) {
+		return gaMapper.payInfo(payNo);
 	}
 }

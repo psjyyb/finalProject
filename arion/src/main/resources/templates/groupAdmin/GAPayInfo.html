@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/groupAdmin/layouts/Gadmin_layout}"
+	layout:fragment="GContent">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+<style>
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .info-card {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .info-card h2 {
+            margin-top: 0;
+            color: #444;
+        }
+        .info-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .detail-card {
+            flex: 1 1 45%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .detail-card h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        .detail-card p {
+            margin: 5px 0;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>결제내역 상세보기</h1>
+        
+        <div class="info-card">
+            <h2>Payment Summary</h2>
+            <p><strong>Payment Number:</strong> <span id="payNo">[[${payInfo.payNo}]]</span></p>
+            <p><strong>Date:</strong> <span id="payDate">[[${#dates.format(payInfo.payDate,'yyyy-MM-dd')}]]</span></p>
+            <p><strong>Price:</strong> <span id="payPrice">[[${#numbers.formatInteger(payInfo.payPrice, 3, 'COMMA')}]]원</span></p>
+            <p><strong>Number of Users:</strong> <span id="usersCnt">[[${payInfo.usersCnt}]]명</span></p>
+            <p><strong>Order ID:</strong> <span id="orderId">[[${payInfo.orderId}]]</span></p>
+             <p><strong>Contract Number:</strong> <span id="contractNo">[[${payInfo.contractNo}]]</span></p>
+        </div>
+
+        <div class="details">
+            <div class="detail-card" th:each="pay : ${detailList}">
+                <h3>[[${pay.moduleName}]]</h3>
+                <p><strong>Price:</strong>[[${#numbers.formatInteger(pay.modulePrice, 3, 'COMMA')}]]원</p>
+            </div>
+            <!-- Additional detail cards can be added here -->
+        </div>
+    </div>

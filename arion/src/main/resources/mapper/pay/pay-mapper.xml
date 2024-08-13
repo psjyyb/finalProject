@@ -33,7 +33,9 @@
                              ,contract_sign
                              ,billingkey
                              ,customerkey
-                             ,first_month_amount)
+                             ,first_month_amount
+                             ,ceo_name
+                             ,ceo_email)
         VALUES(
                #{contractNo}
               ,#{finalDates}
@@ -47,6 +49,8 @@
               ,#{billingkey}
               ,#{customerkey}
               ,#{firstMonthAmount}
+              ,#{ceoName}
+              ,#{ceoEmail}
               )
 	</insert>
 	<insert id="insertSubModule" parameterType="ContractVO">
@@ -107,13 +111,14 @@
                 )
 		VAlUES(
 		         #{payNo}
-		        ,#{userCnt}
+		        ,#{usersCnt}
 		        ,#{companyCode}
 		        ,#{contractNo}
 		        ,#{orderId}
-		        ,#{payPrice}
+		        ,#{monthPayPrice}		        
 		          )
 	</insert>
+	
 	<insert id="insertPayDetail" parameterType="ContractVO">
 	INSERT INTO pay_detail (
                          pay_detail_no
@@ -127,11 +132,13 @@
 	         FROM pay_detail)
 	        ,#{payNo}
 	        ,(SELECT module_no
-	          FROM module
-	          WHERE module_name = #{modumeName})
+		         FROM module
+		         WHERE module_name = #{moduleName}
+		         )
 	        ,(SELECT module_price
-	          FROM module
-	          WHERE module_name = #{modumeName})
+		         FROM module
+		         WHERE module_name = #{moduleName}
+		         )
 	        ,#{moduleName}  
 	        )
 	</insert>

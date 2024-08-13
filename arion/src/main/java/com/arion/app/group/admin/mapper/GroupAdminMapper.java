@@ -5,6 +5,8 @@ import java.util.List;
 import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminVO;
+import com.arion.app.group.admin.service.PayDetailVO;
+import com.arion.app.group.admin.service.PayListVO;
 import com.arion.app.group.admin.service.RankVO;
 import com.arion.app.security.service.CompanyVO;
 
@@ -47,4 +49,9 @@ public interface GroupAdminMapper {
 	// 계약해지
 	int cancleContract(int contractNo, String companyCode); // 계약서 해지
 	int cancleCompany(String companyCode); // 권한 변경
+	
+	List<PayListVO> payList(String comcode); // 결제목록
+	
+	PayListVO payInfo(int payNo); // 결제상세보기
+	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
 }

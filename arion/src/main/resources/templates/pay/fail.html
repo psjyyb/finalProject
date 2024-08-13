@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Content">
+	layout:decorate="~{common/home/layouts/home_layout}"
+	layout:fragment="content">
 <head>
-    <meta charset="UTF-8">
-    <title>카드 등록 실패</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- CSS 파일이 있다면 -->
+<meta charset="UTF-8">
+<title>카드 등록 실패</title>
+<style>
+.container2 {
+	max-width: 600px;
+	margin: 120px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>카드 등록 실패</h1>
-        <p th:text="'카드 등록에 실패했습니다: ' + ${errorMessage}"></p>
-        <a th:href="@{/pay/firstPay}">다시 시도</a> <!-- 실패 후 다시 시도할 수 있는 링크 -->
-    </div>
+	<div class="container2">
+		<div class="container">
+			<h1>카드 등록 실패</h1>
+			<p th:text="'카드 등록에 실패했습니다: ' + ${errorMessage}"></p>
+			<a th:href="@{/home/service}">다시 시도</a>
+			<!-- 실패 후 다시 시도할 수 있는 링크 -->
+		</div>
+	</div>
 </body>
 </html>
+

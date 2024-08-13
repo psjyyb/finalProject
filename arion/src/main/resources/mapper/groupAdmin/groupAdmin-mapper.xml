@@ -13,18 +13,21 @@
 		WHERE company_code =  #{companyCode}
 		ORDER BY employee_no
 	</select>
+	
 	<select id="selectDeptList" resultType="DepartmentVO">
 		SELECT department_name,department_no,manager
 		FROM departments
 		WHERE company_code = #{companyCode}
 		ORDER BY department_no
 	</select>
+	
 	<select id="selectRankList" resultType="RankVO">
 		SELECT rank_name,rank_id,rank_ranking
 		FROM rank
 		WHERE company_code = #{companyCode}
 		ORDER BY rank_id
 	</select>
+	
 	<insert id="insertEmp" parameterType="EmployeeVO">
 		<selectKey keyProperty="employeeNo"
 				   resultType="Integer"
@@ -62,6 +65,7 @@
 		</choose>
 		)
 	</insert>
+	
 	<select id="selectEmpInfo" resultType="EmployeeVO">
 		SELECT employee_no
 			  ,employee_name
@@ -75,6 +79,7 @@
 		FROM employees
 		WHERE employee_no = #{employeeNo}
 	</select>
+	
 	<update id="updateEmp">
 		UPDATE employees
 		SET
@@ -95,6 +100,7 @@
 		    
 		WHERE employee_no = #{employeeNo}
 	</update>
+	
 	<delete id="deleteEmp" parameterType="EmployeeVO">
 		DELETE FROM employees
 		WhERE employee_no = #{employeeNo}
@@ -115,6 +121,7 @@
 		    c.company_code = e.company_code
 		WHERE 
 		    c.company_code =#{companyCode}
+		AND c.contract_state ='계약중'
 	</select>
 	
 	<select id="selectEndSub" resultType="GroupAdminVO">
@@ -124,13 +131,11 @@
 		      ,total_pay_price
 		      ,contract_state
 		FROM contract
-					<![CDATA[
-		WHERE final_date < sysdate 
-							]]>
-		AND company_code = #{companyCode} 
+		WHERE company_code = #{companyCode} 
 		AND contract_state NOT LIKE '계약중'
 		ORDER BY final_date
 	</select>
+	
 	<select id="selectSubInfo" resultType="GroupAdminVO">
 		SELECT DISTINCT c.contract_no
 					   ,start_date
@@ -140,7 +145,6 @@
 					   ,total_pay_price
 					   ,contract_state
 					   ,regular_date
-					   ,pay_state
 					   ,(SELECT LISTAGG(u.module_name, ',') WITHIN GROUP (ORDER BY u.module_name)
         				 FROM usemodule u
         				 WHERE u.contract_no = c.contract_no) AS module_names
@@ -191,6 +195,7 @@
 	<delete id="rankDeSave">
 		DELETE FROM rank WHERE company_code = #{companyCode}
 	</delete>
+	
 	<select id="selectCom" resultType="CompanyVO">
 		SELECT company_code
 		      ,company_name
@@ -206,6 +211,7 @@
 		FROM company
 		WHERE company_code = #{companyCode}
 	</select>
+	
 	<update id="companySave" parameterType="CompanyVO">
 		UPDATE company
 		SET	   company_name = #{companyName}
@@ -226,12 +232,14 @@
 		FROM company
 		WHERE company_code = #{companyCode}
 	</select>
+	
 	<select id="contractNo">
 		SELECT contract_no
 		FROM contract
 		WHERE company_code = #{companyCode} 
 		AND contract_state = '계약중'
 	</select>
+	
 	<update id="cancleContract">
 		UPDATE contract
 		SET contract_state = '계약해지'
@@ -243,4 +251,33 @@
 		SET site_resp = 'No'
 		WHERE company_code = #{companyCode}
 	</update>
+	
+	<select id="payList" resultType="PayListVO">
+		SELECT pay_no
+			  ,pay_date
+			  ,pay_price
+			  ,contract_no 
+		FROM pay 
+		WHERE company_code= #{comCode}
+		ORDER BY pay_no DESC
+	</select>
+	
+	<select id="payInfo" resultType="PayListVo">
+	SELECT pay_no
+		  ,pay_date
+		  ,pay_price
+		  ,users_cnt
+		  ,order_id 
+		  ,contract_no
+	FROM pay 
+	WHERE pay_no = #{payNo}
+	</select>
+	
+	<select id="payDetailInfo" resultType="PayDetailVO">
+		SELECT module_price
+			  ,module_name 
+		FROM pay_detail
+		WHERE pay_no = #{payNo}
+		ORDER BY pay_detail_no DESC
+	</select>
 </mapper>

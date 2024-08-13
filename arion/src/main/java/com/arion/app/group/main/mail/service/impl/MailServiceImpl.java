@@ -45,7 +45,6 @@ public class MailServiceImpl implements MailService {
         System.out.println("중요 메일 조회 결과: " + mails);
         return mails;
     }
-
     @Override
     public List<MailVO> deleteMailList(MailVO mailVO) {
         return mailMapper.deleteMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());

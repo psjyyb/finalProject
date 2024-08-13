@@ -16,14 +16,14 @@
 
 	<!-- 중요 메일 조회 -->
 	<select id="importMailAll" parameterType="MailVO" resultType="MailVO">
-		SELECT
-		FIND_EMP_NAME(m.sender_id) AS sender_name,
-		m.send_date,
-		m.mail_title
-		FROM mail m
-		JOIN mail_receive mr ON m.mail_no = mr.mail_no
-		WHERE mr.employee_id = #{employeeId}
-		AND m.mail_status = 'IMPORT'
+    SELECT
+    FIND_EMP_NAME(m.sender_id) AS sender_name,
+    m.send_date,
+    m.mail_title
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{employeeId}
+    AND m.mail_status = 'IMPORT'
 	</select>
 
 	<!-- 휴지통 조회 -->

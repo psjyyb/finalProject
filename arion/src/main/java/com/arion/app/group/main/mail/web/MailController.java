@@ -45,7 +45,7 @@ public class MailController {
         List<MailVO> receivedMails = mailService.mailList(mailVO);
         model.addAttribute("receivedMails", receivedMails);
 
-        return "group/mail/Mymail";
+        return "group/mail/Mymail";	
     }
     //중요메일
     @GetMapping("/importmail")
@@ -53,14 +53,11 @@ public class MailController {
         String employeeId = (String) httpSession.getAttribute("loginId");
         String companyCode = (String) httpSession.getAttribute("companyCode");
 
-        if (employeeId == null || companyCode == null) {
-            model.addAttribute("error", "Session information is missing.");
-            return "group/mail/importmail";
-        }
-
+        
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
+        System.out.println(employeeId+"ㅎㅇㅎㅇㅎㅇ");
         List<MailVO> importMailAll = mailService.importMailList(mailVO);
         model.addAttribute("importMailAll", importMailAll);
 

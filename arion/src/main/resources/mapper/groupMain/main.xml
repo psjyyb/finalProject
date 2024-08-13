@@ -4,16 +4,15 @@
 
 <select id="getModules" parameterType="String"
 		resultType="getModuleVO">
-   SELECT
-      m.module_name,
-      m.module_no
-    FROM usemodule um JOIN module m 
-                      ON um.module_no = m.module_no
-    WHERE um.contract_no IN (SELECT c.contract_no
-                            FROM contract c
-                            WHERE c.contract_state = '계약중'
-                            AND c.company_code = #{companyCode}
-                            )
+  SELECT DISTINCT m.module_name, m.module_no
+    FROM usemodule um
+    JOIN module m ON um.module_no = m.module_no
+    WHERE um.contract_no IN (
+        SELECT c.contract_no
+        FROM contract c
+        WHERE c.contract_state = '계약중'
+        AND c.company_code = #{companyCode}
+    )
 </select>
 	 <select id="getSubModules" resultType="SubModuleVO">
 	 SELECT

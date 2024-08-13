@@ -6,6 +6,7 @@
 				, doc_type
 				, doc_file
 				, company_code
+				, doc_img
 		FROM template
 		WHERE 1=1 
 		AND company_code = #{companyCode}
@@ -16,11 +17,25 @@
 							, doc_type
 							, doc_file
 							, company_code
+							, doc_img
 		) VALUES (temp_seq.NEXTVAL
 				 , #{docType}
 				 , #{docFile}
 				 , #{companyCode}
+				 , #{docImg}
 		)
 	</insert>
+	
+	<select id ="tempInfo" resultType = "TemplateVO">
+		SELECT temp_no
+				, doc_type
+				, doc_file
+				, company_code
+				, doc_img
+		FROM template
+		WHERE 1=1
+		AND company_code = #{companyCode}
+		AND temp_no = #{tempNo}
+	</select>
 	
 </mapper>

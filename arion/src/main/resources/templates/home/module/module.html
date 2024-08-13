@@ -80,23 +80,45 @@ body {
 <body>
 
 <div class="moduleNav">
+    <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
+    <th:block th:each="module : ${modules}">
+        <a href="#" class="moduleBtn" th:text="${module.moduleName}" th:data-mod-no="${module.moduleNo}"></a>
+
     <th:block th:each="module : ${moduleList}">
         <a href="#" th:text="${module.moduleName}" class="moduleBtn" th:data-mod-no="${module.moduleNo}"></a>
+
     </th:block>
 </div>
 
 <div id="moduleInfo">
-	<th:block th:each="module : ${moduleInfo}">
-   		<div class ="moduleItem">
-   			<img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
-   			<p th:text="${module.modFileContent}"></p>
-   		</div>
-	</th:block>   
+   <th:block th:each="module : ${moduleInfo}">
+         <div class ="moduleItem">
+            <img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
+            <p th:text="${module.modFileContent}"></p>
+         </div>
+   </th:block>   
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
+    // Load modules from Thymeleaf model
+    const modules = /*[[${modules}]]*/ [];
+    
+    function renderModules(modules) {
+        $('.moduleNav').empty();
+        modules.forEach(function(module) {
+            let link = $('<a/>')
+                .attr('href', '#')
+                .addClass('moduleBtn')
+                .text(module.moduleName)
+                .data('mod-no', module.moduleNo);
+            $('.moduleNav').append(link);
+        });
+    }
+
+    renderModules(modules);
+
     $(".moduleBtn").click(function(event){
          event.preventDefault(); 
          
@@ -129,6 +151,7 @@ $(document).ready(function() {
             $('#moduleInfo').append(div);
         });
     }
+
 });
 </script>
 </body>

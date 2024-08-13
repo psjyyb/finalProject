@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 	<h1>기안서</h1>
@@ -13,13 +15,51 @@
 		<label>문서종류</label>
 		<input type="text" name="docType">
 		<label>파일등록</label>
-		<input type="file" name="docFile">
+		<input type="file" name="files" onchange="previewHwpFile()">
+		<div id="captureArea">
+			<div id="previewArea">
+				<!-- 파일 미리보기가 여기에 표시됩니다 -->
+			</div>
+			<input type="hidden" name="captureImage" id="captureImage">
+		</div>
 		<div>
-			<button type="submit" class="btn btn-primary">등록</button>
+			<button type="button" class="btn btn-primary" onclick="captureAndSubmit()">등록</button>
 		</div>
 	</form>
-	<div>
-		
-	</div>
+
+	<script>
+		function previewHwpFile() {
+			const file = document.querySelector('input[name="files"]').files[0];
+			const formData = new FormData();
+			formData.append("file", file);
+
+			$.ajax({
+				type: "POST",
+				url: "/previewHwp",
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					document.getElementById('previewArea').innerHTML = response;
+				},
+				error: function(error) {
+					console.log("HWP 미리보기 실패", error);
+					document.getElementById('previewArea').innerHTML = "파일을 읽는 중 오류가 발생했습니다.";
+				}
+			});
+		}
+
+		function captureAndSubmit() {
+			html2canvas(document.querySelector("#captureArea")).then(function(canvas) {
+				var imgData = canvas.toDataURL("image/png");
+
+				// 이미지를 hidden input에 설정
+				document.getElementById("captureImage").value = imgData;
+
+				// Form을 전송
+				document.getElementById("insertTemp").submit();
+			});
+		}
+	</script>
 </body>
 </html>

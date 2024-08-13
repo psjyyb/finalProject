@@ -4,7 +4,7 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-    <title>받은 메일함</title>
+    <title>중요 메일함</title>
     <style>
         h1 {
             color: #444;
@@ -90,21 +90,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="mail : ${importantMails}">
+            <tr th:each="mail : ${importMailAll}">
                 <td class="checkbox-container">
-                    <input type="checkbox" name="mailIds" value="${mail.id}"> 
+                    <input type="checkbox" name="mailIds" value="${mail.mailNo}"> 
                 </td>
                 <td th:text="${mail.senderName}">발송자 이름</td>
                 <td th:text="${mail.mailTitle}">메일 제목</td>
-                <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">발송일</td>
+                <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
             </tr>
         </tbody>
     </table>
-   <div class="actions-container">
-    <button  id="deleteSelected">삭제</button>
-    </div>
-    <script>
 
+    <div class="actions-container">
+        <button id="deleteSelected" class="delete-btn">삭제</button>
+    </div>
+
+    <script>
         document.getElementById('selectAll').addEventListener('change', function() {
             const isChecked = this.checked;
             const checkboxes = document.querySelectorAll('input[name="mailIds"]');
@@ -118,8 +119,7 @@
             if (checkboxes.length > 0) {
                 if (confirm('선택한 메일을 삭제하시겠습니까?')) {
                     const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
-                  
-                    //  axios.post('/mail/delete', { ids: ids });
+                    //  axios.post('/group/mail/delete', { ids: ids });
                     alert(`삭제 요청: ${ids.join(', ')}`);
                 }
             } else {

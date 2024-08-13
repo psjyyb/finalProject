@@ -55,94 +55,102 @@ public class TemplateController {
 		String companyCode = (String) session.getAttribute("companyCode");
 		templateVO.setCompanyCode(companyCode);
 		TemplateVO findVO = tsvc.tempInfo(templateVO);
+		
+		  // Debugging: check if findVO is null
+	    if (findVO == null) {
+	        System.out.println("findVO is null");
+	    } else {
+	        System.out.println("findVO: " + findVO.toString());
+	    }
+		
+		
 		model.addAttribute("tempInfo", findVO);
 		return "group/document/template/templateInfo";
 	}
 
-	
 	@GetMapping("/group/doc/insertTemp")
 	public String insertTempForm() {
 		return "group/document/template/templateInsert";
 	}
 
-	
 	@PostMapping("/insertTemp")
-	public String insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO, HttpSession session) {
-	    String companyCode = (String) session.getAttribute("companyCode");
-	    String directoryPath = "D:/upload/templates/";
-	    System.out.println("docType: " + tempVO.getDocType());
-	    System.out.println("files" + files[0]);
-	    System.out.println("files" + files[1]);
-	    
-	    if (files.length > 0) {
-	        MultipartFile docFile = files[0];
-	        if (!docFile.isEmpty()) {
-	            String fileName = docFile.getOriginalFilename();
-	            File directory = new File(directoryPath);
+	public String insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO,
+			HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		String directoryPath = "D:/upload/templates/";
+		System.out.println("docType: " + tempVO.getDocType());
+		System.out.println("files" + files[0]);
+		System.out.println("files" + files[1]);
 
-	            if (!directory.exists()) {
-	                directory.mkdirs();
-	            }
+		if (files.length > 0) {
+			MultipartFile docFile = files[0];
+			if (!docFile.isEmpty()) {
+				String fileName = docFile.getOriginalFilename();
+				File directory = new File(directoryPath);
 
-	            String saveName = Paths.get(directoryPath + fileName).toString();
-	            try {
-	                docFile.transferTo(Paths.get(saveName));
-	                tempVO.setDocFile(fileName);
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
 
-	    if (files.length > 1) {
-	        MultipartFile docImg = files[1];
-	        if (!docImg.isEmpty()) {
-	            String imageFileName = tempVO.getDocType() + ".png";
-	            String imagePath = directoryPath + imageFileName;
-	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "docType: " + tempVO.getDocType());
-	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "imageFileName: " + imageFileName);
-	            try (OutputStream stream = new FileOutputStream(imagePath)) {
-	                stream.write(docImg.getBytes());
-	                tempVO.setDocImg(imageFileName);
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
+				String saveName = Paths.get(directoryPath + fileName).toString();
+				try {
+					docFile.transferTo(Paths.get(saveName));
+					tempVO.setDocFile(fileName);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-	    tempVO.setCompanyCode(companyCode);
-	    tsvc.insertTemp(tempVO);
+		if (files.length > 1) {
+			MultipartFile docImg = files[1];
+			if (!docImg.isEmpty()) {
+				String imageFileName = tempVO.getDocName() + ".png";
+				String imagePath = directoryPath + imageFileName;
+				System.out.println(">>>>>>>>>>>>>>>>>>>>" + "docType: " + tempVO.getDocType());
+				System.out.println(">>>>>>>>>>>>>>>>>>>>" + "imageFileName: " + imageFileName);
+				try (OutputStream stream = new FileOutputStream(imagePath)) {
+					stream.write(docImg.getBytes());
+					tempVO.setDocImg(imageFileName);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-	    return "redirect:/group/doc/template";
+		tempVO.setCompanyCode(companyCode);
+		tsvc.insertTemp(tempVO);
+
+		return "redirect:/group/doc/template";
 	}
 
-	//파일 업로드전 미리보기
+	// 파일 업로드전 미리보기
 	@PostMapping("/previewHwp")
 	@ResponseBody
 	public String previewHwp(@RequestParam("file") MultipartFile file) {
-	    String fileContent = "";
-	    
-	    try {
-	        // 임시 파일로 저장
-	        File tempFile = File.createTempFile("upload-", ".hwp");
-	        file.transferTo(tempFile);
+		String fileContent = "";
 
-	        // HWP 파일 읽기
-	        HWPFile hwpFile = HWPReader.fromFile(tempFile.getPath());
-	        if (hwpFile != null) {
-	            fileContent = TextExtractor.extract(hwpFile, TextExtractMethod.InsertControlTextBetweenParagraphText);
-	            fileContent = convertToHTML(fileContent);
-	        }
-	        // 임시 파일 삭제
-	        tempFile.delete();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        fileContent = "HWP 파일을 읽는 중 오류가 발생했습니다.";
-	    }
+		try {
+			// 임시 파일로 저장
+			File tempFile = File.createTempFile("upload-", ".hwp");
+			file.transferTo(tempFile);
 
-	    return fileContent;
+			// HWP 파일 읽기
+			HWPFile hwpFile = HWPReader.fromFile(tempFile.getPath());
+			if (hwpFile != null) {
+				fileContent = TextExtractor.extract(hwpFile, TextExtractMethod.InsertControlTextBetweenParagraphText);
+				fileContent = convertToHTML(fileContent);
+			}
+			// 임시 파일 삭제
+			tempFile.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fileContent = "HWP 파일을 읽는 중 오류가 발생했습니다.";
+		}
+
+		return fileContent;
 	}
-	
+
 	private String convertToHTML(String text) {
 		text = text.replace("\n", "<br/>");
 		return text;

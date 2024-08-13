@@ -47,4 +47,12 @@
 		AND temp_no = #{tempNo}
 	</select>
 	
+	<delete id="tempDelete">
+		DELETE 
+		FROM template
+		WHERE 1=1 
+		AND temp_no = #{tempNo}
+		AND company_code = #{companyCode}
+		
+	</delete>
 </mapper>

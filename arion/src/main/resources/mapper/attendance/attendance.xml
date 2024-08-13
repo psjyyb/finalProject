@@ -33,7 +33,7 @@
         from RANK
         WHERE rank_name = #{rankname} AND company_code = #{companycode}
         )
-    
+        ORDER BY rank_ranking  
 	</select>
 	
 	<select id="attendance" parameterType="AEmployeeVO" resultType="AttendanceVO">
@@ -61,16 +61,29 @@
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
                     AND TO_DATE(#{end}, 'YYYY-MM-DD')
+        ORDER BY att_date            
 	</select>
 	
 	
 	<select id="worktime" parameterType="AEmployeeVO" resultType="WorkTimeVO">
     
 	    SELECT att_date,
-               employee_no , 
-               ROUND((end_time-start_time)* 24 * 60) as work_time
+        case when trunc(((end_time- start_time)*24*60)/60)=0 then to_char(trunc(MOD((end_time- start_time)*24*60,60)))||'분'
+        else to_char(trunc(((end_time- start_time)*24*60)/60)||'시간') 
+        ||to_char(abs(trunc(MOD((end_time- start_time)*24*60,60))))||'분'
+        END as "worktime_hour",
+        trunc((end_time- start_time)*24*60) as "worktime_minute" ,
+        '8시간' as "standard_worktime_hour",
+        400 as "standard_worktime_minute",
+        case when trunc(((end_time- start_time)*24*60-400)/60)=0 then to_char(trunc(MOD((end_time- start_time)*24*60-400,60)))||'분'
+        else to_char(trunc(((end_time- start_time)*24*60-400)/60)||'시간') 
+        ||to_char(abs(trunc(MOD((end_time- start_time)*24*60-400,60))))||'분'
+        END as "interval_hour" ,
+        trunc((end_time- start_time)*24*60-400) as "interval_minute"
         FROM attendance
         WHERE employee_no = #{employeeno}
+        AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
 	</select>
 
 

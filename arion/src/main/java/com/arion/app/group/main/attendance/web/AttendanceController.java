@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import com.arion.app.group.main.attendance.service.AEmployeeVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
+import com.arion.app.group.main.attendance.service.WorkTimeVO;
 import com.arion.app.security.service.LoginUserVO;
 
 
@@ -35,7 +36,7 @@ public class AttendanceController {
 	@Autowired
 	AttendanceService attendanceservice;
 	
-	//ajax 기록 불러오기
+	//ajax 근태기록
 	@RequestMapping("/attendancelist")
 	@ResponseBody
 	public Map<String, Object> getattendancelist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
@@ -74,10 +75,12 @@ public class AttendanceController {
 		String rankName = (String)session.getAttribute("rankName");
 		List<AEmployeeVO> emplist = attendanceservice.aEmployeeList(companyCode,rankName);
 		model.addAttribute("emplist", emplist);
+		model.addAttribute("emplistcount", emplist.size());
+		
 		
 		return "group/attendance/attendancelist";
 	}
-	//완
+
 	
 	@GetMapping("/underlingattendancelist/{employeeNo}")
 	public String underlingattendancelist(@PathVariable String employeeNo,Model model) {
@@ -96,8 +99,54 @@ public class AttendanceController {
 	}
 	
 	
+	@GetMapping("/worktime")
+	public String worktime(HttpServletRequest request,Model model) {
+		
+		HttpSession session = request.getSession();
+		int EmployeeNo = (int)session.getAttribute("employeeNo");
+		model.addAttribute("employeeNo", EmployeeNo);
+		
+		return "group/attendance/myworktime";
+	}
+		
+	//ajax 근태기록
+		@RequestMapping("/worklist")
+		@ResponseBody
+		public Map<String, Object> worklist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
+				@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
+			
+			
+			int EmployeeNo = Integer.parseInt(employeeno);
+			System.out.println(EmployeeNo);
+			 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			 Date start = df.parse(startdate);
+			 Date end = df.parse(enddate);	   
+			System.out.println(start);
+			System.out.println(end);
+			SimpleDateFormat df2 = new SimpleDateFormat("yyyy/MM/dd");
+			String qstart = df2.format(start);
+			String qend = df2.format(end);
+			System.out.println(qstart);
+			System.out.println(qend);
+			
+			List<WorkTimeVO> worktimelist = attendanceservice.worktime(EmployeeNo,qstart,qend);
+			
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("worktimelist", worktimelist);
+			return result;
+		}
 	
 		
-	
-	
+		@GetMapping("/worktimelist")
+		public String worktimelist(HttpServletRequest request,Model model) {
+			HttpSession session = request.getSession();			
+			String companyCode = (String)session.getAttribute("companyCode");
+			String rankName = (String)session.getAttribute("rankName");
+			List<AEmployeeVO> emplist = attendanceservice.aEmployeeList(companyCode,rankName);
+			model.addAttribute("emplist", emplist);
+			model.addAttribute("emplistcount", emplist.size());
+			
+			
+			return "group/attendance/worktimelist";
+		}
 }

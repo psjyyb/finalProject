@@ -80,12 +80,11 @@ body {
 <body>
 
 <div class="moduleNav">
-    <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
-    <th:block th:each="module : ${modules}">
-        <a href="#" class="moduleBtn" th:text="${module.moduleName}" th:data-mod-no="${module.moduleNo}"></a>
 
+    <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
     <th:block th:each="module : ${moduleList}">
         <a href="#" th:text="${module.moduleName}" class="moduleBtn" th:data-mod-no="${module.moduleNo}"></a>
+
 
     </th:block>
 </div>
@@ -102,18 +101,36 @@ body {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Load modules from Thymeleaf model
-    const modules = /*[[${modules}]]*/ [];
+    $(".moduleBtn").click(function(event){
+         event.preventDefault(); 
+         
+         let moduleNo = $(this).data("mod-no");
+         
+         $.ajax({
+             url: '/home/module',
+             type: 'POST',
+             data: { moduleNo: moduleNo },
+             dataType: 'json' 
+         })
+         .done(function(result){
+             moduleDiv(result);
+         })
+         .fail(function(err) {
+            console.log(err);
+         });
+    });
     
-    function renderModules(modules) {
-        $('.moduleNav').empty();
-        modules.forEach(function(module) {
-            let link = $('<a/>')
-                .attr('href', '#')
-                .addClass('moduleBtn')
-                .text(module.moduleName)
-                .data('mod-no', module.moduleNo);
-            $('.moduleNav').append(link);
+    function moduleDiv(result) {
+        $('#moduleInfo').empty(); 
+
+        result.forEach(function(module) {
+            let div = $('<div/>').addClass('moduleItem');
+            let img = $('<img/>').attr('src', '/files/' + module.modFileName).attr('alt', module.modFileName);
+            let p = $('<p/>').text(module.modFileContent);
+            
+            div.append(img);
+            div.append(p);
+            $('#moduleInfo').append(div);
         });
     }
 

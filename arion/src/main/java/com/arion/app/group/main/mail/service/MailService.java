@@ -23,4 +23,10 @@ public interface MailService {
 
     // 메일 보내기
     void sendMail(MailVO mailVO, MultipartFile[] attachments);
+    
+    //메일 상세조회
+    MailVO mailInfo(MailVO mailVO);
+    
+    //메일 검색
+
 }

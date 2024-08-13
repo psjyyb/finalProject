@@ -22,26 +22,18 @@ public class GroupEmployeeMenuController {
 	@Autowired
 	private HttpSession httpSession;
 
-    @ModelAttribute("modules")
-    public List<getModuleVO> populateModules() {
-        List<getModuleVO> modules = (List<getModuleVO>) httpSession.getAttribute("modules");
 
-        if (modules == null) {
-            // 세션에 modules가 없으면 새로 로드
-            String companyCode = (String) httpSession.getAttribute("companyCode");
-            String employeeId = (String) httpSession.getAttribute("loginId");
-
-            getModuleVO moduleVO = new getModuleVO();
-            moduleVO.setCompanyCode(companyCode);
-            moduleVO.setEmployeeId(employeeId);
-
-            modules = mainService.getmoduleList(moduleVO);
-            httpSession.setAttribute("modules", modules);
-        }
-
-        return modules;
-    }
-	
+//    @ModelAttribute("modules")
+//    public List<getModuleVO> populateModules() {
+//        String companyCode = (String) httpSession.getAttribute("companyCode");
+//        String employeeId = (String) httpSession.getAttribute("loginId");
+//
+//        getModuleVO moduleVO = new getModuleVO();
+//        moduleVO.setCompanyCode(companyCode);
+//        moduleVO.setEmployeeId(employeeId);
+//
+//        return mainService.getmoduleList(moduleVO);
+//    }
 	 @GetMapping("/topbar")
 	    public String topbar(HttpSession session, Model model) {
 	        model.addAttribute("empName", session.getAttribute("empName"));
@@ -50,4 +42,5 @@ public class GroupEmployeeMenuController {
 	    }
 	}
 	
+
 

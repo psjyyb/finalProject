@@ -16,7 +16,7 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Sidebar Items -->
-        <li class="nav-item" th:each="module : ${modules}">
+        <li class="nav-item" th:each="module : ${session.modules}">
             <a class="nav-link collapsed" href="javascript:void(0);"
                data-toggle="collapse" 
                th:data-target="'#collapse' + ${module.moduleNo}" 

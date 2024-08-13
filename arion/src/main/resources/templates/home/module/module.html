@@ -14,7 +14,7 @@
 
 <div class="moduleNav">
     <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
-    <th:block th:each="module : ${moduleList}">
+    <th:block th:each="module : ${modules}">
         <a href="#" class="moduleBtn" th:text="${module.moduleName}" th:data-mod-no="${module.moduleNo}"></a>
     </th:block>
 </div>
@@ -26,22 +26,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Load modules when document is ready
-    function loadModules() {
-        $.ajax({
-            url: '/modules',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                renderModules(data);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
-    }
-
-    // Render modules into HTML
+    // Load modules from Thymeleaf model
+    const modules = /*[[${modules}]]*/ [];
+    
     function renderModules(modules) {
         $('.moduleNav').empty();
         modules.forEach(function(module) {
@@ -54,8 +41,8 @@ $(document).ready(function() {
         });
     }
 
-    // Load modules when the page loads
-    loadModules();
+    // Render modules from Thymeleaf model
+    renderModules(modules);
 });
 </script>
 </body>

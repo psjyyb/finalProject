@@ -12,5 +12,7 @@ public interface PayService {
 	
 	int contractInsert(ContractVO contractVO); // 계약서 등록
 	
-	 public String requestBillingKey(String customerKey, String authKey); // 빌링키 발급
+	public String requestBillingKey(String customerKey, String authKey); // 빌링키 발급
+	 
+	int payEnd(ContractVO contractVO); // 주문최종.... 
 }

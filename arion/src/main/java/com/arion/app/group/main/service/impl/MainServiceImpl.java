@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import com.arion.app.group.main.mapper.MainMapper;
@@ -18,11 +19,12 @@ public class MainServiceImpl implements MainService {
     private MainMapper mainMapper;
 
     @Override
+    
     public List<getModuleVO> getmoduleList(getModuleVO getmoduleVO) {
         // 상위 모듈 리스트 조회
         List<getModuleVO> modules = mainMapper.getModules(getmoduleVO.getCompanyCode(), getmoduleVO.getEmployeeId());
         // 하위 모듈 리스트 조회
-        List<SubModuleVO> subModules = mainMapper.getSubModules(getmoduleVO.getCompanyCode(), getmoduleVO.getEmployeeId());
+        List<SubModuleVO> subModules = mainMapper.getSubModules();
 
         // 상위 모듈과 하위 모듈을 조합
         for (getModuleVO module : modules) {

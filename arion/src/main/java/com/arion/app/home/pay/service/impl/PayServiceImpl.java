@@ -59,27 +59,10 @@ public class PayServiceImpl implements PayService {
 	public int findLastNo() {
 		return payMapper.findLastNo();
 	}
-
-	@Transactional
 	@Override
-	public int contractInsert(ContractVO contractVO) {	
-
-		List<String> moduleNames = contractVO.getModuleNames();
-		if (moduleNames != null && !moduleNames.isEmpty()) {
-            // 첫 번째 요소에서 "[" 제거
-            String firstModule = moduleNames.get(0).replace("[", "").trim();
-            moduleNames.set(0, firstModule);
-
-            // 마지막 요소에서 "]" 제거
-            String lastModule = moduleNames.get(moduleNames.size() - 1).replace("]", "").trim();
-            moduleNames.set(moduleNames.size() - 1, lastModule);
-        }
-		moduleNames.forEach(a ->{
-			payMapper.insertSubModule(a,contractVO.getCompanyCode(),contractVO.getContractNo());
-		});
-		return payMapper.insertContract(contractVO);
+	public CompanyVO emailNameSelect(String companyCode) {
+		return payMapper.selectComInfo(companyCode);
 	}
-
 	@Override
 	public String requestBillingKey(String customerKey, String authKey) {
 		String secretKey = "test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN";
@@ -118,12 +101,33 @@ public class PayServiceImpl implements PayService {
 		}
 		return null;
 	}
+	@Transactional
 	@Override
 	 public int payEnd(ContractVO contractVO) {
-		System.out.println(contractVO.getFinalDates());
-
+		System.out.println(contractVO+"최종적으로 데이터가 잘 받아지는지 확인 해보자.");
         return 0;
     }
+	
+	@Override
+	public int payInsert(ContractVO contractVO) {
+		return 0;
+	}
+	@Override
+	public int payDetailInsert(ContractVO contractVO) {
+		return 0;
+	}
+	@Override
+	public int contractInsert(ContractVO contractVO) {	
+		return 0;
+	}
+	@Override
+	public int useModuleInsert(ContractVO contractVO) {
+		return 0;
+	}
+	@Override
+	public int comRespUpdate(ContractVO contractVO) {
+		return 0;
+	}
 }
 //private final String TOSS_API_URL =
 //"https://api.tosspayments.com/v1/billing/keys"; private final String

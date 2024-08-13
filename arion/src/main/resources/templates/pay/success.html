@@ -70,11 +70,11 @@
 	<div class="container2">
 		<h1>결제 정보 확인</h1>
 		<div class="payment-info">
-			<p><strong>결제금액:</strong> 4,900원</p>
-			<p><strong>주문ID:</strong> a4CWyWY5m89PNh7xJ12sad</p>
-			<p><strong>주문명:</strong> 전자결재외2건</p>
-			<p><strong>이메일:</strong> ass6728@naver.com</p>
-			<p><strong>고객명:</strong> 박토스</p>
+			<p th:if="${payInfo.firstMonthAmount != 0}"><strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원</p>
+			<p th:if="${payInfo.firstMonthAmount == 0}"><strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.monthPayPrice,3, 'COMMA')}]]원</p>
+			<p><strong>주문명:</strong>[[${payInfo.moduleNames}]]</p>
+			<p><strong>이메일:</strong>[[${comInfo.ceoEmail}]]</p>
+			<p><strong>고객명:</strong>[[${comInfo.ceoName}]]</p>
 		</div>
 		<div class="button-container">
 			<a href="/payTest">다시 시도</a>
@@ -111,7 +111,7 @@
 			let customerKey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
 		 	let contractNo = `[[${payInfo.contractNo}]]`.replace(/^"|"$/g, '');
 		 	let startDate = `[[${payInfo.startDate}]]`.replace(/^"|"$/g, '');
-		 	
+		 	let finalDates =`[[${payInfo.finalDates}]]`.replace(/^"|"$/g, '');
 		 	let finalDate =`[[${payInfo.finalDate}]]`.replace(/^"|"$/g, '');
 		 	console.log(finalDate,'날짜형식 변경 ....돼라좀 제발 ㅠㅠ');
 		 	let usersCnt = `[[${payInfo.usersCnt}]]`.replace(/^"|"$/g, '');
@@ -121,21 +121,25 @@
 		 	let regularDate = `[[${payInfo.regularDate}]]`.replace(/^"|"$/g, '');
 		 	let customerkey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
 		 	let contractSign = `[[${payInfo.contractSign}]]`.replace(/^"|"$/g, '');
-		 	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');
-		 	
+		 	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');		 	
 		 	let moduleNames = `[[${payInfo.moduleNames}]]`.replace(/^"|"$/g,'');
 		 	let jsonString = moduleNames
 		    .replace(/^\[\[|\]\]$/g, '')  // Remove outer brackets
 		    .replace(/,/g, '","')         // Add quotes around items
 		    .replace(/(.+)/g, '["$1"]'); 
 		 	let moduleNamesArray = JSON.parse(jsonString); // [['일정관리']]
-		 	console.log(moduleNamesArray,'모듈이름 제발 배열 형식으로좀 바꾸자');
-		 	
 		 	let billingkey = `[[${payInfo.billingkey}]]`.replace(/^"|"$/g,'');
 		 	let orderId = generateUUID();
 			if(regularDate == null || regularDate==''){
 		 		regularDate=0;
 		 	}
+			if(firstMonthAmount==0){
+				firstMonthAmount = monthPayPrice;
+			}
+			
+			let email = `[[${comInfo.ceoEmail}]]`.replace(/^"|"$/g,'');
+			let cname = `[[${comInfo.ceoName}]]`.replace(/^"|"$/g,'');
+			console.log(email,'이메일 ' ,cname,' 이름');
 			$.ajax({
 				url: 'https://api.tosspayments.com/v1/billing/' + billingkey,
 				type: 'POST',
@@ -148,8 +152,8 @@
 					amount: firstMonthAmount,
 					orderId: orderId,
 					orderName: moduleNames,
-					customerEmail: "ass6728@naver.com",
-					customerName: "박토스",
+					customerEmail: email,
+					customerName: cname,
 					taxFreeAmount: 0,
 					taxExemptionAmount: 0
 				})
@@ -164,10 +168,10 @@
 			            type: 'POST',
 			            contentType: 'application/json', 
 			            data: JSON.stringify({
-			                customerKey: customerKey,
+			                customerkey: customerKey,
 			                contractNo: parseInt(contractNo, 10),
 			                startDate: startDate,
-			                finalDates: finalDate,
+			                finalDates: finalDates,
 			                usersCnt: parseInt(usersCnt, 10),
 			                monthPayPrice:parseInt(monthPayPrice, 10),
 			                totalPayPrice: parseInt(totalPayPrice, 10),

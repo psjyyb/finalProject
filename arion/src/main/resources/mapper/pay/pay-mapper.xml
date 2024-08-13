@@ -20,7 +20,7 @@
 		 						 ,#{firstMonthAmount, mode=IN, jdbcType=INTEGER}
 		 						 ,#{checks, mode=OUT, jdbcType=INTEGER})
 	</select> -->
-	<insert id="insertContract">
+	<insert id="insertContract" parameterType="ContractVO">
 		 INSERT INTO contract(
                               contract_no
                              ,final_date
@@ -30,10 +30,13 @@
                              ,regular_date
                              ,contract_state
                              ,company_code
-                             ,contract_sign)
+                             ,contract_sign
+                             ,billingkey
+                             ,customerkey
+                             ,first_month_amount)
         VALUES(
                #{contractNo}
-              ,#{finalDate}
+              ,#{finalDates}
               ,#{usersCnt}
               ,#{monthPayPrice}
               ,#{totalPayPrice}
@@ -41,6 +44,9 @@
               ,'계약중'
               ,#{companyCode}
               ,#{contractSign}
+              ,#{billingkey}
+              ,#{customerkey}
+              ,#{firstMonthAmount}
               )
 	</insert>
 	<insert id="insertSubModule" parameterType="ContractVO">
@@ -68,7 +74,7 @@
 		       ,#{contractNo}
 		       )
 	</insert>
-	<select id="selectComInfo">
+	<select id="selectComInfo" resultType="CompanyVO">
 		SELECT company_code
 		      ,company_name
 		      ,company_tel
@@ -83,6 +89,55 @@
 		      ,site_resp
 		FROM company 
 		WHERE company_code = #{companyCode}
-	
 	</select>
+	<insert id="insertPay" parameterType="ContractVO">
+		<selectKey keyProperty="payNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT  NVL(MAX(pay_no), 0) + 1
+	         FROM pay
+		</selectKey>
+		INSERT INTO pay (
+                  pay_no
+                 ,users_cnt
+                 ,company_code
+                 ,contract_no
+                 ,order_id
+                 ,pay_price
+                )
+		VAlUES(
+		         #{payNo}
+		        ,#{userCnt}
+		        ,#{companyCode}
+		        ,#{contractNo}
+		        ,#{orderId}
+		        ,#{payPrice}
+		          )
+	</insert>
+	<insert id="insertPayDetail" parameterType="ContractVO">
+	INSERT INTO pay_detail (
+                         pay_detail_no
+                        ,pay_no
+                        ,module_no
+                        ,module_price
+                        ,module_name
+	                        )
+	VALUES(
+	        (SELECT NVL(MAX(pay_detail_no),0) +1
+	         FROM pay_detail)
+	        ,#{payNo}
+	        ,(SELECT module_no
+	          FROM module
+	          WHERE module_name = #{modumeName})
+	        ,(SELECT module_price
+	          FROM module
+	          WHERE module_name = #{modumeName})
+	        ,#{moduleName}  
+	        )
+	</insert>
+	<update id="updateComResp" parameterType="ContractVO">
+		UPDATE company
+		SET site_resp = 'USER'
+		WHERE company_code = #{companyCode}
+	</update>
 </mapper>

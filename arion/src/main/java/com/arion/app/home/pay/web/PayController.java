@@ -47,10 +47,14 @@ public class PayController {
 	public String payView(PayVO payVO, Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		CompanyVO cvo = payService.selectCom(comCode, payVO);
-		System.out.println(cvo.getFinalDate()+"1번1번1번1번1번");
+		System.out.println(cvo.getFinalDate() + "1번1번1번1번1번");
 		int conNo = payService.findLastNo();
 		model.addAttribute("conNo", conNo);
 		model.addAttribute("comInfo", cvo);
+		if (payVO.getRegularPaymentDate() == null) {
+			payVO.setRegularPaymentDate("0");
+		}
+		System.out.println(payVO);
 		model.addAttribute("payInfo", payVO);
 		return "pay/payView";
 	}
@@ -87,18 +91,23 @@ public class PayController {
 		contractVO.setContractSign(fileName);
 		String customerKey = UUID.randomUUID().toString();
 		contractVO.setCustomerkey(customerKey);
-		System.out.println(contractVO.getFinalDate()+"여기선 어떻게 ?2번2번2번2번2번2번2번2");
+		Date fd = contractVO.getFinalDate();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(format.format(fd) + "여기선 어떻게 ?2번2번2번2번2번2번2번2");
+		String fds = format.format(fd);
+		contractVO.setFinalDates(fds);
+
 		model.addAttribute("payInfo", contractVO);
 		return "pay/firstPay";
 	}
-	
 
 	@GetMapping("/pay/success")
-	public String successPage(@RequestParam("data") String data,Model model,@RequestParam String customerKey, @RequestParam String authKey) {
-		  // JSON 데이터를 객체로 변환
-		  ObjectMapper objectMapper = new ObjectMapper();
-		  ContractVO contractData = null;
-		  try {
+	public String successPage(@RequestParam("data") String data, Model model, @RequestParam String customerKey,
+			@RequestParam String authKey) {
+		// JSON 데이터를 객체로 변환
+		ObjectMapper objectMapper = new ObjectMapper();
+		ContractVO contractData = null;
+		try {
 			contractData = objectMapper.readValue(data, ContractVO.class);
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
@@ -107,25 +116,29 @@ public class PayController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		  String billingKey = payService.requestBillingKey(customerKey,authKey);
-		  contractData.setBillingkey(billingKey);
-		  contractData.setCustomerkey(customerKey);
-		  System.out.println(contractData+"여기선 어떻게 22222");
-		 model.addAttribute("payInfo",contractData);
-		  return "/pay/success"; // 성공 페이지로 리다이렉트
-		}
-	  @GetMapping("/pay/fail")
-	    public String cardRegistrationFailed(@RequestParam("error") String error, Model model) {
-	        model.addAttribute("errorMessage", error);
-	        return "/pay/fail";
-	    }
-	  @PostMapping("/pay/result")
-	  @ResponseBody
-	  public String payResult(@RequestBody ContractVO contractVO) {
-		  System.out.println(contractVO);
-		  payService.payEnd(contractVO);
-		  
-		  return"";
-	  }
+		String billingKey = payService.requestBillingKey(customerKey, authKey);
+		contractData.setBillingkey(billingKey);
+		contractData.setCustomerkey(customerKey);
+		String companyCode = contractData.getCompanyCode();
+		CompanyVO comVo = payService.emailNameSelect(companyCode);
+		model.addAttribute("comInfo", comVo);
+		model.addAttribute("payInfo", contractData);
+		return "/pay/success"; // 성공 페이지로 리다이렉트
+	}
+
+	@GetMapping("/pay/fail")
+	public String cardRegistrationFailed(@RequestParam("error") String error, Model model) {
+		model.addAttribute("errorMessage", error);
+		return "/pay/fail";
+	}
+
+	@PostMapping("/pay/result")
+	@ResponseBody
+	public String payResult(@RequestBody ContractVO contractVO) {
+		System.out.println(contractVO + "마지막 여기 까지 오면 해");
+		payService.payEnd(contractVO);
+
+		return "";
+	}
 
 }

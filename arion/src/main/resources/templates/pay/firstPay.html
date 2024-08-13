@@ -96,7 +96,7 @@
 
 			<div class="form-group">
 				<label for="finalDate">종료 날짜:</label>
-				<p id="finalDate" class="value">[[${payInfo.finalDate}]]</p>
+				<p id="finalDate" class="value">[[${#dates.format(payInfo.finalDate,'yyyy-MM-dd')}]]</p>
 			</div>
 
 			<div class="form-group">
@@ -146,6 +146,7 @@
  	let customerkey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
  	let contractSign = `[[${payInfo.contractSign}]]`.replace(/^"|"$/g, '');
  	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');
+ 	let finalDates = `[[${payInfo.finalDates}]]`.replace(/^"|"$/g, '');
  	let moduleNames = JSON.parse(`[[${payInfo.moduleNames}]]`);
     // 결제창 인스턴스 생성
    const payment = tossPayments.payment({ customerKey });
@@ -156,6 +157,7 @@
 		   finalDate: new Date(finalDate).toISOString(),
 		   usersCnt: usersCnt,
 		   monthPayPrice: monthPayPrice,
+		   finalDates: finalDates,
 		   totalPayPrice: totalPayPrice,
 		   companyCode: companyCode,
 		   regularDate: regularDate,

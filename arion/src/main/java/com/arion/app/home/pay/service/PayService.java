@@ -10,9 +10,20 @@ public interface PayService {
 	
 	int findLastNo(); // 계약서 번호가져오기
 	
-	int contractInsert(ContractVO contractVO); // 계약서 등록
-	
 	public String requestBillingKey(String customerKey, String authKey); // 빌링키 발급
 	 
-	int payEnd(ContractVO contractVO); // 주문최종.... 
+	// 결제시 이루어지는 services
+	int payEnd(ContractVO contractVO); // 결제합체
+	
+	int contractInsert(ContractVO contractVO); // 계약서 등록
+	
+	int useModuleInsert(ContractVO contractVO); // 사용모듈 등록
+	
+	int payInsert(ContractVO contractVO); // 결제 등록
+	
+	int payDetailInsert(ContractVO contractVO); // 결제 상세등록
+	
+	int comRespUpdate(ContractVO contractVO); // 회사테이블 권한수정
+	
+	CompanyVO emailNameSelect(String companyCode); // 메일,이름 가져오기
 }

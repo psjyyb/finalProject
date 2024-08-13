@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+</head>
+<body>
+	<h1>기안서</h1>
+	
+	<th:block th:each="temp, iterStat : ${tempList}">
+		<div>
+            <label>문서종류</label>
+            <p th:text="${temp.docType}"></p>
+            <label>파일 이름</label>
+            <p th:text="${temp.docFile}"></p>
+            <label>파일 내용 미리보기</label>
+            <div th:utext="${fileContents[iterStat.index]}"></div>
+           	
+		</div>
+	</th:block>
+</body>
+</html>

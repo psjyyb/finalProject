@@ -21,6 +21,8 @@ import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
 import com.arion.app.group.admin.service.GroupAdminVO;
+import com.arion.app.group.admin.service.PayDetailVO;
+import com.arion.app.group.admin.service.PayListVO;
 import com.arion.app.group.admin.service.RankVO;
 import com.arion.app.security.service.CompanyVO;
 
@@ -45,12 +47,12 @@ public class GroupAdminController {
 		this.adminService = adminService;
 	}
 
-	@GetMapping("/groupAdmin")
-	public String groupAdmin() {
-		return "groupAdmin/groupAdminMain";
-	}
+	/*
+	 * @GetMapping("/groupAdmin") public String groupAdmin() { return
+	 * "groupAdmin/groupAdminMain"; }
+	 */
 
-	@GetMapping("/groupAdmin/GAEmpList")
+	@GetMapping("/groupAdmin")
 	public String GAEmpList(String companyCode, Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		List<EmployeeVO> list = gaService.empListSelect(comCode);
@@ -86,11 +88,16 @@ public class GroupAdminController {
 	}
 
 	@GetMapping("/groupAdmin/GAEmpUpdate")
-	public String GAEmpUpdate(@RequestParam Integer employeeNo, Model model) {
+	public String GAEmpUpdate(@RequestParam Integer employeeNo, Model model,HttpSession session) {
+		String comCode= (String)session.getAttribute("companyCode");
 		EmployeeVO employeeVO = new EmployeeVO();
 		employeeVO.setEmployeeNo(employeeNo);
 		EmployeeVO evo = gaService.empInfoSelect(employeeVO);
 		System.out.println(evo);
+		List<DepartmentVO> deptList = gaService.deptListSelect(comCode);
+		List<RankVO> rankList = gaService.rankListSelect(comCode);
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("rankList", rankList);
 		model.addAttribute("empInfo",evo);
 		return "groupAdmin/GAEmpUpdate";
 	}
@@ -99,7 +106,7 @@ public class GroupAdminController {
 		int result = gaService.empUpdate(employeeVO);
 		String url = null;
 		if (result > -1) {
-			url = "redirect:/groupAdmin/GAEmpList";
+			url = "redirect:/groupAdmin";
 		} else {
 			url = "redirect:GAEmpUpdate?employeeNo=" + result;
 		}
@@ -200,5 +207,20 @@ public class GroupAdminController {
 	public String contractCancle(int contractNo, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		return gaService.cancleContract(contractNo,comCode);
+	}
+	@GetMapping("/groupAdmin/GAPayList")
+	public String gaPayList(HttpSession session, Model model) {
+		String comCode = (String)session.getAttribute("companyCode");
+		List<PayListVO> list = gaService.payList(comCode);
+		model.addAttribute("payList",list);
+		return "/groupAdmin/GAPayList";
+	}
+	@GetMapping("/groupAdmin/GAPayInfo")
+	public String gaPayInfo(int payNo,Model model) {
+		PayListVO lvo = gaService.payInfo(payNo);
+		List<PayDetailVO> list = gaService.payDetailInfo(payNo);
+		model.addAttribute("detailList",list);
+		model.addAttribute("payInfo",lvo);
+		return "/groupAdmin/GAPayInfo";
 	}
 }

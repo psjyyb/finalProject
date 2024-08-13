@@ -27,6 +27,8 @@ public class ContractVO {
 	private String paymentStatus;
 	private String orderId;
 	private int payNo;
+	private String ceoEmail;
+	private String ceoName;
 	
 	
 	

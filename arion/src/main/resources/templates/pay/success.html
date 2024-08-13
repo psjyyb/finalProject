@@ -123,6 +123,7 @@
 		 	let contractSign = `[[${payInfo.contractSign}]]`.replace(/^"|"$/g, '');
 		 	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');		 	
 		 	let moduleNames = `[[${payInfo.moduleNames}]]`.replace(/^"|"$/g,'');
+		 	
 		 	let jsonString = moduleNames
 		    .replace(/^\[\[|\]\]$/g, '')  // Remove outer brackets
 		    .replace(/,/g, '","')         // Add quotes around items
@@ -160,7 +161,7 @@
 			})
 			 .done(result=> {
 			        console.log(result);
-			        alert('결제 성공!');
+			        
 
 			        // 결제 성공 시 서버로 데이터 전송
 			        $.ajax({
@@ -183,6 +184,9 @@
 			                billingkey: billingkey,
 			                orderId: orderId,
 			                paymentStatus: 'SUCCESS',
+			                ceoEmail: email,
+			                ceoName: cname
+			                
 			            }),
 			            success: function(response) {
 			                console.log('DB 저장 성공:', response);
@@ -190,7 +194,16 @@
 			            error: function(error) {
 			                console.log('DB 저장 실패:', error);
 			            }
-			        });
+			        })
+			        .done(result=>{
+			        	alert('결제가 성공적으로 되었습니다.');
+			        	location.href='/groupAdmin';
+			        })
+			          .fail(err=>{
+			        	console.log(err);
+			        	alert('오류발생');
+			        	location.href='/home';
+			        })
 			    })
 			    .fail(err=> {
 			        console.log(err);

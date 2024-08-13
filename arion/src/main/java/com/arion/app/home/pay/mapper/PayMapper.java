@@ -12,12 +12,13 @@ public interface PayMapper {
 	// 결제
 	int insertPay(ContractVO contractVO); // 결제테이블 insert
 	
-	int insertPayDetail(ContractVO contractVO); // 결제 상세 테이블 insert
+	int insertPayDetail(int payNo, String moduleName); // 결제 상세 테이블 insert
 	
 	int insertContract(ContractVO contractVO);  //계약서작성
 	
 	int insertSubModule(String moduleName,String companyCode,int contractNo); // 구독중인 모듈 등록
 	
 	int updateComResp(ContractVO contractVO); // 회사테이블 권한수정
+	
 	
 }

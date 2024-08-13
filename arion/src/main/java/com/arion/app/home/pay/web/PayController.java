@@ -3,9 +3,13 @@ package com.arion.app.home.pay.web;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -47,14 +51,12 @@ public class PayController {
 	public String payView(PayVO payVO, Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		CompanyVO cvo = payService.selectCom(comCode, payVO);
-		System.out.println(cvo.getFinalDate() + "1번1번1번1번1번");
 		int conNo = payService.findLastNo();
 		model.addAttribute("conNo", conNo);
 		model.addAttribute("comInfo", cvo);
 		if (payVO.getRegularPaymentDate() == null) {
 			payVO.setRegularPaymentDate("0");
 		}
-		System.out.println(payVO);
 		model.addAttribute("payInfo", payVO);
 		return "pay/payView";
 	}
@@ -93,7 +95,6 @@ public class PayController {
 		contractVO.setCustomerkey(customerKey);
 		Date fd = contractVO.getFinalDate();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println(format.format(fd) + "여기선 어떻게 ?2번2번2번2번2번2번2번2");
 		String fds = format.format(fd);
 		contractVO.setFinalDates(fds);
 
@@ -127,18 +128,28 @@ public class PayController {
 	}
 
 	@GetMapping("/pay/fail")
-	public String cardRegistrationFailed(@RequestParam("error") String error, Model model) {
-		model.addAttribute("errorMessage", error);
-		return "/pay/fail";
-	}
+	public String cardRegistrationFailed(
+	    @RequestParam(value = "code", required = false) String code,
+	    @RequestParam(value = "message", required = false) String message,
+	    Model model) {
+		System.out.println("=====================들어옴옴옴ㅇ몽모옴옴옴ㅇ몽모====================");
+	    // 파라미터 디코딩
+	    try {
+	        if (message != null) {
+	            message = URLDecoder.decode(message, StandardCharsets.UTF_8.toString());
+	        }
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace();
+	    }
 
+	    model.addAttribute("errorCode", code);
+	    model.addAttribute("errorMessage", message);
+	    return "pay/fail";
+	}
 	@PostMapping("/pay/result")
 	@ResponseBody
-	public String payResult(@RequestBody ContractVO contractVO) {
-		System.out.println(contractVO + "마지막 여기 까지 오면 해");
-		payService.payEnd(contractVO);
-
-		return "";
+	public Map<String, Object> payResult(@RequestBody ContractVO contractVO) {
+		return payService.payEnd(contractVO);
 	}
 
 }

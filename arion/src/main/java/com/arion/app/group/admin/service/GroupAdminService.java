@@ -40,4 +40,10 @@ public interface GroupAdminService {
 	
 	// 계약해지
 	String cancleContract(int contractNo, String companyCode); // 계약서 해지
+
+	List<PayListVO> payList(String comcode); // 결제목록
+	
+	PayListVO payInfo(int payNo); // 결제상세보기
+	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
+	
 }

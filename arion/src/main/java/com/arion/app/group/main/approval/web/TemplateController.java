@@ -106,61 +106,53 @@ public class TemplateController {
 	}
 
 	@PostMapping("/insertTemp")
-	public String insertTemp(TemplateVO tempVO, HttpSession session) {
-		String fileName = null;
-		String companyCode = (String) session.getAttribute("companyCode");
+	public String insertTemp(TemplateVO tempVO, HttpSession session, @RequestParam("image") String image) {
+	    String companyCode = (String) session.getAttribute("companyCode");
 
-		if (!tempVO.getDocFileName().isEmpty()) {
-			fileName = tempVO.getDocFileName().getOriginalFilename();
-			String directoryPath = "D:/upload/templates/";
+	    // 파일 저장 처리
+	    String fileName = null;
+	    String directoryPath = "D:/upload/templates/";
+	    
+	    if (!tempVO.getDocFileName().isEmpty()) {
+	        fileName = tempVO.getDocFileName().getOriginalFilename();
+	        File directory = new File(directoryPath);
+	        
+	        if (!directory.exists()) {
+	            directory.mkdirs();
+	        }
 
-			File directory = new File(directoryPath);
-			if (!directory.exists()) {
-				directory.mkdirs();
-			}
+	        String saveName = Paths.get(directoryPath + fileName).toString();
+	        try {
+	            tempVO.getDocFileName().transferTo(Paths.get(saveName));
+	            tempVO.setDocFile(fileName);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
-			String saveName = Paths.get(directoryPath + fileName).toString();
-			try {
-				tempVO.getDocFileName().transferTo(Paths.get(saveName));
-				tempVO.setDocFile(fileName);
-				tempVO.setCompanyCode(companyCode);
-				tsvc.insertTemp(tempVO);
+	    // 이미지 저장 처리
+	    String base64Image = image.split(",")[1]; // Data URL의 "data:image/png;base64," 부분 제거
+	    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return "redirect:/group/doc/template";
+	    String imageFileName = tempVO.getDocType() + "-" + UUID.randomUUID() + ".png";
+	    String imagePath = directoryPath + imageFileName;
+
+	    try (OutputStream stream = new FileOutputStream(imagePath)) {
+	        stream.write(imageBytes);
+	        tempVO.setDocImg(imagePath);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+
+	    // 회사 코드 설정
+	    tempVO.setCompanyCode(companyCode);
+
+	    // 데이터베이스에 정보 저장 (파일 경로와 이미지 경로를 포함하여 한 번에 저장)
+	    tsvc.insertTemp(tempVO);
+
+	    return "redirect:/group/doc/template";
 	}
 
-	@PostMapping("/saveImage")
-	@ResponseBody
-	public String saveImage(TemplateVO tempVO, @RequestParam("image") String image) {
-		String base64Image = image.split(",")[1]; // Data URL의 "data:image/png;base64," 부분을 제거
-		byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-
-		String directoryPath = "D:/upload/templates/";
-		File directory = new File(directoryPath);
-
-		if (!directory.exists()) {
-			directory.mkdirs();
-		}
-
-		String fileName = tempVO.getDocType() + ".png";
-		String filePath = directoryPath + fileName;
-
-		try (OutputStream stream = new FileOutputStream(filePath)) {
-			stream.write(imageBytes);
-			
-			tempVO.setDocImg(fileName);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "이미지 저장에 실패했습니다.";
-		}
-		return "이미지가 성공적으로 저장되었습니다.";
-		
-	}
 
 	private String convertToHTML(String text) {
 		text = text.replace("\n", "<br/>");

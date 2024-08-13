@@ -147,4 +147,28 @@
 		SET site_resp = 'USER'
 		WHERE company_code = #{companyCode}
 	</update>
+	<select id="contractList" resultType="ContractVO">
+		SELECT contract_no
+		      ,start_date
+		      ,final_date
+		      ,users_cnt
+		      ,month_pay_price
+		      ,total_pay_price
+		      ,contract_state
+		      ,company_code
+		      ,billingkey
+		      ,customerkey
+		      ,regular_date
+		      ,contract_sign
+		      ,first_month_amount
+		      ,ceo_name
+		      ,ceo_email 
+		FROM contract
+		WHERE contract_state = '계약중' And final_date > sysdate
+	</select>
+	<select id="useModule" resultType="UseModuleVO">
+		SELECT module_no,module_price,module_name
+		FROM usemodule
+		WhERE contract_no = #{contactNo}
+	</select>
 </mapper>

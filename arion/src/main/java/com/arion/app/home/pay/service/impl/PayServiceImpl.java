@@ -2,9 +2,11 @@ package com.arion.app.home.pay.service.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,6 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +26,7 @@ import com.arion.app.home.pay.mapper.PayMapper;
 import com.arion.app.home.pay.service.ContractVO;
 import com.arion.app.home.pay.service.PayService;
 import com.arion.app.home.pay.service.PayVO;
+import com.arion.app.home.pay.service.UseModuleVO;
 import com.arion.app.security.service.CompanyVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +36,14 @@ public class PayServiceImpl implements PayService {
 
 	private GroupAdminMapper gaMapper;
 	private PayMapper payMapper;
-
+	private final String secretKey = "test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN";
+	private final RestTemplate restTemplate = new RestTemplate();
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	private JavaMailSender mailSender;
+	
 	@Autowired
-	public PayServiceImpl(GroupAdminMapper groupAdminMapper, PayMapper payMapper) {
+	public PayServiceImpl(GroupAdminMapper groupAdminMapper, PayMapper payMapper,JavaMailSender mailSender) {
+		this.mailSender = mailSender;
 		this.gaMapper = groupAdminMapper;
 		this.payMapper = payMapper;
 	}
@@ -45,7 +56,6 @@ public class PayServiceImpl implements PayService {
 		String sdate = date.format(fm);
 		int month = Integer.parseInt(payVO.getSubscriptionPeriod()) / 30;
 		LocalDate fdate = date.plusMonths(month);
-		System.out.println(fdate+"날짜 형식이 어떻게 나오는지 확인");
 		cvo.setStartDate(sdate);
 		cvo.setFinalDate(fdate);
 		return cvo;
@@ -55,10 +65,12 @@ public class PayServiceImpl implements PayService {
 	public int findLastNo() {
 		return payMapper.findLastNo();
 	}
+
 	@Override
 	public CompanyVO emailNameSelect(String companyCode) {
 		return payMapper.selectComInfo(companyCode);
 	}
+
 	@Override
 	public String requestBillingKey(String customerKey, String authKey) {
 		String secretKey = "test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN";
@@ -97,23 +109,24 @@ public class PayServiceImpl implements PayService {
 		}
 		return null;
 	}
-	@Transactional // 첫결제 
+
+	@Transactional // 첫결제
 	@Override
-	 public Map<String, Object> payEnd(ContractVO contractVO) {
-		System.out.println(contractVO+"첫주문시 결제금액 처리해야돼");
+	public Map<String, Object> payEnd(ContractVO contractVO) {
+		System.out.println(contractVO + "첫주문시 결제금액 처리해야돼");
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = 0;
 		result += contractInsert(contractVO);
 		contractVO.setMonthPayPrice(contractVO.getFirstMonthAmount());
-		System.out.println(contractVO+"첫주문 금액 변경");
+		System.out.println(contractVO + "첫주문 금액 변경");
 		result += payInsert(contractVO);
-		
+
 		List<String> list = contractVO.getModuleNames();
-		list.forEach(a->{
+		list.forEach(a -> {
 			String trimmedValue = a.trim(); // 앞뒤 공백 제거
-			payDetailInsert(contractVO.getPayNo(),trimmedValue);
-			useModuleInsert(trimmedValue,contractVO.getCompanyCode(),contractVO.getContractNo());
+			payDetailInsert(contractVO.getPayNo(), trimmedValue);
+			useModuleInsert(trimmedValue, contractVO.getCompanyCode(), contractVO.getContractNo());
 		});
 		if (result > 1) {
 			isSuccessed = true;
@@ -121,34 +134,120 @@ public class PayServiceImpl implements PayService {
 
 		map.put("result", isSuccessed);
 		map.put("target", contractVO);
-        return map;
-    }
-	
+		return map;
+	}
+
 	@Override
 	public int payInsert(ContractVO contractVO) {
 		return payMapper.insertPay(contractVO);
 	}
+
 	@Override
 	public int payDetailInsert(int payNo, String moduleName) {
 		return payMapper.insertPayDetail(payNo, moduleName);
 	}
+
 	@Override
-	public int contractInsert(ContractVO contractVO) {	
+	public int contractInsert(ContractVO contractVO) {
 		return payMapper.insertContract(contractVO);
 	}
+
 	@Override
 	public int useModuleInsert(String moduleName, String companyCode, int contractNo) {
 		return payMapper.insertSubModule(moduleName, companyCode, contractNo);
 	}
+
 	@Override
 	public int comRespUpdate(ContractVO contractVO) {
 		return payMapper.updateComResp(contractVO);
 	}
-	
+	@Transactional
+	//@Scheduled(cron = "0 0 12 * * ?") // 매일 낮 12 시에 실행, 초 분 시 월 요일
+	//@Scheduled(fixedDelay = 10000, initialDelay = 5000)
+	@Override
 	public Map<String, Object> schedulePayEnd() {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
+		LocalDate now = LocalDate.now();
+		int day = now.getDayOfMonth();
+		// 계약 목록을 가져옵니다.
+		List<ContractVO> cList = payMapper.contractList();
+		cList.forEach(contract -> {
+			if (contract.getRegularDate() == day) {
+				contract.setOrderId(UUID.randomUUID().toString());
+				
+				List<UseModuleVO> mList = payMapper.useModule(contract.getContractNo());
+				List<String> moduleNames = contract.getModuleNames();
+				if (moduleNames == null) {
+					moduleNames = new ArrayList<>();
+					contract.setModuleNames(moduleNames);
+				}
+				for (UseModuleVO module : mList) {
+					moduleNames.add(module.getModuleName());
+					 String result = String.join(", ", moduleNames);
+				}
+				String moduleNamesString = String.join(", ", moduleNames);
+				contract.setModuleString(moduleNamesString);
+				int result = processPayment(contract);
+				if(result > 0) {
+					payInsert(contract);
+					for (UseModuleVO module : mList) {
+						payDetailInsert(contract.getPayNo(),module.getModuleName());
+					}
+				}
+			}else if(contract.getRegularDate() == day+5) {
+				sendSimpleEmail(contract.getCeoEmail());
+				
+			}
+		});
 		return map;
+	}
+	  public void sendSimpleEmail(String email) {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(email);
+	        message.setSubject("ARION 정기결제 5일전입니다.");
+	        message.setText("안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 정기결제 5일 전이니 계좌를 확인해 주시고 결제가 원할하게 이루어질수있도록 금액을 채워주시기 바랍니다 감사합니다!");
+	        message.setFrom("psjyyb3418@gmail.com");
+
+	        mailSender.send(message);
+	    }
+
+	public int processPayment(ContractVO contractVO) {
+		System.out.println(contractVO);
+		String endpoint = "https://api.tosspayments.com/v1/billing/" + contractVO.getBillingkey();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBasicAuth(secretKey, "");
+		headers.add("Content-Type", "application/json");
+
+		Map<String, Object> body = new HashMap<>();
+		body.put("customerKey", contractVO.getCustomerkey());
+		body.put("amount", contractVO.getMonthPayPrice()); // 결제 금액
+		body.put("orderId", contractVO.getOrderId()); // 주문아이디
+		body.put("orderName",contractVO.getModuleString()); // 모듈정보
+		body.put("customerEmail", contractVO.getCeoEmail()); // 사장이메일, 메일 받을 이메일
+		body.put("customerName", contractVO.getCeoName()); // 사장이름
+		body.put("taxFreeAmount", 0);
+		body.put("taxExemptionAmount", 0);
+
+		String requestBody = "";
+		try {
+			requestBody = objectMapper.writeValueAsString(body);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+		ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, String.class);
+
+		if (response.getStatusCode() == HttpStatus.OK) {
+			System.out.println("결제 성공: " + response.getBody());
+			return 1;
+		} else {
+			System.out.println("결제 실패: " + response.getBody());
+			return 0;
+		}
 	}
 }
 //private final String TOSS_API_URL =

@@ -125,7 +125,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	@Override
 	public int saveCompany(CompanyVO companyVO) {
 		String comPw = companyVO.getCompanyPw();
-		System.out.println(comPw+"TLqkf");
 		if (comPw != null && comPw !="") {
 			String encodedPassword = passwordEncoder.encode(companyVO.getCompanyPw());
 			companyVO.setCompanyPw(encodedPassword);

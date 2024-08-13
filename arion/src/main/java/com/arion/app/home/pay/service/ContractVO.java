@@ -29,6 +29,8 @@ public class ContractVO {
 	private int payNo;
 	private String ceoEmail;
 	private String ceoName;
+	private String contractState;
+	private String moduleString;
 	
 	
 	

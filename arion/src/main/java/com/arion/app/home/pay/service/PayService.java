@@ -28,4 +28,8 @@ public interface PayService {
 	int comRespUpdate(ContractVO contractVO); // 회사테이블 권한수정
 	
 	CompanyVO emailNameSelect(String companyCode); // 메일,이름 가져오기
+	
+	
+	// 정기결제 메인 서비스
+	public Map<String, Object> schedulePayEnd(); 
 }

@@ -17,50 +17,182 @@
 	border-radius: 8px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+	h1 {
+		color: #4CAF50;
+		margin-bottom: 20px;
+	}
+
+	.payment-info {
+		background-color: #f0f0f0;
+		padding: 15px;
+		border-radius: 8px;
+		margin-bottom: 20px;
+		text-align: left;
+	}
+
+	.payment-info p {
+		margin: 8px 0;
+		color: #333;
+	}
+
+	.button-container {
+		margin-top: 20px;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.button-container a, .button-container button {
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		text-decoration: none;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.button-container a:hover, .button-container button:hover {
+		background-color: #45a049;
+	}
+
+	.button-container button {
+		background-color: #008CBA;
+	}
+
+	.button-container button:hover {
+		background-color: #007BB5;
+	}
 </style>
 </head>
 <body>
 	<div class="container2">
-	  <h1>결제 성공</h1>
-	  <p>고객 키: <span id="cus" th:text="${customerKey}"></span></p>
-	  <p>인증 키: <span id="auth" th:text="${authKey}"></span></p>
-	  <p>빌링 키: <span id="bil" th:text="${billingKey}"></span></p>
-	  <a href="/payTest">다시 시도</a>
-	  <button id="testOrder">주문</button>
+		<h1>결제 정보 확인</h1>
+		<div class="payment-info">
+			<p><strong>결제금액:</strong> 4,900원</p>
+			<p><strong>주문ID:</strong> a4CWyWY5m89PNh7xJ12sad</p>
+			<p><strong>주문명:</strong> 전자결재외2건</p>
+			<p><strong>이메일:</strong> ass6728@naver.com</p>
+			<p><strong>고객명:</strong> 박토스</p>
+		</div>
+		<div class="button-container">
+			<a href="/payTest">다시 시도</a>
+			<button id="testOrder">결제하기</button>
+		</div>
 	</div>
-  <script>
-  $('#testOrder').on('click', function() {
-	    let customerKey = $('#cus').text();
-	    let authKey = $('#auth').text();
-	    let billingKey = $('#bil').text();
-	    $.ajax({
-	        url: 'https://api.tosspayments.com/v1/billing/' + billingKey,
-	        type: 'POST',
-	        headers: {
-	            'Authorization': 'Basic ' + btoa('test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN:'),
-	            'Content-Type': 'application/json'
-	        },
-	        data: JSON.stringify({
-	            customerKey: customerKey,
-	            amount: 4900,
-	            orderId: "a4CWyWY5m89PNh7xJ12sad",
-	            orderName: "전자결재외2건",
-	            customerEmail: "ass6728@naver.com",
-	            customerName: "박토스",
-	            taxFreeAmount: 0,
-	            taxExemptionAmount: 0
-	        })
-	    })
-	    .done(function(result) {
-	        console.log(result);
-	        alert('결제성공');
-	    })
-	    .fail(function(err) {
-	        console.log(err);
-	        alert('결제실패');
-	    });
-	});
 
-  </script>
+	<script>
+	 function generateUUID() {
+	        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+	            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+	        );
+	    }
+	 function formatDateString(dateString) {
+		    // 문자열에서 불필요한 부분을 제거하고 Date 객체를 생성
+		    const trimmedDateString = dateString.trim(); // 공백 제거
+		    const date = new Date(trimmedDateString);
+		    
+		    // 유효한 날짜인지 확인
+		    if (isNaN(date.getTime())) {
+		        console.error(`Invalid Date: ${trimmedDateString}`);
+		        return null; // 또는 기본값을 반환
+		    }
+		    
+		    // yyyy-MM-dd 형식으로 포맷
+		    const year = date.getFullYear();
+		    const month = String(date.getMonth() + 1).padStart(2, '0');
+		    const day = String(date.getDate()).padStart(2, '0');
+		    
+		    return `${year}-${month}-${day}`;
+		}
+
+		$('#testOrder').on('click', function() {
+			let customerKey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
+		 	let contractNo = `[[${payInfo.contractNo}]]`.replace(/^"|"$/g, '');
+		 	let startDate = `[[${payInfo.startDate}]]`.replace(/^"|"$/g, '');
+		 	
+		 	let finalDate =`[[${payInfo.finalDate}]]`.replace(/^"|"$/g, '');
+		 	console.log(finalDate,'날짜형식 변경 ....돼라좀 제발 ㅠㅠ');
+		 	let usersCnt = `[[${payInfo.usersCnt}]]`.replace(/^"|"$/g, '');
+		 	let monthPayPrice = `[[${payInfo.monthPayPrice}]]`.replace(/^"|"$/g, '');
+		 	let totalPayPrice = `[[${payInfo.totalPayPrice}]]`.replace(/^"|"$/g, '');
+		 	let companyCode = `[[${payInfo.companyCode}]]`.replace(/^"|"$/g, '');
+		 	let regularDate = `[[${payInfo.regularDate}]]`.replace(/^"|"$/g, '');
+		 	let customerkey = `[[${payInfo.customerkey}]]`.replace(/^"|"$/g, '');
+		 	let contractSign = `[[${payInfo.contractSign}]]`.replace(/^"|"$/g, '');
+		 	let firstMonthAmount = `[[${payInfo.firstMonthAmount}]]`.replace(/^"|"$/g, '');
+		 	
+		 	let moduleNames = `[[${payInfo.moduleNames}]]`.replace(/^"|"$/g,'');
+		 	let jsonString = moduleNames
+		    .replace(/^\[\[|\]\]$/g, '')  // Remove outer brackets
+		    .replace(/,/g, '","')         // Add quotes around items
+		    .replace(/(.+)/g, '["$1"]'); 
+		 	let moduleNamesArray = JSON.parse(jsonString); // [['일정관리']]
+		 	console.log(moduleNamesArray,'모듈이름 제발 배열 형식으로좀 바꾸자');
+		 	
+		 	let billingkey = `[[${payInfo.billingkey}]]`.replace(/^"|"$/g,'');
+		 	let orderId = generateUUID();
+			if(regularDate == null || regularDate==''){
+		 		regularDate=0;
+		 	}
+			$.ajax({
+				url: 'https://api.tosspayments.com/v1/billing/' + billingkey,
+				type: 'POST',
+				headers: {
+					'Authorization': 'Basic ' + btoa('test_sk_mBZ1gQ4YVXQ1Oj2OJJvjrl2KPoqN:'),
+					'Content-Type': 'application/json'
+				},
+				data: JSON.stringify({
+					customerKey: customerKey,
+					amount: firstMonthAmount,
+					orderId: orderId,
+					orderName: moduleNames,
+					customerEmail: "ass6728@naver.com",
+					customerName: "박토스",
+					taxFreeAmount: 0,
+					taxExemptionAmount: 0
+				})
+			})
+			 .done(result=> {
+			        console.log(result);
+			        alert('결제 성공!');
+
+			        // 결제 성공 시 서버로 데이터 전송
+			        $.ajax({
+			            url: '/pay/result',  // 서버의 결제 성공 처리 엔드포인트
+			            type: 'POST',
+			            contentType: 'application/json', 
+			            data: JSON.stringify({
+			                customerKey: customerKey,
+			                contractNo: parseInt(contractNo, 10),
+			                startDate: startDate,
+			                finalDates: finalDate,
+			                usersCnt: parseInt(usersCnt, 10),
+			                monthPayPrice:parseInt(monthPayPrice, 10),
+			                totalPayPrice: parseInt(totalPayPrice, 10),
+			                companyCode: companyCode,
+			                regularDate: parseInt(regularDate, 10),
+			                contractSign: contractSign,
+			                firstMonthAmount: parseInt(firstMonthAmount, 10),
+			                moduleNames: moduleNamesArray,
+			                billingkey: billingkey,
+			                orderId: orderId,
+			                paymentStatus: 'SUCCESS',
+			            }),
+			            success: function(response) {
+			                console.log('DB 저장 성공:', response);
+			            },
+			            error: function(error) {
+			                console.log('DB 저장 실패:', error);
+			            }
+			        });
+			    })
+			    .fail(err=> {
+			        console.log(err);
+			        alert('결제 실패');
+			    });
+			});
+	</script>
 </body>
 </html>

@@ -11,7 +11,7 @@ import lombok.Data;
 public class ContractVO {
 	private int contractNo;
 	private String startDate;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd") // 파라미터 자동변환
 	private Date finalDate;
 	private int usersCnt;
 	private int monthPayPrice;
@@ -22,8 +22,10 @@ public class ContractVO {
 	private String customerkey;
 	private String contractSign;
 	private int firstMonthAmount;
-	
+	private String finalDates;
 	private List<String> moduleNames;
+	
+	private String orderId;
 	
 	
 	

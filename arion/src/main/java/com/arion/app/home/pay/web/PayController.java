@@ -3,7 +3,9 @@ package com.arion.app.home.pay.web;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.home.pay.service.ContractVO;
 import com.arion.app.home.pay.service.PayService;
@@ -43,6 +47,7 @@ public class PayController {
 	public String payView(PayVO payVO, Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		CompanyVO cvo = payService.selectCom(comCode, payVO);
+		System.out.println(cvo.getFinalDate()+"1번1번1번1번1번");
 		int conNo = payService.findLastNo();
 		model.addAttribute("conNo", conNo);
 		model.addAttribute("comInfo", cvo);
@@ -82,6 +87,7 @@ public class PayController {
 		contractVO.setContractSign(fileName);
 		String customerKey = UUID.randomUUID().toString();
 		contractVO.setCustomerkey(customerKey);
+		System.out.println(contractVO.getFinalDate()+"여기선 어떻게 ?2번2번2번2번2번2번2번2");
 		model.addAttribute("payInfo", contractVO);
 		return "pay/firstPay";
 	}
@@ -104,7 +110,7 @@ public class PayController {
 		  String billingKey = payService.requestBillingKey(customerKey,authKey);
 		  contractData.setBillingkey(billingKey);
 		  contractData.setCustomerkey(customerKey);
-		  System.out.println(contractData);
+		  System.out.println(contractData+"여기선 어떻게 22222");
 		 model.addAttribute("payInfo",contractData);
 		  return "/pay/success"; // 성공 페이지로 리다이렉트
 		}
@@ -113,5 +119,13 @@ public class PayController {
 	        model.addAttribute("errorMessage", error);
 	        return "/pay/fail";
 	    }
+	  @PostMapping("/pay/result")
+	  @ResponseBody
+	  public String payResult(@RequestBody ContractVO contractVO) {
+		  System.out.println(contractVO);
+		  payService.payEnd(contractVO);
+		  
+		  return"";
+	  }
 
 }

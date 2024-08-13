@@ -1,11 +1,14 @@
 package com.arion.app.home.pay.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
@@ -48,6 +49,7 @@ public class PayServiceImpl implements PayService {
 		String sdate = date.format(fm);
 		int month = Integer.parseInt(payVO.getSubscriptionPeriod()) / 30;
 		LocalDate fdate = date.plusMonths(month);
+		System.out.println(fdate+"날짜 형식이 어떻게 나오는지 확인");
 		cvo.setStartDate(sdate);
 		cvo.setFinalDate(fdate);
 		return cvo;
@@ -116,6 +118,12 @@ public class PayServiceImpl implements PayService {
 		}
 		return null;
 	}
+	@Override
+	 public int payEnd(ContractVO contractVO) {
+		System.out.println(contractVO.getFinalDates());
+
+        return 0;
+    }
 }
 //private final String TOSS_API_URL =
 //"https://api.tosspayments.com/v1/billing/keys"; private final String

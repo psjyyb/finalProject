@@ -23,5 +23,6 @@ public class CompanyVO {
     private String ceoPhone;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate finalDate;
 }

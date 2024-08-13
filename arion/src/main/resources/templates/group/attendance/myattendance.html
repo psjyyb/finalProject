@@ -11,32 +11,32 @@
 </head>
 
 <body onload="autoReload();">
-	<table align="center" id="calendar">
-		<tr>
-			<td>
-			<button id="before"></button>
-			</td>
-			<td colspan="4" align="center">
-			<div id="yearmonth"></div>
-			</td>
-			<td>
-			<button id="next"></button>
-			</td>
-			<td>
-			<button id="today">오늘</button>
-			</td>
+	
+	<div colspan="4" align="center" display="inline">
+	
+	<button id="before"></button>
+			
+	<h2 id="yearmonth" ></h2>
+			
+	<button id="next"></button>
+			
+	<button id="today">오늘</button>
+	
+    </div>
+			<div colspan="4" align="right">
 			<button id="download">다운로드</button>
 			<a href="/group/attendance/attendancelist">부하직원 근태기록</a>
-		</tr>
-		
+	
+	</div>
+	<table align="center" id="calendar"  width="50%"  height ="30%" >		
 		<tr>
-		    <td width="14%"><font color="#ed5353">일</font></td>
-			<td width="14%"> 월 </td>
-			<td width="14%"> 화 </td>
-			<td width="14%"> 수 </td>
-			<td width="14%"> 목 </td>
-			<td width="14%"> 금 </td>
-			<td width="14%"><font color="#009de0">토</font></td>
+		    <th width="14%"><font color="#ed5353">일</font></th>
+			<th width="14%"> 월 </th>
+			<th width="14%"> 화 </th>
+			<th width="14%"> 수 </th>
+			<th width="14%"> 목 </th>
+			<th width="14%"> 금 </th>
+			<th width="14%"><font color="#009de0">토</font></th>
 			
 		</tr>
 	</table>

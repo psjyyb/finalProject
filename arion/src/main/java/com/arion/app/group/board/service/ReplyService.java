@@ -1,10 +1,13 @@
 package com.arion.app.group.board.service;
 
 import java.util.List;
-import com.arion.app.group.board.service.ReplyVO;
 
 public interface ReplyService {
-	void insert(ReplyVO reply);
-	void delete(int commentNo);
+	
+	// 댓글 리스트
+ 	public List<ReplyVO> replyList(int boardNo);
 
+ 	// 댓글 등록
+ 	public int Replyinsert(ReplyVO replyVO);
+ 	
 }

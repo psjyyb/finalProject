@@ -32,6 +32,7 @@
 						<button type="button" class="btn btn-primary" id="saveSign">서명
 							저장</button>
 						<button type="button" class="btn cancle">취소</button>
+						<button type="button" class="btn btn-secondary" id="clearSign">지우기</button>
 					</div>
 				</div>
 			</form>
@@ -45,6 +46,7 @@
 		$(document).ready(function() {
 			$("#signModalBtn").on("click", function() {
 				$('#signModal').css('display', 'block');
+				signaturePad.clear();
 			});
 
 			$(".cancle").on("click", function() {
@@ -56,16 +58,24 @@
 					$(event.target).css('display', 'none');
 				}
 			});
-
+	
+			$("#clearSign").on("click", function() {
+				signaturePad.clear(); // 서명을 지우기 버튼을 클릭하면 서명을 지움
+			});
+			
 			$("#saveSign").on("click", function() {
 				if (signaturePad.isEmpty()) {
-					alert("서명을 입력해주세요.");
+					Swal.fire({
+						icon: "error",
+						text: "서명을 입력해주세요."
+					})
 				} else {
 					var signatureData = signaturePad.toDataURL();
 					$("#signature-data").val(signatureData);
 					$("#insertSign").submit();
 				}
 			});
+			
 		});
 	</script>
 </body>

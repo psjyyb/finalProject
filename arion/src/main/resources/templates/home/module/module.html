@@ -80,18 +80,22 @@ body {
 <body>
 
 <div class="moduleNav">
+
+    <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
     <th:block th:each="module : ${moduleList}">
         <a href="#" th:text="${module.moduleName}" class="moduleBtn" th:data-mod-no="${module.moduleNo}"></a>
+
+
     </th:block>
 </div>
 
 <div id="moduleInfo">
-	<th:block th:each="module : ${moduleInfo}">
-   		<div class ="moduleItem">
-   			<img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
-   			<p th:text="${module.modFileContent}"></p>
-   		</div>
-	</th:block>   
+   <th:block th:each="module : ${moduleInfo}">
+         <div class ="moduleItem">
+            <img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
+            <p th:text="${module.modFileContent}"></p>
+         </div>
+   </th:block>   
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -129,6 +133,42 @@ $(document).ready(function() {
             $('#moduleInfo').append(div);
         });
     }
+
+    renderModules(modules);
+
+    $(".moduleBtn").click(function(event){
+         event.preventDefault(); 
+         
+         let moduleNo = $(this).data("mod-no");
+         
+         $.ajax({
+             url: '/home/module',
+             type: 'POST',
+             data: { moduleNo: moduleNo },
+             dataType: 'json' 
+         })
+         .done(function(result){
+             moduleDiv(result);
+         })
+         .fail(function(err) {
+            console.log(err);
+         });
+    });
+    
+    function moduleDiv(result) {
+        $('#moduleInfo').empty(); 
+
+        result.forEach(function(module) {
+            let div = $('<div/>').addClass('moduleItem');
+            let img = $('<img/>').attr('src', '/files/' + module.modFileName).attr('alt', module.modFileName);
+            let p = $('<p/>').text(module.modFileContent);
+            
+            div.append(img);
+            div.append(p);
+            $('#moduleInfo').append(div);
+        });
+    }
+
 });
 </script>
 </body>

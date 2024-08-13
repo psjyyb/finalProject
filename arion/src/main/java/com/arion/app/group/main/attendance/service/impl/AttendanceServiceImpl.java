@@ -38,9 +38,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 	
 	@Override
-	public List<WorkTimeVO> worktime() {
+	public List<WorkTimeVO> worktime(int employeeno,String start,String end) {
 		// TODO Auto-generated method stub
-		return attendancemapper.worktime();
+		return attendancemapper.worktime(employeeno,start,end);
 	}
 
 

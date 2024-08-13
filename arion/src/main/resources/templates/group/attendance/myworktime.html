@@ -5,34 +5,43 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+
 <title>myworktime</title>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
 </head>
+
 <body onload="autoReload();">
-		
-			<button id="before"></button>
+
+	
+	<div colspan="4" align="center" display="inline">
+	
+	<button id="before"></button>
 			
+	<h2 id="yearmonth" ></h2>
 			
-			<div id="month/week"></div>
+	<button id="next"></button>
 			
-		
-			<button id="next"></button>
-		
-					
-	<table >
-	 <thead>
-	      <tr >
-	        <th>일자</th>
-	        <th>사원명</th>
-	        <th>표준근무시간(시간단위)</th>
-	        <th>표준근무시간(분단위)</th>
-	        <th>차이(시간단위)</th>
-	        <th>차이(분단위)</th>
-	      </tr>
-	    </thead>
-	    <tbody/>
-	    
+	<button id="today">오늘</button>
+	
+    </div>	
+			<div colspan="4" align="right">
+			<button id="download">다운로드</button>
+			<a href="/group/attendance/worktimelist">부하직원 근무시간기록</a>
+	</div>
+						
+		<table align="center" id="worktimetable" width="80%"  height ="30%">
+		<tr>
+		    <th width="10%">일자</th>
+			<th width="14%">근무시간(시간)</th>
+			<th width="14%">근무시간(분)</th>
+			<th width="17%">표준근무시간(시간)</th>
+			<th width="17%">표준근무시간(분)</th>
+			<th width="11%">차이(시간)</th>
+			<th width="11%">차이(분)</th>
+		</tr>
 		
 	</table>
-	<script th:src="@{/js/group/attendance/mytime.js}"></script>
+			
+	<script th:src="@{/js/group/attendance/myworktime.js}"></script>
 </body>
 </html >

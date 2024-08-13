@@ -214,7 +214,7 @@ h1, h2, h3 {
 									type="hidden" name="totalPayPrice"
 									th:value="${payInfo.totalAmount}">
 							</p>
-							<p>
+							<p th:if="${payInfo.firstMonthAmount != '0'}">
 								<strong>첫달 결제 금액:</strong>
 								[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원 <input
 									type="hidden" name="firstMonthAmount"
@@ -271,8 +271,9 @@ h1, h2, h3 {
 						<tbody>
 							<tr>
 								<td>1</td>
-								<td>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3,
+								<td th:if="${payInfo.firstMonthAmount != '0'}" >[[${#numbers.formatInteger(payInfo.firstMonthAmount,3,
 									'COMMA')}]]원</td>
+								<td th:if="${payInfo.firstMonthAmount == '0'}" >[[${#numbers.formatInteger(payInfo.monthlyAmount,3, 'COMMA')}]]원</td>
 								<td th:text="${comInfo.startDate}"></td>
 							</tr>
 						</tbody>

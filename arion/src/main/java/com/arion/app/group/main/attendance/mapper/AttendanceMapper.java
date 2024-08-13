@@ -18,7 +18,7 @@ public interface AttendanceMapper {
 	
 	public List<AttendanceVO> attendance(int employeeno,String start, String end);
 	
-	public List<WorkTimeVO> worktime();
+	public List<WorkTimeVO> worktime(int employeeno, String start, String end);
 	
 	public List<AttendanceDownloadVO> attendancedownload(int employeeno,String start, String end);
 }

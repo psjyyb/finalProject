@@ -1,30 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/group/layouts/group_layout}"
-	layout:fragment="Content">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-<title>ARION</title>
- <link rel="stylesheet" type="text/css" href="/css/smarteditor2.css">
+    <meta charset="UTF-8">
+    <title>ARION</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/smarteditor2.css">
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/SmartEditor2.js"></script>
+    <style>
+        h1 {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            color: #343a40;
+            text-align: center;
+        }
+        .table-container {
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        thead th {
+            background-color: #343a40;
+            color: white;
+        }
+        tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
 </head>
 <body>
-	<h1>기안서</h1>
-	<div>
-		<button type="button" th:onclick="|location.href='@{/group/doc/insertTemp}'|" class="btn btn-primary">등록</button>
-	</div>
-	<th:block th:each="temp, iterStat : ${tempList}">
-		<div>
-            <label>문서종류</label>
-            <p th:text="${temp.docType}"></p>
-            <label>파일 이름</label>
-            <p th:text="${temp.docFile}"></p>
-            <label>파일 내용 미리보기</label>
-            <div th:utext="${fileContents[iterStat.index]}"></div>
-           	
-		</div>
-	</th:block>
+    <div class="container">
+        <h1>기안서</h1>
+        <div class="text-right mb-3">
+            <button type="button" th:onclick="|location.href='@{/group/doc/insertTemp}'|"
+                    class="btn btn-primary">등록</button>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>문서명</th>
+                        <th>문서타입</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="temp : ${tempList}">
+                        <tr th:data-temp-no="${temp.tempNo}">
+                            <td th:text="${temp.tempNo}"></td>
+                            <td th:text="${temp.docName}"></td>
+                            <td th:text="${temp.docType}"></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+		$('tbody > tr').on('click', function() {
+			let tempNo = $(this).data('temp-no');
+			location.href = '/home/tempInfo?tempNo=' + tempNo;
+		});
+	</script>
 </body>
 </html>

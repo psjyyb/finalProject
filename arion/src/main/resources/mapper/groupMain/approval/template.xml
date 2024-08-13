@@ -5,22 +5,46 @@
 		SELECT temp_no
 				, doc_type
 				, doc_file
+				, doc_name
 				, company_code
+				, doc_img
 		FROM template
 		WHERE 1=1 
 		AND company_code = #{companyCode}
 	</select>
 	
 	<insert id="insertTemp" parameterType="TemplateVO">
+		<selectKey keyProperty="tempNo" resultType="String" order="BEFORE">
+        	SELECT 'MD' 
+               || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(temp_no, -3))), 0) + 1, 3, '0')
+        	FROM template
+    	</selectKey>
 		INSERT INTO template(temp_no
 							, doc_type
+							, doc_name
 							, doc_file
 							, company_code
-		) VALUES (temp_seq.NEXTVAL
+							, doc_img
+		) VALUES (#{tempNo}
 				 , #{docType}
 				 , #{docFile}
+				 , #{docName}
 				 , #{companyCode}
+				 , #{docImg}
 		)
 	</insert>
+	
+	<select id ="tempInfo" resultType = "TemplateVO">
+		SELECT temp_no
+				, doc_type
+				, doc_file
+				, doc_name
+				, company_code
+				, doc_img
+		FROM template
+		WHERE 1=1
+		AND company_code = #{companyCode}
+		AND temp_no = #{tempNo}
+	</select>
 	
 </mapper>

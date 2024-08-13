@@ -45,7 +45,7 @@ public class MailController {
         List<MailVO> receivedMails = mailService.mailList(mailVO);
         model.addAttribute("receivedMails", receivedMails);
 
-        return "group/mail/Mymail";
+        return "group/mail/Mymail";	
     }
     //중요메일
     @GetMapping("/importmail")
@@ -53,20 +53,45 @@ public class MailController {
         String employeeId = (String) httpSession.getAttribute("loginId");
         String companyCode = (String) httpSession.getAttribute("companyCode");
 
-        if (employeeId == null || companyCode == null) {
-            model.addAttribute("error", "Session information is missing.");
-            return "group/mail/importmail";
-        }
-
+        
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
+        System.out.println(employeeId+"ㅎㅇㅎㅇㅎㅇ");
         List<MailVO> importMailAll = mailService.importMailList(mailVO);
         model.addAttribute("importMailAll", importMailAll);
 
         return "group/mail/importmail";
     }
-    
+    //휴지통
+    @GetMapping("/trashmail")
+    public String deleteMailList(Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        System.out.println(employeeId+"ㅎㅇㅎㅇㅎㅇ");
+        List<MailVO> deleteMailAll = mailService.deleteMailList(mailVO);
+        model.addAttribute("deleteMailAll", deleteMailAll);
+
+        return "group/mail/trashmail";
+    }
+    //메일 상세보기
+    @GetMapping("/mailInfo/{mailNo}")
+    public String mailInfo(@PathVariable("mailNo") int mailNo, Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        MailVO mailVO = new MailVO();
+        mailVO.setMailNo(mailNo);
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        MailVO mailDetails = mailService.mailInfo(mailVO);
+        model.addAttribute("mailInfo", mailDetails);
+
+        return "group/mail/mailInfo";
+    }
     // 메일 보내기 폼 페이지
     @GetMapping("/writemail")
     public String mailSendForm(Model model) {

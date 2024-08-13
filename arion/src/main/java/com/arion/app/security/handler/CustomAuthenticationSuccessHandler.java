@@ -1,23 +1,31 @@
 package com.arion.app.security.handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.arion.app.group.main.mapper.MainMapper;
+import com.arion.app.group.main.service.SubModuleVO;
+import com.arion.app.group.main.service.getModuleVO;
 import com.arion.app.security.service.LoginUserVO;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+	@Autowired
+	MainMapper mainMapper;
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -48,7 +56,25 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    System.out.println("사원번호 : " + userDetail.getEmployeeNo());
 	    System.out.println("사이트권한 : " + userDetail.getSiteResp());
 
+	    	getModuleVO  getmodule= new getModuleVO();
+	        // 상위 모듈 리스트 조회
+	        List<getModuleVO> modules = mainMapper.getModules(userDetail.getCompanyCode(), userDetail.getUsername());
+	        // 하위 모듈 리스트 조회
+	        List<SubModuleVO> subModules = mainMapper.getSubModules(userDetail.getCompanyCode(), userDetail.getUsername());
 
+	        // 상위 모듈과 하위 모듈을 조합
+	        for (getModuleVO module : modules) {
+	            module.setSubModules(new ArrayList<>());
+	            for (SubModuleVO subModule : subModules) {
+	                if (module.getModuleNo() != null && subModule.getModuleNo() != null 
+	                        && subModule.getModuleNo().equals(module.getModuleNo())) {
+	                    module.getSubModules().add(subModule);
+	                }
+	            }
+	        }
+	        session.setAttribute("modules", modules);
+	        
+	
 	    
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (GrantedAuthority authority : authorities) {

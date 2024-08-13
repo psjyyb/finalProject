@@ -39,4 +39,10 @@ public class TemplateServiceImpl implements TemplateService {
 		return map;
 	}
 
+	@Override
+	public TemplateVO tempInfo(TemplateVO templateVO) {
+		// TODO Auto-generated method stub
+		return mapper.tempInfo(templateVO);
+	}
+
 }

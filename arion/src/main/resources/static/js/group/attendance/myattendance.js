@@ -52,7 +52,7 @@
 
 
 		// 남은 테이블 줄 삭제
-		while (tbcal.rows.length > 2) 
+		while (tbcal.rows.length > 1) 
 		{
 			tbcal.deleteRow(tbcal.rows.length - 1);
 		}
@@ -158,6 +158,7 @@
     type: "get",
     url: "https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?serviceKey=MmddflL0dcWkfZ771b8PxLIGjXgPjEtt1GNQuBX%2BkamRgsienWW71vT1jXbQ0bqJT4XaTHNg9FJctHPsF9%2B3RA%3D%3D&solYear=" + holiyear + "&solMonth=" + holimonth,
     dataType: "xml",
+    async: false,
     success: function(xmlData) {
     	if($(xmlData).find("totalCount").text()==0){
     		
@@ -211,6 +212,7 @@
               'enddate': enddate
               },
 		 dataType:"json",
+		 async: false,
            success : function(data) {
 			
 			var attendancelist = data.attendancelist;

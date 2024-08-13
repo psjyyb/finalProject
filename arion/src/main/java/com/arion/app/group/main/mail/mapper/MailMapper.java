@@ -27,9 +27,14 @@ public interface MailMapper {
     // 메일 보내기
     int sendMail(MailVO mailVO);
 
+    //메일 검색
+    
+    
     // 메일 삭제
     int mailDelete(int mailNo);
     
+    //메일 상세조회
+    MailVO selectMailInfo(MailVO mailVO);
     // 메일 수신 기록 삽입 메서드
     int insertMailReceive(MailReceiveVO receiveVO);
     //시퀀스

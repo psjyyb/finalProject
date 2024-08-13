@@ -28,28 +28,38 @@ public class MailServiceImpl implements MailService {
 
     @Autowired
     private FileService fileService;
-
+    //받은메일
     @Override
     public List<MailVO> mailList(MailVO mailVO) {
         return mailMapper.receiveMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
-
+    //보낸메일
     @Override
     public List<MailVO> sendMailList(MailVO mailVO) {
         return mailMapper.sendMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
-
+    //중요메일
     @Override
     public List<MailVO> importMailList(MailVO mailVO) {
         List<MailVO> mails = mailMapper.importMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
         System.out.println("중요 메일 조회 결과: " + mails);
         return mails;
     }
+    //휴지통
     @Override
     public List<MailVO> deleteMailList(MailVO mailVO) {
         return mailMapper.deleteMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
     }
+    
+    //메일 상세조회
+    @Override
+    public MailVO mailInfo(MailVO mailVO) {
+        return mailMapper.selectMailInfo(mailVO);
+    }
+    
+    //메일검색
 
+    //삭제
     @Override
     public Map<String, Object> deleteMail(MailVO mailVO) {
         Map<String, Object> map = new HashMap<>();
@@ -58,7 +68,7 @@ public class MailServiceImpl implements MailService {
         map.put("target", mailVO);
         return map;
     }
-
+    //메일보내기
     @Transactional
     @Override
     public void sendMail(MailVO mailVO, MultipartFile[] attachments) {

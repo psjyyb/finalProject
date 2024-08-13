@@ -11,6 +11,7 @@ public class MailVO {
     private String senderId;
     private String senderName;
     private String receiverEmail;
+    private String receiverId;
     private String mailTitle;
     private String mailContent;
     private String mailStatus;
@@ -19,5 +20,11 @@ public class MailVO {
     
     private String companyCode;
 
-    // Getters and Setters
+    // 검색 조건 추가
+    private Date startDate;       // 검색 시작 날짜
+    private Date endDate;         // 검색 종료 날짜
+    private String searchTitle;   // 제목으로 검색
+    private String searchContent; // 내용으로 검색
+    private String searchSender;  // 작성자로 검색
+
 }

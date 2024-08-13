@@ -63,7 +63,35 @@ public class MailController {
 
         return "group/mail/importmail";
     }
-    
+    //휴지통
+    @GetMapping("/trashmail")
+    public String deleteMailList(Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        System.out.println(employeeId+"ㅎㅇㅎㅇㅎㅇ");
+        List<MailVO> deleteMailAll = mailService.deleteMailList(mailVO);
+        model.addAttribute("deleteMailAll", deleteMailAll);
+
+        return "group/mail/trashmail";
+    }
+    //메일 상세보기
+    @GetMapping("/mailInfo/{mailNo}")
+    public String mailInfo(@PathVariable("mailNo") int mailNo, Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        MailVO mailVO = new MailVO();
+        mailVO.setMailNo(mailNo);
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        MailVO mailDetails = mailService.mailInfo(mailVO);
+        model.addAttribute("mailInfo", mailDetails);
+
+        return "group/mail/mailInfo";
+    }
     // 메일 보내기 폼 페이지
     @GetMapping("/writemail")
     public String mailSendForm(Model model) {

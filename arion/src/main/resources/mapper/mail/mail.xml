@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.arion.app.group.main.mail.mapper.MailMapper">
+<mapper
+	namespace="com.arion.app.group.main.mail.mapper.MailMapper">
 
 	<!-- 받은 메일 조회 -->
-	<select id="receiveMailAll" parameterType="MailVO" resultType="MailVO">
-		SELECT
-		FIND_EMP_NAME(m.sender_id) AS sender_name,
-		m.send_date,
-		m.mail_title
-		FROM mail m
-		JOIN mail_receive mr ON m.mail_no = mr.mail_no
-		WHERE mr.employee_id = #{employeeId}
-		AND m.mail_status = 'RECEIVED'
-	</select>
-
-	<!-- 중요 메일 조회 -->
-	<select id="importMailAll" parameterType="MailVO" resultType="MailVO">
+	<select id="receiveMailAll" parameterType="MailVO"
+		resultType="MailVO">
     SELECT
-    FIND_EMP_NAME(m.sender_id) AS sender_name,
-    m.send_date,
-    m.mail_title
+        m.mail_no, 
+        FIND_EMP_NAME(m.sender_id) AS sender_name,
+        m.send_date,
+        m.mail_title
     FROM mail m
     JOIN mail_receive mr ON m.mail_no = mr.mail_no
     WHERE mr.employee_id = #{employeeId}
-    AND m.mail_status = 'IMPORT'
+    AND m.mail_status = 'RECEIVED'
 	</select>
 
-	<!-- 휴지통 조회 -->
-	<select id="deleteMailAll" parameterType="MailVO" resultType="MailVO">
+	<!-- 중요 메일 조회 -->
+	<select id="importMailAll" parameterType="MailVO"
+		resultType="MailVO">
 		SELECT
 		FIND_EMP_NAME(m.sender_id) AS sender_name,
 		m.send_date,
@@ -35,76 +27,96 @@
 		FROM mail m
 		JOIN mail_receive mr ON m.mail_no = mr.mail_no
 		WHERE mr.employee_id = #{employeeId}
-		AND m.mail_status = 'TRASH'
+		AND m.mail_status = 'IMPORT'
 	</select>
 
-	<!-- 메일 정보 조회 -->
-	<select id="selectMailInfo" parameterType="MailVO" resultType="MailVO">
+	<!-- 휴지통 조회 -->
+	<select id="deleteMailAll" parameterType="MailVO"
+		resultType="MailVO">
 		SELECT
 		FIND_EMP_NAME(m.sender_id) AS sender_name,
 		m.send_date,
+		m.mail_title
+		FROM mail m
+		JOIN mail_receive mr ON m.mail_no =
+		mr.mail_no
+		WHERE mr.employee_id = #{employeeId}
+		AND m.mail_status =
+		'TRASH'
+	</select>
+
+	<!-- 메일 상세 조회 -->
+	<select id="selectMailInfo" parameterType="MailVO"
+		resultType="MailVO">
+		SELECT
+		FIND_EMP_NAME(m.sender_id) AS sender_name,
+		mr.employee_id AS receiver_id,
 		m.mail_title,
 		m.mail_content,
-		mr.employee_id AS recipient_id
+		m.send_date
 		FROM mail m
 		JOIN mail_receive mr ON m.mail_no = mr.mail_no
 		WHERE m.mail_no = #{mailNo}
-		AND mr.employee_id = #{employeeId}
 	</select>
+
+
 
 	<!-- 시퀀스 값 가져오기 -->
 	<select id="getMailNoSequence" resultType="int">
-		SELECT MAIL_NO_SEQ.NEXTVAL FROM DUAL
+		SELECT
+		MAIL_NO_SEQ.NEXTVAL FROM DUAL
 	</select>
 
 	<!-- 메일 데이터 삽입 -->
-<insert id="sendMail" parameterType="MailVO">
-    INSERT INTO MAIL (
-        MAIL_NO,
-        SENDER_ID,
-        COMPANY_CODE,
-        MAIL_CONTENT,
-        SEND_DATE,
-        MAIL_TITLE,
-        MAIL_STATUS
-    )
-    VALUES (
-        #{mailNo},
-        #{senderId},
-        #{companyCode},
-        #{mailContent},
-        SYSDATE,
-        #{mailTitle},
-        'SEND'
-    )
-</insert>
+	<insert id="sendMail" parameterType="MailVO">
+		INSERT INTO MAIL (
+		MAIL_NO,
+		SENDER_ID,
+		COMPANY_CODE,
+		MAIL_CONTENT,
+		SEND_DATE,
+		MAIL_TITLE,
+		MAIL_STATUS
+		)
+		VALUES (
+		#{mailNo},
+		#{senderId},
+		#{companyCode},
+		#{mailContent},
+		SYSDATE,
+		#{mailTitle},
+		'SEND'
+		)
+	</insert>
 
 	<!-- 메일 수신자 데이터 삽입 -->
-<insert id="insertMailReceive" parameterType="MailReceiveVO">
-    INSERT INTO MAIL_RECEIVE (
-        RECEIVE_NO,
-        MAIL_NO,
-        EMPLOYEE_ID,
-        FILE_NO
-    )
-    VALUES (
-        #{receiveNo},
-        #{mailNo},
-        #{employeeId},
-        #{fileNo}
-    )
-</insert>
+	<insert id="insertMailReceive" parameterType="MailReceiveVO">
+		INSERT INTO MAIL_RECEIVE (
+		RECEIVE_NO,
+		MAIL_NO,
+		EMPLOYEE_ID,
+		FILE_NO
+		)
+		VALUES (
+		#{receiveNo},
+		#{mailNo},
+		#{employeeId},
+		#{fileNo}
+		)
+	</insert>
 
 	<!-- 메일 상태를 수신된 상태로 변경 -->
 	<update id="updateMailStatusToReceived">
 		UPDATE MAIL
 		SET MAIL_STATUS = 'RECEIVED'
-		WHERE MAIL_NO = #{mailNo}
+		WHERE MAIL_NO
+		= #{mailNo}
 	</update>
 
 	<!-- 메일 파일 데이터 삽입 -->
 	<insert id="insertMailFile" parameterType="MailFileVO">
-		INSERT INTO MAIL_FILE (
+		INSERT INTO MAIL_FILE
+		(
 		FILE_NO,
 		MAIL_NO,
 		FILE_NAME,

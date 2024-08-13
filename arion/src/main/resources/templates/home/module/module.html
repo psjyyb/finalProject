@@ -6,9 +6,76 @@
 <head>
     <meta charset="utf-8">
     <title>ARION</title>
-    <style>
-    /* 스타일 생략 (기존과 동일) */
-    </style>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.moduleNav {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    margin: 150px auto;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.moduleNav a {
+    color: #333;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.moduleNav a:hover {
+    color: #ff9800; 
+}
+
+.moduleNav a.active {
+    color: #ff9800; 
+}
+
+#moduleInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+
+}
+
+.moduleItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.moduleItem img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.moduleItem p {
+    flex: 1;
+    margin: 0 20px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.moduleItem:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+</style>
 </head>
 <body>
 
@@ -16,11 +83,20 @@
     <!-- Thymeleaf가 서버 측에서 렌더링한 모듈 링크 -->
     <th:block th:each="module : ${modules}">
         <a href="#" class="moduleBtn" th:text="${module.moduleName}" th:data-mod-no="${module.moduleNo}"></a>
+
+    <th:block th:each="module : ${moduleList}">
+        <a href="#" th:text="${module.moduleName}" class="moduleBtn" th:data-mod-no="${module.moduleNo}"></a>
+
     </th:block>
 </div>
 
 <div id="moduleInfo">
-    <!-- 이 부분은 JavaScript가 동적으로 업데이트합니다 -->
+   <th:block th:each="module : ${moduleInfo}">
+         <div class ="moduleItem">
+            <img th:src="@{/files/{fileName}(fileName=${module.modFileName})}">
+            <p th:text="${module.modFileContent}"></p>
+         </div>
+   </th:block>   
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -41,8 +117,41 @@ $(document).ready(function() {
         });
     }
 
-    // Render modules from Thymeleaf model
     renderModules(modules);
+
+    $(".moduleBtn").click(function(event){
+         event.preventDefault(); 
+         
+         let moduleNo = $(this).data("mod-no");
+         
+         $.ajax({
+             url: '/home/module',
+             type: 'POST',
+             data: { moduleNo: moduleNo },
+             dataType: 'json' 
+         })
+         .done(function(result){
+             moduleDiv(result);
+         })
+         .fail(function(err) {
+            console.log(err);
+         });
+    });
+    
+    function moduleDiv(result) {
+        $('#moduleInfo').empty(); 
+
+        result.forEach(function(module) {
+            let div = $('<div/>').addClass('moduleItem');
+            let img = $('<img/>').attr('src', '/files/' + module.modFileName).attr('alt', module.modFileName);
+            let p = $('<p/>').text(module.modFileContent);
+            
+            div.append(img);
+            div.append(p);
+            $('#moduleInfo').append(div);
+        });
+    }
+
 });
 </script>
 </body>

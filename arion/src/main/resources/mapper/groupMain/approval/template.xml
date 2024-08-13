@@ -6,6 +6,7 @@
 				, doc_type
 				, doc_file
 				, company_code
+				, doc_img
 		FROM template
 		WHERE 1=1 
 		AND company_code = #{companyCode}

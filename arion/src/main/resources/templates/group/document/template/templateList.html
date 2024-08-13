@@ -22,8 +22,7 @@
             <label>파일 이름</label>
             <p th:text="${temp.docFile}"></p>
             <label>파일 내용 미리보기</label>
-            <div th:utext="${fileContents[iterStat.index]}"></div>
-           	
+            <img th:src="@{/files/templates/(fileName)=${temp.docImg}}"/>           	
 		</div>
 	</th:block>
 </body>

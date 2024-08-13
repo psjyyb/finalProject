@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>ARION</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 	<h1>기안서</h1>
@@ -14,11 +15,12 @@
 		<label>문서종류</label>
 		<input type="text" name="docType">
 		<label>파일등록</label>
-		<input type="file" name="docFileName">
+		<input type="file" name="files" onchange="previewHwpFile()">
 		<div id="captureArea">
-			<!-- 캡처할 콘텐츠 -->
-			<h2>캡처할 영역</h2>
-			<p>이 영역이 이미지로 캡처되어 서버에 저장됩니다.</p>
+			<div id="previewArea">
+				<!-- 파일 미리보기가 여기에 표시됩니다 -->
+			</div>
+			<input type="hidden" name="captureImage" id="captureImage">
 		</div>
 		<div>
 			<button type="button" class="btn btn-primary" onclick="captureAndSubmit()">등록</button>
@@ -26,27 +28,36 @@
 	</form>
 
 	<script>
+		function previewHwpFile() {
+			const file = document.querySelector('input[name="files"]').files[0];
+			const formData = new FormData();
+			formData.append("file", file);
+
+			$.ajax({
+				type: "POST",
+				url: "/previewHwp",
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					document.getElementById('previewArea').innerHTML = response;
+				},
+				error: function(error) {
+					console.log("HWP 미리보기 실패", error);
+					document.getElementById('previewArea').innerHTML = "파일을 읽는 중 오류가 발생했습니다.";
+				}
+			});
+		}
+
 		function captureAndSubmit() {
 			html2canvas(document.querySelector("#captureArea")).then(function(canvas) {
 				var imgData = canvas.toDataURL("image/png");
 
-				// AJAX를 통해 캡처된 이미지를 먼저 서버로 전송
-				$.ajax({
-					type: "POST",
-					url: "/saveImage",
-					data: {
-						image: imgData
-					},
-					success: function(response) {
-						alert("이미지가 저장되었습니다.");
-						
-						// 이미지 저장 후, 폼 데이터를 전송
-						$("#insertTemp").submit();
-					},
-					error: function(error) {
-						console.log("이미지 저장 실패", error);
-					}
-				});
+				// 이미지를 hidden input에 설정
+				document.getElementById("captureImage").value = imgData;
+
+				// Form을 전송
+				document.getElementById("insertTemp").submit();
 			});
 		}
 	</script>

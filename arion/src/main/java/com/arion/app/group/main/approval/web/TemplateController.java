@@ -106,54 +106,80 @@ public class TemplateController {
 	}
 
 	@PostMapping("/insertTemp")
-	public String insertTemp(TemplateVO tempVO, HttpSession session, @RequestParam("image") String image) {
+	public String insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO, HttpSession session) {
 	    String companyCode = (String) session.getAttribute("companyCode");
-
-	    // 파일 저장 처리
-	    String fileName = null;
 	    String directoryPath = "D:/upload/templates/";
+	    System.out.println("docType: " + tempVO.getDocType());
 	    
-	    if (!tempVO.getDocFileName().isEmpty()) {
-	        fileName = tempVO.getDocFileName().getOriginalFilename();
-	        File directory = new File(directoryPath);
-	        
-	        if (!directory.exists()) {
-	            directory.mkdirs();
-	        }
+	    if (files.length > 0) {
+	        MultipartFile docFile = files[0];
+	        if (!docFile.isEmpty()) {
+	            String fileName = docFile.getOriginalFilename();
+	            File directory = new File(directoryPath);
 
-	        String saveName = Paths.get(directoryPath + fileName).toString();
-	        try {
-	            tempVO.getDocFileName().transferTo(Paths.get(saveName));
-	            tempVO.setDocFile(fileName);
-	        } catch (IOException e) {
-	            e.printStackTrace();
+	            if (!directory.exists()) {
+	                directory.mkdirs();
+	            }
+
+	            String saveName = Paths.get(directoryPath + fileName).toString();
+	            try {
+	                docFile.transferTo(Paths.get(saveName));
+	                tempVO.setDocFile(fileName);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
 	        }
 	    }
 
-	    // 이미지 저장 처리
-	    String base64Image = image.split(",")[1]; // Data URL의 "data:image/png;base64," 부분 제거
-	    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-
-	    String imageFileName = tempVO.getDocType() + "-" + UUID.randomUUID() + ".png";
-	    String imagePath = directoryPath + imageFileName;
-
-	    try (OutputStream stream = new FileOutputStream(imagePath)) {
-	        stream.write(imageBytes);
-	        tempVO.setDocImg(imagePath);
-	    } catch (IOException e) {
-	        e.printStackTrace();
+	    if (files.length > 1) {
+	        MultipartFile docImg = files[1];
+	        if (!docImg.isEmpty()) {
+	            String imageFileName = docImg.getOriginalFilename() + ".png";
+	            String imagePath = directoryPath + imageFileName;
+	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "docType: " + tempVO.getDocType());
+	            System.out.println(">>>>>>>>>>>>>>>>>>>>" + "imageFileName: " + imageFileName);
+	            try (OutputStream stream = new FileOutputStream(imagePath)) {
+	                stream.write(docImg.getBytes());
+	                tempVO.setDocImg(imagePath);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
 	    }
 
-	    // 회사 코드 설정
 	    tempVO.setCompanyCode(companyCode);
-
-	    // 데이터베이스에 정보 저장 (파일 경로와 이미지 경로를 포함하여 한 번에 저장)
 	    tsvc.insertTemp(tempVO);
 
 	    return "redirect:/group/doc/template";
 	}
 
+	//파일 업로드전 미리보기
+	@PostMapping("/previewHwp")
+	@ResponseBody
+	public String previewHwp(@RequestParam("file") MultipartFile file) {
+	    String fileContent = "";
+	    
+	    try {
+	        // 임시 파일로 저장
+	        File tempFile = File.createTempFile("upload-", ".hwp");
+	        file.transferTo(tempFile);
 
+	        // HWP 파일 읽기
+	        HWPFile hwpFile = HWPReader.fromFile(tempFile.getPath());
+	        if (hwpFile != null) {
+	            fileContent = TextExtractor.extract(hwpFile, TextExtractMethod.InsertControlTextBetweenParagraphText);
+	            fileContent = convertToHTML(fileContent);
+	        }
+	        // 임시 파일 삭제
+	        tempFile.delete();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        fileContent = "HWP 파일을 읽는 중 오류가 발생했습니다.";
+	    }
+
+	    return fileContent;
+	}
+	
 	private String convertToHTML(String text) {
 		text = text.replace("\n", "<br/>");
 		return text;

@@ -58,7 +58,7 @@ public class GroupAdminController {
 		String comCode = (String) session.getAttribute("companyCode");
 		List<EmployeeVO> list = gaService.empListSelect(comCode);
 		model.addAttribute("empList", list);
-		return "groupAdmin/GAEmpList";
+		return "/groupAdmin";
 	}
 
 	@GetMapping("/groupAdmin/GAEmpInsert")
@@ -81,9 +81,9 @@ public class GroupAdminController {
 		int result = gaService.empInsert(empVO);
 		String url = null;
 		if (result > -1) {
-			url = "redirect:GAEmpUpdate?employeeNo=" + result;
+			url = "redirect:/GAEmpUpdate?employeeNo=" + result;
 		} else {
-			url = "redirect:GAEmpList";
+			url = "redirect:/groupAdmin";
 		}
 		return url;
 	}
@@ -117,7 +117,7 @@ public class GroupAdminController {
 	@GetMapping("/groupAdmin/GAEmpDelete")
 	public String GAEmpDelete(EmployeeVO empVO) {
 		gaService.empDelete(empVO);
-		return "redirect:/groupAdmin/GAEmpList";
+		return "redirect:/groupAdmin";
 	}
 	
 	@GetMapping("/groupAdmin/GAEndSubList")
@@ -189,7 +189,7 @@ public class GroupAdminController {
 		int result = gaService.saveCompany(companyVO);
 		String url = null;
 		if (result > -1) {
-			url = "redirect:/groupAdmin/GAEmpList";
+			url = "redirect:/groupAdmin";
 		} else {
 			url = "redirect:/groupAdmin/GAComMod";
 		}

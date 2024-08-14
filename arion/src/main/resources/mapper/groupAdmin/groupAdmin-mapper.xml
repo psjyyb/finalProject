@@ -248,7 +248,7 @@
 	
 	<update id="cancleCompany">
 		UPDATE company 
-		SET site_resp = 'No'
+		SET site_resp = 'NO'
 		WHERE company_code = #{companyCode}
 	</update>
 	
@@ -280,4 +280,10 @@
 		WHERE pay_no = #{payNo}
 		ORDER BY pay_detail_no DESC
 	</select>
+	
+	<update id="updateContract">
+		UPDATE contract
+		SET final_date = #{finalDate}
+		WHERE contract_no = #{contractNo}
+	</update>
 </mapper>

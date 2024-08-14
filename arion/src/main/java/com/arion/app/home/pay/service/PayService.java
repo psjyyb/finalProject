@@ -32,4 +32,7 @@ public interface PayService {
 	
 	// 정기결제 메인 서비스
 	public Map<String, Object> schedulePayEnd(); 
+	
+	
+	void stateUpdate(); // 계약기간이 끝난계약 만료로 변경.
 }

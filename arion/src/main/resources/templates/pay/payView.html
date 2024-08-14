@@ -5,6 +5,7 @@
 	layout:fragment="content">
 <head>
 <meta charset="UTF-8">
+<title>ARION</title>
 <script
 	src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <style>
@@ -162,7 +163,7 @@ h1, h2, h3 {
 </head>
 <body>
 	<div class="container2">
-		<form id="signature-form" method="post" th:action="@{/home/payView}">
+		<form id="signature-form" method="post" th:action="@{/pay/payView}">
 			<div class="contract-container">
 				<div class="contract-header">
 					<h1>구독형 그룹웨어 계약서 작성</h1>

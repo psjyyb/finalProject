@@ -20,6 +20,9 @@
 		 						 ,#{firstMonthAmount, mode=IN, jdbcType=INTEGER}
 		 						 ,#{checks, mode=OUT, jdbcType=INTEGER})
 	</select> -->
+	<select id="updateState" statementType="CALLABLE">
+		CALL final_contract()
+	</select>
 	<insert id="insertContract" parameterType="ContractVO">
 		 INSERT INTO contract(
                               contract_no

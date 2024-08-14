@@ -68,6 +68,10 @@ h1 {
 		<h1>기안서 상세보기</h1>
 		<div class="document-card">
 			<div class="row">
+			<div class="col-md-6">
+					<label>문서번호</label>
+					<p th:text="${tempInfo.tempNo}"></p>
+				</div>
 				<div class="col-md-6">
 					<label>문서명</label>
 					<p th:text="${tempInfo.docName}"></p>
@@ -89,7 +93,7 @@ h1 {
 		</div>
 		<div class="text-right mb-3">
 			<button type="button" th:onclick="|location.href='@{/group/doc/template}'|" class="btn btn-primary">목록으로</button>
-			<button type="button" th:onclick="|location.href='@{/group/doc/tempDelete(tempNo=${tempInfo.tempNo})}"class="btn btn-danger">삭제</button>
+			<button type="button" th:onclick="|location.href='@{/group/doc/tempDelete(tempNo=${tempInfo.tempNo})}'|" class="btn btn-danger">삭제</button>
 		</div>
 	</div>
 

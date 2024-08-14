@@ -72,12 +72,6 @@ tbody tr:hover {
 <body>
 	<div class="container">
 		<h1>기안서</h1>
-		<div class="text-right mb-3">
-			<button type="button"
-				th:onclick="|location.href='@{/group/doc/insertTemp}'|"
-				class="btn btn-primary">등록</button>
-		</div>
-
 		<div class="table-container">
 			<table class="table table-hover">
 				<thead>
@@ -97,6 +91,11 @@ tbody tr:hover {
 					</th:block>
 				</tbody>
 			</table>
+			<div class="text-right mb-3">
+				<button type="button"
+					th:onclick="|location.href='@{/group/doc/insertTemp}'|"
+					class="btn btn-primary">등록</button>
+			</div>
 		</div>
 	</div>
 	<script>

@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -54,16 +55,7 @@ public class TemplateController {
 	public String tempInfo(TemplateVO templateVO, Model model, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		templateVO.setCompanyCode(companyCode);
-		TemplateVO findVO = tsvc.tempInfo(templateVO);
-		
-		  // Debugging: check if findVO is null
-	    if (findVO == null) {
-	        System.out.println("findVO is null");
-	    } else {
-	        System.out.println("findVO: " + findVO.toString());
-	    }
-		
-		
+		TemplateVO findVO = tsvc.tempInfo(templateVO);		
 		model.addAttribute("tempInfo", findVO);
 		return "group/document/template/templateInfo";
 	}
@@ -101,7 +93,6 @@ public class TemplateController {
 				}
 			}
 		}
-
 		if (files.length > 1) {
 			MultipartFile docImg = files[1];
 			if (!docImg.isEmpty()) {
@@ -123,13 +114,20 @@ public class TemplateController {
 
 		return "redirect:/group/doc/template";
 	}
-
+	
+	@GetMapping("/group/doc/tempDelete")
+	public String tempDelete(@RequestParam String tempNo, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		tsvc.tempDelete(companyCode, tempNo);
+		return "redirect:/group/doc/template";
+	}
+	
+	
 	// 파일 업로드전 미리보기
 	@PostMapping("/previewHwp")
 	@ResponseBody
 	public String previewHwp(@RequestParam("file") MultipartFile file) {
 		String fileContent = "";
-
 		try {
 			// 임시 파일로 저장
 			File tempFile = File.createTempFile("upload-", ".hwp");
@@ -145,12 +143,34 @@ public class TemplateController {
 			tempFile.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
-			fileContent = "HWP 파일을 읽는 중 오류가 발생했습니다.";
 		}
 
 		return fileContent;
 	}
 
+	@PostMapping("/previewHtml")
+	@ResponseBody
+	public String previewHtml(@RequestParam("file") MultipartFile file) {
+		StringBuilder fileContent = new StringBuilder();
+
+		try {
+			File tempFile = File.createTempFile("upload-", ".html");
+			file.transferTo(tempFile);
+			
+			 try (BufferedReader br = new BufferedReader(new FileReader(tempFile))) {
+	                String line;
+	                while ((line = br.readLine()) != null) {
+	                    fileContent.append(line).append("\n");
+	                }
+	            }
+	            tempFile.delete();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return fileContent.toString();
+	}
+	
 	private String convertToHTML(String text) {
 		text = text.replace("\n", "<br/>");
 		return text;

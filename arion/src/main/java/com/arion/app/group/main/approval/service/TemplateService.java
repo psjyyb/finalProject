@@ -9,5 +9,5 @@ public interface TemplateService {
 	public List<TemplateVO> tempList(@Param("companyCode") String companyCode);
 	public Map<String, Object> insertTemp(TemplateVO templateVO);
 	public TemplateVO tempInfo(TemplateVO templateVO);
-	
+	public int tempDelete(@Param("companyCode") String companyCode, @Param("tempNo") String tempNo);
 }

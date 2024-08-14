@@ -45,4 +45,10 @@ public class TemplateServiceImpl implements TemplateService {
 		return mapper.tempInfo(templateVO);
 	}
 
+	@Override
+	public int tempDelete(String companyCode, String tempNo) {
+		// TODO Auto-generated method stub
+		return mapper.tempDelete(companyCode, tempNo);
+	}
+
 }

@@ -1,152 +1,200 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/group/layouts/group_layout}"
-    layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <style>
-    body {
-        font-family: 'Arial', sans-serif;
-    }
+body {
+	font-family: 'Arial', sans-serif;
+}
 
-    h1 {
-        text-align: center;
-        margin-top: 20px;
-        color: #343a40;
-    }
+h1 {
+	text-align: center;
+	margin-top: 20px;
+	color: #343a40;
+}
 
-    .form-container {
-        max-width: 1200px;
-        margin: 20px auto;
-        background-color: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+.form-container {
+	max-width: 1200px;
+	margin: 20px auto;
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-    label {
-        font-weight: bold;
-        color: #495057;
-    }
+label {
+	font-weight: bold;
+	color: #495057;
+}
 
-    .form-control {
-        margin-bottom: 15px;
-    }
+.form-control {
+	margin-bottom: 15px;
+}
 
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        transition: background-color 0.3s ease;
-    }
+.btn-primary {
+	background-color: #007bff;
+	border-color: #007bff;
+	transition: background-color 0.3s ease;
+}
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
+.btn-primary:hover {
+	background-color: #0056b3;
+	border-color: #0056b3;
+}
 
-    #captureArea {
-        margin-top: 20px;
-        text-align: center;
-    }
+#captureArea {
+	margin-top: 20px;
+	text-align: center;
+}
 
-    #previewArea {
-        margin-top: 10px;
-        padding: 15px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        background-color: #f8f9fa;
-    }
+#previewArea {
+	margin-top: 10px;
+	padding: 15px;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+	background-color: #f8f9fa;
+}
 </style>
 </head>
 <body>
-    <div class="container">
-        <h1>기안서</h1>
-        <div class="form-container">
-            <form id="insertTemp" th:action="@{/insertTemp}" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>문서명</label>
-                    <input type="text" name="docName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>문서종류</label>
-                    <select name="docType" class="form-control" required>
-                        <option value=".hwp">HWP</option>
-                        <option value=".html">HTML</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>파일등록</label>
-                    <input type="file" name="files" class="form-control-file" onchange="previewHwpFile()" required>
-                </div>
-                <div id="captureArea">
-                    <div id="previewArea">
-                        <!-- 파일 미리보기가 여기에 표시됩니다 -->
-                        <p>미리보기가 여기에 표시됩니다.</p>
-                    </div>
-                </div>
-                <div class="text-right mt-4">
-                    <button type="button" class="btn btn-primary" onclick="captureAndSubmit()">등록</button>
-                    	<button type="button" th:onclick="|location.href='@{/group/doc/template}'|" class="btn btn-primary">목록으로</button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="container">
+		<h1>기안서</h1>
+		<div class="form-container">
+			<form id="insertTemp" th:action="@{/insertTemp}" method="post"
+				enctype="multipart/form-data">
+				<div class="form-group">
+					<label>문서명</label> <input type="text" name="docName"
+						class="form-control" required>
+				</div>
+				<div class="form-group">
+					<label>문서종류</label> <select id="selectDocType" name="docType"
+						class="form-control" required>
+						<option value=".hwp">HWP</option>
+						<option value=".html">HTML</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>파일등록</label> <input type="file" name="files"
+						class="form-control-file" onchange="previewFile()" required>
+				</div>
+				<div id="captureArea">
+					<div id="previewArea">
+						<p>미리보기가 여기에 표시됩니다.</p>
+					</div>
+				</div>
+				<div class="text-right mt-4">
+					<button type="button" class="btn btn-primary"
+						onclick="captureAndSubmit()">등록</button>
+					<button type="button"
+						th:onclick="|location.href='@{/group/doc/template}'|"
+						class="btn btn-primary">목록으로</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
-    <script>
-        function previewHwpFile() {
-            const file = document.querySelector('input[name="files"]').files[0];
-            const formData = new FormData();
-            formData.append("file", file);
+<script>		
+	function previewFile() {
+		const file = $('input[name="files"]')[0].files[0];
+		const fileType = $('#selectDocType').val();
 
-            $.ajax({
-                type: "POST",
-                url: "/previewHwp",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    document.getElementById('previewArea').innerHTML = response;
-                },
-                error: function(error) {
-                    console.log("HWP 미리보기 실패", error);
-                    document.getElementById('previewArea').innerHTML = "파일을 읽는 중 오류가 발생했습니다.";
-                }
-            });
-        }
+		if (fileType === '.hwp') {
+			previewHwpFile(file);
+		} else if (fileType === '.html') {
+			previewHtmlFile(file);
+		}
+	}
 
-        function captureAndSubmit() {
-            html2canvas(document.querySelector("#captureArea")).then(function(canvas) {
-                canvas.toBlob(function(blob) {
-                    const form = document.getElementById("insertTemp");
-                    const formData = new FormData(form);
+	function previewHwpFile(file) {
+		const formData = new FormData();
+		formData.append("file", file);
 
-                    // 캡처된 이미지를 files 배열에 추가
-                    formData.append("files", blob, "capture.png");
+		$.ajax({
+			type: "POST",
+			url: "/previewHwp",
+			data: formData,
+			processData: false,
+			contentType: false
+		})
+		.done(function(response) {
+			$('#previewArea').html(response);
+		})
+		.fail(function(error) {
+			$('#previewArea').html("파일을 읽는 중 오류가 발생했습니다.");
+		});
+	}
 
-                    // AJAX를 사용해 FormData를 전송
-                    $.ajax({
-                        type: "POST",
-                        url: form.action,
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            alert("폼이 성공적으로 제출되었습니다.");
-                            window.location.href = "/group/doc/template";
-                        },
-                        error: function(error) {
-                            alert("폼 제출 중 오류가 발생했습니다.");
-                        }
-                    });
-                }, "image/png");
-            });
-        }
-    </script>
+	function previewHtmlFile(file) {
+		const formData = new FormData();
+		formData.append("file", file);
+
+		$.ajax({
+			type: "POST",
+			url: "/previewHtml",
+			data: formData,
+			processData: false,
+			contentType: false
+		})
+		.done(function(response) {
+			$('#previewArea').html(response);
+		})
+		.fail(function(error) {
+			$('#previewArea').html("파일을 읽는 중 오류가 발생했습니다.");
+		});
+	}
+
+	function captureAndSubmit() {
+		const submitButton = $('button[type="button"]');
+		submitButton.prop('disabled', true);
+
+		html2canvas($('#captureArea')[0]).then(function(canvas) {
+			canvas.toBlob(function(blob) {
+				const form = $('#insertTemp')[0];
+				const formData = new FormData(form);
+
+				formData.append("files", blob, "capture.png");
+
+				$.ajax({
+					type: "POST",
+					url: form.action,
+					data: formData,
+					processData: false,
+					contentType: false
+				})
+				.done(function(response) {
+					Swal.fire({
+						icon: "success",
+						text: "기안서가 등록되었습니다.",
+						timer: 2000,
+						willClose: () => {
+							window.location.href = "/group/doc/template";
+						}
+					});
+				})
+				.fail(function(error) {
+					Swal.fire({
+						icon: "error",
+						text: "기안서 등록에 실패했습니다."
+					});
+					submitButton.prop('disabled', false);
+				});
+			}, "image/png");
+		});
+	}
+
+	$(document).ready(function() {
+		$('#selectDocType').on('change', function() {
+			$('#previewArea').empty();
+			$('input[name="files"]').val(''); 
+		});
+	});
+</script>
 </body>
 </html>

@@ -16,7 +16,7 @@
 <body>
     <div>
         <h3>자유게시판 글 등록</h3>
-        <form name="insertForm" th:action="@{/freeboardInsert}" method="POST">
+        <form name="insertForm" th:action="@{/freeboardInsert}" method="POST" enctype="multipart/form-data">
             <table>
                 <tr>
                     <th>제목</th>
@@ -26,6 +26,12 @@
                     <th>내용</th>
                     <td width="100%" height="100%">
                         <textarea name="boardContent" id="boardContent" placeholder="내용을 입력해주세요" rows="10px" cols="75px"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th>파일 첨부</th>
+                    <td>
+                        <input type="file" name="files" multiple />
                     </td>
                 </tr>
             </table>

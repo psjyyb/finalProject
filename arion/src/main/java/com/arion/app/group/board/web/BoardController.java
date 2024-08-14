@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.arion.app.common.service.FileService;
+import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.BoardService;
 import com.arion.app.group.board.service.BoardVO;
 import com.arion.app.group.board.service.Criteria;
@@ -33,6 +37,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardController {
 
+	@Autowired
+	FileService fsvc;
+	
 	private final BoardService boardService;
 	private final ReplyService replyService;
 	
@@ -50,6 +57,8 @@ public class BoardController {
 	@GetMapping("/group/freeboardInfo")
 	public String boardInfo(BoardVO boardVO, Model model) {
 		BoardVO findVO = boardService.boardInfo(boardVO);
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo());
+		model.addAttribute("fileInfo", fileVOList);
 		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);
 		List<ReplyVO> list = replyService.replyList(boardVO.getBoardNo());
@@ -65,13 +74,13 @@ public class BoardController {
 	
 	// 게시글 등록 (처리)
 	@PostMapping("/freeboardInsert")
-	public String boardInsertProcess(BoardVO boardVO, HttpSession session) { 
+	public String boardInsertProcess(BoardVO boardVO, @RequestPart MultipartFile[] files, HttpSession session) { 
 		int employeeNo = (int) session.getAttribute("employeeNo"); //HttpSession
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setEmployeeNo(employeeNo); //로그인세션 받아와서 작성자로
 		boardVO.setBoardCategory("Y02"); //글 등록하기위해선 어떤게시판에 등록할것인지 정해야함
 		boardVO.setCompanyCode(companyCode); //회사코드를 받아서 그룹웨어를 사용하기 때문에 회사코드를 받아야됨
-		long bno = boardService.insertBoard(boardVO);
+		long bno = boardService.insertBoard(boardVO, files, companyCode);
 		return "redirect:/group/freeboardInfo?boardNo=" + bno;
 	}
 	

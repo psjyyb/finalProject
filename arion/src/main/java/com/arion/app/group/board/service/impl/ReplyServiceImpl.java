@@ -1,6 +1,8 @@
 package com.arion.app.group.board.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import com.arion.app.group.board.service.ReplyVO;
 @Service
 public class ReplyServiceImpl implements ReplyService{
 	
+	@Autowired
 	private ReplyMapper replyMapper;
 
 	@Autowired
@@ -26,10 +29,36 @@ public class ReplyServiceImpl implements ReplyService{
 
 	// 댓글 등록
 	@Override
-	public int Replyinsert(ReplyVO replyVO) {
-		int result = replyMapper.Replyinsert(replyVO);
+	public int insertReply(ReplyVO replyVO) {
+		int result = replyMapper.insertReply(replyVO);
 		return result == 1 ? replyVO.getCommentNo() : -1;
 	}
+
+	// 댓글 수정
+	@Override
+	public Map<String, Object> updateReply(ReplyVO replyVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		
+		int result = replyMapper.updateReply(replyVO);
+		if(result == 1 ) {
+			isSuccessed = true;
+		}
+		map.put("result", isSuccessed);
+		map.put("target", replyVO);
+		return map;
+	}
+	
+	// 댓글 삭제
+	 @Override
+	 public int deleteReply(int commentNo, int boardNo) {
+	 	Map<String, Object> params = new HashMap<>();
+	 	params.put("commentNo", commentNo);
+	 	params.put("boardNo", boardNo);
+	        
+	 	return replyMapper.deleteReply(params);
+	 }
+
 
 
 

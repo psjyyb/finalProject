@@ -1,6 +1,9 @@
 package com.arion.app.group.admin.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +128,7 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	@Override
 	public int saveCompany(CompanyVO companyVO) {
 		String comPw = companyVO.getCompanyPw();
-		if (comPw != null && comPw !="") {
+		if (comPw != null && comPw != "") {
 			String encodedPassword = passwordEncoder.encode(companyVO.getCompanyPw());
 			companyVO.setCompanyPw(encodedPassword);
 		}
@@ -144,34 +147,56 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		map.put("result", isSuccessed);
 		return map;
 	}
+
 	@Override
 	public int contractNo(String companyCode) {
 		return gaMapper.contractNo(companyCode);
 	}
+
 	@Transactional
 	@Override
 	public String cancleContract(int contractNo, String companyCode) {
 		int result = gaMapper.cancleCompany(companyCode);
 		result += gaMapper.cancleContract(contractNo, companyCode);
 		String url = null;
-		if(result <= 1) {
+		if (result <= 1) {
 			url = "redirect:/groupAdmin/conCan";
-		}else {
+		} else {
 			url = "redirect:/home";
 		}
 		return url;
 	}
+
 	@Override
 	public List<PayListVO> payList(String comcode) {
 		return gaMapper.payList(comcode);
 	}
-	
+
 	@Override
 	public List<PayDetailVO> payDetailInfo(int payNo) {
 		return gaMapper.payDetailInfo(payNo);
 	}
+
 	@Override
 	public PayListVO payInfo(int payNo) {
 		return gaMapper.payInfo(payNo);
+	}
+
+	@Override
+	public Map<String, Object> extendContract(int period, String comCode) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		GroupAdminVO gvo = gaMapper.selectSubInfo(comCode);
+		Date date = gvo.getFinalDate();
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate newDate = localDate.plusMonths(period);
+		
+		System.out.println(newDate + "갱신된 날짜가 어떻게 나오는지 ");
+		int result = gaMapper.updateContract(newDate, gvo.getContractNo());
+		if (result > 1) {
+			isSuccessed = true;
+		}
+		map.put("result", isSuccessed);
+		return map;
 	}
 }

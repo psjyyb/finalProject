@@ -1,6 +1,7 @@
 package com.arion.app.group.admin.web;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -206,6 +207,7 @@ public class GroupAdminController {
 	@PostMapping("/groupAdmin/contractCancle")
 	public String contractCancle(int contractNo, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
+		System.out.println(contractNo);
 		return gaService.cancleContract(contractNo,comCode);
 	}
 	@GetMapping("/groupAdmin/GAPayList")
@@ -222,5 +224,10 @@ public class GroupAdminController {
 		model.addAttribute("detailList",list);
 		model.addAttribute("payInfo",lvo);
 		return "/groupAdmin/GAPayInfo";
+	}
+	@PostMapping("/groupAdmin/GANowContract")
+	public Map<String,Object>extendContract(int period,HttpSession session){
+		String comCode = (String)session.getAttribute("companyCode"); 
+		return gaService.extendContract(period, comCode);
 	}
 }

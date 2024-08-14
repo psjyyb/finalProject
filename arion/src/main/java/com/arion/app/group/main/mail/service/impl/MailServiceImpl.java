@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmailService;
 import com.arion.app.common.service.FileService;
+import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.main.mail.mapper.MailMapper;
 import com.arion.app.group.main.mail.service.MailReceiveVO;
 import com.arion.app.group.main.mail.service.MailService;
@@ -30,8 +31,8 @@ public class MailServiceImpl implements MailService {
     private FileService fileService;
     //받은메일
     @Override
-    public List<MailVO> mailList(MailVO mailVO) {
-        return mailMapper.receiveMailAll(mailVO.getCompanyCode(), mailVO.getSenderId());
+    public List<MailVO> mailList(MailVO mailVO,Criteria criteria) {
+        return mailMapper.receiveMailAll(mailVO,criteria);
     }
     //보낸메일
     @Override
@@ -45,6 +46,17 @@ public class MailServiceImpl implements MailService {
         System.out.println("중요 메일 조회 결과: " + mails);
         return mails;
     }
+    
+    //메일 페이징
+	@Override
+	public int selectMailTotalCount(Criteria criteria) {
+//		Map<String, Object> params = new HashMap<>();
+//		params.put("searchType", criteria.getSearchType());
+//		params.put("keyword", criteria.getKeyword());
+
+		return mailMapper.selectMailTotalCount(criteria);
+	}
+    
     //휴지통
     @Override
     public List<MailVO> deleteMailList(MailVO mailVO) {

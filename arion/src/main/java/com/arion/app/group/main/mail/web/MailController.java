@@ -13,12 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.arion.app.group.board.service.Criteria;
+import com.arion.app.group.board.service.PageDTO;
 import com.arion.app.group.main.mail.service.MailService;
 import com.arion.app.group.main.mail.service.MailVO;
 
@@ -35,15 +36,22 @@ public class MailController {
 
     // 받은 메일 조회 (페이지)
     @GetMapping("/Mymail")
-    public String mailList(Model model) {
+    public String mailList(Model model,Criteria criteria) {
     	String employeeId=(String) httpSession.getAttribute("loginId");
-        String companyCode = (String) httpSession.getAttribute("companyCode");
-
+        String companyCode = (String) httpSession.getAttribute("companyCode"); 
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
-        List<MailVO> receivedMails = mailService.mailList(mailVO);
+    
+        List<MailVO> receivedMails = mailService.mailList(mailVO,criteria);
+        int totalCount = mailService.selectMailTotalCount(criteria);
+        
+        PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		
         model.addAttribute("receivedMails", receivedMails);
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("criteria", criteria);
+      
 
         return "group/mail/Mymail";	
     }

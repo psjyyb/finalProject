@@ -248,7 +248,7 @@
 	
 	<update id="cancleCompany">
 		UPDATE company 
-		SET site_resp = 'No'
+		SET site_resp = 'NO'
 		WHERE company_code = #{companyCode}
 	</update>
 	

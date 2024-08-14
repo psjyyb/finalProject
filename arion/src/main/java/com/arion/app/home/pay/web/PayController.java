@@ -47,7 +47,7 @@ public class PayController {
 		this.payService = payService;
 	}
 
-	@GetMapping("/home/payView")
+	@GetMapping("/pay/payView")
 	public String payView(PayVO payVO, Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		CompanyVO cvo = payService.selectCom(comCode, payVO);
@@ -61,7 +61,7 @@ public class PayController {
 		return "pay/payView";
 	}
 
-	@PostMapping("/home/payView")
+	@PostMapping("/pay/payView")
 	public String payProcess(@RequestParam("signatureData") String signatureData, ContractVO contractVO, Model model) {
 		String fileName = null;
 		try {

@@ -28,5 +28,5 @@ public interface PayMapper {
 	List<ContractVO> contractList(); // 계약중 그리고 계약종료일이 현재날짜보다 큰 계약에 대한 모든 계약조회
 	List<UseModuleVO> useModule(int contractNo); // 계약건에 대한 사용모듈 조회 pay detail 에 넣을 정보
 	
-	
+	void updateState(); // 계약기간이 끝난계약 만료로 변경.
 }

@@ -46,4 +46,6 @@ public interface GroupAdminService {
 	PayListVO payInfo(int payNo); // 결제상세보기
 	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
 	
+	Map<String, Object>extendContract(int period,String comCode); // 계약서 갱신
+
 }

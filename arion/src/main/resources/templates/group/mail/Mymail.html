@@ -89,9 +89,17 @@
 </head>
 <body>
     <h1>받은 메일함</h1>
-    <form action="/group/mail/Mymail/search" method="GET">
-        <input type="text" name="keyword" placeholder="Search Mails" required>
-        <button type="submit">검색</button>
+    <form action="/group/mail/Mymail/search" method="GET" th:object="${criteria}">
+      			<div>
+				<select th:field="*{searchType}">
+					<option value="title" th:selected="${criteria.searchType == ''}">전체</option>
+					<option value="title"
+						th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+					<option value="writer"
+						th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+				</select> <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+			</div>
+			<button type="submit">검색</button>
     </form>
     <table>
         <thead>
@@ -125,6 +133,19 @@
         <button id="deleteSelected" class="delete-btn">휴지통</button>
     </div>
 
+<ul class="pagination">
+			<li th:if="${pageDTO.prev}"><a
+				th:href="@{|/home/qna?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
+			</li>
+			<li
+				th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
+				th:classappend="${pageNum == criteria.pageNum} ? 'active'"><a
+				th:href="@{|/home/qna?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
+			</li>
+			<li th:if="${pageDTO.next}"><a
+				th:href="@{|/home/qna?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
+			</li>
+		</ul>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.getElementById('selectAll').addEventListener('change', function() {

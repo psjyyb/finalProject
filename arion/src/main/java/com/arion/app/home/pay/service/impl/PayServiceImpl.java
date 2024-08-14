@@ -1,8 +1,10 @@
 package com.arion.app.home.pay.service.impl;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,6 +130,7 @@ public class PayServiceImpl implements PayService {
 			payDetailInsert(contractVO.getPayNo(), trimmedValue);
 			useModuleInsert(trimmedValue, contractVO.getCompanyCode(), contractVO.getContractNo());
 		});
+		result+=comRespUpdate(contractVO);
 		if (result > 1) {
 			isSuccessed = true;
 		}
@@ -196,17 +199,32 @@ public class PayServiceImpl implements PayService {
 					}
 				}
 			}else if(contract.getRegularDate() == day+5) {
-				sendSimpleEmail(contract.getCeoEmail());
+				String text = "안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 정기결제 5일 전이니 계좌를 확인해 주시고 결제가 원할하게 이루어질수있도록 금액을 채워주시기 바랍니다 감사합니다!";
+				String subject = "ARION 정기결제 5일전입니다.";
+				sendSimpleEmail(contract.getCeoEmail(),subject,text);
 				
 			}
+				stateUpdate();  // 계약기간이 만료된 계약건의 상태를 계약만료로 바꿔줌
+			Date fdate = contract.getFinalDate();
+			LocalDate localDate = fdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			int fday=localDate.getDayOfMonth();
+			if(fday == day+5) {
+				String text = "안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 고객님의 계약기간이 5일 남았습니다. 서비스를 계속 이용하고 싶으시면 계약 갱신 또는 계약 수정을 해주시 바랍니다.";
+				String subject = "ARION 계약기간이 만료 5일전입니다.";
+				sendSimpleEmail(contract.getCeoEmail(),subject,text);
+
+
+
+			}
+			
 		});
 		return map;
 	}
-	  public void sendSimpleEmail(String email) {
+	  public void sendSimpleEmail(String email,String subject,String text) {
 	        SimpleMailMessage message = new SimpleMailMessage();
 	        message.setTo(email);
-	        message.setSubject("ARION 정기결제 5일전입니다.");
-	        message.setText("안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 정기결제 5일 전이니 계좌를 확인해 주시고 결제가 원할하게 이루어질수있도록 금액을 채워주시기 바랍니다 감사합니다!");
+	        message.setSubject(subject);
+	        message.setText(text);
 	        message.setFrom("psjyyb3418@gmail.com");
 
 	        mailSender.send(message);
@@ -248,6 +266,11 @@ public class PayServiceImpl implements PayService {
 			System.out.println("결제 실패: " + response.getBody());
 			return 0;
 		}
+	}
+	@Override
+	public void stateUpdate() {
+		payMapper.updateState();
+		
 	}
 }
 //private final String TOSS_API_URL =

@@ -120,9 +120,9 @@
 	
 	<!-- 조회수 -->
 	<update id="ViewCnt" parameterType="int">
-		UPDATE board
-		SET viewCnt = viewCnt + 1
-		WHERE board_no = #{boardNo}
+	UPDATE board
+	SET viewCnt = viewCnt + 1
+	WHERE board_no = #{boardNo}
 	</update>
 	
 	<!-- 게시글 수 -->

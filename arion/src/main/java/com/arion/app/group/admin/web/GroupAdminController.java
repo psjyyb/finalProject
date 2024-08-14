@@ -1,6 +1,5 @@
 package com.arion.app.group.admin.web;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
+import com.arion.app.group.admin.service.DepartmentListVO;
 import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
@@ -143,17 +144,18 @@ public class GroupAdminController {
 	public String GADeptList(Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		List<DepartmentVO> deptList = gaService.deptListSelect(comCode);
+		List<EmployeeVO> empList = gaService.empListSelect(comCode);
+		model.addAttribute("empList",empList);
 		model.addAttribute("deptList",deptList);
 		return "groupAdmin/GADeptList";
 	}
 	@PostMapping("/groupAdmin/GADeptSave")
-	public String GADeptSave (DepartmentVO deptVO,HttpSession session) {
-		String comCode = (String) session.getAttribute("companyCode");
-		String depts = deptVO.getDepartmentName();
-		String[] deptArr = depts.split(","); // 콤마를 기준으로 배열로 담아준다
-		List<String> list = Arrays.asList(deptArr); // 배열에 담긴 값을 리스트로 
-		gaService.saveDept(list,comCode);		
-		return "redirect:/groupAdmin/GADeptList";
+	public String GADeptSave(@ModelAttribute("departments") DepartmentListVO deptListVO, HttpSession session) {
+	    String comCode = (String) session.getAttribute("companyCode");
+	    System.out.println(deptListVO);
+
+	    gaService.saveDept(deptListVO, comCode);  // 서비스로 전체 부서 목록 전달
+	    return "redirect:/groupAdmin/GADeptList";
 	}
 	@GetMapping("/groupAdmin/GARankList")
 	public String GARankList(Model model, HttpSession session) {
@@ -206,6 +208,7 @@ public class GroupAdminController {
 	@PostMapping("/groupAdmin/contractCancle")
 	public String contractCancle(int contractNo, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
+		System.out.println(contractNo);
 		return gaService.cancleContract(contractNo,comCode);
 	}
 	@GetMapping("/groupAdmin/GAPayList")
@@ -222,5 +225,10 @@ public class GroupAdminController {
 		model.addAttribute("detailList",list);
 		model.addAttribute("payInfo",lvo);
 		return "/groupAdmin/GAPayInfo";
+	}
+	@PostMapping("/groupAdmin/GANowContract")
+	public Map<String,Object>extendContract(int period,HttpSession session){
+		String comCode = (String)session.getAttribute("companyCode"); 
+		return gaService.extendContract(period, comCode);
 	}
 }

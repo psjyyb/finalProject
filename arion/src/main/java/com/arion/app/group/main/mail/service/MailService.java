@@ -9,25 +9,28 @@ import com.arion.app.group.board.service.Criteria;
 public interface MailService {
 
     // 받은 메일 조회
-    List<MailVO> mailList(MailVO mailVO,Criteria criteria);
+
+	List<MailVO> mailList(MailVO mailVO, Criteria criteria);
 
     // 보낸 메일 조회
-    List<MailVO> sendMailList(MailVO mailVO);
+    List<MailVO> sendMailList(MailVO mailVO, Criteria criteria);
 
     // 중요 메일 조회
-    List<MailVO> importMailList(MailVO mailVO);
+    List<MailVO> importMailList(MailVO mailVO, Criteria criteria);
 
     // 휴지통 조회
-    List<MailVO> deleteMailList(MailVO mailVO);
+    List<MailVO> deleteMailList(MailVO mailVO, Criteria criteria);
     
     //메일 페이징
-    int selectMailTotalCount(Criteria criteria);
+    int selectMailTotalCount(MailVO mailVO,Criteria criteria);
     // 메일 삭제
     Map<String, Object> deleteMail(MailVO mailVO);
 
     // 메일 보내기
-    public void sendMail(MailVO mailVO, MultipartFile[] attachments);
+    int sendMail(MailVO mailVO, MultipartFile[] attachments);
     
+    // 수신자 정보 조회
+    List<MailReceiveVO> selectReceivers(String companyCode);
     //메일 상세조회
     MailVO mailInfo(MailVO mailVO);
  

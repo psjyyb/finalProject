@@ -15,7 +15,7 @@
 	</select>
 	
 	<select id="selectDeptList" resultType="DepartmentVO">
-		SELECT department_name,department_no,manager
+		SELECT department_name,department_no,manager_id
 		FROM departments
 		WHERE company_code = #{companyCode}
 		ORDER BY department_no
@@ -162,11 +162,13 @@
 		INSERT INTO departments(
 								 department_no
 								,department_name
-								,company_code)
+								,company_code
+								,manager_id)
 		VALUES (
 				 #{departmentNo}
 				,#{departmentName}
-				,#{companyCode})
+				,#{companyCode}
+				,#{managerId})
 	</insert>
 	
 	<delete id="deptDeSave">
@@ -280,4 +282,10 @@
 		WHERE pay_no = #{payNo}
 		ORDER BY pay_detail_no DESC
 	</select>
+	
+	<update id="updateContract">
+		UPDATE contract
+		SET final_date = #{finalDate}
+		WHERE contract_no = #{contractNo}
+	</update>
 </mapper>

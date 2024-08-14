@@ -26,7 +26,7 @@ public interface GroupAdminService {
 	
 	GroupAdminVO sunInfoSelect(String companyCode); // 현재 구독중인 계약정보
 	
-	int saveDept(List<String> list,String companyCode); // 부서저장
+	int saveDept(DepartmentListVO list,String companyCode); // 부서저장
 	
 	int saveRank(RankVO rankVO, String companyCode); // 직급저장
 	
@@ -46,4 +46,6 @@ public interface GroupAdminService {
 	PayListVO payInfo(int payNo); // 결제상세보기
 	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
 	
+	Map<String, Object>extendContract(int period,String comCode); // 계약서 갱신
+
 }

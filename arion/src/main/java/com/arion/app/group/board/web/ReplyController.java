@@ -1,13 +1,16 @@
 package com.arion.app.group.board.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.arion.app.group.board.service.BoardVO;
 import com.arion.app.group.board.service.ReplyService;
 import com.arion.app.group.board.service.ReplyVO;
 
@@ -19,15 +22,28 @@ public class ReplyController {
     private ReplyService replyService;
 
 	// 댓글 등록(처리)
-	@PostMapping("/replyInsert")
+	@PostMapping("/group/insertReply")
 	public String Replyinsert(ReplyVO replyVO, HttpSession session) {
-		String empname = (String) session.getAttribute("empName");
+		int employeeNo = (int) session.getAttribute("employeeNo");
 		String companyCode = (String) session.getAttribute("companyCode");
-		replyVO.setCommentWrite(empname);
+		replyVO.setCommentWrite(new Integer(employeeNo).toString()); //
 		replyVO.setCompanyCode(companyCode);
-		int bno = replyService.Replyinsert(replyVO);
+		int bno = replyService.insertReply(replyVO);
 		return "redirect:/group/freeboardInfo?boardNo=" + replyVO.getBoardNo();
-	}	
+	}
 
+	// 댓글 수정
+	@PostMapping("/group/updateReply")
+	@ResponseBody
+	public Map<String, Object> replyUpdateProcess(@RequestBody ReplyVO replyVO) {
+		return replyService.updateReply(replyVO);
+	}
 	
+	
+	// 댓글 삭제
+	@PostMapping("/group/deleteReply")
+    public String deleteReply(@RequestParam("commentNo") int commentNo, @RequestParam("boardNo") int boardNo) {
+        replyService.deleteReply(commentNo, boardNo);
+        return "redirect:/group/freeboardInfo?boardNo=" + boardNo;
+    }
 }

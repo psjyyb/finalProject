@@ -14,22 +14,31 @@ import com.arion.app.group.main.mail.service.MailVO;
 public interface MailMapper {
 
     // 받은 메일 조회
-    List<MailVO> receiveMailAll(MailVO mailVO,Criteria criteria);
+    List<MailVO> receiveMailAll(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
 
     // 보낸 메일 조회
-    List<MailVO> sendMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
+    List<MailVO> sendMailAll(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
 
     // 중요 메일 조회
-    List<MailVO> importMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
+    List<MailVO> importMailAll(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
 
     // 휴지통 조회
-    List<MailVO> deleteMailAll(@Param("companyCode") String companyCode, @Param("employeeId") String employeeId);
+    List<MailVO> deleteMailAll(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
 
     //메일 페이징
-    int selectMailTotalCount(Criteria criteria);
+    int selectMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
+   
+    int sendMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
+    
+    int importMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
+    
+    int deleteMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
     // 메일 보내기
     int sendMail(MailVO mailVO);
 
+    // 수신자 정보 조회
+    List<MailReceiveVO> selectReceivers(@Param("companyCode") String companyCode);
+    
     //메일 검색
     
     

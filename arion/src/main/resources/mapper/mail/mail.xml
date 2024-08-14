@@ -3,59 +3,208 @@
 <mapper
 	namespace="com.arion.app.group.main.mail.mapper.MailMapper">
 
-	<!-- 받은 메일 조회 -->
-	<select id="receiveMailAll" parameterType="MailVO"
-		resultType="MailVO">
-			SELECT *
-  			FROM (
-     			 SELECT  mail_no, 
-           				 FIND_EMP_NAME(sender_id) AS sender_name,
-           		 send_date,
-          		 mail_title,
-            	 ROWNUM AS rn
-      		FROM (
-          		  SELECT m.mail_no, 
-               			 FIND_EMP_NAME(m.sender_id) AS sender_name,
-               			 m.send_date,
-              			 m.mail_title
-          		  FROM mail m
-          		  JOIN mail_receive mr ON m.mail_no = mr.mail_no
-           		  WHERE mr.employee_id = #{employeeId}
-           		  AND m.company_code = #{companyCode}
-                  AND m.mail_status = 'RECEIVED'
-           		 <if test="searchType != null and searchType != ''">
-           		     <if test="searchType == 'mailtitle'">
-               		     AND m.mail_title LIKE '%' || #{keyword} || '%'
-            	     </if>
-            		 <if test="searchType == 'senderId'">
-              		      AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{keyword} || '%'
-             		 </if>
-         		   </if>
-          		  ORDER BY m.mail_no DESC
-      			  )
-      		  WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
-   			 )
-  		  WHERE rn > (#{pageNum} - 1) * #{amount}
-	</select>
+<!-- 받은 메일 조회 -->
+<select id="receiveMailAll" parameterType="map" resultType="MailVO">
+    SELECT *
+    FROM (
+        SELECT mail_no, 
+               sender_name,
+               send_date,
+               mail_title,
+               ROWNUM AS rn
+        FROM (
+            SELECT m.mail_no, 
+                   FIND_EMP_NAME(m.sender_id) AS sender_name,
+                   m.send_date,
+                   m.mail_title
+            FROM mail m
+            JOIN mail_receive mr ON m.mail_no = mr.mail_no
+            WHERE mr.employee_id = #{mailVO.senderId}
+            AND m.company_code = #{mailVO.companyCode}
+            AND m.mail_status = 'RECEIVED'
+            <if test="criteria.searchType != null and criteria.searchType != ''">
+                <if test="criteria.searchType == 'mailtitle'">
+                    AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+                <if test="criteria.searchType == 'senderId'">
+                    AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+            </if>
+            ORDER BY m.mail_no DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+    )
+    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
+</select>
 
-	<select id="selectMailTotalCount" resultType="int">
-    	SELECT COUNT(*)
-   		FROM mail m
-    	JOIN mail_receive mr ON m.mail_no = mr.mail_no
-    	WHERE 1=1
-    	AND mr.employee_id = #{employeeId}
- 		AND m.mail_status = 'RECEIVED'
-    	<if test="searchType != null and searchType != ''">
-       		 <if test="searchType == 'title'">
-         		   AND m.mail_title LIKE '%' || #{keyword} || '%'
-       		 </if>
-      		  <if test="searchType == 'sender'">
-          		  AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{keyword} || '%'
-       			 </if>
-   		 </if>
-	</select>
+<select id="selectMailTotalCount" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{mailVO.senderId}
+    AND m.mail_status = 'RECEIVED'
+    <if test="criteria.searchType != null and criteria.searchType != ''">
+        <if test="criteria.searchType == 'mailtitle'">
+            AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+        <if test="criteria.searchType == 'senderId'">
+            AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+    </if>
+</select>
 
-	<!-- 중요 메일 조회 -->
+<!-- 보낸 메일 조회 -->
+<select id="sendMailAll" parameterType="map" resultType="MailVO">
+    SELECT *
+    FROM (
+        SELECT mail_no, 
+               sender_name,
+               send_date,
+               mail_title,
+               ROWNUM AS rn
+        FROM (
+            SELECT m.mail_no, 
+                   FIND_EMP_NAME(m.sender_id) AS sender_name,
+                   m.send_date,
+                   m.mail_title
+            FROM mail m
+            JOIN mail_receive mr ON m.mail_no = mr.mail_no
+            WHERE mr.employee_id = #{mailVO.senderId}
+            AND m.company_code = #{mailVO.companyCode}
+            AND m.mail_status = 'SEND'
+            <if test="criteria.searchType != null and criteria.searchType != ''">
+                <if test="criteria.searchType == 'mailtitle'">
+                    AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+                <if test="criteria.searchType == 'senderId'">
+                    AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+            </if>
+            ORDER BY m.mail_no DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+    )
+    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
+</select>
+
+<select id="sendMailTotalCount" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{mailVO.senderId}
+    AND m.mail_status = 'SEND'
+    <if test="criteria.searchType != null and criteria.searchType != ''">
+        <if test="criteria.searchType == 'mailtitle'">
+            AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+        <if test="criteria.searchType == 'senderId'">
+            AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+    </if>
+</select>
+
+<!-- 중요 메일 조회 -->
+<select id="importMailAll" parameterType="map" resultType="MailVO">
+    SELECT *
+    FROM (
+        SELECT mail_no, 
+               sender_name,
+               send_date,
+               mail_title,
+               ROWNUM AS rn
+        FROM (
+            SELECT m.mail_no, 
+                   FIND_EMP_NAME(m.sender_id) AS sender_name,
+                   m.send_date,
+                   m.mail_title
+            FROM mail m
+            JOIN mail_receive mr ON m.mail_no = mr.mail_no
+            WHERE mr.employee_id = #{mailVO.senderId}
+            AND m.company_code = #{mailVO.companyCode}
+            AND m.mail_status = 'IMPORT'
+            <if test="criteria.searchType != null and criteria.searchType != ''">
+                <if test="criteria.searchType == 'mailtitle'">
+                    AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+                <if test="criteria.searchType == 'senderId'">
+                    AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+            </if>
+            ORDER BY m.mail_no DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+    )
+    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
+</select>
+
+<select id="importMailTotalCount" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{mailVO.senderId}
+    AND m.mail_status = 'IMPORT'
+    <if test="criteria.searchType != null and criteria.searchType != ''">
+        <if test="criteria.searchType == 'mailtitle'">
+            AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+        <if test="criteria.searchType == 'senderId'">
+            AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+    </if>
+</select>
+
+
+<!-- 휴지통 메일 조회 -->
+<select id="deleteMailAll" parameterType="map" resultType="MailVO">
+    SELECT *
+    FROM (
+        SELECT mail_no, 
+               sender_name,
+               send_date,
+               mail_title,
+               ROWNUM AS rn
+        FROM (
+            SELECT m.mail_no, 
+                   FIND_EMP_NAME(m.sender_id) AS sender_name,
+                   m.send_date,
+                   m.mail_title
+            FROM mail m
+            JOIN mail_receive mr ON m.mail_no = mr.mail_no
+            WHERE mr.employee_id = #{mailVO.senderId}
+            AND m.company_code = #{mailVO.companyCode}
+            AND m.mail_status = 'TRASH'
+            <if test="criteria.searchType != null and criteria.searchType != ''">
+                <if test="criteria.searchType == 'mailtitle'">
+                    AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+                <if test="criteria.searchType == 'senderId'">
+                    AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+                </if>
+            </if>
+            ORDER BY m.mail_no DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+    )
+    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
+</select>
+
+<select id="deleteMailTotalCount" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM mail m
+    JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE mr.employee_id = #{mailVO.senderId}
+    AND m.mail_status = 'TRASH'
+    <if test="criteria.searchType != null and criteria.searchType != ''">
+        <if test="criteria.searchType == 'mailtitle'">
+            AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+        <if test="criteria.searchType == 'senderId'">
+            AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+    </if>
+</select>
+
+	<!-- 중요 메일 조회
 	<select id="importMailAll" parameterType="MailVO"
 		resultType="MailVO">
 		SELECT
@@ -68,7 +217,7 @@
 		AND m.mail_status = 'IMPORT'
 	</select>
 
-	<!-- 휴지통 조회 -->
+
 	<select id="deleteMailAll" parameterType="MailVO"
 		resultType="MailVO">
 		SELECT
@@ -82,7 +231,7 @@
 		AND m.mail_status =
 		'TRASH'
 	</select>
-
+ -->
 	<!-- 메일 상세 조회 -->
 	<select id="selectMailInfo" parameterType="MailVO"
 		resultType="MailVO">
@@ -105,69 +254,42 @@
 		MAIL_NO_SEQ.NEXTVAL FROM DUAL
 	</select>
 
-	<!-- 메일 데이터 삽입 -->
-	<insert id="sendMail" parameterType="MailVO">
-		INSERT INTO MAIL (
-		MAIL_NO,
-		SENDER_ID,
-		COMPANY_CODE,
-		MAIL_CONTENT,
-		SEND_DATE,
-		MAIL_TITLE,
-		MAIL_STATUS
-		)
-		VALUES (
-		#{mailNo},
-		#{senderId},
-		#{companyCode},
-		#{mailContent},
-		SYSDATE,
-		#{mailTitle},
-		'SEND'
-		)
-	</insert>
+<!-- 메일 전송 -->
+<insert id="insertMail" parameterType="MailVO">
+    INSERT INTO mail (
+        mail_no,
+        sender_id,
+        sender_name,
+        mail_title,
+        mail_content,
+        mail_status,
+        company_code
+    ) VALUES (
+        #{mailNo},
+        #{senderId},
+        #{mailTitle},
+        #{mailContent},
+        'SEND',
+        #{companyCode}
+    )
+</insert>
 
-	<!-- 메일 수신자 데이터 삽입 -->
-	<insert id="insertMailReceive" parameterType="MailReceiveVO">
-		INSERT INTO MAIL_RECEIVE (
-		RECEIVE_NO,
-		MAIL_NO,
-		EMPLOYEE_ID,
-		FILE_NO
-		)
-		VALUES (
-		#{receiveNo},
-		#{mailNo},
-		#{employeeId},
-		#{fileNo}
-		)
-	</insert>
-
-	<!-- 메일 상태를 수신된 상태로 변경 -->
-	<update id="updateMailStatusToReceived">
-		UPDATE MAIL
-		SET MAIL_STATUS = 'RECEIVED'
-		WHERE MAIL_NO
-		= #{mailNo}
-	</update>
-
-	<!-- 메일 파일 데이터 삽입 -->
-	<insert id="insertMailFile" parameterType="MailFileVO">
-		INSERT INTO MAIL_FILE
-		(
-		FILE_NO,
-		MAIL_NO,
-		FILE_NAME,
-		COMPANY_CODE,
-		FILE_TYPE
-		)
-		VALUES (
-		#{fileNo},
-		#{mailNo},
-		#{fileName},
-		#{companyCode},
-		#{fileType}
-		)
-	</insert>
+    <!-- 메일 수신자 정보 추가 -->
+    <insert id="insertMailReceive" parameterType="MailReceiveVO">
+        INSERT INTO mail_receive (
+            receive_no,
+            mail_no,
+            employee_id,
+            receive_email,
+            company_code
+        ) VALUES (
+            #{receiveNo},
+            #{mailNo},
+            #{employeeId},
+            #{receiveEmail},
+            #{companyCode}
+        )
+    </insert>
 
 </mapper>
+

@@ -89,18 +89,17 @@
 </head>
 <body>
     <h1>받은 메일함</h1>
-    <form action="/group/mail/Mymail/search" method="GET" th:object="${criteria}">
-      			<div>
-				<select th:field="*{searchType}">
-					<option value="title" th:selected="${criteria.searchType == ''}">전체</option>
-					<option value="title"
-						th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-					<option value="writer"
-						th:selected="${criteria.searchType == 'senderId'}">작성자</option>
-				</select> <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
-			</div>
-			<button type="submit">검색</button>
-    </form>
+   <form action="/group/mail/Mymail" method="GET" th:object="${criteria}">
+    <div>
+        <select th:field="*{searchType}">
+            <option value="" th:selected="${criteria.searchType == ''}">전체</option>
+            <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+            <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+        </select>
+        <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+    </div>
+    <button type="submit">검색</button>
+</form>
     <table>
         <thead>
             <tr>

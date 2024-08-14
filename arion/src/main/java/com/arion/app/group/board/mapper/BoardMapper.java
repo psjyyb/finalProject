@@ -2,14 +2,19 @@ package com.arion.app.group.board.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.arion.app.group.board.service.BoardVO;
 import com.arion.app.group.board.service.Criteria;
+import com.arion.app.security.service.CompanyVO;
 
 public interface BoardMapper {
 
 	// 자유게시판 freeboard //
 	// 전체조회
 	public List<BoardVO> selectBoardAll(Criteria criteria);
+	
+	List<CompanyVO> selectCompany(@Param("companyCode") String companyCode);
 	
 	// 글 상세조회
 	public BoardVO selectBoardInfo(BoardVO boardVO);

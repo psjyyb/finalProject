@@ -30,6 +30,109 @@ h1, h2, h3 {
 	color: green;
 	font-size: 16px;
 }
+/* 기본 스타일 초기화 */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+/* 트리거 버튼 스타일링 */
+.btn-primary {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+}
+
+/* 모달창 백그라운드 */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	animation: fadeIn 0.3s;
+}
+
+/* 모달창 컨텐츠 스타일링 */
+.modal-content {
+	background-color: white;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 30%;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	animation: slideIn 0.4s;
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+@keyframes slideIn {from { transform:translateY(-50px);
+	opacity: 0;
+}
+
+to {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+}
+
+/* 닫기 버튼 스타일링 */
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.close:hover, .close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* 드롭다운 메뉴 스타일링 */
+.styled-select {
+	width: 100%;
+	padding: 10px;
+	margin-top: 15px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
+/* 버튼 스타일링 */
+#submitBtn {
+	margin-top: 20px;
+	width: 100%;
+	padding: 10px;
+	border-radius: 5px;
+}
 </style>
 </head>
 <body>
@@ -80,21 +183,83 @@ h1, h2, h3 {
 				<td id="regular_date">매월 [[${subInfo.regularDate}]]일</td>
 			</tr>
 		</table>
-		<button type="button" class="btn btn-success" id="conPlus">계약 기간 갱신</button>
-		<button type="button" class="btn btn-primary" id="conMode">계약 수정</button>
-		<button type="button" class="btn btn-danger" id="conCan">계약 철회</button>
-		
+		<button type="button" class="btn btn-success" id="conPlus">계약
+			기간 갱신</button>
+		<button type="button" class="btn btn-primary" id="conMode">계약
+			수정</button>
+		<button type="button" class="btn btn-danger" id="conCan">계약
+			철회</button>
 	</div>
-	
+	<div id="contractModal" style="display: none;">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>계약 기간 연장</h2>
+			<label for="contractPeriod">연장할 기간을 선택하세요:</label> <select
+				id="contractPeriod">
+				<option value="1">1개월</option>
+				<option value="3">3개월</option>
+				<option value="6">6개월</option>
+				<option value="12">1년</option>
+			</select>
+			<button id="submitBtn" class="btn btn-primary">갱신</button>
+		</div>
+	</div>
+
 	<script>
-		$('#conMode').on('click',function(){
-			
-		})
-		$('#conCan').on('click',function(){
-			if(confirm('계약을 철회하시겠습니까?')){
-				location.href='/groupAdmin/GAConCan';
+		let conNo = $('#contract_no').text();
+		$('#conMode').on('click', function() {
+			if (confirm('계약을 수정하시게 되면 현재 계약이 해지 됩니다. 수정하시겠습니까 ?')) {
+				$.ajax({
+					url: '/groupAdmin/contractCancle',
+					type: 'POST',
+					data: { contractNo: conNo }
+				})
+				.done(result=>{
+					if (confirm('계약서를 작성하러 가시겠습니까?')) {
+						location.href = '/home/service';
+					}
+				})
+				.fail(err=>{
+					console.log(err);
+				})
 			}
 		})
+		$('#conCan').on('click', function() {
+			if (confirm('계약을 철회하시겠습니까?')) {
+				location.href = '/groupAdmin/GAConCan';
+			}
+		})
+		$('#conPlus').on('click', function(){
+			$('#contractModal').show();
+			$('.section').hide();
+		})
+
+    // 모달창 닫기
+    $('.close').on('click', function() {
+    	 $('.section').show();
+        $('#contractModal').hide();
+       
+    });
+
+    // 갱신 버튼 클릭 시
+    $('#submitBtn').on('click', function() {
+        let selectedPeriod = $('#contractPeriod').val();
+        console.log(selectedPeriod);
+        $.ajax({
+            url: '/groupAdmin/GANowContract',
+            type: 'POST',
+            data: { period: selectedPeriod },
+            success: function(response) {
+                alert('계약이 성공적으로 연장되었습니다.');
+                $('#contractModal').hide();
+                location.href='/groupAdmin/GANowContract';
+                // 필요 시 화면 갱신
+            },
+            error: function(error) {
+                alert('계약 연장에 실패했습니다. 다시 시도해 주세요.');
+            }
+        });
+    });
 	</script>
 </body>
 </html>

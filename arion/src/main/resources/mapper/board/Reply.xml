@@ -23,7 +23,7 @@ WHERE
 </select>
 
 <!-- 댓글 작성 -->
-<insert id="Replyinsert" parameterType="ReplyVO">
+<insert id="insertReply" parameterType="ReplyVO">
 INSERT INTO comments
     (
         comment_no,
@@ -36,36 +36,31 @@ INSERT INTO comments
 VALUES
     (
         comm_seq.NEXTVAL,
-        #{replyVO.commentContent},
-        #{replyVO.commentWrite},
+        #{commentContent},
+        #{commentWrite},
         SYSDATE,
-        #{boardVO.boardNo},
-        #{replyVO.companyCode}
-    );
+        #{boardNo},
+        #{companyCode}
+    )
 </insert>
 
+<!-- 댓글 수정 -->
+<update id="updateReply" parameterType="ReplyVO">
+UPDATE comments
+SET    comment_content = #{commentContent}
+WHERE  comment_no = #{commentNo}
+</update>
 
+<!-- 댓글 삭제 -->
+<delete id="deleteReply" parameterType="map">
+DELETE FROM comments
+WHERE comment_no = #{commentNo}
+</delete>
 
-<insert id="">
-INSERT INTO comments 
-        ( 
-            comment_no, 
-            comment_content, 
-            comment_write, 
-            comment_date, 
-            board_no, 
-            company_code
-        )
-    VALUES 
-        ( 
-            comm_seq.NEXTVAL, 
-            #{commentContent}, 
-            #{commentWrite},
-            sysDate,
-            #{boardNo}, 
-            #{companyCode}
-        )
-        
-        </insert>
+<!-- 댓글 토탈 -->
+<select id="total" resultType="int">
+SELECT COUNT(*)
+FROM comments
+</select>
 
 </mapper>

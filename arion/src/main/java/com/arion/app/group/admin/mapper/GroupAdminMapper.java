@@ -1,5 +1,6 @@
 package com.arion.app.group.admin.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.arion.app.group.admin.service.DepartmentVO;
@@ -54,4 +55,7 @@ public interface GroupAdminMapper {
 	
 	PayListVO payInfo(int payNo); // 결제상세보기
 	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
+	
+	int updateContract(LocalDate finalDate, int contractNo); // 계약 갱신
+	
 }

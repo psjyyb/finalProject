@@ -6,15 +6,53 @@
 	<!-- 받은 메일 조회 -->
 	<select id="receiveMailAll" parameterType="MailVO"
 		resultType="MailVO">
-    SELECT
-        m.mail_no, 
-        FIND_EMP_NAME(m.sender_id) AS sender_name,
-        m.send_date,
-        m.mail_title
-    FROM mail m
-    JOIN mail_receive mr ON m.mail_no = mr.mail_no
-    WHERE mr.employee_id = #{employeeId}
-    AND m.mail_status = 'RECEIVED'
+			SELECT *
+  			FROM (
+     			 SELECT  mail_no, 
+           				 FIND_EMP_NAME(sender_id) AS sender_name,
+           		 send_date,
+          		 mail_title,
+            	 ROWNUM AS rn
+      		FROM (
+          		  SELECT m.mail_no, 
+               			 FIND_EMP_NAME(m.sender_id) AS sender_name,
+               			 m.send_date,
+              			 m.mail_title
+          		  FROM mail m
+          		  JOIN mail_receive mr ON m.mail_no = mr.mail_no
+           		  WHERE mr.employee_id = #{employeeId}
+           		  AND m.company_code = #{companyCode}
+                  AND m.mail_status = 'RECEIVED'
+           		 <if test="searchType != null and searchType != ''">
+           		     <if test="searchType == 'mailtitle'">
+               		     AND m.mail_title LIKE '%' || #{keyword} || '%'
+            	     </if>
+            		 <if test="searchType == 'senderId'">
+              		      AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{keyword} || '%'
+             		 </if>
+         		   </if>
+          		  ORDER BY m.mail_no DESC
+      			  )
+      		  WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}
+   			 )
+  		  WHERE rn > (#{pageNum} - 1) * #{amount}
+	</select>
+
+	<select id="selectMailTotalCount" resultType="int">
+    	SELECT COUNT(*)
+   		FROM mail m
+    	JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    	WHERE 1=1
+    	AND mr.employee_id = #{employeeId}
+ 		AND m.mail_status = 'RECEIVED'
+    	<if test="searchType != null and searchType != ''">
+       		 <if test="searchType == 'title'">
+         		   AND m.mail_title LIKE '%' || #{keyword} || '%'
+       		 </if>
+      		  <if test="searchType == 'sender'">
+          		  AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{keyword} || '%'
+       			 </if>
+   		 </if>
 	</select>
 
 	<!-- 중요 메일 조회 -->

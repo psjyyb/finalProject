@@ -226,7 +226,7 @@
            });
 			
 }
-
+//엑셀
 document.getElementById("download").addEventListener('click',download);
 	
 	function download(){
@@ -259,7 +259,7 @@ document.getElementById("download").addEventListener('click',download);
     
                 link.href = window.URL.createObjectURL(blob); 
            
-                link.download = "boardList_data.xlsx"; 
+                link.download = "사번:"+ $('#employeeno').val()+".xlsx"; 
 
                 link.click(); 
        

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>myvacation</title>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+</head>
+<body onload="autoReload();">
+	
+	
+			<div colspan="4" align="right">
+			<button id="download">다운로드</button>
+			<a href="/group/attendance/attendancelist">부하직원 휴가기록</a>
+	
+	</div>
+	<table align="center" id="vacationtable" width="80%"  height ="30%">
+		<tr>
+		    <th width="10%">일자</th>
+			<th width="14%">휴가 유형</th>
+			<th width="14%">휴가일수</th>
+			<th width="17%">상태</th>
+			<th width="17%">신청일자</th>
+		</tr>
+		
+	</table>
+			
+	<script th:src="@{/js/group/attendance/vacation.js}"></script>
+</body>
+</html >

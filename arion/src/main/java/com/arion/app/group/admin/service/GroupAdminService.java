@@ -26,7 +26,7 @@ public interface GroupAdminService {
 	
 	GroupAdminVO sunInfoSelect(String companyCode); // 현재 구독중인 계약정보
 	
-	int saveDept(List<String> list,String companyCode); // 부서저장
+	int saveDept(DepartmentListVO list,String companyCode); // 부서저장
 	
 	int saveRank(RankVO rankVO, String companyCode); // 직급저장
 	

@@ -26,7 +26,7 @@ th {
 	color: white;
 }
 
-td input {
+td input, td select {
 	width: 90%;
 	padding: 5px;
 	font-size: 16px;
@@ -85,65 +85,81 @@ td input {
 </style>
 </head>
 <body>
+	<!-- empList를 JSON으로 렌더링 -->
+	<script th:inline="javascript">
+		let empList = /*[[${empList}]]*/ [];
+	</script>
+
 	<form th:action="@{/groupAdmin/GADeptSave}" method="POST" name="deptForm">
-	<table id="deptTable">
-		<thead>
-			<tr>
-				<th>순서</th>
-				<th>부서</th>
-				<th>작업</th>
-			</tr>
-		</thead>
-		<tbody>
-			<th:block th:each="dept, status : ${deptList}">
+		<table id="deptTable">
+			<thead>
 				<tr>
-					<td th:text="${status.count}">1</td>
-					<td><input name="departmentName" type="text" th:value="${dept.departmentName}"></td>
-					<td>
-						<button class="button delete" onclick="deleteRow(this)">삭제</button>
-					</td>
+					<th>순서</th>
+					<th>부서</th>
+					<th>부장</th>
+					<th>작업</th>
 				</tr>
-			</th:block>
-		</tbody>
-	</table>
+			</thead>
+			<tbody id="deptTableBody">
+			    <th:block th:each="dept,i : ${deptList}">
+			        <tr>
+			            <td class="order-index">[[${i.count}]]</td>
+			            <td>
+			                <input th:name="'departments['+${i.index}+'].departmentName'" type="text" th:value="${dept.departmentName}">
+			            </td>
+			            <td>
+			                <select th:name="'departments['+${i.index}+'].managerId'">
+			                    <option th:each="emp : ${empList}" th:value="${emp.employeeNo}" th:text="${emp.employeeName}" th:selected="${emp.employeeNo == dept.managerId}"></option>
+			                </select>
+			            </td>
+			            <td>
+			                <button type="button" class="button delete" onclick="deleteRow(this)">삭제</button>
+			            </td>
+			        </tr>
+			    </th:block>
+			</tbody>
+		</table>
 
-	<div class="action-buttons">
-		<button type="button" class="add-button" onclick="addRow()">+ 부서 추가</button>
-		<button class="save-button" onclick="saveChanges()">저장</button>
-	</div>
-</form>
+		<div class="action-buttons">
+			<button type="button" class="add-button" onclick="addRow()">+ 부서 추가</button>
+			<button type="submit" class="save-button">저장</button>
+		</div>
+	</form>
+
 	<script>
-        function deleteRow(btn) {
-            let row = btn.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-            updateOrder();
-        }
+function deleteRow(btn) {
+    let row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+    updateOrder();
+}
 
-        function addRow() {
-            let table = document.getElementById("deptTable").getElementsByTagName("tbody")[0];
-            let rowCount = table.rows.length + 1;
-            let row = table.insertRow();
-            let cell1 = row.insertCell(0);
-            let cell2 = row.insertCell(1);
-            let cell3 = row.insertCell(2);
-            cell1.innerHTML = rowCount;
-            cell2.innerHTML = `<input name="departmentName" type="text" value="">`;
-            cell3.innerHTML = `
-                <button class="button delete" onclick="deleteRow(this)">삭제</button>`;
-        }
+function addRow() {
+    let tableBody = document.getElementById("deptTableBody");
+    let rowCount = tableBody.rows.length;
 
-        function updateOrder() {
-            let table = document.getElementById("deptTable").getElementsByTagName("tbody")[0];
-            for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].cells[0].innerHTML = i + 1;
-            }
-        }
+    let options = empList.map(emp => `<option value="${emp.employeeNo}">${emp.employeeName}</option>`).join('');
 
-        function saveChanges(e) {
-        	deptForm.submit();
-            alert("변경사항이 저장되었습니다.");
-            // 여기에 저장 기능을 구현할 수 있습니다.
-        }
-    </script>
+    // Create new row with updated HTML
+    let row = tableBody.insertRow();
+    row.innerHTML = `
+        <td class="order-index">${rowCount + 1}</td>
+        <td><input name="departments[${rowCount}].departmentName" type="text" value=""></td>
+        <td><select name="departments[${rowCount}].managerId">${options}</select></td>
+        <td><button type="button" class="button delete" onclick="deleteRow(this)">삭제</button></td>
+    `;
+
+    updateOrder();
+}
+
+function updateOrder() {
+    let rows = document.querySelectorAll("#deptTableBody tr");
+    rows.forEach((row, index) => {
+        row.querySelector(".order-index").textContent = index + 1;
+        // Update the name attributes for each row
+        row.querySelector('input[name^="departments"]').name = `departments[${index}].departmentName`;
+        row.querySelector('select[name^="departments"]').name = `departments[${index}].managerId`;
+    });
+}
+</script>
 </body>
 </html>

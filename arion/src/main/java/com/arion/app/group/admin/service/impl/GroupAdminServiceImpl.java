@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
+import com.arion.app.group.admin.service.DepartmentListVO;
 import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.admin.service.GroupAdminService;
@@ -93,14 +94,17 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 
 	@Transactional
 	@Override
-	public int saveDept(List<String> list, String companyCode) {
+	public int saveDept(DepartmentListVO list, String companyCode) {
+		System.out.println(list);
 		int result = gaMapper.deptDeSave(companyCode);
-		DepartmentVO dvo = new DepartmentVO();
-		list.forEach(i -> {
-			dvo.setCompanyCode(companyCode);
-			dvo.setDepartmentName(i);
-			gaMapper.deptInSave(dvo);
-		});
+		List<DepartmentVO> departments = list.getDepartments();
+
+		for (DepartmentVO deptVO : departments) {
+			System.out.println("Department Name: " + deptVO.getDepartmentName());
+			System.out.println("Manager ID: " + deptVO.getManagerId());
+			deptVO.setCompanyCode(companyCode);
+			result += gaMapper.deptInSave(deptVO);
+		}
 		return result;
 	}
 
@@ -190,7 +194,7 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		Date date = gvo.getFinalDate();
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate newDate = localDate.plusMonths(period);
-		
+
 		System.out.println(newDate + "갱신된 날짜가 어떻게 나오는지 ");
 		int result = gaMapper.updateContract(newDate, gvo.getContractNo());
 		if (result > 1) {

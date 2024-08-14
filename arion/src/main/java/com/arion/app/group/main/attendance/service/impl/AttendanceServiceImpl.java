@@ -1,6 +1,7 @@
 package com.arion.app.group.main.attendance.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import com.arion.app.group.main.attendance.service.AEmployeeVO;
 import com.arion.app.group.main.attendance.service.AttendanceDownloadVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
+import com.arion.app.group.main.attendance.service.SumWorkTimeVO;
+import com.arion.app.group.main.attendance.service.VacationVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
 
 @Service
@@ -20,26 +23,26 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public AEmployeeVO aEmployee(int iemployeeno) {
-		// TODO Auto-generated method stub
+		
 		return attendancemapper.aEmployee(iemployeeno);
 	}
 	
 	
 	@Override
 	public List<AEmployeeVO> aEmployeeList(String companycode, String rankname) {
-		// TODO Auto-generated method stub
+		
 		return attendancemapper.aEmployeeList(companycode,rankname);
 	}
 	
 	@Override
 	public List<AttendanceVO> attendance(int employeeno,String start,String end) {
-		// TODO Auto-generated method stub
+		
 		return attendancemapper.attendance(employeeno,start,end);
 	}
 	
 	@Override
 	public List<WorkTimeVO> worktime(int employeeno,String start,String end) {
-		// TODO Auto-generated method stub
+		
 		return attendancemapper.worktime(employeeno,start,end);
 	}
 
@@ -48,6 +51,27 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public List<AttendanceDownloadVO> attendancedownload(int employeeno,String start,String end) {
 		
 		return attendancemapper.attendancedownload(employeeno,start,end);
+	}
+
+
+	@Override
+	public SumWorkTimeVO sumworktime(int employeeno, String start, String end) {
+		
+		return attendancemapper.sumworktime(employeeno, start, end);
+	}
+
+
+	@Override
+	public List<Map<String, Integer>> yearslist(int employeeno) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public VacationVO vacation(int employeeno, int years) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import com.arion.app.group.main.attendance.service.AEmployeeVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
+import com.arion.app.group.main.attendance.service.SumWorkTimeVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
 import com.arion.app.security.service.LoginUserVO;
 
@@ -109,7 +110,7 @@ public class AttendanceController {
 		return "group/attendance/myworktime";
 	}
 		
-	//ajax 근태기록
+	//ajax 근무시간
 		@RequestMapping("/worklist")
 		@ResponseBody
 		public Map<String, Object> worklist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
@@ -130,9 +131,12 @@ public class AttendanceController {
 			System.out.println(qend);
 			
 			List<WorkTimeVO> worktimelist = attendanceservice.worktime(EmployeeNo,qstart,qend);
+			SumWorkTimeVO sumworktime = attendanceservice.sumworktime(EmployeeNo, qstart, qend);
 			
 			Map<String, Object> result = new HashMap<String, Object>();
 			result.put("worktimelist", worktimelist);
+			result.put("sumworktime", sumworktime);
+			
 			return result;
 		}
 	
@@ -149,4 +153,46 @@ public class AttendanceController {
 			
 			return "group/attendance/worktimelist";
 		}
+		
+		@GetMapping("/underlingworktimelist/{employeeNo}")
+		public String underlingworktimelist(@PathVariable String employeeNo,Model model) {
+			
+			model.addAttribute("employeeNo", employeeNo);
+			System.out.println(employeeNo);
+			
+			int EmployeeNo = Integer.parseInt(employeeNo);
+			AEmployeeVO underlingname= attendanceservice.aEmployee(EmployeeNo);
+			System.out.println(underlingname.getEmployeename());
+			
+			model.addAttribute("underlingName", underlingname.getEmployeename());
+			
+			
+			return "group/attendance/underlingworktime";
+		}
+		
+		//휴가
+		@GetMapping("/vacation")
+		public String vacation(HttpServletRequest request,Model model) {
+			
+			HttpSession session = request.getSession();
+			int EmployeeNo = (int)session.getAttribute("employeeNo");
+			model.addAttribute("employeeNo", EmployeeNo);
+			
+			return "group/attendance/myvacation";
+		}
+		
+		//ajax 휴가기록
+		@RequestMapping("/vacationlist")
+		@ResponseBody
+		public Map<String, Object> vacationlist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "years",required = false) int years) throws Exception {
+						
+			int EmployeeNo = Integer.parseInt(employeeno);
+			 
+			Map<String, Object> result = new HashMap<String, Object>();
+			System.out.println(years);
+			//result.put("attendancelist", attendance);
+			return result;
+		}
+		
+		
 }

@@ -73,19 +73,38 @@
         ||to_char(abs(trunc(MOD((end_time- start_time)*24*60,60))))||'분'
         END as "worktime_hour",
         trunc((end_time- start_time)*24*60) as "worktime_minute" ,
-        '8시간' as "standard_worktime_hour",
-        400 as "standard_worktime_minute",
-        case when trunc(((end_time- start_time)*24*60-400)/60)=0 then to_char(trunc(MOD((end_time- start_time)*24*60-400,60)))||'분'
-        else to_char(trunc(((end_time- start_time)*24*60-400)/60)||'시간') 
-        ||to_char(abs(trunc(MOD((end_time- start_time)*24*60-400,60))))||'분'
+        '9시간' as "standard_worktime_hour",
+        540 as "standard_worktime_minute",
+        case when trunc(((end_time- start_time)*24*60-540)/60)=0 then to_char(trunc(MOD((end_time- start_time)*24*60-540,60)))||'분'
+        else to_char(trunc(((end_time- start_time)*24*60-540)/60)||'시간') 
+        ||to_char(abs(trunc(MOD((end_time- start_time)*24*60-540,60))))||'분'
         END as "interval_hour" ,
-        trunc((end_time- start_time)*24*60-400) as "interval_minute"
+        trunc((end_time- start_time)*24*60-540) as "interval_minute"
         FROM attendance
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
                     AND TO_DATE(#{end}, 'YYYY-MM-DD')
+        ORDER BY att_date            
 	</select>
 
-
+<select id="sumworktime" parameterType="AEmployeeVO" resultType="SumWorkTimeVO">
+        SELECT
+        case when trunc(sum((end_time- start_time)*24*60)/60)=0 then to_char(trunc(MOD(sum((end_time- start_time)*24*60),60)))||'분'
+        else to_char(trunc(sum((end_time- start_time)*24*60)/60)||'시간') 
+        ||to_char(abs(trunc(MOD(sum((end_time- start_time)*24*60),60))))||'분'
+        END as "sum_worktime_hour",        
+        trunc(sum((end_time- start_time)*24*60)) as "sum_worktime_minute"
+        ,case when trunc(sum((end_time- start_time)*24*60-540)/60)=0 then to_char(trunc(MOD(sum((end_time- start_time)*24*60-540),60)))||'분'
+        else to_char(trunc(sum((end_time- start_time)*24*60-540)/60)||'시간') 
+        ||to_char(abs(trunc(MOD(sum((end_time- start_time)*24*60-540),60))))||'분'
+        END as "sum_interval_hour",
+        trunc(sum((end_time- start_time)*24*60-540)) as "sum_interval_minute"
+        FROM attendance 
+        WHERE employee_no = #{employeeno}
+        AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD') 
+                          AND TO_DATE(#{end}, 'YYYY-MM-DD')
+        ORDER BY att_date                   
+        
+   </select>
    
 </mapper>

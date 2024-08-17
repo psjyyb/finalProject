@@ -58,7 +58,7 @@ public class GroupAdminController {
 		String comCode = (String) session.getAttribute("companyCode");
 		List<EmployeeVO> list = gaService.empListSelect(comCode);
 		model.addAttribute("empList", list);
-		return "/groupAdmin";
+		return "/groupAdmin/GAEmpList";
 	}
 
 	@GetMapping("/groupAdmin/GAEmpInsert")

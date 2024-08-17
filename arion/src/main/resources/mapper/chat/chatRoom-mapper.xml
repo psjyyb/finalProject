@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.chat.mapper.ChatRoomMapper">
+	<insert id="createChatRoom" parameterType="ChatRoomVO">
+		<selectKey keyProperty="roomNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			 SELECT  NVL(MAX(room_no), 0) + 1
+	         FROM chatrooms
+		</selectKey>
+		INSERT INTO chatrooms(
+                       room_no 
+                      ,chatroom_name
+                      ,company_code)
+		VALUES(
+				#{roomNo}
+			   ,#{chatroomName}
+			   ,#{companyCode})
+	</insert>
+	<insert id="membersChatRoom" parameterType="ChatMemberVO">
+	<selectKey keyProperty="chatmembersNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			 SELECT  NVL(MAX(chatmembers_no), 0) + 1
+	         FROM chatmembers
+		</selectKey>
+	INSERT INTO chatmembers(
+                         chatmembers_no
+                        ,employee_no
+                        ,room_no)
+	VALUES(
+			#{chatmembersNo}
+		   ,#{employeeNo}
+		   ,#{roomNo})
+	</insert>
+	<select id="selectChatRooms" resultType="ChatRoomVO">
+		SELECT r.room_no
+	      ,chatroom_name
+	      ,create_date
+	      ,company_code
+		FROM chatrooms r
+		JOIN chatmembers m
+		ON r.room_no = m.room_no
+		WHERE company_code = #{companyCode} AND m.employee_no = #{employeeNo}
+	</select>
+</mapper>

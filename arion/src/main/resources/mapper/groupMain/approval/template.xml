@@ -27,8 +27,8 @@
 							, doc_img
 		) VALUES (#{tempNo}
 				 , #{docType}
-				 , #{docFile}
 				 , #{docName}
+				 , #{docFile}
 				 , #{companyCode}
 				 , #{docImg}
 		)
@@ -54,4 +54,18 @@
 		AND temp_no = #{tempNo}
 		AND company_code = #{companyCode}
 	</delete>
+	
+	<select id="tpyeTempList" resultType="TemplateVO">
+		SELECT temp_no
+				, doc_type
+				, doc_file
+				, doc_name
+				, company_code
+				, doc_img
+		FROM template
+		WHERE 1=1 
+		AND company_code = #{companyCode}
+		AND doc_type = #{doc_type}
+	</select>
+	
 </mapper>

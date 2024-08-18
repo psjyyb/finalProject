@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+	<meta charset="UTF-8">
+	<title>ARION</title>
+	<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+	<link th:href="@{/css/group/document/document.css}" rel="stylesheet">
+</head>
+
+<body>
+	<div class="container2">
+		<div class="header2">문서작성</div>
+		<form id="writeDoc" th:action="@{/writeDoc}" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="button-container">
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#approverModal">결재자 선택</button>
+					<ul id="selectedApproversList"></ul>
+				</div>
+				<div class="button-container">
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#referenceModal">참조자 선택</button>
+					<ul id="selectedReferencesList"></ul>
+				</div>
+			</div>
+
+			<table class="form-table">
+				<tr>
+					<th>제목</th>
+					<td colspan="2"><input type="text" name="docTitle"></td>
+					<td><select id="templateSelect">
+						<option value="">템플릿을 선택하세요.</option>
+						<option th:each="temp : ${tempList}" th:value="${temp.tempNo}" th:text="${temp.docName}"></option>
+					</select></td>
+				</tr>
+				<tr>
+					<th>첨부파일</th>
+					<td colspan="3"><input type="file" name="attachment"></td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td colspan="3">
+						<div id="placeholder" class="placeholder-message">
+							<h5>내용을 작성하려면 템플릿을 선택하세요</h5>
+						</div> 
+						<textarea id="editor" hidden></textarea>
+					</td>
+				</tr>
+			</table>
+			<div class="btn-group">
+				<button type="submit" class="save">작성완료</button>
+				<button type="button" class="cancel">작성취소</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- 결재자 선택 모달 -->
+	<div class="modal fade" id="approverModal" tabindex="-1" aria-labelledby="approverModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="approverModalLabel">결재자 선택</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="department-list" id="departmentList">
+						<!-- 부서 목록이 동적으로 로드됨 -->
+					</div>
+					<div class="employee-list" id="employeeList">
+						<!-- 선택된 부서의 사원 목록이 여기에 추가됨 -->
+					</div>
+					<div class="employee-list" id="selectedApproversListModal">
+						<!-- 선택된 결재자 목록이 여기에 표시됨 -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-primary" id="approverSelectDone">결재자 선택 완료</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 참조자 선택 모달 -->
+	<div class="modal fade" id="referenceModal" tabindex="-1" aria-labelledby="referenceModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="referenceModalLabel">참조자 선택</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="department-list" id="referenceDepartmentList">
+						<!-- 부서 목록이 동적으로 로드됨 -->
+					</div>
+					<div class="employee-list" id="referenceEmployeeList">
+						<!-- 선택된 부서의 사원 목록이 여기에 추가됨 -->
+					</div>
+					<div class="employee-list" id="selectedReferencesListModal">
+						<!-- 선택된 참조자 목록이 여기에 표시됨 -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-primary" id="referenceSelectDone">참조자 선택 완료</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script th:src="@{/js/group/document/document.js}"></script>
+</body>
+</html>

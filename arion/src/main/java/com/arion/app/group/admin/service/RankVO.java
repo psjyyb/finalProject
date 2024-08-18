@@ -9,4 +9,5 @@ public class RankVO {
 	private int rankRankKing;
 	private String companyCode;
 	private String rankRangkings;
+	private int rankRanking;
 }

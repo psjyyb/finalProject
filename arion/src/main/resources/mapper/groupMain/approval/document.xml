@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.approval.mapper.DocumentMapper">
+	<select id="selectDepartment" parameterType="String" resultType="String">
+		SELECT DISTINCT department_name
+        FROM employees
+        WHERE company_code = #{companyCode}
+        ORDER BY department_name ASC
+	</select>
+	
+	<select id="selectEmployeeList" parameterType="map" resultType="EmployeesVO">
+		SELECT e.employee_no
+			  , e.employee_name
+			  , e.department_name
+			  , e.rank_name
+			  , r.rank_ranking
+        FROM employees e JOIN rank r 
+        				 ON e.rank_name = r.rank_name 
+        				 AND e.company_code = r.company_code
+        WHERE e.company_code = #{companyCode} 
+        AND e.department_name = #{departmentName}
+        ORDER BY r.rank_ranking ASC
+	</select>
+	
+	
+</mapper>

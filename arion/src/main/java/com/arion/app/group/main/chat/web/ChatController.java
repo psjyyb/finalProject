@@ -1,26 +1,28 @@
 package com.arion.app.group.main.chat.web;
 
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
-import com.arion.app.group.main.chat.service.ChatMessageDTO;
-import com.arion.app.group.main.chat.service.ChatService;
+import com.arion.app.group.main.chat.domain.Messages;
+import com.arion.app.group.main.chat.repository.ChatMessageRepository;
 
 
-@RestController
+@Controller
 public class ChatController {
+	   @Autowired
+	    private ChatMessageRepository chatMessageRepository;
 
-	private final ChatService chatService;
+	    @MessageMapping("/chat")
+	    @SendTo("/topic/messages")
+	    public Messages sendMessage(Messages message) {
+	    	System.out.println(message);
+	        message.setSendAt(LocalDateTime.now()); // 현재 시간 설정
+	        chatMessageRepository.save(message); // 메시지 DB 저장
+	        return message;
+	    }
 
-	public ChatController(ChatService chatService) {
-		this.chatService = chatService;
-	}
-
-	@MessageMapping("/chat")
-	@SendTo("/topic/messages")
-	public ChatMessageDTO sendMessage(ChatMessageDTO message) {
-		chatService.processMessage(message);
-		return message;
-	}
 }

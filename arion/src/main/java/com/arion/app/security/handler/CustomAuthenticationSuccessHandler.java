@@ -88,7 +88,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			} else if (roleName.equals("ROLE_No")) {
 				redirectUrl = "/home";
 				break;
-			} else if (roleName.equals("ROLE_일반사원") || roleName.equals("ROLE_사원관리자")) {
+			} else if (roleName.equals("ROLE_일반직") || roleName.equals("ROLE_관리직") || roleName.equals("ROLE_임원")) {
 				redirectUrl = "/group";
 				break;
 			}

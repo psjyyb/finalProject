@@ -51,4 +51,10 @@ public class TemplateServiceImpl implements TemplateService {
 		return mapper.tempDelete(companyCode, tempNo);
 	}
 
+	@Override
+	public List<TemplateVO> tpyeTempList(String companyCode, String docType) {
+		// TODO Auto-generated method stub
+		return mapper.tpyeTempList(companyCode, docType);
+	}
+
 }

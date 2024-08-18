@@ -11,4 +11,7 @@ public interface TemplateMapper {
 	public int insertTemp(TemplateVO templateVO);
 	public TemplateVO tempInfo(TemplateVO templateVO);
 	public int tempDelete(@Param("companyCode") String companyCode, @Param("tempNo") String tempNo);
+
+	public List<TemplateVO> tpyeTempList(@Param("companyCode") String companyCode, @Param("docType") String docType);
+
 }

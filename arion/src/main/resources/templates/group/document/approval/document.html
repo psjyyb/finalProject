@@ -28,16 +28,21 @@
 			<table class="form-table">
 				<tr>
 					<th>제목</th>
-					<td colspan="2"><input type="text" name="docTitle"></td>
-					<td><select id="templateSelect">
-						<option value="">템플릿을 선택하세요.</option>
-						<option th:each="temp : ${tempList}" th:value="${temp.tempNo}" th:text="${temp.docName}"></option>
-					</select></td>
+					<td colspan="2">
+					<input type="text" name="docTitle"></td>
+					<td>
+						<select id="templateSelect">
+							<option value="">템플릿을 선택하세요.</option>
+							<option th:each="temp : ${tempList}" th:value="${temp.tempNo}" th:text="${temp.docName}"></option>
+						</select>
+						<input type="hidden" name="docName" id="docName">
+					</td>
 				</tr>
 				<tr>
 					<th>첨부파일</th>
 					<td colspan="3">
-						<input type="file" name="files" id="files" multiple>
+						<input type="file" name="files" id="fileInput" multiple>
+						<ul id="fileList" class="file-list"></ul>
 					</td>
 				</tr>
 				<tr>
@@ -51,7 +56,7 @@
 				</tr>
 			</table>
 			<div class="btn-group">
-				<button type="submit" class="save">작성완료</button>
+				<button type="button" class="save" id="submitDocument">상신하기</button>
 				<button type="button" class="cancel">작성취소</button>
 			</div>
 		</form>

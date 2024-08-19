@@ -4,7 +4,8 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-    <title>받은 메일함</title>
+<meta charset="UTF-8">
+    <title>諛쏆� 硫붿씪�븿</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,48 +89,48 @@
     </style>
 </head>
 <body>
-    <h1>받은 메일함</h1>
+    <h1>諛쏆� 硫붿씪�븿</h1>
    <form action="/group/mail/Mymail" method="GET" th:object="${criteria}">
     <div>
         <select th:field="*{searchType}">
-            <option value="" th:selected="${criteria.searchType == ''}">전체</option>
-            <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-            <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+            <option value="" th:selected="${criteria.searchType == ''}">�쟾泥�</option>
+            <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">�젣紐�</option>
+            <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">�옉�꽦�옄</option>
         </select>
-        <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+        <input type="text" th:field="*{keyword}" placeholder="寃��깋�뼱 �엯�젰" />
     </div>
-    <button type="submit">검색</button>
+    <button type="submit">寃��깋</button>
 </form>
     <table>
         <thead>
             <tr>
                 <th class="checkbox-container">
-                    <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
+                    <input type="checkbox" id="selectAll"> <!-- �쟾泥� �꽑�깮 泥댄겕諛뺤뒪 -->
                 </th>
-                <th>보낸사람</th>
-                <th>제목</th>
-                <th>수신일</th>
+                <th>蹂대궦�궗�엺</th>
+                <th>�젣紐�</th>
+                <th>�닔�떊�씪</th>
             </tr>
         </thead>
         <tbody>
-            <!-- 메일 리스트를 반복해서 출력 -->
+            <!-- 硫붿씪 由ъ뒪�듃瑜� 諛섎났�빐�꽌 異쒕젰 -->
             <tr th:each="mail : ${receivedMails}">
                 <td class="checkbox-container">
-                    <input type="checkbox" name="mailIds" value="${mail.mailNo}"> <!-- 각 메일의 ID를 값으로 설정 -->
+                    <input type="checkbox" name="mailIds" value="${mail.mailNo}"> <!-- 媛� 硫붿씪�쓽 ID瑜� 媛믪쑝濡� �꽕�젙 -->
                 </td>
-                <td th:text="${mail.senderName}">발송자 이름</td>
+                <td th:text="${mail.senderName}">諛쒖넚�옄 �씠由�</td>
                 <td>
-                    <!-- 메일 제목을 클릭하면 메일 상세 정보로 이동 -->
-                    <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
+                    <!-- 硫붿씪 �젣紐⑹쓣 �겢由��븯硫� 硫붿씪 �긽�꽭 �젙蹂대줈 �씠�룞 -->
+                    <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">硫붿씪 �젣紐�</a>
                 </td>
-                <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
+                <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">�닔�떊�씪</td>
             </tr>
         </tbody>
     </table>
 
     <div class="actions-container">
-        <button id="importSelected" class="compose-btn">중요메일함</button>
-        <button id="deleteSelected" class="delete-btn">휴지통</button>
+        <button id="importSelected" class="compose-btn">以묒슂硫붿씪�븿</button>
+        <button id="deleteSelected" class="delete-btn">�쑕吏��넻</button>
     </div>
 
 <ul class="pagination">
@@ -158,13 +159,13 @@
         document.getElementById('deleteSelected').addEventListener('click', function() {
             const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
             if (checkboxes.length > 0) {
-                if (confirm('선택한 메일을 삭제하시겠습니까?')) {
+                if (confirm('�꽑�깮�븳 硫붿씪�쓣 �궘�젣�븯�떆寃좎뒿�땲源�?')) {
                     const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
                     // axios.post('/group/mail/delete', { ids: ids });
-                    alert(`삭제 요청: ${ids.join(', ')}`);
+                    alert(`�궘�젣 �슂泥�: ${ids.join(', ')}`);
                 }
             } else {
-                alert('삭제할 메일을 선택하세요.');
+                alert('�궘�젣�븷 硫붿씪�쓣 �꽑�깮�븯�꽭�슂.');
             }
         });
     </script>

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.group.board.service.Criteria;
+import com.arion.app.group.board.service.PageDTO;
 import com.arion.app.group.main.approval.service.ApprovalVO;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
@@ -120,13 +122,47 @@ public class DocumentController {
 	}
 	
 	@PostMapping("/writeDoc")
-	public String insertDoc(DocumentVO documentVO, ApprovalVO approvalVO, DocAccessVO docAccessVO, HttpSession session, @RequestPart MultipartFile[] files ) {
-		String companyCode = (String) session.getAttribute("companyCode");
-		String employeeNo = (String) session.getAttribute("employeeNo");
+	public String insertDoc(
+	        	DocumentVO documentVO,
+	        	@RequestParam List<Integer> approverIds,
+	        	@RequestParam List<Integer> referenceIds,
+	        	HttpSession session,
+	        	@RequestPart MultipartFile[] files) {
 		
 		
-		return "redirect:/group/Main";
+		System.out.println("Approver IDs: " + approverIds);
+	    System.out.println("Reference IDs: " + referenceIds);
+		
+	    String companyCode = (String) session.getAttribute("companyCode");
+	    int employeeNo = (int) session.getAttribute("employeeNo");
+
+	    documentVO.setCompanyCode(companyCode);
+	    documentVO.setEmployeeNo(employeeNo);
+
+	    dsvc.insertDocument(documentVO, approverIds, referenceIds, files, companyCode);
+
+	    return "redirect:/group";
 	}
 	
-
+	@GetMapping("/group/doc/apprProgress")
+	public String waitApprList(Model model, Criteria criteria, HttpSession session) {
+		int employeeNo = (int) session.getAttribute("employeeNo");
+		String companyCode = (String) session.getAttribute("companyCode");
+		
+		DocAccessVO docAccessVO = new DocAccessVO();
+		docAccessVO.setEmployeeNo(employeeNo);
+		docAccessVO.setCompanyCode(companyCode);
+		
+		List<DocumentVO> apprProgressList = dsvc.apprProgressList(docAccessVO, criteria);
+		int totalCount = dsvc.countApprProgressList(docAccessVO, criteria);
+		
+		PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		model.addAttribute("pageDTO", pageDTO);
+		model.addAttribute("proDoc", apprProgressList);
+		model.addAttribute("critera", criteria);
+		
+		return "group/document/approval/apprProgressList";
+	}
+	
+	
 }

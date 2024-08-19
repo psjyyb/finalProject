@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.approval.mapper.HolDocMapper">
+	<insert id="insertHolDoc" parameterType="HolDocVO">
+		INSERT INTO hol_doc(hol_temp_no
+							, hol_type
+							, start_date
+							, end_date
+							, company_code
+							, doc_no
+							, employee_no
+		) VALUES (hol_doc_seq.NEXTVAL
+				 , #{holType}
+				 , #{startDate}
+				 , #{endDate}
+				 , #{companyCode}
+				 , #{docNo}
+				 , #{employeeNo}
+		)
+	</insert>
+</mapper>

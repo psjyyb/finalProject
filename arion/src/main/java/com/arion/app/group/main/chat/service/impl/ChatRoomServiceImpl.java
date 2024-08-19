@@ -1,6 +1,8 @@
 package com.arion.app.group.main.chat.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import com.arion.app.group.main.chat.mapper.ChatRoomMapper;
 import com.arion.app.group.main.chat.service.ChatMemberVO;
 import com.arion.app.group.main.chat.service.ChatRoomService;
 import com.arion.app.group.main.chat.service.ChatRoomVO;
+import com.arion.app.group.main.chat.service.ChatVO;
 
 @Service
 public class ChatRoomServiceImpl implements ChatRoomService {
@@ -23,8 +26,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	@Transactional
 	@Override
 	public ChatRoomVO createChatRoom(@RequestBody ChatRoomVO chatRoomVO) {
-	    System.out.println(chatRoomVO + " - Service Implementation");
-
 	    // 채팅방 생성
 	    chatRoomMapper.createChatRoom(chatRoomVO);
 
@@ -39,8 +40,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 	    for (int i = 0; i < chatRoomVO.getEmployeeIds().length; i++) {
 	        chatMemberVO.setEmployeeNo(chatRoomVO.getEmployeeIds()[i]);
-	        System.out.println(chatRoomVO.getEmployeeIds()[i] + " - Employee ID");
-	        System.out.println(chatMemberVO + " - Chat Member VO");
 	        chatRoomMapper.membersChatRoom(chatMemberVO);
 	    }
 
@@ -50,5 +49,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public List<ChatRoomVO> chatRoomsSelect(String companyCode, int employeeNo) {
     	return chatRoomMapper.selectChatRooms(companyCode, employeeNo);
+    }
+    @Override
+    public Map<String, Object> chatRoomExit(ChatVO chatVO) {
+    	Map<String,Object> map = new HashMap<>();
+    	boolean isSuccess = false;
+    	int result = chatRoomMapper.exitChatRoom(chatVO);
+    	if(result> 1 ) {
+    		isSuccess = true;
+    	}
+    	map.put("result", isSuccess);
+		map.put("target", chatVO);
+    	return map;
     }
 }

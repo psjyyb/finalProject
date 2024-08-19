@@ -115,13 +115,11 @@ public class PayServiceImpl implements PayService {
 	@Transactional // 첫결제
 	@Override
 	public Map<String, Object> payEnd(ContractVO contractVO) {
-		System.out.println(contractVO + "첫주문시 결제금액 처리해야돼");
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = 0;
 		result += contractInsert(contractVO);
 		contractVO.setMonthPayPrice(contractVO.getFirstMonthAmount());
-		System.out.println(contractVO + "첫주문 금액 변경");
 		result += payInsert(contractVO);
 
 		List<String> list = contractVO.getModuleNames();

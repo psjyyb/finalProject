@@ -81,7 +81,7 @@ public class GroupAdminController {
 		int result = gaService.empInsert(empVO);
 		String url = null;
 		if (result > -1) {
-			url = "redirect:/GAEmpUpdate?employeeNo=" + result;
+			url = "redirect:/groupAdmin/GAEmpUpdate?employeeNo=" + result;
 		} else {
 			url = "redirect:/groupAdmin";
 		}

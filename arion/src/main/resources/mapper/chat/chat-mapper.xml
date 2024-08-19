@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.chat.mapper.ChatMapper">
+	<select id="selectRoomNo" resultType="ChatVO">
+		SELECT message_no
+		      ,sender_id
+		      ,employee_no
+		      ,content
+		      ,send_at
+		      ,TO_CHAR(send_at,'hh:MI') as send_time
+		      ,room_no
+		FROM messages WHERE room_no=#{roomNo}
+		ORDER BY send_at
+	</select>
+
+</mapper>

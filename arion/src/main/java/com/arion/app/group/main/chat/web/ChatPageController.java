@@ -35,14 +35,18 @@ public class ChatPageController {
 	public String getChatPage(Model model, HttpSession session) {
 		int empNo = (Integer) session.getAttribute("employeeNo");
 		String comCode = (String) session.getAttribute("companyCode");
+		String empName = (String) session.getAttribute("empName");
 		List<Messages> previousMessages = chatMessageRepository.findAll(); // 이걸 해당하는 방넘버를 가지고  대화내용 불러오는걸ㄹ ㅗ바꿔야돼
 		List<EmployeeVO> list = gaService.empListSelect(comCode);
 		List<ChatRoomVO> chatRoomList = chatRoomService.chatRoomsSelect(comCode, empNo);
+		model.addAttribute("empName",empName);
 		model.addAttribute("chatRoomList", chatRoomList);
 		model.addAttribute("empList", list);
-		model.addAttribute("messages", previousMessages);
+		//model.addAttribute("messages", previousMessages);
 		model.addAttribute("empNo", empNo);
 		return "group/chat/chat";
-
 	}
+//	@PostMapping("/group/chatRoom")
+//  public List<Messages>
+	
 }

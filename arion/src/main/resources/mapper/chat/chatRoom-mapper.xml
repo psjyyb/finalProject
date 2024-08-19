@@ -44,4 +44,9 @@
 		WHERE company_code = #{companyCode} AND m.employee_no = #{employeeNo}
 		ORDER BY room_no DESC
 	</select>
+	<delete id="exitChatRoom" parameterType="ChatVO">
+		DELETE FROM chatmembers
+		WHERE employee_no= #{employeeNo}
+		AND room_no= #{roomNo}
+	</delete>
 </mapper>

@@ -13,6 +13,7 @@ import com.arion.app.group.main.chat.repository.ChatMessageRepository;
 
 @Controller
 public class ChatController {
+	
 	   @Autowired
 	    private ChatMessageRepository chatMessageRepository;
 
@@ -24,5 +25,4 @@ public class ChatController {
 	        chatMessageRepository.save(message); // 메시지 DB 저장
 	        return message;
 	    }
-
 }

@@ -1,0 +1,10 @@
+package com.arion.app.group.main.chat.service;
+
+import java.util.List;
+
+public interface ChatRoomService {
+
+	ChatRoomVO createChatRoom(ChatRoomVO chatRoomVO);
+
+	List<ChatRoomVO> chatRoomsSelect(String companyCode, int employeeNo);
+}

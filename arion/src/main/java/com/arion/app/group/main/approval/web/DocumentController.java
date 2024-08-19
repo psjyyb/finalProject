@@ -12,11 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.group.main.approval.service.ApprovalVO;
+import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
+import com.arion.app.group.main.approval.service.DocumentVO;
 import com.arion.app.group.main.approval.service.TemplateService;
 import com.arion.app.group.main.approval.service.TemplateVO;
 
@@ -111,6 +117,15 @@ public class DocumentController {
 		String companyCode = (String) session.getAttribute("companyCode");
 		
 		return dsvc.selectEmployeeList(companyCode, departmentName);
+	}
+	
+	@PostMapping("/writeDoc")
+	public String insertDoc(DocumentVO documentVO, ApprovalVO approvalVO, DocAccessVO docAccessVO, HttpSession session, @RequestPart MultipartFile[] files ) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		String employeeNo = (String) session.getAttribute("employeeNo");
+		
+		
+		return "redirect:/group/Main";
 	}
 	
 

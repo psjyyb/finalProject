@@ -1,5 +1,8 @@
 package com.arion.app.group.main.approval.service;
 
+import lombok.Data;
+
+@Data
 public class DocAccessVO {
 	private int accessNo;
 	private int employeeNo;

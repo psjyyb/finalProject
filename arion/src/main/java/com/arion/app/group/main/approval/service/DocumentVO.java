@@ -5,10 +5,13 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Data;
+
+@Data
 public class DocumentVO {
 	private int docNo;
 	private String docTitle;
-	private String docType;
+	private String docName;
 	private Clob docContent;
 	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date createDate;

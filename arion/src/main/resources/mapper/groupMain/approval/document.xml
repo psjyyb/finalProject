@@ -22,5 +22,26 @@
         ORDER BY r.rank_ranking ASC
 	</select>
 	
+	<insert id="insertDocument" parameterType="DocumentVO">
+		INSERT INTO document(doc_no
+							, employee_no
+							, doc_title
+							, doc_name
+							, doc_content
+							, doc_create_date
+							, doc_status
+							, company_code
+		) VALUES (doc_seq.NEXTVAL
+				 , #{employeeNo}
+				 , #{docTite}
+				 , #{docName}
+				 , #{docContent,jdbcType=CLOB,typeHandler=org.apache.ibatis.type.ClobTypeHandler}
+				 , sysdate
+				 , '상신완료'
+				 , #{company_code}
+		)
+	</insert>
+	
+	
 	
 </mapper>

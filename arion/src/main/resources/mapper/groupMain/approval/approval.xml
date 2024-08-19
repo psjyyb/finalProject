@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.main.approval.mapper.ApprovalMapper">
-	<select id="empSign" resultType="String">
-		SELECT sign_img
-		FROM employees
-		WHERE employee_id = #{employeeId}
-		WHERE company_code = #{companyCode}
-	</select>
-	
-	<update id="insertSign" parameterType="EmployeeVO">
-		UPDATE employees
-		SET
-			sign_img = #{signImg}
-		WHERE employee_id = #{employeeId}
-		AND company_code = #{companyCode};	
-	</update>
+	<insert id="insertApproval" parameterType="ApprovalVO">
+		INSERT INTO approval(appr_no
+							, doc_no
+							, employee_no
+							, sequence
+							, company_code
+							, appr_status
+		) VALUES (appr_seq.NEXTVAL
+				 , #{docNo}
+				 , #{employeeNo}
+				 , #{sequence}
+				 , #{companyCode}
+				 , '결재대기'
+		)
+	</insert>
 </mapper>

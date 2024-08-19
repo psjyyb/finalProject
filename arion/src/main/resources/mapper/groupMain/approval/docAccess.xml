@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.approval.mapper.DocAccessMapper">
+	<insert id="insertAccess" parameterType="DocAccessVO">
+		INSERT INTO doc_access (access_no
+								, employee_no
+								, access_view
+								, reference
+								, access_appr
+								, doc_no
+								, company_code
+		) VALUES (access_seq.NEXTVAL
+				 , #{employeeNo}
+				 , #{accessView}
+				 , #{reference}
+				 , #{accessAppr}
+				 , #{docNo}
+				 , #{companyCode}
+		)
+	</insert>
+</mapper>

@@ -11,4 +11,5 @@ public interface DocumentMapper {
 	List<String> selectDepartment(@Param("companyCode") String companyCode);
 	List<EmployeesVO> selectEmployeeList(@Param("companyCode") String companyCode, @Param("departmentName") String departmentName );
 	
+	
 }

@@ -18,7 +18,9 @@ public interface AttendanceService {
 	public SumWorkTimeVO sumworktime(int employeeno, String start, String end);
 	
 	//년수별 기간 
-	public List<Map<String, Integer>> yearslist(int employeeno);
+	public List<YearsVO> yearslist(int employeeno);
 	//년수로 해당 년수 휴가기록
-	public VacationVO vacation(int employeeno,int years);
+	public List<VacationVO> vacation(int employeeno,int years);
+	
+	public EmpVacationVO empvacation(int employeeno,int years,List<VacationVO> vacationlist);
 }

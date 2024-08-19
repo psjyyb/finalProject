@@ -2,6 +2,7 @@ package com.arion.app.group.main.attendance.web;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +26,11 @@ import org.springframework.ui.Model;
 import com.arion.app.group.main.attendance.service.AEmployeeVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
+import com.arion.app.group.main.attendance.service.EmpVacationVO;
 import com.arion.app.group.main.attendance.service.SumWorkTimeVO;
+import com.arion.app.group.main.attendance.service.VacationVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
+import com.arion.app.group.main.attendance.service.YearsVO;
 import com.arion.app.security.service.LoginUserVO;
 
 
@@ -176,7 +180,9 @@ public class AttendanceController {
 			
 			HttpSession session = request.getSession();
 			int EmployeeNo = (int)session.getAttribute("employeeNo");
+			List<YearsVO> YearsList=attendanceservice.yearslist(EmployeeNo);
 			model.addAttribute("employeeNo", EmployeeNo);
+			model.addAttribute("yearsList", YearsList);
 			
 			return "group/attendance/myvacation";
 		}
@@ -187,12 +193,63 @@ public class AttendanceController {
 		public Map<String, Object> vacationlist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "years",required = false) int years) throws Exception {
 						
 			int EmployeeNo = Integer.parseInt(employeeno);
-			 
-			Map<String, Object> result = new HashMap<String, Object>();
 			System.out.println(years);
-			//result.put("attendancelist", attendance);
+
+			List<VacationVO>  vacationlist =  attendanceservice.vacation(EmployeeNo, years);
+			EmpVacationVO empvacation = attendanceservice.empvacation(EmployeeNo, years, vacationlist);
+			
+			
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("vacationlist", vacationlist);
+			result.put("empvacation", empvacation);
 			return result;
 		}
 		
 		
+		@GetMapping("/underlingvacationlist")
+		public String underlingvacationlist(HttpServletRequest request,Model model) {
+			HttpSession session = request.getSession();			
+			String companyCode = (String)session.getAttribute("companyCode");
+			String rankName = (String)session.getAttribute("rankName");
+			List<AEmployeeVO> emplist = attendanceservice.aEmployeeList(companyCode,rankName);
+			model.addAttribute("emplist", emplist);
+			model.addAttribute("emplistcount", emplist.size());
+			
+			
+			return "group/attendance/vacationlist";
+		}
+		
+		@GetMapping("/underlingvacationlist/{employeeNo}")
+		public String underlingvacationlist(@PathVariable String employeeNo,Model model) {
+			
+			model.addAttribute("employeeNo", employeeNo);
+			System.out.println(employeeNo);
+			
+			int EmployeeNo = Integer.parseInt(employeeNo);
+			AEmployeeVO underlingname= attendanceservice.aEmployee(EmployeeNo);
+			System.out.println(underlingname.getEmployeename());
+			
+			model.addAttribute("underlingName", underlingname.getEmployeename());
+			
+			List<YearsVO> YearsList=attendanceservice.yearslist(EmployeeNo);
+			
+			model.addAttribute("yearsList", YearsList);
+			
+			
+			return "group/attendance/underlingvacation";
+		}
+		
+		
+		//휴가
+				@GetMapping("/chart")
+				public String chart(HttpServletRequest request,Model model) {
+					
+					HttpSession session = request.getSession();
+					int EmployeeNo = (int)session.getAttribute("employeeNo");
+					
+					model.addAttribute("employeeNo", EmployeeNo);
+					
+					
+					return "group/attendance/mychart";
+				}
 }

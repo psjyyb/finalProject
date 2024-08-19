@@ -5,9 +5,12 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>myvacation</title>
-<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+
+<title>underlingvacation</title>
 </head>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+<h2 th:text="${underlingName}+'의 휴가 기록'"></h2>
+
 <body onload="autoReload();">
 	
 	       <div >
@@ -17,12 +20,10 @@
 						th:text="${years.period}">없음</option>
 				</select>
 			</div>
-	 <div >
-	 <span>사용일수</span><p id="used"></p><span>남은일수</span><p id="remaining"></p><span>총휴가일수</span><p id="vacation"></p><span>유효기간</span><p id="expirationdate"></p>
-	</div>
+	<span>사용일수</span><p id="used"></p><span>남은일수</span><p id="remaining"></p><span>총휴가일수</span><p id="vacation"></p><span>유효기간</span><p id="expirationdate"></p>
 			<div colspan="4" align="right">
 			<button id="download">다운로드</button>
-			<a href="/group/attendance/underlingvacationlist">부하직원 휴가기록</a>
+			<a href="/group/attendance/underlingvacationlist">되돌아가기</a>
 	
 	</div>
 	<table align="center" id="vacationtable" width="80%"  height ="30%">

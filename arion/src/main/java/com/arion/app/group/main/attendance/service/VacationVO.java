@@ -9,13 +9,10 @@ import lombok.Data;
 @Data
 public class VacationVO {
 
-	private Integer years;
-	@DateTimeFormat(pattern="yyyy/MM/dd")
-	private Date startdate;
-	@DateTimeFormat(pattern="yyyy/MM/dd")
-	private Date enddate;
+	private String vacationdate;
+	private String holtype;
 	private double usevacation;
-	private double remainingvacation;
-	private double yearsvacation;
+	private String docstatus;
+	private String createdate;
 	
 }

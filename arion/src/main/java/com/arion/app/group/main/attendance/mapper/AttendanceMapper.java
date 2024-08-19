@@ -8,6 +8,7 @@ import com.arion.app.group.main.attendance.service.AEmployeeVO;
 import com.arion.app.group.main.attendance.service.AttendanceDownloadVO;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
 import com.arion.app.group.main.attendance.service.SumWorkTimeVO;
+import com.arion.app.group.main.attendance.service.VacationVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
 
 @Mapper
@@ -24,4 +25,6 @@ public interface AttendanceMapper {
 	public SumWorkTimeVO sumworktime(int employeeno, String start, String end);
 	
 	public List<AttendanceDownloadVO> attendancedownload(int employeeno,String start, String end);
+
+	public List<VacationVO> vacation(int employeeno, String start, String end);
 }

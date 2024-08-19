@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.arion.app.group.main.attendance.service.AttendanceDownloadVO;
 import com.arion.app.group.main.attendance.service.AttendanceService;
 import com.arion.app.group.main.attendance.service.AttendanceVO;
+import com.arion.app.group.main.attendance.service.EmpVacationVO;
 import com.arion.app.group.main.attendance.service.SumWorkTimeVO;
+import com.arion.app.group.main.attendance.service.VacationVO;
 import com.arion.app.group.main.attendance.service.WorkTimeVO;
 
 import java.io.IOException;
@@ -185,6 +187,87 @@ public class ExcelController {
         
     }
 	
-	
+	@PostMapping("/files/vacationdownload")
+    public void vacationdownload(HttpServletResponse res,@RequestParam(value = "employeeno",required = false) String employeeno,
+    		@RequestParam(value = "years",required = false) String years) throws Exception {
+    	int iemployeeno=Integer.parseInt(employeeno);
+    	int iyears=Integer.parseInt(years);
+    	
+			List<VacationVO> vacationlist = attendanceservice.vacation(iemployeeno,iyears);
+			EmpVacationVO empvacation = attendanceservice.empvacation(iemployeeno, iyears, vacationlist);
+			
+        Workbook workbook =new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(); // 엑셀 sheet 이름
+        
+        int rowCount = 0; // 데이터가 저장될 행
+
+
+        Row headerRow = null;
+        Cell headerCell = null;
+
+        headerRow = sheet.createRow(rowCount++);
+       
+
+         
+        
+        sheet.setColumnWidth(0, 6800);
+        sheet.setColumnWidth(4, 5000);
+            headerCell = headerRow.createCell(0);
+            headerCell.setCellValue("일자"); // 데이터 추가
+            headerCell = headerRow.createCell(1);
+            headerCell.setCellValue("휴가유형"); // 데이터 추가
+            headerCell = headerRow.createCell(2);
+            headerCell.setCellValue("휴가일수"); // 데이터 추가
+            headerCell = headerRow.createCell(3);
+            headerCell.setCellValue("상태"); // 데이터 추가
+            headerCell = headerRow.createCell(4);
+            headerCell.setCellValue("신청일자"); // 데이터 추가
+            
+            
+        Row bodyRow = null;
+        Cell bodyCell = null;
+
+        for(VacationVO vacation : vacationlist) {
+        	
+            bodyRow = sheet.createRow(rowCount++);
+            
+                bodyCell = bodyRow.createCell(0);
+                bodyCell.setCellValue(vacation.getVacationdate()); // 데이터 추가                    
+                bodyCell = bodyRow.createCell(1);
+                bodyCell.setCellValue(vacation.getHoltype()); // 데이터 추가    
+                bodyCell = bodyRow.createCell(2);
+                bodyCell.setCellValue(vacation.getUsevacation()); // 데이터 추가                               
+                bodyCell = bodyRow.createCell(3);
+                bodyCell.setCellValue(vacation.getDocstatus()); // 데이터 추가                                
+                bodyCell = bodyRow.createCell(4);
+                bodyCell.setCellValue(vacation.getCreatedate()); // 데이터 추가  
+                
+        }
+        bodyRow = sheet.createRow(rowCount++);
+        bodyCell = bodyRow.createCell(0);
+        bodyCell.setCellValue("사용일수"); // 데이터 추가                    
+        bodyCell = bodyRow.createCell(1);
+        bodyCell.setCellValue(empvacation.getUsed()); // 데이터 추가                                       
+        bodyCell = bodyRow.createCell(2);
+        bodyCell.setCellValue("남은일수"); // 데이터 추가                                                
+        bodyCell = bodyRow.createCell(3);
+        bodyCell.setCellValue(empvacation.getRemaining()); // 데이터 추가   
+        bodyCell = bodyRow.createCell(4);
+        bodyCell.setCellValue("휴가일수"); // 데이터 추가  
+        bodyCell = bodyRow.createCell(5);
+        bodyCell.setCellValue(empvacation.getVacation()); // 데이터 추가  
+        bodyCell = bodyRow.createCell(6);
+        bodyCell.setCellValue("사용기한"); // 데이터 추가  
+        bodyCell = bodyRow.createCell(7);
+        bodyCell.setCellValue(empvacation.getExpirationdate()); // 데이터 추가  
+
+        String fileName = "spring_excel_download";
+
+        res.setContentType("application/vnd.ms-excel");
+        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");       
+        workbook.write(res.getOutputStream());
+        workbook.close();
+        
+    }
 	
 }

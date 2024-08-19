@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+
+<title>mychart</title>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+</head>
+
+<body onload="autoReload();">
+	
+	<div colspan="4" align="center" display="inline">
+	
+	<button id="before"></button>
+			
+	<h2 id="yearmonth" ></h2>
+			
+	<button id="next"></button>
+			
+	<button id="today">오늘</button>
+	
+    </div>
+			<div colspan="4" align="right">
+			
+			<a href="/group/attendance/attendancelist">부하직원 근태기록</a>
+	
+	</div>
+	
+	
+<div id="chart"></div>
+
+
+	<script th:src="@{/vendor/billboard/d3.v5.min.js}"></script>
+    <link th:href="@{/vendor/billboard/billboard.css}" rel="stylesheet">
+    <script th:src="@{/vendor/billboard/billboard.js}"></script>
+	<link rel="stylesheet" href="@{/vendor/billboard/billboard.css}">
+<script src="@{/vendor/billboard/billboard.pkgd.js}"></script>
+<script th:src="@{/js/group/attendance/chart.js}"></script>
+</body>
+</html >

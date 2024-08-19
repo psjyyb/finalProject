@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	// CKEditor 초기화
 	$('#templateSelect').on('change', function() {
 		let tempNo = $(this).val();
-
+		let tempName = $(this).find('option:selected').text(); // 선택된 템플릿의 이름 가져오기
+		
 		if (tempNo) {
+			$('#docName').val(tempName); // docName 필드에 템플릿 이름 설정
 			$('#placeholder').hide(); // 안내 메시지 숨기기
 			$('#editor').show(); // 에디터 표시
 
@@ -50,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		} else {
 			// 템플릿 선택이 해제된 경우
+			$('#docName').val(''); // 선택 해제 시 docName 필드 값 비우기
 			if (editorInstance !== null) {
 				editorInstance.destroy()  // CKEditor 인스턴스 제거
 					.then(() => {
@@ -265,5 +268,67 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 		$('#selectedReferencesList').html(referenceHtml);
 		$('#referenceModal').modal('hide');
+	});
+
+	// 다중 파일 업로드 처리
+	$('#files').on('change', function() {
+		let files = $(this)[0].files;
+		let fileList = $('#fileList');
+		fileList.empty();
+
+		for (let i = 0; i < files.length; i++) {
+			let fileName = files[i].name;
+			let listItem = $('<li>').text(fileName);
+			let removeButton = $('<button>').text('삭제').on('click', function() {
+				$(this).parent().remove();
+			});
+			listItem.append(removeButton);
+			fileList.append(listItem);
+		}
+	});
+
+	// 문서 작성 완료 버튼 클릭 시 Ajax로 데이터 전송
+	$('#submitDocument').on('click', function(event) {
+		event.preventDefault();
+		const formData = new FormData($('#writeDoc')[0]);
+
+		// 결재자 및 참조자 목록을 FormData에 추가
+		selectedApprovers.forEach((approver, index) => {
+			formData.append(`approverIds`, approver.employeeNo);
+		});
+
+		selectedReferences.forEach((reference, index) => {
+			formData.append(`referenceIds`, reference.employeeNo);
+		});
+	
+		// CKEditor의 내용을 formData에 추가
+   		if (editorInstance) {
+        	const content = editorInstance.getData(); // CKEditor 내용 가져오기
+        	formData.append('docContent', content);
+    	}
+		
+		$.ajax({
+			url: '/writeDoc',
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false,
+			success: function(response) {
+				Swal.fire({
+					icon: "success",
+					text: "문서가 상신되었습니다.",
+					willClose: () => {
+						window.location.href = '/group';	
+					}
+				});
+			},
+			error: function(error) {
+				console.log('Error:', error);
+				Swal.fire({
+					icon: "error",
+					text: "상신 중 오류가 발생했습니다."
+				});
+			}
+		});
 	});
 });

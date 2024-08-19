@@ -98,7 +98,7 @@ $(document).ready(function() {
 		})
 		.fail(err => {
 			Swal.fire({
-				icon: "erroer",
+				icon: "error",
 				text: "등록 중 오류가 발생했습니다."
 			});
 		})

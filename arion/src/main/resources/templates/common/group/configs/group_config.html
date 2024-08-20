@@ -29,4 +29,43 @@
 <!-- Custom styles for this template-->
 <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
 <link th:href="@{/images/favicon.png}" rel="icon">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/group/chat/chatStyle.css}">
+<style>
+#chat-button {
+    position: fixed; /* 화면에 고정 */
+    bottom: 20px; /* 화면 하단에서 20px 위에 위치 */
+    right: 20px; /* 화면 오른쪽에서 20px 안쪽에 위치 */
+    width: 80px; /* 버튼의 너비를 80px로 설정 */
+    height: 80px; /* 버튼의 높이를 80px로 설정 */
+    background-color: #007bff; /* 버튼의 배경색 */
+    color: white; /* 아이콘 색상 */
+    border-radius: 50%; /* 버튼을 원형으로 만듦 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    font-size: 30px; /* 아이콘의 크기를 크게 설정 */
+}
+
+#chat-button:hover {
+    background-color: #0056b3; /* 마우스를 올렸을 때 배경색 변경 */
+    transform: scale(1.1); /* 마우스를 올렸을 때 약간 확대 */
+}
+
+#chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+</style>
 </html>

@@ -1,38 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:replace="common/group/configs/group_config :: GroupConfigFragment">
-    <meta charset="UTF-8">
-    <title>ARION</title>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head
+	th:replace="common/group/configs/group_config :: GroupConfigFragment">
+<meta charset="UTF-8">
+<title>ARION</title>
 </head>
 <body id="page-top">
-    <div id="wrapper">
-        <!-- Sidebar -->
-        <th:block th:insert="common/group/fragments/group_menu :: GroupMenuFragment"></th:block>
-        
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <th:block th:insert="common/group/fragments/group_header :: GroupHeaderFragment"></th:block>
-                <div class="container-fluid">
-                    <!-- Page-specific content -->
-                    <th:block layout:fragment="Content"></th:block>
-                </div>
-            </div>
-            
-            <!-- Footer -->
-            <!-- Uncomment and add footer reference if needed -->
-            <!-- <footer th:replace="common/group/fragments/group_footer :: GroupFooterFragment"></footer> -->
-        </div>
-    </div>
+	<div id="wrapper">
+		<!-- Sidebar -->
+		<th:block
+			th:insert="common/group/fragments/group_menu :: GroupMenuFragment"></th:block>
 
-    <!-- Scripts -->
-    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-    <script th:src="@{/js/sb-admin-2.min.js}"></script>
-    <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
-    <script th:src="@{/js/demo/chart-area-demo.js}"></script>
-    <script th:src="@{/js/demo/chart-pie-demo.js}"></script>
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- Main Content -->
+			<div id="content">
+				<th:block
+					th:insert="common/group/fragments/group_header :: GroupHeaderFragment"></th:block>
+				<div class="container-fluid">
+					<!-- Page-specific content -->
+					<th:block layout:fragment="Content"></th:block>
+				</div>
+			</div>
+			<!-- 채팅 버튼 -->
+			<div id="chat-button">
+				<a th:href="@{/group/chat}" class="chat-link"> <i
+					class="fas fa-comment-dots fa-lg"></i>
+				</a>
+			</div>
+			<!-- Footer -->
+			<!-- Uncomment and add footer reference if needed -->
+			<!-- <footer th:replace="common/group/fragments/group_footer :: GroupFooterFragment"></footer> -->
+		</div>
+	</div>
+
+	<!-- Scripts -->
+	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+	<script th:src="@{/js/sb-admin-2.min.js}"></script>
+	<script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+	<script th:src="@{/js/demo/chart-area-demo.js}"></script>
+	<script th:src="@{/js/demo/chart-pie-demo.js}"></script>
 </body>
 </html>

@@ -6,8 +6,10 @@ html, body {
 }
 
 .container-fluid {
-    height: 100vh; /* 전체 화면 높이 사용 */
+    height: 800px; /* 전체 화면 높이 사용 */
+    width: 1000px;
     overflow: hidden; /* 컨테이너에서 스크롤바 제거 */
+    background-color:#fff;
 }
 
 .row {
@@ -32,6 +34,7 @@ html, body {
 }
 
 .profile_name {
+	width:1000px;
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -76,6 +79,7 @@ html, body {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 15px;
+    width:60%
 }
 
 .outgoing_msg .sent_msg {
@@ -220,7 +224,7 @@ html, body {
     display: inline-block;
     padding: 0 0 0 10px;
     vertical-align: top;
-    width: 92%;
+    width: 700px;
 }
 
 .received_withd_msg p {
@@ -230,7 +234,7 @@ html, body {
     font-size: 14px;
     margin: 0;
     padding: 5px 10px 5px 12px;
-    width: 100%;
+    width: 400px;
 }
 
 .time_date {
@@ -257,12 +261,13 @@ html, body {
     margin: 0;
     color: #fff;
     padding: 5px 10px 5px 12px;
-    width: 100%;
+    width: 400px;
 }
 
 .outgoing_msg {
     overflow: hidden;
     margin: 26px 0 26px;
+    width:700px;
 }
 
 .sent_msg {

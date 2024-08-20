@@ -42,7 +42,7 @@ public class MailController {
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
-
+        mailVO.setMailStatus("RECEIVED");
         List<MailVO> receivedMails = mailService.mailList(mailVO, criteria);
         int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
 
@@ -61,7 +61,7 @@ public class MailController {
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
-    
+        mailVO.setMailStatus("IMPORT");
         List<MailVO> importMailAll = mailService.importMailList(mailVO, criteria);
         int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
@@ -79,7 +79,7 @@ public class MailController {
         MailVO mailVO = new MailVO();
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
-        
+        mailVO.setMailStatus("TRASH");
         List<MailVO> deleteMailAll = mailService.deleteMailList(mailVO,criteria);
         int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
@@ -103,37 +103,58 @@ public class MailController {
 
         return "group/mail/mailInfo";
     }
+    
+    //보낸메일
+    @GetMapping("/sendmail")
+    public String sendMailList(Model model, Criteria criteria) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        MailVO mailVO = new MailVO();
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+        mailVO.setMailStatus("SEND");
+        List<MailVO> sendMailAll = mailService.sendMailList(mailVO, criteria);
+        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+       
+        model.addAttribute("sendMailAll",sendMailAll);
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("criteria", criteria);
+        return "group/mail/sendmail";
+    }
+    
     // 메일 보내기 폼 페이지
     @GetMapping("/writemail")
     public String mailSendForm(Model model) {
     	String employeeId=(String) httpSession.getAttribute("loginId");
+    	
+    	//조직도    	
+    
         model.addAttribute("employeeId", employeeId);
         
         return "group/mail/writemail";
     }
+    
+    
     //보내기
-    @PostMapping("/mailSend")
-    public String sendMail(MailVO mailVO, @RequestPart(required = false) MultipartFile[] attachments, HttpSession httpSession) {
+    @PostMapping("/writemail")
+    @ResponseBody
+    public int sendMail(MailVO mailVO, @RequestPart(required = false) MultipartFile[] files, HttpSession httpSession) {
         // 세션에서 회사 코드와 로그인 사용자 ID를 가져옵니다.
         String companyCode = (String) httpSession.getAttribute("companyCode");
-        String senderId = (String) httpSession.getAttribute("loginId");
+        Integer senderId = (Integer) httpSession.getAttribute("employeeNo");
         String senderName = (String) httpSession.getAttribute("loginName"); // 예를 들어, 로그인 사용자 이름
 
         // MailVO에 발신자 정보와 회사 코드를 설정합니다.
-        mailVO.setSenderId(senderId);
+        mailVO.setSenderId(senderId.toString());
         mailVO.setSenderName(senderName);
         mailVO.setCompanyCode(companyCode);
 
+        mailVO.setReceiverIds(mailVO.getReceiverId().split(","));
         // 메일을 전송합니다.
-        int result = mailService.sendMail(mailVO, attachments);
-
-      
-        if (result == 1) {
-            return "redirect:/myMail"; // 메일 목록 페이지로 이동
-        } else {
-            // 실패 시 실패 페이지로 이동하거나 에러 메시지를 모델에 추가할 수 있습니다.
-            return "redirect:/mailSendError"; // 실패 페이지로 이동
-        }
+        int result = mailService.sendMail(mailVO, files);
+        return result;
+        
     }
     // 메일 삭제 (처리)
     @PostMapping("/delete")

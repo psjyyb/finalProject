@@ -34,7 +34,7 @@ public interface MailMapper {
     
     int deleteMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
     // 메일 보내기
-    int sendMail(MailVO mailVO);
+    public int sendMail(MailVO mailVO);
 
     // 수신자 정보 조회
     List<MailReceiveVO> selectReceivers(@Param("companyCode") String companyCode);

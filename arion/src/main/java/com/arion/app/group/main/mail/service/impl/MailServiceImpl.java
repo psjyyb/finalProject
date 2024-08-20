@@ -35,6 +35,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender; 
     
+    
     //받은메일
     @Override
     public List<MailVO> mailList(MailVO mailVO, Criteria criteria) {
@@ -55,7 +56,8 @@ public class MailServiceImpl implements MailService {
     }
     
     //메일 페이징
-	@Override
+
+	
 	public int selectMailTotalCount(MailVO mailVO,Criteria criteria) {
 //		Map<String, Object> params = new HashMap<>();
 //		params.put("searchType", criteria.getSearchType());
@@ -92,35 +94,34 @@ public class MailServiceImpl implements MailService {
     //메일보내기
     @Transactional
     @Override
-    public int sendMail(MailVO mailVO, MultipartFile[] attachments) {
+    public int sendMail(MailVO mailVO, MultipartFile[] files) {
         try {
-            // 내부 수신자 정보
-            List<MailReceiveVO> internalReceivers = mailMapper.selectReceivers(mailVO.getCompanyCode());
-
-            // 메일 제목 내용변경
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject(mailVO.getMailTitle());
-            message.setText(mailVO.getMailContent());
-
-            // 외부 수신자에게 메일
-            if (mailVO.getReceiverEmails() != null) {
-                for (String email : mailVO.getReceiverEmails()) {
-                    message.setTo(email);
-                    mailSender.send(message);
-                  
+        	//
+        	 mailMapper.sendMail(mailVO);
+        	 MailReceiveVO receiveVO = new MailReceiveVO();
+        	 receiveVO.setMailNo(mailVO.getMailNo());
+            if (mailVO.getReceiverIds() != null) {
+                for (String email : mailVO.getReceiverIds()) {
+                	//저장
+                	receiveVO.setEmployeeId(email);
+                  	//외부메일
+                	if(email.indexOf("@")>0) {                		
+                        // 메일 제목 내용변경
+                        SimpleMailMessage message = new SimpleMailMessage();
+                        message.setSubject(mailVO.getMailTitle());
+                        message.setText(mailVO.getMailContent());
+                		message.setTo(email);
+                        mailSender.send(message);
+                	}else {
+                		receiveVO.setCompanyCode(mailVO.getCompanyCode());
+                	}
+                	mailMapper.insertMailReceive(receiveVO);
                 }
             }
-
-            // 내부 수신자에게 메일을 보냅니다.
-            if (internalReceivers != null && !internalReceivers.isEmpty()) {
-                for (MailReceiveVO receiver : internalReceivers) {
-                    message.setTo(receiver.getReceiveEmail());
-                    mailSender.send(message);
-                  
-                }
-            }
+     
             return 1; 
         } catch (Exception e) {
+        	e.printStackTrace();
             return 0; 
         }
     }
@@ -129,4 +130,5 @@ public class MailServiceImpl implements MailService {
     public List<MailReceiveVO> selectReceivers(String companyCode) {
         return mailMapper.selectReceivers(companyCode);
     }
+
 }

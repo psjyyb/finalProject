@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.group.mapper.GroupMapper">
+	<!-- 부서조회-->
+	<select id="selectDepartment" parameterType="String" resultType="departmentsVO"> 
+		SELECT DISTINCT department_name
+        FROM employees
+        WHERE company_code = #{companyCode}
+	</select>
+	
+	<!-- 사원조회 -->
+	<select id="selectEmployeeList" parameterType="map" resultType="employeesVO"> 
+		SELECT e.employee_no
+			  , e.employee_name
+			  , e.department_name
+			  , e.rank_name
+			  , r.rank_ranking
+			  , e.employee_phone
+        FROM employees e JOIN rank r 
+        				 ON e.rank_name = r.rank_name 
+        				 AND e.company_code = r.company_code
+        WHERE e.company_code = #{companyCode} 
+        AND e.department_name = #{departmentName}
+     </select>
+     <!-- 사원상세정보 -->
+    <select id="selectEmployeeDetail" parameterType="int" resultType="employeesVO">
+        SELECT e.employee_no,
+               e.employee_name,
+               e.department_name,
+               e.rank_name,
+               e.employee_phone,
+               e.employee_id
+        FROM employees e
+        WHERE e.employee_no = #{employeeNo}
+    </select>
+     <!-- 주소록 회사목록 -->
+     <select id="selectCompanyNames" parameterType="String" resultType="String">
+    	 SELECT DISTINCT company_name
+   		 FROM address
+   		 WHERE employee_id = #{employeeId}
+	</select>
+     <!-- 주소록 사원 -->
+     <select id="selectAddressList" parameterType="map" resultType="AddressVO">
+  		  SELECT addr_no,
+         	   addr_name,
+        	   addr_phone,
+        	   company_name,
+        	   addr_email,
+       		   addr_rank,
+       		   employee_id
+  		  FROM address
+   		 WHERE employee_id = #{employeeId}
+  		  AND company_name = #{companyName}
+</select>
+     
+     <!-- 주소록 사원상세 -->
+    <select id="selectAddressDetail" parameterType="int" resultType="AddressVO">
+       	SELECT addr_no,
+      	     addr_name,
+      	     addr_phone,
+      	     company_name,
+      	     addr_email,
+      		 addr_rank,
+     	     employee_id
+  		  FROM address
+  		  WHERE addr_no = #{addrNo}
+</select>
+	<!-- 주소록 등록 -->
+<insert id="insertAddress" parameterType="AddressVO">
+   		 INSERT INTO address (
+       		 addr_no,
+       		 addr_name,
+       		 addr_phone, 
+      		 company_name, 
+      		 addr_email, 
+      		 addr_rank, 
+     		 employee_id
+   			 )
+    VALUES (
+        addr_no_seq.NEXTVAL, 
+       		 #{addrName},
+      		 #{addrPhone}, 
+       		 #{companyName}, 
+     		 #{addrEmail}, 
+     	     #{addrRank}, 
+             #{employeeId}
+  			 )
+</insert>
+
+
+<!-- 주소록 수정 -->
+<update id="updateAddress" parameterType="AddressVO">
+    UPDATE address
+    SET addr_name = #{addrName},
+        addr_phone = #{addrPhone},
+        company_name = #{companyName},
+        addr_email = #{addrEmail},
+        addr_rank = #{addrRank}
+    WHERE addr_no = #{addrNo}
+</update>
+
+<!-- 주소록 삭제 -->
+<delete id="deleteAddress" parameterType="int">
+    DELETE FROM address
+    WHERE addr_no = #{addrNo}
+</delete>
+
+</mapper>

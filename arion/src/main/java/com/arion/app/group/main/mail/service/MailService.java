@@ -27,8 +27,9 @@ public interface MailService {
     Map<String, Object> deleteMail(MailVO mailVO);
 
     // 메일 보내기
-    int sendMail(MailVO mailVO, MultipartFile[] attachments);
+    int sendMail(MailVO mailVO, MultipartFile[] files);
     
+   
     // 수신자 정보 조회
     List<MailReceiveVO> selectReceivers(String companyCode);
     //메일 상세조회

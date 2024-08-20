@@ -99,4 +99,9 @@ public class DocumentServiceImpl implements DocumentService{
 		return mapper.countApprProgressList(docAccessVO, criteria);
 	}
 
+	@Override
+	public DocumentVO documentInfo(DocumentVO documentVO) {
+		return mapper.documentInfo(documentVO);
+	}
+
 }

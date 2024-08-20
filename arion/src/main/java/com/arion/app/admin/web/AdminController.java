@@ -87,7 +87,8 @@ public class AdminController {
 	@GetMapping("/adminQnAInfo")
 	public String adminQnAInfo(QnAVO qnaVO, Model model) {
 		QnAVO qvo = adminService.qnaInfoSelect(qnaVO);
-		List<FileVO> fileList = fileService.selectFiles("qna", qnaVO.getQnaNo());
+		String companyCode = null;
+		List<FileVO> fileList = fileService.selectFiles("qna", qnaVO.getQnaNo(), companyCode);
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("qna", qvo);
 		return "admin/adminQnAInfo";

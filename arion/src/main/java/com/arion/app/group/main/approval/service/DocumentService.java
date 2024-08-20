@@ -22,5 +22,5 @@ public interface DocumentService {
 	List<DocumentVO> apprProgressList(DocAccessVO docAccessVO, Criteria criteria);
 	public int countApprProgressList(DocAccessVO docAccessVO, Criteria criteria);
 
-	
+	public DocumentVO documentInfo(DocumentVO documentVO);
 }

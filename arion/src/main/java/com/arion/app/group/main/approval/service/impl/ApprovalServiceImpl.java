@@ -29,4 +29,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return 1;
 	}
 
+	@Override
+	public ApprovalVO apprInfo(ApprovalVO approvalVO) {
+		
+		return mapper.apprInfo(approvalVO);
+	}
+
 }

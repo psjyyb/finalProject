@@ -16,4 +16,23 @@
 				 , '결재대기'
 		)
 	</insert>
+	
+	<select id="apprInfo" resultType="ApprovalVO">
+		SELECT a.appr_status
+			 , a.appr_reason
+			 , a.sign_date
+			 , a.sequence
+			 , a.company_code
+			 , a.doc_no
+			 , e.employee_no
+			 , e.employee_name
+			 , e.rank_name
+			 , e.department_name
+		FROM approval a JOIN employees e
+						ON a.employee_no = e.employee_no
+		WHERE 1=1 
+		AND a.doc_no = #{docNo}
+		AND a.company_code = #{companyCode}
+		ORDER BY sequence DESC;		
+	</select>
 </mapper>

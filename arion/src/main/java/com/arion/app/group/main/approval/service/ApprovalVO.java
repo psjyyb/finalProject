@@ -20,5 +20,8 @@ public class ApprovalVO {
 	private int docNo;
 	private int employeeNo;
 	
+	private String employeeName;
+	private String rankName;
+	private String departmentName;
 	private RankVO rank;
 }

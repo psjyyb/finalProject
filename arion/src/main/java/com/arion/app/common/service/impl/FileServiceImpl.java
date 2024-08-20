@@ -79,18 +79,18 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public String updateFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode) {
-		deleteFiles(tableName, keyNo);
+		deleteFiles(tableName, keyNo, companyCode);
 		return insertFiles(files, tableName, keyNo, companyCode);
 	}
 
 	@Override
-	public List<FileVO> selectFiles(String tableName, int keyNo) {
-		return mapper.selectFiles(tableName, keyNo);
+	public List<FileVO> selectFiles(String tableName, int keyNo, String companyCode) {
+		return mapper.selectFiles(tableName, keyNo, companyCode);
 	}
 
 	@Override
-	public int deleteFiles(String tableName, int keyNo) {
-		return mapper.deleteFiles(tableName, keyNo);
+	public int deleteFiles(String tableName, int keyNo, String companyCode) {
+		return mapper.deleteFiles(tableName, keyNo, companyCode);
 	}
 
 	private String makeFolder() {

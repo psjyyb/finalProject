@@ -55,9 +55,10 @@ public class BoardController {
 	
 	// 게시글 상세조회
 	@GetMapping("/group/freeboardInfo")
-	public String boardInfo(BoardVO boardVO, Model model) {
+	public String boardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
 		BoardVO findVO = boardService.boardInfo(boardVO);
-		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo());
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
 		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);

@@ -22,6 +22,6 @@ public interface DocumentMapper {
 	List<DocumentVO> apprProgressList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
 	public int countApprProgressList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
 
-
+	public DocumentVO documentInfo(DocumentVO documentVO);
 
 }

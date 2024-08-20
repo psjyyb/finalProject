@@ -36,6 +36,9 @@
 		FROM files
 		WHERE table_name = #{tableName} 
 		AND key_no = #{keyNo}
+		<if test="companyCode != null and comapnyCode != ''">
+			AND company_code = #{companyCode}
+		</if>
 		ORDER BY file_turn ASC
 	</select>
 			
@@ -44,5 +47,8 @@
 		FROM files
 		WHERE table_name = #{tableName} 
 		AND key_no = #{keyNo}
+		<if test="companyCode != null and comapnyCode != ''">
+			AND company_code = #{companyCode}
+		</if>
 	</delete>
 </mapper>

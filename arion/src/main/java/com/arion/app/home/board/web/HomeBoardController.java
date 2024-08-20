@@ -82,7 +82,8 @@ public class HomeBoardController {
 	@GetMapping("/home/qnaInfo")
 	public String qnaInfo(HomeQnaVO homeQnaVO, Model model, HttpSession session) {
         HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
-        List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
+        String companyCode = null;
+        List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo(), companyCode);
         model.addAttribute("qnaInfo", findVO);
         model.addAttribute("fileInfo", fileVOList);
         
@@ -97,8 +98,9 @@ public class HomeBoardController {
 	
 	@GetMapping("/home/qnaDelete")
 	public String qnaDelete(@RequestParam Integer qnaNo) {
+		String companyCode = null;
 		qsvc.deleteQna(qnaNo);
-		fsvc.deleteFiles("qna", qnaNo);
+		fsvc.deleteFiles("qna", qnaNo, companyCode);
 		return "redirect:/home/qna";
 	}
 	
@@ -118,7 +120,7 @@ public class HomeBoardController {
 	    
 	    HomeQnaVO homeQnaVO = new HomeQnaVO();
 	    homeQnaVO.setQnaNo(qnaNo);
-	    List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo());
+	    List<FileVO> fileVOList = fsvc.selectFiles("qna", homeQnaVO.getQnaNo(), companyCode);
 	    HomeQnaVO findVO = qsvc.QnaInfo(homeQnaVO);
 	    model.addAttribute("fileInfo", fileVOList);
 	    model.addAttribute("qnaUpdate", findVO); 

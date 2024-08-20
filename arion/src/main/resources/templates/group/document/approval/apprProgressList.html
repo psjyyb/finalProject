@@ -8,61 +8,71 @@
 <title>ARION</title>
 </head>
 <body>
-<div class="container2">
-	<form th:action="@{/group/doc/apprProgress}" method="get" th:object="${criteria}" class="search-container">
-		<div>
-		  	<input type="text" name="docTitle" placeholder="제목" th:value="${criteria.docTitle}">
-    	  	<input type="text" name="writer" placeholder="기안자" th:value="${criteria.writer}">
-    		<input type="date" name="startDate" th:value="${criteria.startDate}">
-    		<input type="date" name="endDate" th:value="${criteria.endDate}">
+	<div class="container2">
+		<form th:action="@{/group/doc/apprProgress}" method="get"
+			th:object="${criteria}" class="search-container">
+			<div>
+				<input type="text" name="docTitle" placeholder="제목"
+					th:value="${criteria.docTitle}"> <input type="text"
+					name="writer" placeholder="기안자" th:value="${criteria.writer}">
+				<input type="date" name="startDate" th:value="${criteria.startDate}">
+				<input type="date" name="endDate" th:value="${criteria.endDate}">
+			</div>
+			<button type="submit">검색</button>
+		</form>
+		<div class="document-list">
+			<table>
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>부서</th>
+						<th>기안서종류</th>
+						<th>제목</th>
+						<th>기안자</th>
+						<th>직급</th>
+						<th>결재상태</th>
+						<th>상신일자</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="document : ${proDoc}">
+						<tr th:data-doc-no="${document.docNo}">
+							<td th:text="${document.docNo}"></td>
+							<td th:text="${document.departmentName}"></td>
+							<td th:text="${document.docName}"></td>
+							<td th:text="${document.docTitle}"></td>
+							<td th:text="${document.employeeName}"></td>
+							<td th:text="${document.rankName}"></td>
+							<td th:text="${document.docStatus}"></td>
+							<td th:text="${#dates.format(document.createDate, 'yyyy-MM-dd')}"></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
 		</div>
-		<button type="submit">검색</button>
-	</form>
-	<div class="document-list">
-           <table>
-               <thead>
-                   <tr>
-                       <th>번호</th>
-                       <th>부서</th>
-                       <th>기안서종류</th>
-                       <th>제목</th>
-                       <th>기안자</th>
-                       <th>직급</th>
-                       <th>결재상태</th>
-                       <th>상신일자</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="document : ${proDoc}">
-                        <td th:text="${document.docNo}"></td>
-                        <td th:text="${document.departmentName}"></td>
-                        <td th:text="${document.docName}"></td>
-                        <td th:text="${document.docTitle}"></td>
-                        <td th:text="${document.employeeName}"></td>
-                        <td th:text="${document.rankName}"></td>
-                        <td th:text="${document.docStatus}"></td>
-                        <td th:text="${#dates.format(document.createDate, 'yyyy-MM-dd')}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- 페이징 -->
-        <div class="pagination">
-            <ul>
-                <li th:if="${pageDTO.prev}">
-                    <a th:href="@{|/group/doc/apprProgress?page=${pageDTO.startPage - 1}|}">이전</a>
-                </li>
-                <li th:each="i : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
-                    th:class="${pageDTO.criteria.pageNum == i} ? 'active' : ''">
-                    <a th:href="@{|/group/doc/apprProgress?page=${i}|}" th:text="${i}"></a>
-                </li>
-                <li th:if="${pageDTO.next}">
-                    <a th:href="@{|/group/doc/apprProgress?page=${pageDTO.endPage + 1}|}">다음</a>
-                </li>
-            </ul>
-        </div>
-</div>
-	
+
+		<!-- 페이징 -->
+		<div class="pagination">
+			<ul>
+				<li th:if="${pageDTO.prev}"><a
+					th:href="@{|/group/doc/apprProgress?page=${pageDTO.startPage - 1}|}">이전</a>
+				</li>
+				<li
+					th:each="i : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
+					th:class="${pageDTO.criteria.pageNum == i} ? 'active' : ''"><a
+					th:href="@{|/group/doc/apprProgress?page=${i}|}" th:text="${i}"></a>
+				</li>
+				<li th:if="${pageDTO.next}"><a
+					th:href="@{|/group/doc/apprProgress?page=${pageDTO.endPage + 1}|}">다음</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<script>
+		$('tbody > tr').on('click', function() {
+			let docNo = $(this).data('doc-no');
+			location.href = '/group/doc/documentInfo?docNo=' + docNo;
+		});
+	</script>
 </body>
 </html>

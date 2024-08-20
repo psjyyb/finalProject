@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.common.service.FileService;
+import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.board.service.PageDTO;
 import com.arion.app.group.main.approval.service.ApprovalVO;
@@ -42,6 +44,9 @@ public class DocumentController {
 	@Autowired
 	DocumentService dsvc;
 
+	@Autowired
+	FileService fsvc;
+	
 	@GetMapping("/group/doc/document")
 	public String document(Model model, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
@@ -164,5 +169,20 @@ public class DocumentController {
 		return "group/document/approval/apprProgressList";
 	}
 	
+	@GetMapping("/group/doc/documentInfo")
+	public String documentInfo(Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		DocumentVO documentVO = new DocumentVO();
+		documentVO.setCompanyCode(companyCode);
+		DocumentVO docInfo = dsvc.documentInfo(documentVO);
+		
+		List<FileVO> fileList = fsvc.selectFiles("document", documentVO.getDocNo(),companyCode);
+		ApprovalVO approvalVO = new ApprovalVO();
+		approvalVO.setCompanyCode(companyCode);
+		
+		
+		
+		return "group/document/approval/documentInfo";
+	}
 	
 }

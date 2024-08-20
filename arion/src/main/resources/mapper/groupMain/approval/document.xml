@@ -207,7 +207,7 @@
 			  , e.rank_name
 			  , e.department_name
 		FROM document d JOIN employees e
-						ON d.emplyoee_no = e.employee_no
+						ON d.employee_no = e.employee_no
 		WHERE d.doc_no = #{docNo}
 		AND d.company_code = #{companyCode}
 	</select>

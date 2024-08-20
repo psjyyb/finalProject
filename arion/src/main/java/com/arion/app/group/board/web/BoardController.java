@@ -57,9 +57,10 @@ public class BoardController {
 
 	// 공지사항 게시글 상세조회
 	@GetMapping("/group/noticeboardInfo")
-	public String noticeboardInfo(BoardVO boardVO, Model model) {
+	public String noticeboardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
 		BoardVO findVO = boardService.noticeboardInfo(boardVO);
-		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo());
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
 		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);
@@ -188,9 +189,10 @@ public class BoardController {
 
 	// 부서게시판 게시글 상세조회
 	@GetMapping("/group/deptboardInfo")
-	public String deptboardInfo(BoardVO boardVO, Model model) {
+	public String deptboardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
 		BoardVO findVO = boardService.deptboardInfo(boardVO);
-		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo());
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
 		boardService.ViewCnt(boardVO.getBoardNo());
 		model.addAttribute("board", findVO);

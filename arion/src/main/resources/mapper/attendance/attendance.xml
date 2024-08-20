@@ -47,7 +47,7 @@
         FROM attendance
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
-                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')+ 1
 	</select>
 	
 	<select id="attendancedownload" parameterType="AEmployeeVO" resultType="AttendanceDownloadVO">
@@ -60,7 +60,7 @@
         FROM attendance
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
-                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')+ 1
         ORDER BY att_date            
 	</select>
 	
@@ -83,7 +83,7 @@
         FROM attendance
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
-                    AND TO_DATE(#{end}, 'YYYY-MM-DD')
+                    AND TO_DATE(#{end}, 'YYYY-MM-DD')+ 1
         ORDER BY att_date            
 	</select>
 
@@ -102,7 +102,7 @@
         FROM attendance 
         WHERE employee_no = #{employeeno}
         AND att_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD') 
-                          AND TO_DATE(#{end}, 'YYYY-MM-DD')
+                          AND TO_DATE(#{end}, 'YYYY-MM-DD')+ 1
         ORDER BY att_date                   
         
    </select>
@@ -115,8 +115,20 @@
       FROM document d JOIN hol_doc h ON d.doc_no=h.doc_no
       WHERE d.employee_no = #{employeeno}
         AND d.create_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD') 
-                          AND TO_DATE(#{end}, 'YYYY-MM-DD')
+                          AND TO_DATE(#{end}, 'YYYY-MM-DD')+ 1
         ORDER BY d.create_date                   
 	</select>
+	
+	<update id="updatescheduleattendance">
+		UPDATE attendance 
+		   SET
+		   		end_time = #{boardTitle}
+		 WHERE end_time = null
+	</update>
+	
+	<insert id="insertscheduleattendance">
+	
+	
+	</insert>
    
 </mapper>

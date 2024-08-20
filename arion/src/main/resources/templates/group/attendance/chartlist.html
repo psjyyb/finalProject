@@ -5,16 +5,16 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>attendancelist</title>
+<title>worktimelist</title>
 </head>
 </head>
 <body>
 	<div >
 		<!-- DataTales Example -->
-		<a href="/group/attendance/attendances">되돌아가기</a>
+		<a href="/group/attendance/worktime">되돌아가기</a>
 		<div align="center" width="50%">
 			<div >
-				<h6 >부하직원 목록</h6><h6 th:text="'인원 수:'+${#lists.size(emplist)}"></h6>
+				<h6 >부하직원 목록</h6><h6 th:text="'인원 수:'+${emplistcount}"></h6>
 			</div>
 			<div >
 				<div >
@@ -32,7 +32,7 @@
 							<th:block th:each="emp :${emplist}">
 								<tr>
 									<td th:text="${emp.employeeno}"></td>
-									<td><a th:text="${emp.employeename}" th:href="@{/group/attendance/underlingattendancelist/{employeeNo}(employeeNo=${emp.employeeno})}"></td>
+									<td><a th:text="${emp.employeename}" th:href="@{/group/attendance/underlingchartlist/{employeeNo}(employeeNo=${emp.employeeno})}"></td>
 									<td th:text="${emp.rankname}"></td>
 									<td th:text="${emp.departmentname}"></td>
 									<td th:text="${#dates.format(emp.hireDate,'yyyy-MM-dd')}"></td>

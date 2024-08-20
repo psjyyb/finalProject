@@ -1,9 +1,243 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/smarteditor2/css/smart_editor2_items.css}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" th:href="@{/css/group/board/reply.css}">
+<title></title>
 </head>
 <body>
+<div>
+	<h3><a th:href="@{/group/noticeboardList}">공지사항</a></h3>
+		
+	<table>
+		<tr>
+			<th>번호</th>
+			<td th:text="${board.boardNo}"></td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td>[[${board.boardTitle}]]</td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td>[[${board.employeeName}]]</td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td style="height:300px; width:500px;" th:utext="${board.boardContent}" />
+		</tr>
+		<tr>
+			<th>작성일자</th>
+			<td>[[${#dates.format(board.writeDate, 'yyyy.MM.dd')}]]</td>
+		</tr>
+		<tr>
+			<th>조회수</th>
+			<td>[[${board.viewCnt}]]</td>
+		</tr>
+		<!-- 파일 첨부 목록 -->
+		<tr>
+			<th>첨부 파일</th>
+			<td>
+			  <ul>
+				<li th:each="file : ${fileInfo}">
+				  <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" 
+				     th:text="${file.fileOriginalName}"></a>
+				</li>
+				</ul>
+			</td>
+		</tr>	
+	</table>
+		<div>
+			<button type="button" th:onclick="|location.href='@{noticeboardUpdate(boardNo=${board.boardNo})}'|"
+					th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
+			<button type="button" th:onclick="|location.href='@{noticeboardList}'|">목록</button>
+			<button type="button" id="deleteButton" data-url="#" th:data-url="@{/group/noticeboardDelete(boardNo=${board.boardNo})}"
+					th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
+		</div>
+	</div>
+	
+	  <!-- 댓글 영역 시작 -->
+<div class="comments-section">
+    <h4>댓글</h4>
+    <ul class="comments-list" th:each="reply : ${comments}">
+        <li class="comment-item">
+            <div class="comment-author">
+                [[${reply.commentWrite}]]
+                <span>&#91;[[${reply.departmentName}]]&#93;</span>
+                <span>&#91;[[${reply.rankName}]]&#93;</span>
+            </div>
+            <div class="comment-content">
+                [[${reply.commentContent}]]
+            </div>
+            <div class="comment-date">
+                [[${#dates.format(reply.commentDate, 'yyyy.MM.dd')}]]
+            </div>
+            <div class="comment-actions">
+                <button type="button" class="edit-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}"
+                		th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
+                <button type="button" class="delete-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}"
+                		th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
+            </div>
+            <!-- 수정 폼 공간, 기본적으로 숨김 -->
+                <div class="comment-edit-container" style="display: none;">
+                    <h3>댓글 수정</h3>
+                    <form class="editReplyForm">
+                        <input type="hidden" name="commentNo" class="editCommentNo" />
+                        <input type="hidden" name="boardNo" class="editBoardNo" />
+                        <textarea name="commentContent" class="editCommentContent" required></textarea>
+                        <button type="submit">입력</button>
+                        <button type="button" class="cancelEdit">취소</button>
+                    </form>
+                </div>
+        </li>
+    </ul>
+</div>
+
+
+   <!-- 댓글 입력 폼 -->
+<div class="comment-container">
+    <h3>댓글 입력</h3>
+    <form id="replyForm" action="/noticeboardInfo" method="POST">
+    	<input type="hidden" name="commentNo" id="commentNo" />
+        <textarea name="commentContent" id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
+        <button type="submit" th:data-url="@{/group/noticeboardDelete(boardNo=${board.boardNo})}">댓글 등록</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:inline="javascript">	
+	 $(document).ready(function() {
+	        var boardNo = "[[${board.boardNo}]]";
+
+	        // 글 삭제 버튼
+	        $('#deleteButton').on('click', function(event) {
+	            event.preventDefault(); // 기본 동작 방지
+
+	            Swal.fire({
+	                title: '정말 삭제하시겠습니까?',
+	                icon: 'warning',
+	                showCancelButton: true,
+	                confirmButtonColor: '#3085d6',
+	                cancelButtonColor: '#d33',
+	                confirmButtonText: '삭제',
+	                cancelButtonText: '취소'
+	            }).then((result) => {
+	                if (result.isConfirmed) {
+	                    var deleteUrl = $(this).data('url');
+	                    window.location.href = deleteUrl; // 삭제 후 페이지 리다이렉트
+	                }
+	            });
+	        });
+
+	        // 댓글 등록 폼 이벤트
+	        $('#replyForm').on('submit', function(event) {
+	            event.preventDefault(); // 기본 폼 제출 동작 방지
+
+	            var formData = {
+	                boardNo: boardNo,
+	                commentContent: $('#commentContent').val()
+	            };
+
+	            $.ajax({
+	                url: '/group/insertReply', // 서버 요청 URL
+	                type: 'POST', // 요청 방법
+	                data: formData, // 폼 데이터
+	                success: function(response) {
+	                    $('#replyForm')[0].reset();
+	                    window.location.reload();	// 등록 후 페이지 리다이렉트
+	                },
+	                error: function(xhr, status, error) {
+	                    alert('댓글 등록 중 오류가 발생했습니다: ' + error);
+	                }
+	            });
+	        });
+
+	        // 댓글 삭제 버튼 클릭 이벤트
+	        $('.delete-reply').on('click', function() {
+	            var commentNo = $(this).data('commentno');
+	            var boardNo = $(this).data('boardno');
+
+	            Swal.fire({
+	                title: '정말 삭제하시겠습니까?',
+	                icon: 'warning',
+	                showCancelButton: true,
+	                confirmButtonColor: '#3085d6',
+	                cancelButtonColor: '#d33',
+	                confirmButtonText: '삭제',
+	                cancelButtonText: '취소'
+	            }).then((result) => {
+	                if (result.isConfirmed) {
+	                    $.ajax({
+	                        url: '/group/deleteReply', // 서버 요청 URL
+	                        type: 'POST', // 요청 방법
+	                        data: {
+	                            commentNo: commentNo,
+	                            boardNo: boardNo
+	                        },
+	                        success: function(response) {
+	                            Swal.fire('삭제 완료!', '댓글이 삭제되었습니다.', 'success');
+	                            window.location.reload(); // 페이지 새로고침
+	                        },
+	                        error: function(xhr, status, error) {
+	                            Swal.fire('오류', '댓글 삭제 중 오류가 발생했습니다.', 'error');
+	                        }
+	                    });
+	                }
+	            });
+	        });
+
+	     // 댓글 수정 버튼 클릭 이벤트
+	        $('.edit-reply').on('click', function() {
+	            var $commentItem = $(this).closest('li');
+	            var commentNo = $(this).data('commentno');
+	            var boardNo = $(this).data('boardno');
+	            var commentContent = $commentItem.find('.comment-content').text().trim();
+
+	            var $editContainer = $commentItem.find('.comment-edit-container');
+	            $editContainer.find('.editCommentNo').val(commentNo);
+	            $editContainer.find('.editBoardNo').val(boardNo);
+	            $editContainer.find('.editCommentContent').val(commentContent);
+	            $editContainer.show();
+	        });
+
+	        // 댓글 수정 폼 제출 이벤트
+	        $('.comments-section').on('submit', '.editReplyForm', function(event) {
+	            event.preventDefault(); // 기본 폼 제출 동작 방지
+
+	            var $form = $(this);
+	            var formData = {
+	                commentNo: $form.find('.editCommentNo').val(),
+	                boardNo: $form.find('.editBoardNo').val(),
+	                commentContent: $form.find('.editCommentContent').val(),
+	            };
+
+	            $.ajax({
+	                url: '/group/updateReply', // 서버 요청 URL
+	                type: 'POST', // 요청 방법
+	                contentType: 'application/json', // JSON 타입으로 설정
+    				data: JSON.stringify(formData), // 데이터를 JSON 문자열로 변환
+	                success: function(response) {
+	                    Swal.fire('수정 완료', '댓글이 수정되었습니다.', 'success');
+	                    $form.closest('.comment-edit-container').hide();
+	                    window.location.reload(); // 페이지 새로고침
+	                },
+	                error: function(xhr, status, error) {
+	                    Swal.fire('오류', '댓글 수정 중 오류가 발생했습니다.', 'error');
+	                }
+	            });
+	        });
+
+	        // 댓글 수정 취소 버튼 클릭 이벤트
+	        $('.comments-section').on('click', '.cancelEdit', function() {
+	            $(this).closest('.comment-edit-container').hide();
+	        });
+	    });
+	
+	</script>
 </body>
 </html>

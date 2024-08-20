@@ -20,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
 	private BoardMapper boardMapper;
-	
+
 	@Autowired
 	FileService fsvc;
 
@@ -31,61 +31,11 @@ public class BoardServiceImpl implements BoardService{
 	public BoardServiceImpl(BoardMapper boardMapper) {
 		this.boardMapper = boardMapper;
 	}
-	
-	// 자유게시판 //
-	// 전체 게시글 조회
-	@Override
-	public List<BoardVO> boardList(Criteria cri) {
-		return boardMapper.selectBoardAll(cri);
-	}
-	
-	// 회사코드?
+
+	// 회사코드
 	@Override
 	public List<CompanyVO> selectCompany(String companyCode) {
 		return boardMapper.selectCompany(companyCode);
-	}
-
-	// 게시글 상세조회
-	@Override
-	public BoardVO boardInfo(BoardVO boardVO) {
-		return boardMapper.selectBoardInfo(boardVO);
-	}
-
-	// 게시글 등록
-	@Transactional
-	@Override
-	public long insertBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
-		long result = boardMapper.insertBoardInfo(boardVO);
-		
-		if (files != null && files.length > 0) {
-			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
-			fsvc.insertFiles(files, "board", boardVO.getBoardNo(), companyCode);
-		} else {
-			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
-		}
-		return result == 1 ? boardVO.getBoardNo() : -1;
-	}
-
-	// 게시글 수정
-	@Override
-	public Map<String, Object> updateBoard(BoardVO boardVO) {
-		Map<String, Object> map = new HashMap<>();
-		boolean isSuccessed = false;
-
-		int result = boardMapper.updateBoardInfo(boardVO);
-		if(result == 1) {
-			isSuccessed = true;
-		}		
-		map.put("result", isSuccessed);
-		map.put("target", boardVO);
-		
-		return map;
-	}
-	
-	// 게시글 삭제
-	@Override
-	public int deleteBoard(int boardNO) {
-		return boardMapper.deleteBoardInfo(boardNO);
 	}
 
 	// 게시글 조회수
@@ -100,5 +50,168 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.getTotal(cri);
 	}
 
+	
+	// noticeboard //
+	// 공지사항 게시글 조회
+	@Override
+	public List<BoardVO> noticeboardList(Criteria cri) {
+		List<BoardVO> list = boardMapper.selectBoardAll(cri);
+
+		return boardMapper.selectBoardAll(cri);
+	}
+
+	// 공지사항 게시글 상세조회
+	@Override
+	public BoardVO noticeboardInfo(BoardVO boardVO) {
+		return boardMapper.noticeselectBoardInfo(boardVO);
+	}
+
+	// 공지사항 게시글 등록
+	@Transactional
+	@Override
+	public long noticeinsertBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
+		long result = boardMapper.noticeinsertBoardInfo(boardVO);
+
+		if (files != null && files.length > 0) {
+			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
+			fsvc.insertFiles(files, "board", boardVO.getBoardNo(), companyCode);
+		} else {
+			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
+		}
+		return result == 1 ? boardVO.getBoardNo() : -1;
+	}
+
+	// 공지사항 게시글 수정
+	@Override
+	public Map<String, Object> noticeupdateBoard(BoardVO boardVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+
+		int result = boardMapper.noticeupdateBoardInfo(boardVO);
+		if (result == 1) {
+			isSuccessed = true;
+		}
+		map.put("result", isSuccessed);
+		map.put("target", boardVO);
+
+		return map;
+	}
+
+	// 공지사항 게시글 삭제
+	@Override
+	public int noticedeleteBoard(int boardNO) {
+		return boardMapper.noticedeleteBoardInfo(boardNO);
+	}
+
+	
+	// freeboard
+	// 자유게시판 게시글 조회
+	@Override
+	public List<BoardVO> boardList(Criteria cri) {
+		return boardMapper.selectBoardAll(cri);
+	}
+
+	// 자유게시판 게시글 상세조회
+	@Override
+	public BoardVO boardInfo(BoardVO boardVO) {
+		return boardMapper.selectBoardInfo(boardVO);
+	}
+
+	// 자유게시판 게시글 등록
+	@Transactional
+	@Override
+	public long insertBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
+		long result = boardMapper.insertBoardInfo(boardVO);
+
+		if (files != null && files.length > 0) {
+			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
+			fsvc.insertFiles(files, "board", boardVO.getBoardNo(), companyCode);
+		} else {
+			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
+		}
+		return result == 1 ? boardVO.getBoardNo() : -1;
+	}
+
+	// 자유게시판 게시글 수정
+	@Override
+	public Map<String, Object> updateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+
+		if (files != null && files.length > 0) {
+			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
+			fsvc.updateFiles(files, "board", boardVO.getBoardNo(), companyCode);
+		} else {
+			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
+		}
+
+		int result = boardMapper.updateBoardInfo(boardVO);
+		if (result == 1) {
+			isSuccessed = true;
+		}
+		map.put("result", isSuccessed);
+		map.put("target", boardVO);
+
+		return map;
+	}
+
+	// 자유게시판 게시글 삭제
+	@Override
+	public int deleteBoard(int boardNO) {
+		return boardMapper.deleteBoardInfo(boardNO);
+	}
+
+	
+	// deptboard //
+	// 부서게시판 게시글 조회
+	@Override
+	public List<BoardVO> deptboardList(Criteria cri) {
+		List<BoardVO> list = boardMapper.selectBoardAll(cri);
+
+		return boardMapper.selectBoardAll(cri);
+	}
+
+	// 부서게시판 게시글 상세조회
+	@Override
+	public BoardVO deptboardInfo(BoardVO boardVO) {
+		return boardMapper.deptselectBoardInfo(boardVO);
+	}
+
+	// 부서게시판 게시글 등록
+	@Transactional
+	@Override
+	public long deptinsertBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
+		long result = boardMapper.deptinsertBoardInfo(boardVO);
+
+		if (files != null && files.length > 0) {
+			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
+			fsvc.insertFiles(files, "board", boardVO.getBoardNo(), companyCode);
+		} else {
+			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
+		}
+		return result == 1 ? boardVO.getBoardNo() : -1;
+	}
+
+	// 부서게시판 게시글 수정
+	@Override
+	public Map<String, Object> deptupdateBoard(BoardVO boardVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+
+		int result = boardMapper.deptupdateBoardInfo(boardVO);
+		if (result == 1) {
+			isSuccessed = true;
+		}
+		map.put("result", isSuccessed);
+		map.put("target", boardVO);
+
+		return map;
+	}
+
+	// 부서게시판 게시글 삭제
+	@Override
+	public int deptdeleteBoard(int boardNO) {
+		return boardMapper.deptdeleteBoardInfo(boardNO);
+	}
 
 }

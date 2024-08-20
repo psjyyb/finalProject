@@ -53,9 +53,11 @@
 		</tr>	
 	</table>
 		<div>
-			<button type="button" th:onclick="|location.href='@{freeboardUpdate(boardNo=${board.boardNo})}'|">수정</button>
+			<button type="button" th:onclick="|location.href='@{freeboardUpdate(boardNo=${board.boardNo})}'|"
+					th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
 			<button type="button" th:onclick="|location.href='@{freeboardList}'|">목록</button>
-			<button type="button" id="deleteButton" data-url="#" th:data-url="@{/group/freeboardDelete(boardNo=${board.boardNo})}">삭제</button>
+			<button type="button" id="deleteButton" data-url="#" th:data-url="@{/group/freeboardDelete(boardNo=${board.boardNo})}"
+					th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
 		</div>
 	</div>
 	
@@ -76,8 +78,10 @@
                 [[${#dates.format(reply.commentDate, 'yyyy.MM.dd')}]]
             </div>
             <div class="comment-actions">
-                <button type="button" class="edit-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}">수정</button>
-                <button type="button" class="delete-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}">삭제</button>
+                <button type="button" class="edit-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}"
+                		th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
+                <button type="button" class="delete-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}"
+                		th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
             </div>
             <!-- 수정 폼 공간, 기본적으로 숨김 -->
                 <div class="comment-edit-container" style="display: none;">

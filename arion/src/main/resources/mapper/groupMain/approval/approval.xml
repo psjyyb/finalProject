@@ -8,12 +8,14 @@
 							, sequence
 							, company_code
 							, appr_status
+							, appr_line
 		) VALUES (appr_seq.NEXTVAL
 				 , #{docNo}
 				 , #{employeeNo}
 				 , #{sequence}
 				 , #{companyCode}
 				 , '결재대기'
+				 , #{apprLine}
 		)
 	</insert>
 	
@@ -28,13 +30,63 @@
 			 , e.employee_name
 			 , e.rank_name
 			 , e.department_name
-			 , e.sign_img
-		FROM approval a JOIN employees e
+			 , s.sign_img
+		FROM approval a LEFT JOIN employees e
 						ON a.employee_no = e.employee_no
+						LEFT JOIN sign s
+						ON a.appr_no = s.appr_no
 		WHERE 1=1 
 		AND a.doc_no = #{docNo}
 		AND a.company_code = #{companyCode}
-		ORDER BY sequence DESC	
+		ORDER BY sequence ASC	
+	</select>
+		
+	<select id="getApproverRankInfo" parameterType="map" resultType="map">
+    	SELECT e.employee_no,
+       		   COALESCE(r.rank_ranking, 0) as rank_ranking  
+		FROM employees e
+		JOIN rank r ON e.rank_name = r.rank_name
+          			AND e.company_code = r.company_code
+		WHERE e.employee_no IN
+		<foreach item="id" collection="approverIds" open="(" separator="," close=")">
+    		#{id}
+		</foreach>
+		AND e.company_code = #{companyCode}
 	</select>
 	
+	<select id="checkApproval" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+   		FROM approval
+    	WHERE employee_no = #{employeeNo}
+      	AND doc_no = #{docNo}
+      	AND company_code = #{companyCode}
+      	AND sequence = appr_line
+      	AND appr_status = '결재대기'
+	</select>
+	
+	<update id="approveDocument" parameterType="map">
+		UPDATE approval
+		SET appr_status = '결재완료'
+		   , sign_date = sysdate
+		WHERE employee_no = #{employeeNo}
+		AND doc_no = #{docNo}
+		AND company_code = #{companyCode}
+	</update>
+	
+	<update id="updateNextLine" parameterType="map">
+		UPDATE approval
+		SET appr_line = appr_line + 1
+		WHERE appr_status = '결재대기'
+		AND doc_no = #{docNo}
+		AND company_code = #{companyCode}
+	</update>
+	
+	<select id="getApprNo" resultType="int">
+    	SELECT appr_no
+    	FROM approval
+    	WHERE employee_no = #{employeeNo}
+    	AND doc_no = #{docNo}
+    	AND company_code = #{companyCode}
+    	AND appr_status = '결재완료'
+</select>
 </mapper>

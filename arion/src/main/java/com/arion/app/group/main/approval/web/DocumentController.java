@@ -29,6 +29,8 @@ import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
+import com.arion.app.group.main.approval.service.SignService;
+import com.arion.app.group.main.approval.service.SignVO;
 import com.arion.app.group.main.approval.service.TemplateService;
 import com.arion.app.group.main.approval.service.TemplateVO;
 
@@ -54,6 +56,9 @@ public class DocumentController {
 	
 	@Autowired
 	DocAccessService dasvc;
+	
+	@Autowired
+	SignService ssavc;
 	
 	@GetMapping("/group/doc/document")
 	public String document(Model model, HttpSession session) {
@@ -138,10 +143,9 @@ public class DocumentController {
 	public String insertDoc(
 	        	DocumentVO documentVO,
 	        	@RequestParam List<Integer> approverIds,
-	        	@RequestParam List<Integer> referenceIds,
+	        	@RequestParam(value = "referenceIds", required = false) List<Integer> referenceIds,
 	        	HttpSession session,
 	        	@RequestPart MultipartFile[] files) {
-		
 		
 		System.out.println("Approver IDs: " + approverIds);
 	    System.out.println("Reference IDs: " + referenceIds);
@@ -154,7 +158,7 @@ public class DocumentController {
 
 	    dsvc.insertDocument(documentVO, approverIds, referenceIds, files, companyCode);
 
-	    return "redirect:/group";
+	    return "등록되었습니다";
 	}
 	
 	@GetMapping("/group/doc/apprProgress")
@@ -180,6 +184,8 @@ public class DocumentController {
 	@GetMapping("/group/doc/documentInfo")
 	public String documentInfo(Model model, HttpSession session, @RequestParam(value = "docNo", required = false) int docNo) {
 		String companyCode = (String) session.getAttribute("companyCode");
+		int employeeNo = (int) session.getAttribute("employeeNo");
+		String employeeId = (String) session.getAttribute("loginId");
 		DocumentVO documentVO = new DocumentVO();
 		documentVO.setCompanyCode(companyCode);
 		documentVO.setDocNo(docNo);
@@ -196,14 +202,52 @@ public class DocumentController {
 		DocAccessVO docAccessVO = new DocAccessVO(); 
 		docAccessVO.setCompanyCode(companyCode);
 		docAccessVO.setDocNo(docNo);
+		docAccessVO.setEmployeeNo(employeeNo);
 		List<DocAccessVO> referenceInfo = dasvc.referenceInfo(docAccessVO);
+		int accessAppr = dasvc.accessAppr(docAccessVO);
+		
+		int approverIndex = -1;
+		for (int i = 0; i < apprInfo.size(); i++) {
+			if (apprInfo.get(i).getEmployeeNo() == employeeNo) {
+				approverIndex = i;
+				break;
+			}
+		}
+		
+		SignVO signVO = new SignVO();
+		signVO.setCompanyCode(companyCode);
+		signVO.setEmployeeId(employeeId);
+		String employeeSign = ssavc.empSign(companyCode, employeeId);		
 		
 		model.addAttribute("apprInfo", apprInfo);
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("docInfo", docInfo);
 		model.addAttribute("refInfo", referenceInfo);
-		
+		model.addAttribute("accessAppr", accessAppr);
+		model.addAttribute("empSign", employeeSign);
+		model.addAttribute("approverIndex", approverIndex);
+		System.out.println(">>>>>>>>>>>> " + employeeSign);
 		return "group/document/approval/documentInfo";
 	}
 	
+	 @PostMapping("/group/doc/checkApproval")
+	 @ResponseBody
+	 public boolean checkApproval(HttpSession session, @RequestParam int docNo) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		int employeeNo = (int) session.getAttribute("employeeNo");
+	   // 결재 가능 여부를 확인
+		return asvc.checkApproval(employeeNo, docNo, companyCode) > 0;
+	 }
+	
+	 @PostMapping("/group/doc/approveDocument")
+	 @ResponseBody
+	 public String approveDocument(HttpSession session, @RequestParam int docNo, @RequestParam String signImg) {
+		 String companyCode = (String) session.getAttribute("companyCode");
+		 int employeeNo = (int) session.getAttribute("employeeNo");
+
+	
+		 dsvc.updateApprStatus(docNo, companyCode, employeeNo, signImg);
+		 return "결재가 성공적으로 처리되었습니다.";
+		
+	 }
 }

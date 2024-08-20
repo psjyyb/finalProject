@@ -34,7 +34,7 @@ public class FileServiceImpl implements FileService {
 	@Transactional
 	@Override
 	public String insertFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode) {
-
+		log.debug("keyNo : " + keyNo);
 		if(files == null || files.length == 0) {
 			return null;
 		}

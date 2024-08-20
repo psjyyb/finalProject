@@ -1,107 +1,249 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/group/layouts/group_layout}"
-	layout:fragment="Content">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-<title>ARION</title>
-<script
-	src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-<link th:href="@{/css/group/document/signList.css}" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <title>ARION</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link th:href="@{/css/group/document/documentInfo.css}" rel="stylesheet"/>
 </head>
 <body>
-	<th:block th:each="appr : ${apprInfo}">
-		<div>
-			<label>결재자</label>
-			<span th:text="${appr.departmentName}"></span>
-			<span th:text="${appr.employeeName}"></span>
-			<span th:text="${appr.rankName}"></span>
-			<canvas id="signature-pad" width="50" height="40"></canvas>
-		</div>
-	</th:block>
-	<div>
-		<button>문서정보</button>
-		<button>참조자정보</button>
-		<button>반려사유</button>
-	</div>
-	<div>
-		<table>
-			<tr>
-				<th>문서번호</th>
-				<td th:text="${docInfo.docNo}"></td>
-				<th>기안서종류</th>
-				<td th:text="${docInfo.docName}"></td>
-				<th>상신일자</th>
-				<td th::text="${#dates.format(docInfo.createDate, 'yyyy-MM-dd')}"></td>
-			</tr>
-			<tr>
-				<th>부서</th>
-				<td th:text="${docInfo.departmentName}"></td>
-				<th>결재상태</th>
-				<td ></td>
-				<th>완료일자</th>
-				<td th:text="${#dates.format(docInfo.finishDate, 'yyyy-MM-dd')}"></td>
-			</tr>
-		</table>
-	</div>
-	<div>
-		<table>
-			<thead>
-				<tr>
-					<th>부서</th>
-					<th>이름</th>
-					<th>직급</th>
-				</tr>
-			</thead>
-			<tbody>
-				<th:block th:each="ref : ${refInfo}">
-					<tr>
-						<td th:text="${ref.departmentName}"></td>
-							<td th:text="${ref.employeeName}"></td>
-						<td th:text="${ref.rankName}"></td>
-					</tr>
-				</th:block>
-			</tbody>
-		</table>
-	</div>
-	<div>
-		<div>
-			<th:block th:each="appr : ${apprInfo}">
-				<span th:text="${appr.reason}"></span>
-			</th:block>
-		</div>
-	</div>
-	<div>
-		<table>
-			<tr>
-				<th>제목</th>
-				<td th:text="${docInfo.docTitle}"></td>
-			</tr>
-			<tr>
-				<th>첨부파일</th>
-				<th:block th:each="file : ${fileList}">
-					<td>
-						<a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
-					</td>
-				</th:block>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td>
-					<div>
-						[(${docInfo.docContent})]
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<div>
-		<button>결재하기</button>
-		<button>반려하기</button>
-		<button>목록으로</button>
-	</div>
-	
-	
+<div class="container2">
+    <div class="header2">문서 조회</div>
+
+    <!-- 결재자 정보 -->
+    <div class="approver-info-container">
+        <th:block th:each="appr, status : ${apprInfo}">
+            <div class="approver-info" id="approver-[[${status.index}]]">
+                <label>결재자</label>
+                <div>[[${appr.departmentName}]] | [[${appr.employeeName}]] [[${appr.rankName}]]</div>
+                <div>결재시간 : <span th:text="${#dates.format(appr.signDate, 'yyyy-MM-dd')}"></span></div>
+                <th:block th:if="${appr.signImg != null}">
+            		<img th:src="@{/files/signatures/{fileName}(fileName=${appr.signImg})}" id="signature-pad-[[${status.index}]]" alt="서명 이미지" width="120" height="100"/>
+        		</th:block>
+
+        		<th:block th:if="${appr.signImg == null}">
+            		<div id="signature-pad-[[${status.index}]]" style="width: 120px; height: 100px;"></div>
+        		</th:block>
+            </div>
+        </th:block>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="buttons">
+        <button type="button" onclick="showSection('docInfo')">문서정보</button>
+        <button type="button" onclick="showSection('refInfo')">참조자정보</button>
+        <button type="button" onclick="showSection('apprReason')">반려사유</button>
+    </div>
+
+    <!-- 문서 정보, 참조자 정보, 반려 사유 섹션 -->
+    <div id="docInfo" class="section active-section">
+        <table class="form-table">
+            <tr>
+                <th>문서번호</th>
+                <td id="docNo" th:text="${docInfo.docNo}"></td>
+                <th>기안서종류</th>
+                <td th:text="${docInfo.docName}"></td>
+                <th>상신일자</th>
+                <td th:text="${#dates.format(docInfo.createDate, 'yyyy-MM-dd')}"></td>
+            </tr>
+            <tr>
+                <th>부서</th>
+                <td th:text="${docInfo.departmentName}"></td>
+                <th>결재상태</th>
+                <td th:text="${docInfo.apprStatus}"></td>
+                <th>완료일자</th>
+                <td th:text="${#dates.format(docInfo.finishDate, 'yyyy-MM-dd')}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="refInfo" class="section">
+        <table class="form-table">
+            <thead>
+            <tr>
+                <th>부서</th>
+                <th>이름</th>
+                <th>직급</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="ref : ${refInfo}">
+                <tr>
+                    <td th:text="${ref.departmentName}"></td>
+                    <td th:text="${ref.employeeName}"></td>
+                    <td th:text="${ref.rankName}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="apprReason" class="section">
+        <div>
+            <th:block th:each="appr : ${apprInfo}">
+                <span th:if="${appr.reason != null}" th:text="${appr.reason}"></span>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- 문서 제목 및 내용 -->
+    <div class="content-section">
+        <table class="doc-table">
+            <tr>
+                <th>제목</th>
+                <td th:text="${docInfo.docTitle}"></td>
+            </tr>
+            <tr>
+                <th>첨부파일</th>
+                <td><th:block th:each="file : ${fileList}">
+                        <a th:href="@{/files/{fileName}(fileName=${file.filePath})}"
+                           th:text="${file.fileOriginalName}"></a>
+                        <br>
+                    </th:block></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <div>
+                        <span th:utext="${docInfo.docContent}"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- 액션 버튼들 -->
+    <div class="action-buttons">
+        <button th:if="${accessAppr == 1}" type="button" id="approveBtn" th:data-doc-no="${docInfo.docNo}">결재하기</button>
+        <button th:if="${accessAppr == 1}">반려하기</button>
+        <button type="button" onclick="location.href='/group/doc/apprProgress'">목록으로</button>
+    </div>
+</div>
+
+<div id="approvalModal" class="modal">
+    <div class="modal-content">
+        <th:block th:if="${empSign != null}">
+            <img th:src="@{/files/signatures/{fileName}(fileName=${empSign})}" id="signatureImage" alt="서명 이미지"/>
+            <div class="button-group">
+                <button type="button" class="save" id="confirmSignBtn">서명하기</button>
+                <button type="button" class="cancel" onclick="closeModal()">취소</button>
+            </div>
+        </th:block>
+        <th:block th:if="${empSign == null}">
+            <p>전자서명이 없습니다.</p>
+            <div class="button-group">
+                <button type="button" class="clear" onclick="location.href='/group/doc/sign'">전자서명 등록</button>
+                <button type="button" class="cancel" onclick="closeModal()">취소</button>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+<script>
+
+        // 섹션 표시 함수
+        function showSection(sectionId) {
+            $('.section').removeClass('active-section');
+            $('#' + sectionId).addClass('active-section');
+        }
+
+        // 결재 버튼 클릭 시
+        $('#approveBtn').on('click', function() {
+            const docNo = this.getAttribute('data-doc-no');
+            checkApproval(docNo);
+        });
+
+        // 결재 권한 확인 함수
+        function checkApproval(docNo) {
+        	console.log(docNo)
+            $.post('/group/doc/checkApproval', { docNo: docNo })
+                .done(function(hasApproval) {
+                    if (hasApproval) {
+                        openApprovalModal(docNo);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '권한 없음',
+                            text: '결재 순서가 아닙니다.',
+                            confirmButtonText: '확인'
+                        });
+                    }
+                })
+                .fail(function() {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '권한 없음',
+                        text: '결재 순서가 아닙니다.',
+                        confirmButtonText: '확인'
+                    });
+                });
+        }
+
+        // 모달 열기
+        function openApprovalModal(docNo) {
+            $('#approvalModal').data('docno', docNo).show();
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            $('#approvalModal').hide();
+        }
+
+        // 서명하기 버튼 클릭 시 결재 처리
+        $('#confirmSignBtn').on('click', function() {
+            const docNo = $('#approvalModal').data('docno');
+            submitApproval(docNo);
+        });
+
+        // 결재 처리 함수
+        function submitApproval(docNo) {
+        	const signImg = $('#signatureImage').attr('src').split('/').pop(); // 파일 이름만 가져오기
+        	console.log(signImg);
+            $.post('/group/doc/approveDocument', { docNo: docNo, signImg: signImg })
+                .done(function(data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '결재 완료',
+                        text: data,
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        	 // 새로고침 없이 페이지에 서명 이미지 바로 추가
+                            const approverIndex = getCurrentApproverIndex();
+                            if (approverIndex !== -1) {
+                                const imgElement = $('#signature-pad-' + approverIndex);
+                                imgElement.attr('src', '/files/signatures/' + signImg); // 새로운 서명 이미지로 대체
+                            }
+                            closeModal();
+                        }
+                    });
+                })
+                .fail(function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '오류 발생',
+                        text: '결재 처리 중 오류가 발생했습니다.',
+                        confirmButtonText: '확인'
+                    });
+                });
+        }
+
+        // 현재 결재자의 인덱스를 가져오는 함수
+        function getCurrentApproverIndex() {
+            let currentIndex = -1;
+            const apprInfo = /*[[${apprInfo}]]*/ [];
+            const employeeNo = /*[[${employeeNo}]]*/ 0;
+            apprInfo.forEach((appr, index) => {
+                if (appr.employeeNo === employeeNo) {
+                    currentIndex = index;
+                }
+            });
+            return currentIndex;
+        }
+
+</script>
 </body>
 </html>

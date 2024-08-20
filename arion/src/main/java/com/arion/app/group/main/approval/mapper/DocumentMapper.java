@@ -23,5 +23,7 @@ public interface DocumentMapper {
 	public int countApprProgressList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
 
 	public DocumentVO documentInfo(DocumentVO documentVO);
+	
+	public void updateApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode);
 
 }

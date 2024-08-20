@@ -23,4 +23,6 @@ public interface DocumentService {
 	public int countApprProgressList(DocAccessVO docAccessVO, Criteria criteria);
 
 	public DocumentVO documentInfo(DocumentVO documentVO);
+	
+	public void updateApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode, int employeeNo, String signImg);
 }

@@ -19,10 +19,12 @@ public class ApprovalVO {
 	private String companyCode;
 	private int docNo;
 	private int employeeNo;
+	private int apprLine;
 	
 	private String employeeName;
 	private String rankName;
 	private String departmentName;
+	private int rankRanking;
 	private String signImg;
 	private RankVO rank;
 }

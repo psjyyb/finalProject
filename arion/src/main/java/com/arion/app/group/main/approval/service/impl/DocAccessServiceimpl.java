@@ -72,5 +72,11 @@ public class DocAccessServiceimpl implements DocAccessService {
 		
 		return mapper.referenceInfo(docAccessVO);
 	}
+
+	@Override
+	public int accessAppr(DocAccessVO docAccessVO) {
+		// TODO Auto-generated method stub
+		return mapper.accessAppr(docAccessVO);
+	}
 		
 }

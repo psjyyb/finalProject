@@ -1,10 +1,13 @@
 package com.arion.app.group.main.approval.service.impl;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmployeesVO;
@@ -12,10 +15,13 @@ import com.arion.app.common.service.FileService;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.main.approval.mapper.DocumentMapper;
 import com.arion.app.group.main.approval.service.ApprovalService;
+import com.arion.app.group.main.approval.service.ApprovalVO;
 import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
+import com.arion.app.group.main.approval.service.SignService;
+import com.arion.app.group.main.approval.service.SignVO;
 import com.arion.app.home.board.service.impl.QnaServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +42,9 @@ public class DocumentServiceImpl implements DocumentService{
 	@Autowired
 	FileService fsvc;
 	
+	@Autowired
+	SignService ssvc;
+	
 	@Override
 	public List<String> selectDepartment(String companyCode) {
 		
@@ -51,28 +60,39 @@ public class DocumentServiceImpl implements DocumentService{
 	@Transactional
 	@Override
 	public int insertDocument(DocumentVO documentVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode) {
+		try {					
+			int result = mapper.insertDocument(documentVO);
+			log.debug("docNo " + documentVO.getDocNo());
+			
+			//결재등록
+			log.debug("결재 등록 시작. docNo: " + documentVO.getDocNo());
+			asvc.insertApproval(approverIds, documentVO.getDocNo(), companyCode);
+			log.debug("결재 등록 완료.");
+		
+			//파일등록
+			log.debug("파일 등록");
+			if(files != null && files.length > 0) {
+				log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
+				log.debug("docNo " + documentVO.getDocNo());
+				fsvc.insertFiles(files, "document", documentVO.getDocNo(), companyCode);
+				log.debug("파일 keyNO: " + documentVO.getDocNo());
+			}
 
-		int result = mapper.insertDocument(documentVO);
-		log.debug("docNo " + documentVO.getDocNo());
+			//접근제한 등록
+			dasvc.insertAccessApproval(approverIds, documentVO.getDocNo(), companyCode);
+			dasvc.insertAccessReference(referenceIds, documentVO.getDocNo(), companyCode);
 		
-		//파일등록
-		log.debug("파일 등록");
-		if(files != null && files.length > 0) {
-			fsvc.insertFiles(files, "document", documentVO.getDocNo(), companyCode);
-			log.debug("파일 keyNO: " + documentVO.getDocNo());
+			//작성자와 동일한 부서원, 임원 추가
+			List<EmployeesVO> referenceList = dasvc.selectAddReference(documentVO.getEmployeeNo(), companyCode);
+			dasvc.insertAddReference(referenceList, documentVO.getDocNo(), companyCode);		
+		
+			return result;
+			
+		}catch (Exception err) {
+	        log.error("Error", err);
+	        throw err; 
 		}
-		//결재등록
-		asvc.insertApproval(approverIds, documentVO.getDocNo(), companyCode);
-	
-		//접근제한 등록
-		dasvc.insertAccessApproval(approverIds, documentVO.getDocNo(), companyCode);
-		dasvc.insertAccessReference(referenceIds, documentVO.getDocNo(), companyCode);
-		
-		//작성자와 동일한 부서원, 관리직, 임원 추가
-		List<EmployeesVO> referenceList = dasvc.selectAddReference(documentVO.getEmployeeNo(), companyCode);
-		dasvc.insertAddReference(referenceList, documentVO.getDocNo(), companyCode);		
-		
-		return result;
+			
 	}
 
 	@Override
@@ -102,6 +122,27 @@ public class DocumentServiceImpl implements DocumentService{
 	@Override
 	public DocumentVO documentInfo(DocumentVO documentVO) {
 		return mapper.documentInfo(documentVO);
+	}
+
+	@Override
+	@Transactional
+	public void updateApprStatus(int docNo, String companyCode, int employeeNo, String signImg) {
+		
+		asvc.approveDocument(employeeNo, docNo, companyCode);
+		
+		asvc.updateNextLine(docNo, companyCode);
+		
+		int apprNo = asvc.getApprNo(employeeNo, docNo, companyCode);
+		
+		SignVO signVO = new SignVO();
+		signVO.setSignImg(signImg);
+		signVO.setApprNo(apprNo); 
+		signVO.setDocNo(docNo);
+		signVO.setEmployeeNo(employeeNo);
+		signVO.setCompanyCode(companyCode);
+		ssvc.apprSign(signVO);
+		
+		mapper.updateApprStatus(docNo, companyCode);		
 	}
 
 }

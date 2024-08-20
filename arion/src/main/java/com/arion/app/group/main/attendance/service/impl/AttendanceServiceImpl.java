@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.arion.app.group.main.attendance.mapper.AttendanceMapper;
@@ -27,7 +28,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Autowired 
 	private AttendanceMapper attendancemapper;
-
+	
 	@Override
 	public AEmployeeVO aEmployee(int iemployeeno) {
 		

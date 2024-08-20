@@ -3,6 +3,7 @@ package com.arion.app.group.main.attendance.web;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +45,12 @@ public class AttendanceController {
 	//ajax 근태기록
 	@RequestMapping("/attendancelist")
 	@ResponseBody
-	public Map<String, Object> getattendancelist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
+	public Map<String, Object> getattendancelist(HttpServletRequest request,
+			@RequestParam(value = "employeeno",required = false)  Integer EmployeeNo,
+			@RequestParam(value = "startdate",required = false) String startdate,
 			@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
 		
 		
-		int EmployeeNo = Integer.parseInt(employeeno);
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		 Date start = df.parse(startdate);
 		 Date end = df.parse(enddate);	   
@@ -60,19 +62,16 @@ public class AttendanceController {
 		System.out.println(qstart);
 		System.out.println(qend);
 		List<AttendanceVO> attendance = attendanceservice.attendance(EmployeeNo,qstart,qend);
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("attendancelist", attendance);
-		return result;
+		return Collections.singletonMap("attendancelist", attendance);
 	}
 	
+	//근태기록 페이지이동
 	@GetMapping("/attendances")
 	public String attendance(HttpServletRequest request,Model model) {
-		HttpSession session = request.getSession();
-		int EmployeeNo = (int)session.getAttribute("employeeNo");
-		model.addAttribute("employeeNo", EmployeeNo);
 		
 		return "group/attendance/myattendance";
 	}
+	
 	@GetMapping("/attendancelist")
 	public String attendancelist(HttpServletRequest request,Model model) {
 		HttpSession session = request.getSession();			
@@ -105,11 +104,7 @@ public class AttendanceController {
 	
 	
 	@GetMapping("/worktime")
-	public String worktime(HttpServletRequest request,Model model) {
-		
-		HttpSession session = request.getSession();
-		int EmployeeNo = (int)session.getAttribute("employeeNo");
-		model.addAttribute("employeeNo", EmployeeNo);
+	public String worktime(HttpServletRequest request,Model model) {		
 		
 		return "group/attendance/myworktime";
 	}
@@ -117,12 +112,11 @@ public class AttendanceController {
 	//ajax 근무시간
 		@RequestMapping("/worklist")
 		@ResponseBody
-		public Map<String, Object> worklist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "startdate",required = false) String startdate,
+		public Map<String, Object> worklist(HttpServletRequest request,
+				@RequestParam(value = "employeeno",required = false) Integer EmployeeNo,
+				@RequestParam(value = "startdate",required = false) String startdate,
 				@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
 			
-			
-			int EmployeeNo = Integer.parseInt(employeeno);
-			System.out.println(EmployeeNo);
 			 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			 Date start = df.parse(startdate);
 			 Date end = df.parse(enddate);	   
@@ -190,7 +184,9 @@ public class AttendanceController {
 		//ajax 휴가기록
 		@RequestMapping("/vacationlist")
 		@ResponseBody
-		public Map<String, Object> vacationlist(HttpServletRequest request,@RequestParam(value = "employeeno",required = false) String employeeno,@RequestParam(value = "years",required = false) int years) throws Exception {
+		public Map<String, Object> vacationlist(HttpServletRequest request,
+				@RequestParam(value = "employeeno",required = false) String employeeno,
+				@RequestParam(value = "years",required = false) int years) throws Exception {
 						
 			int EmployeeNo = Integer.parseInt(employeeno);
 			System.out.println(years);
@@ -240,16 +236,70 @@ public class AttendanceController {
 		}
 		
 		
-		//휴가
+		//차트
 				@GetMapping("/chart")
-				public String chart(HttpServletRequest request,Model model) {
-					
-					HttpSession session = request.getSession();
-					int EmployeeNo = (int)session.getAttribute("employeeNo");
-					
-					model.addAttribute("employeeNo", EmployeeNo);
-					
+				public String chart(HttpServletRequest request,Model model) {						
 					
 					return "group/attendance/mychart";
 				}
+				
+	    //ajax 차트기록	
+				@RequestMapping("/chartlist")
+				@ResponseBody
+				public Map<String, Object> chartlist(HttpServletRequest request,
+						@RequestParam(value = "employeeno",required = false) Integer EmployeeNo,
+						@RequestParam(value = "startdate",required = false) String startdate,
+						@RequestParam(value = "enddate",required = false) String enddate) throws Exception {
+								
+					 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					 Date start = df.parse(startdate);
+					 Date end = df.parse(enddate);	   
+					System.out.println(start);
+					System.out.println(end);
+					SimpleDateFormat df2 = new SimpleDateFormat("yyyy/MM/dd");
+					String qstart = df2.format(start);
+					String qend = df2.format(end);
+					System.out.println(qstart);
+					System.out.println(qend);
+					
+					List<WorkTimeVO> worktimelist = attendanceservice.worktime(EmployeeNo,qstart,qend);
+
+					
+					Map<String, Object> result = new HashMap<String, Object>();
+					result.put("worktimelist", worktimelist);
+					return result;
+				}	
+				@GetMapping("/underlingchartlist")
+				public String underlingchartlist(HttpServletRequest request,Model model) {
+					HttpSession session = request.getSession();			
+					String companyCode = (String)session.getAttribute("companyCode");
+					String rankName = (String)session.getAttribute("rankName");
+					List<AEmployeeVO> emplist = attendanceservice.aEmployeeList(companyCode,rankName);
+					model.addAttribute("emplist", emplist);
+					model.addAttribute("emplistcount", emplist.size());
+					
+					
+					return "group/attendance/chartlist";
+				}
+				
+				@GetMapping("/underlingchartlist/{employeeNo}")
+				public String underlingchartlist(@PathVariable String employeeNo,Model model) {
+					
+					model.addAttribute("employeeNo", employeeNo);
+					System.out.println(employeeNo);
+					
+					int EmployeeNo = Integer.parseInt(employeeNo);
+					AEmployeeVO underlingname= attendanceservice.aEmployee(EmployeeNo);
+					System.out.println(underlingname.getEmployeename());
+					
+					model.addAttribute("underlingName", underlingname.getEmployeename());
+					
+					List<YearsVO> YearsList=attendanceservice.yearslist(EmployeeNo);
+					
+					model.addAttribute("yearsList", YearsList);
+					
+					
+					return "group/attendance/underlingchart";
+				}
+				
 }

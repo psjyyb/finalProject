@@ -48,19 +48,73 @@ function autoReload()
 		}
 		
 		
+		//한달 기록 출력
+		let endday = new Date(today.getFullYear(), today.getMonth()+1, 0);
+		let month=today.getMonth()+1;
+		var startdate=today.getFullYear()+'-'+month+'-1';
+		console.log('startdate:'+startdate);
+		
+		var enddate=today.getFullYear()+'-'+month+'-'+endday.getDate();
+		console.log('enddate:'+enddate);
 		
 		
+		var datax= ['x'];
+		
+		var datay= ['근무시간(분)'];
 		
 		
-
+		 $.ajax({
+			url : '/group/attendance/chartlist',
+			
+           type : 'POST',
+           data : {
+			'employeeno' : $('#employeeno').val(),
+              'startdate' : startdate,
+              'enddate': enddate
+              },
+		 dataType:"json",
+		 async: false,
+           success : function(data) {
+			var worktimelist = data.worktimelist;
+			console.log(worktimelist);
+		   $.each(worktimelist, function(key, value) {
+			
+			
+			$.each(value, function(key, value) {
+		
+		if(key=='attdate')
+		{
+			
+		    let date =  new Date(value);						
+			datax.push('\''+ date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+'\'');
+		}
+		if(key=='worktimeminute')
+		{
+			console.log(value);
+			
+			
+			
+			datay.push(value);
+			
+		}
+					
+		          })			
+			
+		   })
+		   
+		   }
+           
+       });
+		
+		
 var chart = bb.generate({
     bindto: "#chart",
     data: {
    
         x: "x",
         columns: [
-			['x', "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05", "2024-01-06"],
-				["근무시간", 320, 580, 450, 590, 570, 500]
+			datax,
+			datay
         ],
         type: "bar"
             
@@ -72,14 +126,30 @@ var chart = bb.generate({
                     tick: {
                         format: "%Y-%m-%d"  // 날짜 포맷 설정
                     }
-                }
+                    
+                   },y: {
+            
+            max: 800  // Y축의 최대값 설정
+        }
+                   
+                   
+                   
             },         
             grid: {
                 y: {
                     lines: [
-                          {value: 540, text: '표준근무시간'}
+                          {value: 540, text: '표준근무시간(540)'}
                     ]
                 }
-            }
+            },
+    bar: {
+        width: {
+            ratio: 0.1 // 바 너비의 비율 (0~1 범위)
+        }
+    }
+           
 });
 }
+
+
+

@@ -20,4 +20,5 @@ public class EmployeesVO {
 	private String signImg;
 	private String departmentName;
 	private String rankName;
+	private String employeePhone;
 }

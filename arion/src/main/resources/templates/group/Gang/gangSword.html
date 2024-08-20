@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+    <title>ARION</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 1200px;
+        }
+        .departments, .employees {
+            flex: 1;
+            margin: 20px;
+        }
+        .departments h2, .employees h2 {
+            font-size: 24px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        .employees {
+            border-left: 1px solid #e0e0e0;
+            padding-left: 20px;
+        }
+        #employeeDetail {
+            flex: 1;
+            margin-left: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* 사원 정보가 선택되기 전에는 숨김 */
+        }
+        #employeeDetail h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #007bff;
+        }
+        #employeeDetail p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="departments">
+            <h2>부서</h2>
+            <ul id="departmentList"></ul>
+        </div>
+        <div class="employees">
+            <h2>사원</h2>
+            <ul id="employeeList"></ul>
+        </div>
+        <div id="employeeDetail">
+            <h3>사원 정보</h3>
+            <p>이름: </p>
+            <p>직급: </p>
+            <p>부서명: </p>
+            <p>연락처: </p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 부서 목록을 불러오는 AJAX 요청
+            $.ajax({
+                url: '/group/Gang/departments',
+                method: 'GET',
+                success: function(data) {
+                    let departmentList = $('#departmentList');
+                    departmentList.empty();
+
+                    data.forEach(function(department) {
+                        departmentList.append('<li><a href="#" class="department" data-name="' + department.departmentName + '">' + department.departmentName + '</a></li>');
+                    });
+                }
+            });
+
+            // 부서를 클릭했을 때 사원 목록을 불러오는 AJAX 요청
+            $(document).on('click', '.department', function(e) {
+                e.preventDefault();
+                let departmentName = $(this).data('name');
+
+                $.ajax({
+                    url: '/group/Gang/employees',
+                    method: 'GET',
+                    data: { departmentName: departmentName },
+                    success: function(data) {
+                        let employeeList = $('#employeeList');
+                        employeeList.empty();
+                        $('#employeeDetail').hide(); // 부서를 클릭하면 사원 정보는 숨김
+
+                        data.forEach(function(employee) {
+                            employeeList.append('<li><a href="#" class="employee" data-id="' + employee.employeeNo + '">' + employee.employeeName + ' (' + employee.rankName + ')</a></li>');
+                        });
+                    }
+                });
+            });
+
+            // 사원 클릭 시 상세 정보를 불러오는 AJAX 요청
+            $(document).on('click', '.employee', function(e) {
+                e.preventDefault();
+                let employeeId = $(this).data('id');
+
+                $.ajax({
+                    url: '/group/Gang/employee', 
+                    method: 'GET',
+                    data: { employeeNo: employeeId },
+                    success: function(employee) {
+                        $('#employeeDetail').html('<h3>사원 정보</h3>' +
+                            '<p>이름: ' + employee.employeeName + '</p>' +
+                            '<p>직급: ' + employee.rankName + '</p>' +
+                            '<p>부서명: ' + employee.departmentName + '</p>' +
+                            '<p>연락처: ' + employee.employeePhone + '</p>'
+                        ).show(); // 사원 정보 표시
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

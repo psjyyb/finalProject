@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>ARION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2><i class="fas fa-user-edit"></i> 주소록 수정</h2>
+    <form id="updateForm">
+        <input type="hidden" id="addrNo" name="addrNo" th:value="${address.addrNo}">
+        <label for="addrName">이름:</label>
+        <input type="text" id="addrName" name="addrName" th:value="${address.addrName}" required><br>
+        <label for="addrPhone">연락처:</label>
+        <input type="text" id="addrPhone" name="addrPhone" th:value="${address.addrPhone}" required><br>
+        <label for="companyName">회사명:</label>
+        <input type="text" id="companyName" name="companyName" th:value="${address.companyName}" required><br>
+        <label for="addrEmail">이메일:</label>
+        <input type="text" id="addrEmail" name="addrEmail" th:value="${address.addrEmail}"><br>
+        <label for="addrRank">직급:</label>
+        <input type="text" id="addrRank" name="addrRank" th:value="${address.addrRank}"><br>
+        <button type="button" id="updateButton">수정 완료</button>
+    </form>
+    <a href="/group/Gang/address"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+
+    <script>
+    $(document).ready(function() {
+        $('#updateButton').click(function() {
+            // Collect form data
+            const addrNo = $('#addrNo').val(); 
+            const addrName = $('#addrName').val();
+            const addrPhone = $('#addrPhone').val();
+            const companyName = $('#companyName').val();
+            const addrEmail = $('#addrEmail').val();
+            const addrRank = $('#addrRank').val();
+
+            if (isNaN(addrNo) || addrNo.trim() === '') {
+                alert('주소록 번호가 올바르지 않습니다.');
+                return;
+            }
+
+            // Send AJAX request
+            $.ajax({
+                url: '/group/Gang/addressEdit',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    addrNo: parseInt(addrNo, 10),
+                    addrName: addrName,
+                    addrPhone: addrPhone,
+                    companyName: companyName,
+                    addrEmail: addrEmail,
+                    addrRank: addrRank
+                }),
+                success: function(response) {
+                    if (response.result) {
+                        alert('주소록이 성공적으로 수정되었습니다.');
+                        window.location.href = '/group/Gang/address';
+                    } else {
+                        alert('주소록 수정에 실패하였습니다.');
+                    }
+                },
+                error: function() {
+                    alert('주소록 수정에 실패하였습니다.');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

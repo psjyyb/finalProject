@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>주소록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 1200px;
+            position: relative; /* 위치 조정을 위해 필요 */
+        }
+        .companies, .addresses {
+            flex: 1;
+            margin: 20px;
+        }
+        .companies h2, .addresses h2 {
+            font-size: 24px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        .addresses {
+            border-left: 1px solid #e0e0e0;
+            padding-left: 20px;
+        }
+        #addressDetail {
+            flex: 1;
+            margin-left: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* 주소록 상세 정보가 선택되기 전에는 숨김 */
+        }
+        #addressDetail h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #007bff;
+        }
+        #addressDetail p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .button-group {
+            margin-top: 20px;
+        }
+        .button-group button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+        .button-group .delete {
+            background-color: #dc3545;
+        }
+        .button-group .delete:hover {
+            background-color: #c82333;
+        }
+        .register-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .register-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="companies">
+            <h2>회사 목록</h2>
+            <ul id="companyList"></ul>
+        </div>
+        <div class="addresses">
+            <h2>주소록</h2>
+            <ul id="addressList"></ul>
+        </div>
+        <div id="addressDetail">
+            <h3>주소록 정보</h3>
+            <p>이름: <span id="detailName"></span></p>
+            <p>연락처: <span id="detailPhone"></span></p>
+            <p>이메일: <span id="detailEmail"></span></p>
+            <p>직급: <span id="detailRank"></span></p>
+            <div class="button-group">
+                <button id="editButton">수정</button>
+                <button id="deleteButton" class="delete">삭제</button>
+            </div>
+        </div>
+        <!-- 등록 버튼 -->
+        <button class="register-button" onclick="window.location.href='/group/Gang/AddrInsert'">주소록 등록</button>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        // 회사 목록을 불러오는 AJAX 요청
+        $.ajax({
+            url: '/group/Gang/companyNames',
+            method: 'GET',
+            success: function(data) {
+                let companyList = $('#companyList');
+                companyList.empty();
+
+                data.forEach(function(company) {
+                    companyList.append('<li><a href="#" class="company" data-name="' + company + '">' + company + '</a></li>');
+                });
+            }
+        });
+
+        // 회사 클릭 시 주소록 목록을 불러오는 AJAX 요청
+        $(document).on('click', '.company', function(e) {
+            e.preventDefault();
+            let companyName = $(this).data('name');
+
+            $.ajax({
+                url: '/group/Gang/addresses',
+                method: 'GET',
+                data: { companyName: companyName },
+                success: function(data) {
+                    let addressList = $('#addressList');
+                    addressList.empty();
+                    $('#addressDetail').hide(); // 주소록 정보는 숨김
+
+                    data.forEach(function(address) {
+                        addressList.append('<li><a href="#" class="address" data-id="' + address.addrNo + '">' + address.addrName + '</a></li>');
+                    });
+                }
+            });
+        });
+
+        // 주소록 클릭 시 상세 정보를 불러오는 AJAX 요청
+        $(document).on('click', '.address', function(e) {
+            e.preventDefault();
+            let addressId = $(this).data('id');
+
+            $.ajax({
+                url: '/group/Gang/addressDetail',
+                method: 'GET',
+                data: { addrNo: addressId },
+                success: function(address) {
+                    $('#detailName').text(address.addrName);
+                    $('#detailPhone').text(address.addrPhone);
+                    $('#detailEmail').text(address.addrEmail);
+                    $('#detailRank').text(address.addrRank);
+                    $('#addressDetail').data('id', address.addrNo); // 주소록 상세 정보를 저장
+                    $('#addressDetail').show(); // 주소록 정보 표시
+                }
+            });
+        });
+
+        // 수정 버튼 클릭 시 주소록 수정 페이지로 이동
+        $('#editButton').click(function() {
+            let addrId = $('#addressDetail').data('id');
+            window.location.href = '/group/Gang/addressEdit?addrNo=' + addrId;
+        });
+
+        // 삭제 버튼 클릭 시 주소록 삭제 요청
+        $('#deleteButton').click(function() {
+            let addrId = $('#addressDetail').data('id');
+            $.ajax({
+                url: '/group/Gang/addressDelete',
+                method: 'POST',
+                data: { addrNo: addrId },
+                success: function(response) {
+                    alert('주소록이 삭제되었습니다.');
+                    $('#addressDetail').hide();
+                    $('#addressList').find('[data-id="' + addrId + '"]').remove();
+                },
+                error: function() {
+                    alert('주소록 삭제에 실패했습니다.');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

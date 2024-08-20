@@ -7,7 +7,8 @@
                c.company_id AS loginId, 
                c.company_pw AS loginPw,
                c.ceo_name AS ceoName,
-               c.site_resp AS siteResp, 
+               c.site_resp AS siteResp,
+               c.company_name AS companyName,
                'company' AS loginType
         FROM company c
         WHERE c.company_code = #{companyCode}

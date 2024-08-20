@@ -47,5 +47,6 @@ public interface GroupAdminService {
 	List<PayDetailVO> payDetailInfo(int payNo); // 결제상세상세보기
 	
 	Map<String, Object>extendContract(int period,String comCode); // 계약서 갱신
-
+	
+	boolean checkOverlapId(String Comcode,String employeeId);
 }

@@ -76,6 +76,7 @@ public class GroupAdminController {
 
 	@PostMapping("/groupAdmin/GAEmpInsert")
 	public String GAEmpInsertPro(EmployeeVO empVO, HttpSession session) {
+		System.out.println(empVO+"@@@@@@@@@@@@@@@@@@@@@@@");
 		String comCode = (String) session.getAttribute("companyCode");
 		empVO.setCompanyCode(comCode);
 		int result = gaService.empInsert(empVO);
@@ -152,8 +153,6 @@ public class GroupAdminController {
 	@PostMapping("/groupAdmin/GADeptSave")
 	public String GADeptSave(@ModelAttribute("departments") DepartmentListVO deptListVO, HttpSession session) {
 	    String comCode = (String) session.getAttribute("companyCode");
-	    System.out.println(deptListVO);
-
 	    gaService.saveDept(deptListVO, comCode);  // 서비스로 전체 부서 목록 전달
 	    return "redirect:/groupAdmin/GADeptList";
 	}
@@ -208,7 +207,6 @@ public class GroupAdminController {
 	@PostMapping("/groupAdmin/contractCancle")
 	public String contractCancle(int contractNo, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
-		System.out.println(contractNo);
 		return gaService.cancleContract(contractNo,comCode);
 	}
 	@GetMapping("/groupAdmin/GAPayList")
@@ -231,4 +229,11 @@ public class GroupAdminController {
 		String comCode = (String)session.getAttribute("companyCode"); 
 		return gaService.extendContract(period, comCode);
 	}
+	@PostMapping("/groupAdmin/checkId")
+	@ResponseBody
+	public boolean checkOverlapId(String employeeId,HttpSession session){
+		String comCode = (String) session.getAttribute("companyCode");
+	return gaService.checkOverlapId(comCode, employeeId);
+	}
+	
 }

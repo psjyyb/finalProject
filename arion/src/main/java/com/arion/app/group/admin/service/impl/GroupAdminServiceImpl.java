@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -113,12 +114,16 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	public int saveRank(RankVO rankVO, String companyCode) {
 		int result = gaMapper.rankDeSave(companyCode);
 		String ranks = rankVO.getRankName();
+		String rankN = rankVO.getRankRangkings();
+		String rankNarr[] = rankN.split(",");
 		String rankArr[] = ranks.split(",");
 		List<String> list = Arrays.asList(rankArr);
 		RankVO rvo = new RankVO();
+		AtomicInteger indexHolder = new AtomicInteger();
 		list.forEach(i -> {
 			rvo.setRankName(i);
 			rvo.setCompanyCode(companyCode);
+			rvo.setRankRangkingQ(rankNarr[indexHolder.getAndIncrement()]);
 			gaMapper.rankInSave(rvo);
 		});
 		return result;
@@ -202,5 +207,16 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		}
 		map.put("result", isSuccessed);
 		return map;
+	}
+	@Override
+	public boolean checkOverlapId(String Comcode, String employeeId) {
+		Map<String,Object> map = new HashMap<>();
+		boolean isSuccess = false;
+		EmployeeVO evo = gaMapper.checkOverlapId(Comcode, employeeId);
+		System.out.println(evo+"@@@@@@@@@@@@@@@@@@@@@@@");
+		if(evo==null) {
+			isSuccess=true;
+		}
+		return isSuccess;
 	}
 }

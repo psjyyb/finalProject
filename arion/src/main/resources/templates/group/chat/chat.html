@@ -99,7 +99,7 @@
     var roomNo = null;
     // 웹소켓 연결
     function connect() {
-        var socket = new SockJS('/wsocket');
+        var socket = new SockJS('http://192.168.0.21:8080/wsocket');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected: ', frame);

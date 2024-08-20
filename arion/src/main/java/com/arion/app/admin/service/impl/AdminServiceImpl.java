@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.arion.app.admin.mapper.AdminMapper;
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
+import com.arion.app.admin.service.ChartVO;
 import com.arion.app.admin.service.ModuleFileVO;
 import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
@@ -160,6 +161,14 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int modDelete(int moduleNo) {
 		return adminMapper.deleteMod(moduleNo);
+	}
+	@Override
+	public List<ChartVO> pieChart() {
+		return adminMapper.pieChart();
+	}
+	@Override
+	public List<ChartVO> areaChart() {
+		return adminMapper.areaChart();
 	}
 
 }

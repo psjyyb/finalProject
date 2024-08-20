@@ -23,6 +23,7 @@ h2 {
 
 .form-group {
 	margin-bottom: 20px;
+	position: relative;
 }
 
 label {
@@ -38,6 +39,7 @@ input[type="text"], input[type="password"], select {
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
+	box-sizing: border-box; /* 추가 */
 }
 
 input[type="text"]:focus, input[type="password"]:focus, select:focus {
@@ -61,24 +63,51 @@ button {
 button:hover {
 	background-color: #0056b3;
 }
- .message-container {
-            background-color: #ffffff;
-            padding: 20px 30px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .message-container h1 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .message-container p {
-            font-size: 16px;
-            color: #555;
-            margin: 0;
-        }
+
+#overlap {
+	width: auto;
+	display: inline-block;
+	position: absolute;
+	right: 10px; /* 오른쪽으로 10px 띄워서 밀림을 방지 */
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 8px;
+	background-color: #28a745;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	border: 1px solid #0056b3; /* 추가 */
+	box-sizing: border-box; /* 추가 */
+}
+
+
+.message-container {
+	background-color: #ffffff;
+	padding: 20px 30px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+.message-container h1 {
+	font-size: 24px;
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.message-container p {
+	font-size: 16px;
+	color: #555;
+	margin: 0;
+}
+
+#id-message {
+	color: red;
+	font-size: 14px;
+	margin-bottom: 5px;
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -87,24 +116,32 @@ button:hover {
 		<form th:action="@{/groupAdmin/GAEmpInsert}" method="POST"
 			name="insertEmp">
 			<div class="form-group">
-				<label for="name">사원명:</label> <input type="text" id="name"
-					name="employeeName">
+				<label for="name">사원명:</label>
+				<input type="text" id="name" name="employeeName">
+			</div>
+			<div id="id-message">중복된 아이디입니다.</div>
+			<div class="form-group">
+				<label for="id">아이디:</label>
+				
+				<input type="text" id="id" name="employeeId">
+				<button type="button" id="overlap">중복체크</button>
 			</div>
 			<div class="form-group">
-				<label for="id">아이디:</label> <input type="text" id="id"
-					name="employeeId">
+				<label for="password">비밀번호:</label>
+				<input type="password" id="password" name="employeePw">
 			</div>
 			<div class="form-group">
-				<label for="password">비밀번호:</label> <input type="password"
-					id="password" name="employeePw">
+				<label for="phone">전화번호:</label>
+				<input type="text" id="phone" name="employeePhone">
 			</div>
 			<div class="form-group">
-				<label for="startDate">입사일:</label> <input type="date"
-					id="startDate" name="hireDate">
+				<label for="startDate">입사일:</label>
+				<input type="date" id="startDate" name="hireDate">
 			</div>
+			
 			<div class="form-group">
-				<label for="position">직책:</label> <select id="position"
-					name="employeeResp">
+				<label for="position">직책:</label>
+				<select id="position" name="employeeResp">
 					<option value="없음">없음</option>
 					<option value="임원">임원</option>
 					<option value="사원관리자">사원관리자</option>
@@ -113,15 +150,16 @@ button:hover {
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="rank">직급:</label> <select id="rank" name="rankName">
+				<label for="rank">직급:</label>
+				<select id="rank" name="rankName">
 					<option value="">없음</option>
 					<option th:each=" rank :${rankList}" th:value="${rank.rankName}"
 						th:text="${rank.rankName}">없음</option>
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="department">부서:</label> <select id="department"
-					name="departmentName">
+				<label for="department">부서:</label>
+				<select id="department" name="departmentName">
 					<option value="없음">없음</option>
 					<option th:each="dept :${deptList}" th:value="${dept.departmentName}"
 						th:text="${dept.departmentName}"></option>
@@ -131,37 +169,66 @@ button:hover {
 		</form>
 	</div>
 	<div class="container" th:if="${userInfo.usersCnt <= 0}">
-		 <div class="message-container">
-        <h1>사원을 더이상 등록할 수 없습니다.</h1>
-        <p>서비스를 더 이용하시려면 사용인원수를 추가해주세요!</p>
-    </div>
+		<div class="message-container">
+			<h1>사원을 더이상 등록할 수 없습니다.</h1>
+			<p>서비스를 더 이용하시려면 사용인원수를 추가해주세요!</p>
+		</div>
 	</div>
 	<script>
-    $('[name="insertEmp"]').on('submit',function(event){
-        event.preventDefault();
+	let check = false;
+	$('[name="insertEmp"]').on('submit', function(event) {
+		event.preventDefault();
 		let ename = $('input[name=employeeName]');
-        if(ename.val()==''){
-        	alert('사원명은 필수입니다.');
-        	ename.focus();
-        	return;
-        }
-        let eid = $('input[name=employeeId]');
-    	if(eid.val()==''){
-    		alert('사원아이디는 필수입니다.');
-    		eid.focus();
-    		return;
-    	}
-    	let epw = $('input[name=employeePw]');
-    	if(epw.val()==''){
-    		alert('사원비밀번호는 필수입니다.');
-    		epw.focus();
-    		return;
-    	}
-    	if(confirm('사원을 등록하시겠습니까?')){
-    		insertEmp.submit();
-    	}
-        
-    })
-    </script>
+		if (ename.val() == '') {
+			alert('사원명은 필수입니다.');
+			ename.focus();
+			return;
+		}
+		let eid = $('input[name=employeeId]');
+		if (eid.val() == '') {
+			alert('사원아이디는 필수입니다.');
+			eid.focus();
+			return;
+		}
+		let epw = $('input[name=employeePw]');
+		if (epw.val() == '') {
+			alert('사원비밀번호는 필수입니다.');
+			epw.focus();
+			return;
+		}
+		if (confirm('사원을 등록하시겠습니까?') && check) {
+			insertEmp.submit();
+		} else {
+			alert('아이디 중복을 확인해주세요');
+		}
+	});
+
+	$('#overlap').on('click', function() {
+		event.preventDefault();
+		let empId = $('input[name=employeeId]').val();
+		$.ajax({
+			url: '/groupAdmin/checkId',
+			method: 'POST',
+			data: { employeeId: empId },
+			success: (result) => {
+				let idMessage = $('#id-message');
+				if (result) {
+					idMessage.text('사용가능합니다.');
+					idMessage.css('color', 'green');
+					idMessage.show();
+					check = true;
+				} else {
+					idMessage.text('중복된 아이디입니다.');
+					idMessage.css('color', 'red');
+					idMessage.show();
+					check = false;
+				}
+			},
+			error: (err) => {
+				console.log(err);
+			}
+		});
+	});
+	</script>
 </body>
 </html>

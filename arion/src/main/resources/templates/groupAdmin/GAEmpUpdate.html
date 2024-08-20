@@ -98,6 +98,10 @@ button.delete:hover {
 					id="password" name="employeePw">
 			</div>
 			<div class="form-group">
+				<label for="phone">전화번호:</label>
+				<input type="text" id="phone" name="employeePhone" th:field=*{employeePhone}>
+			</div>
+			<div class="form-group">
 				<label for="startDate">입사일:</label> <input type="date"
 					id="startDate" name="hireDate" th:field="*{hireDate}">
 			</div>

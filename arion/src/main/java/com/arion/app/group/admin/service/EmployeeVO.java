@@ -20,6 +20,7 @@ public class EmployeeVO {
 	private String employeeResp;
 	private String companyCode;
 	private String signImg;
+	private String employeePhone;
 	
 	
 	

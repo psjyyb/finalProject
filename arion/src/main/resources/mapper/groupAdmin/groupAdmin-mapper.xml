@@ -44,7 +44,9 @@
 		,employee_pw
 		,department_name
 		,rank_name
+		,employee_phone
 		,hire_date
+		
 		)
 		VALUES(
 		 #{employeeNo}
@@ -55,6 +57,7 @@
 		,#{employeePw}
 		,#{departmentName}
 		,#{rankName}
+		,#{employeePhone}
 		<choose>
 			<when test="hireDate !=null">
 				,#{hireDate}
@@ -76,6 +79,7 @@
 	          ,employee_pw
 			  ,department_name
 			  ,rank_name
+			  ,employee_phone
 		FROM employees
 		WHERE employee_no = #{employeeNo}
 	</select>
@@ -187,11 +191,13 @@
 		INSERT INTO rank(
 						 rank_id
 						,rank_name
-						,company_code)
+						,company_code
+						,rank_ranking)
 		VALUES(
 				 #{rankId}
 				,#{rankName}
-				,#{companyCode} )
+				,#{companyCode}
+				,#{rankRangkingQ} )
 	</insert>
 	
 	<delete id="rankDeSave">
@@ -288,4 +294,10 @@
 		SET final_date = #{finalDate}
 		WHERE contract_no = #{contractNo}
 	</update>
+	<select id="checkOverlapId" resultType="EmployeeVO">
+		SELECT employee_id 
+		FROM employees 
+		WHERE company_code=#{companyCode}
+		AND employee_id=#{employeeId}
+	</select>
 </mapper>

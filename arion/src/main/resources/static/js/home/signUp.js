@@ -202,10 +202,10 @@ $(document).ready(function() {
         }
 
         let companyType = $('input[name="companyType"]');
-        if(companyType.val().trim() === ''){
+        if(companyType.val() === ''){
             Swal.fire({
                 icon: "error",
-                text: "업종을 입력하세요.",
+                text: "업종을 선택하세요.",
                 didClose: () => {
                     companyType.focus();
                 }

@@ -9,12 +9,14 @@
 		      ,t.start_date
 		      ,t.final_date
 		      ,t.users_cnt
+              ,t.contract_state
 		FROM company c 
 		JOIN contract t
 		ON c.company_code = t.company_code
 					<![CDATA[
-		WHERE final_date < sysdate
-							]]>
+		WHERE final_date > sysdate
+        ]]>
+        AND contract_state ='계약중'
 		ORDER BY t.contract_no
 	</select>
 	<select id="selectSubInfo" parameterType="AdminVO">
@@ -193,4 +195,34 @@
 		DELETE FROM module
 		WHERE module_no = #{moduleNo}
 	</delete>
+	<select id="pieChart" resultType="ChartVO">
+		SELECT COMPANY_TYPE AS label
+			  ,COUNT(*) AS result_value
+		FROM company
+		WHERE COMPANY_TYPE != 'ADMIN'
+		GROUP BY COMPANY_TYPE	
+	</select>
+	<select id="areaChart" resultType="ChartVO">
+		SELECT
+	    cal.month AS label,
+	    ROUND(NVL(AVG(p.pay_price), 0)) AS result_value
+		FROM
+		    (
+		        SELECT 1 AS month FROM DUAL UNION ALL
+		        SELECT 2 AS month FROM DUAL UNION ALL
+		        SELECT 3 AS month FROM DUAL UNION ALL
+		        SELECT 4 AS month FROM DUAL UNION ALL
+		        SELECT 5 AS month FROM DUAL UNION ALL
+		        SELECT 6 AS month FROM DUAL UNION ALL
+		        SELECT 7 AS month FROM DUAL UNION ALL
+		        SELECT 8 AS month FROM DUAL UNION ALL
+		        SELECT 9 AS month FROM DUAL UNION ALL
+		        SELECT 10 AS month FROM DUAL UNION ALL
+		        SELECT 11 AS month FROM DUAL UNION ALL
+		        SELECT 12 AS month FROM DUAL
+		    ) cal
+		LEFT JOIN pay p ON cal.month = EXTRACT(MONTH FROM p.pay_date)
+		GROUP BY cal.month
+		ORDER BY cal.month
+	</select>
 </mapper>

@@ -68,6 +68,9 @@ public class LoginUserVO implements UserDetails {
     	return userVO.getSiteResp();
 
     }
+    public String getCompanyName() {
+    	return userVO.getCompanyName();
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

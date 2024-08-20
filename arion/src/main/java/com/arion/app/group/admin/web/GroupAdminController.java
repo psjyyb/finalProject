@@ -76,6 +76,7 @@ public class GroupAdminController {
 
 	@PostMapping("/groupAdmin/GAEmpInsert")
 	public String GAEmpInsertPro(EmployeeVO empVO, HttpSession session) {
+		System.out.println(empVO+"@@@@@@@@@@@@@@@@@@@@@@@");
 		String comCode = (String) session.getAttribute("companyCode");
 		empVO.setCompanyCode(comCode);
 		int result = gaService.empInsert(empVO);

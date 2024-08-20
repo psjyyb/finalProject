@@ -15,6 +15,7 @@ public class UserVO {
     private String empName;
     private int employeeNo;
     private String ceoName;
+    private String companyName;
     
     
 

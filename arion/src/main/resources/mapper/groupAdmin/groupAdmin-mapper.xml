@@ -44,7 +44,9 @@
 		,employee_pw
 		,department_name
 		,rank_name
+		,employee_phone
 		,hire_date
+		
 		)
 		VALUES(
 		 #{employeeNo}
@@ -55,6 +57,7 @@
 		,#{employeePw}
 		,#{departmentName}
 		,#{rankName}
+		,#{employeePhone}
 		<choose>
 			<when test="hireDate !=null">
 				,#{hireDate}
@@ -76,6 +79,7 @@
 	          ,employee_pw
 			  ,department_name
 			  ,rank_name
+			  ,employee_phone
 		FROM employees
 		WHERE employee_no = #{employeeNo}
 	</select>

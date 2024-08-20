@@ -31,4 +31,8 @@ public interface AdminService {
 	int filesPro(ModuleVO moduleVO); // 다중파일처리
 	
 	int modDelete(int moduleNo); // 모듈삭제
+	
+	List<ChartVO> pieChart(); // 파이차트
+	
+	List<ChartVO> areaChart(); // 도넛차트
 }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
@@ -16,6 +17,7 @@ import com.arion.app.admin.service.ModuleVO;
 import com.arion.app.admin.service.QnAVO;
 import com.arion.app.common.service.FileService;
 import com.arion.app.common.service.FileVO;
+import com.arion.app.admin.service.ChartVO;
 
 	/*
 	 * 작성자 : 박성준
@@ -148,5 +150,17 @@ public class AdminController {
 			url = "redirect:/adminModInfo";
 		}
 		return url;
+	}
+	@PostMapping("/adminAreaChart")
+	@ResponseBody
+	public List<ChartVO> areaChart(){
+		List<ChartVO> list = adminService.areaChart();
+		System.out.println(list);
+		return list;
+	}
+	@PostMapping("/adminPieChart")
+	@ResponseBody
+	public List<ChartVO> pieChart(){
+		return adminService.pieChart();
 	}
 }

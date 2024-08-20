@@ -6,8 +6,102 @@
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
+<script
+	src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<link th:href="@{/css/group/document/signList.css}" rel="stylesheet" />
 </head>
 <body>
-
+	<th:block th:each="appr : ${apprInfo}">
+		<div>
+			<label>결재자</label>
+			<span th:text="${appr.departmentName}"></span>
+			<span th:text="${appr.employeeName}"></span>
+			<span th:text="${appr.rankName}"></span>
+			<canvas id="signature-pad" width="50" height="40"></canvas>
+		</div>
+	</th:block>
+	<div>
+		<button>문서정보</button>
+		<button>참조자정보</button>
+		<button>반려사유</button>
+	</div>
+	<div>
+		<table>
+			<tr>
+				<th>문서번호</th>
+				<td th:text="${docInfo.docNo}"></td>
+				<th>기안서종류</th>
+				<td th:text="${docInfo.docName}"></td>
+				<th>상신일자</th>
+				<td th::text="${#dates.format(docInfo.createDate, 'yyyy-MM-dd')}"></td>
+			</tr>
+			<tr>
+				<th>부서</th>
+				<td th:text="${docInfo.departmentName}"></td>
+				<th>결재상태</th>
+				<td ></td>
+				<th>완료일자</th>
+				<td th:text="${#dates.format(docInfo.finishDate, 'yyyy-MM-dd')}"></td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>부서</th>
+					<th>이름</th>
+					<th>직급</th>
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="ref : ${refInfo}">
+					<tr>
+						<td th:text="${ref.departmentName}"></td>
+							<td th:text="${ref.employeeName}"></td>
+						<td th:text="${ref.rankName}"></td>
+					</tr>
+				</th:block>
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<div>
+			<th:block th:each="appr : ${apprInfo}">
+				<span th:text="${appr.reason}"></span>
+			</th:block>
+		</div>
+	</div>
+	<div>
+		<table>
+			<tr>
+				<th>제목</th>
+				<td th:text="${docInfo.docTitle}"></td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<th:block th:each="file : ${fileList}">
+					<td>
+						<a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+					</td>
+				</th:block>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td>
+					<div>
+						[(${docInfo.docContent})]
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<button>결재하기</button>
+		<button>반려하기</button>
+		<button>목록으로</button>
+	</div>
+	
+	
 </body>
 </html>

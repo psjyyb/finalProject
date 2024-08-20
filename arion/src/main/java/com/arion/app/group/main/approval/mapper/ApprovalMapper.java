@@ -1,9 +1,11 @@
 package com.arion.app.group.main.approval.mapper;
 
+import java.util.List;
+
 import com.arion.app.group.main.approval.service.ApprovalVO;
 
 public interface ApprovalMapper {
 	public int insertApproval(ApprovalVO approvalVO);
 	
-	public ApprovalVO apprInfo(ApprovalVO approvalVO);
+	public List<ApprovalVO> apprInfo(ApprovalVO approvalVO);
 }

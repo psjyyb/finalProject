@@ -12,13 +12,19 @@
 		<form th:action="@{/group/doc/apprProgress}" method="get"
 			th:object="${criteria}" class="search-container">
 			<div>
-				<input type="text" name="docTitle" placeholder="제목"
-					th:value="${criteria.docTitle}"> <input type="text"
-					name="writer" placeholder="기안자" th:value="${criteria.writer}">
-				<input type="date" name="startDate" th:value="${criteria.startDate}">
-				<input type="date" name="endDate" th:value="${criteria.endDate}">
+				<label>제목</label>
+				<input type="text" name="docTitle" th:value="${criteria.docTitle}">
+				<label>기안자</label>
+				<input type="text" name="writer" th:value="${criteria.writer}">				
 			</div>
-			<button type="submit">검색</button>
+				<label>상신일자</label>
+				<input type="date" name="startDate" th:value="${criteria.startDate}">
+				<label> ~ </label>
+				<input type="date" name="endDate" th:value="${criteria.endDate}">
+				<button type="submit">검색</button>
+			<div>
+			
+			</div>
 		</form>
 		<div class="document-list">
 			<table>

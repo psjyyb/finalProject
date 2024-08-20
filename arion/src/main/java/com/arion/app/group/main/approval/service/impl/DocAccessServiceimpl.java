@@ -66,5 +66,11 @@ public class DocAccessServiceimpl implements DocAccessService {
 		
 		return mapper.selectAddReference(employeeNo, companyCode);
 	}
+
+	@Override
+	public List<DocAccessVO> referenceInfo(DocAccessVO docAccessVO){
+		
+		return mapper.referenceInfo(docAccessVO);
+	}
 		
 }

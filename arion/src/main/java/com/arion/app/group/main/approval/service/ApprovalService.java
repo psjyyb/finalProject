@@ -7,5 +7,5 @@ import com.arion.app.common.service.EmployeesVO;
 public interface ApprovalService {
 	public int insertApproval(List<Integer> approverIds, int DocNo, String companyCode);
 	
-	public ApprovalVO apprInfo(ApprovalVO approvalVO);
+	public List<ApprovalVO> apprInfo(ApprovalVO approvalVO);
 }

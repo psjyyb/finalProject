@@ -30,7 +30,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public ApprovalVO apprInfo(ApprovalVO approvalVO) {
+	public List<ApprovalVO> apprInfo(ApprovalVO approvalVO){
 		
 		return mapper.apprInfo(approvalVO);
 	}

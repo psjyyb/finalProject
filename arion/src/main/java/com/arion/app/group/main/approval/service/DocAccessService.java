@@ -11,4 +11,6 @@ public interface DocAccessService {
 	public void insertAddReference(List<EmployeesVO> referenceList, int DocNo, String companyCode);
 	
 	List<EmployeesVO> selectAddReference(int employeeNo, String companyCode);
+	
+	public List<DocAccessVO> referenceInfo(DocAccessVO docAccessVO);
 }

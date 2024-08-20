@@ -23,5 +23,6 @@ public class ApprovalVO {
 	private String employeeName;
 	private String rankName;
 	private String departmentName;
+	private String signImg;
 	private RankVO rank;
 }

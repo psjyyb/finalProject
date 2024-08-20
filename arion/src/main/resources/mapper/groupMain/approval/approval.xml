@@ -28,11 +28,13 @@
 			 , e.employee_name
 			 , e.rank_name
 			 , e.department_name
+			 , e.sign_img
 		FROM approval a JOIN employees e
 						ON a.employee_no = e.employee_no
 		WHERE 1=1 
 		AND a.doc_no = #{docNo}
 		AND a.company_code = #{companyCode}
-		ORDER BY sequence DESC;		
+		ORDER BY sequence DESC	
 	</select>
+	
 </mapper>

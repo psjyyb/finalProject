@@ -11,4 +11,5 @@ public interface DocAccessMapper {
 	public int insertAccess(DocAccessVO docAccessVO);
 	List<EmployeesVO> selectAddReference(@Param("employeeNo") int employeeNo, @Param("companyCode") String companyCode);
 	
+	public List<DocAccessVO> referenceInfo(DocAccessVO docAccessVO);
 }

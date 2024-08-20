@@ -33,4 +33,23 @@
 								WHERE employee_no = #{employeeNo})
 		OR employee_resp IN ('관리직' , '임원'))
 	</select>
+	
+	<select id="referenceInfo" resultType="DocAccessVO">
+		SELECT DISTINCT da.employee_no
+						, da.doc_no
+						, e.employee_name
+						, e.department_name
+						, e.rank_name
+						, e.employee_resp
+						, r.rank_ranking
+		FROM doc_access da JOIN employees e
+						   ON da.employee_no = e.employee_no
+						   JOIN rank r
+						   ON e.rank_name = r.rank_name
+		WHERE 1=1
+		AND da.reference = 1
+		AND da.doc_no = #{docNo}
+		AND da.company_code = #{companyCode}
+		ORDER BY r.rank_ranking ASC
+	</select>
 </mapper>

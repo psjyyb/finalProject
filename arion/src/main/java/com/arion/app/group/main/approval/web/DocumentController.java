@@ -23,7 +23,9 @@ import com.arion.app.common.service.FileService;
 import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.board.service.PageDTO;
+import com.arion.app.group.main.approval.service.ApprovalService;
 import com.arion.app.group.main.approval.service.ApprovalVO;
+import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
@@ -46,6 +48,12 @@ public class DocumentController {
 
 	@Autowired
 	FileService fsvc;
+	
+	@Autowired
+	ApprovalService asvc;
+	
+	@Autowired
+	DocAccessService dasvc;
 	
 	@GetMapping("/group/doc/document")
 	public String document(Model model, HttpSession session) {
@@ -170,17 +178,30 @@ public class DocumentController {
 	}
 	
 	@GetMapping("/group/doc/documentInfo")
-	public String documentInfo(Model model, HttpSession session) {
+	public String documentInfo(Model model, HttpSession session, @RequestParam(value = "docNo", required = false) int docNo) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		DocumentVO documentVO = new DocumentVO();
 		documentVO.setCompanyCode(companyCode);
+		documentVO.setDocNo(docNo);
 		DocumentVO docInfo = dsvc.documentInfo(documentVO);
+		System.out.println(">>>>>>>>>>>>docNo : " + docNo);
 		
-		List<FileVO> fileList = fsvc.selectFiles("document", documentVO.getDocNo(),companyCode);
+		List<FileVO> fileList = fsvc.selectFiles("document", docNo, companyCode);
+		
 		ApprovalVO approvalVO = new ApprovalVO();
 		approvalVO.setCompanyCode(companyCode);
+		approvalVO.setDocNo(docNo);
+		List<ApprovalVO> apprInfo = asvc.apprInfo(approvalVO);
 		
+		DocAccessVO docAccessVO = new DocAccessVO(); 
+		docAccessVO.setCompanyCode(companyCode);
+		docAccessVO.setDocNo(docNo);
+		List<DocAccessVO> referenceInfo = dasvc.referenceInfo(docAccessVO);
 		
+		model.addAttribute("apprInfo", apprInfo);
+		model.addAttribute("fileList", fileList);
+		model.addAttribute("docInfo", docInfo);
+		model.addAttribute("refInfo", referenceInfo);
 		
 		return "group/document/approval/documentInfo";
 	}

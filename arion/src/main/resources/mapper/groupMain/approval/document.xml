@@ -131,6 +131,7 @@
 							, rank_name
 							, doc_status
 							, create_date
+							, appr_status
 							, ROWNUM AS rn
 			FROM (
 				SELECT DISTINCT d.doc_no
@@ -140,6 +141,7 @@
 					  , e.employee_name
 					  , e.rank_name
 					  , d.doc_status
+					  , d.appr_status
 					  , d.create_date
 				FROM document d JOIN doc_access da
 								ON d.doc_no = da.doc_no
@@ -162,9 +164,9 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
-				ORDER BY doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+			ORDER BY doc_no DESC
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
 	</select>
@@ -219,4 +221,10 @@
 		AND company_code = #{companyCode}
 	</update>
 	
+	<update id="updateRejectStatus">
+		UPDATE document
+		SET appr_status = '반려'
+		WHERE doc_no = #{docNo}
+		AND company_code = #{companyCode}
+	</update>
 </mapper>

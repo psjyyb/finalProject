@@ -25,4 +25,6 @@ public interface DocumentService {
 	public DocumentVO documentInfo(DocumentVO documentVO);
 	
 	public void updateApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode, int employeeNo, String signImg);
+
+	public void updateRejectStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode, int employeeNo, String apprReason);
 }

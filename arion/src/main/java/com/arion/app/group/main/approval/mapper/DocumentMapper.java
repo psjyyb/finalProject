@@ -25,5 +25,6 @@ public interface DocumentMapper {
 	public DocumentVO documentInfo(DocumentVO documentVO);
 	
 	public void updateApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode);
-
+	
+	public void updateRejectStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode);
 }

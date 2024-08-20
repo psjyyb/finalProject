@@ -85,7 +85,7 @@
     <div id="apprReason" class="section">
         <div>
             <th:block th:each="appr : ${apprInfo}">
-                <span th:if="${appr.reason != null}" th:text="${appr.reason}"></span>
+                <span th:if="${appr.apprReason != null}" th:text="${appr.apprReason}"></span>
             </th:block>
         </div>
     </div>
@@ -118,7 +118,7 @@
     <!-- 액션 버튼들 -->
     <div class="action-buttons">
         <button th:if="${accessAppr == 1}" type="button" id="approveBtn" th:data-doc-no="${docInfo.docNo}">결재하기</button>
-        <button th:if="${accessAppr == 1}">반려하기</button>
+        <button th:if="${accessAppr == 1}" type="button" id="rejectBtn" th:data-doc-no="${docInfo.docNo}">반려하기</button>
         <button type="button" onclick="location.href='/group/doc/apprProgress'">목록으로</button>
     </div>
 </div>
@@ -142,108 +142,206 @@
     </div>
 </div>
 
+<!-- 반려 모달 -->
+<div id="rejectModal" class="modal">
+    <div class="modal-content">
+        <textarea id="rejectReason" placeholder="반려 사유를 입력하세요."></textarea>
+        <div class="button-group">
+            <button type="button" class="save" id="confirmRejectBtn" th:data-doc-no="${docInfo.docNo}">반려하기</button>
+            <button type="button" class="cancel" onclick="closeRejectModal()">취소</button>
+        </div>
+    </div>
+</div>
+
 <script>
+    // 섹션 표시 함수
+    function showSection(sectionId) {
+        $('.section').removeClass('active-section');
+        $('#' + sectionId).addClass('active-section');
+    }
 
-        // 섹션 표시 함수
-        function showSection(sectionId) {
-            $('.section').removeClass('active-section');
-            $('#' + sectionId).addClass('active-section');
-        }
+    // 결재 버튼 클릭 시
+    $('#approveBtn').on('click', function() {
+        const docNo = this.getAttribute('data-doc-no');
+        checkApproval(docNo);
+    });
 
-        // 결재 버튼 클릭 시
-        $('#approveBtn').on('click', function() {
-            const docNo = this.getAttribute('data-doc-no');
-            checkApproval(docNo);
+    // 결재 권한 확인 함수
+    function checkApproval(docNo) {
+        console.log(docNo);
+        $.ajax({
+            url: '/group/doc/checkApproval',
+            method: 'POST',
+            data: { docNo: docNo }
+        })
+        .done(function(hasApproval) {
+            if (hasApproval) {
+                openApprovalModal(docNo);
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '권한 없음',
+                    text: '결재 순서가 아닙니다.',
+                    confirmButtonText: '확인'
+                });
+            }
+        })
+        .fail(function() {
+            Swal.fire({
+                icon: 'warning',
+                title: '권한 없음',
+                text: '결재 순서가 아닙니다.',
+                confirmButtonText: '확인'
+            });
         });
+    }
 
-        // 결재 권한 확인 함수
-        function checkApproval(docNo) {
-        	console.log(docNo)
-            $.post('/group/doc/checkApproval', { docNo: docNo })
-                .done(function(hasApproval) {
-                    if (hasApproval) {
-                        openApprovalModal(docNo);
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '권한 없음',
-                            text: '결재 순서가 아닙니다.',
-                            confirmButtonText: '확인'
-                        });
+    // 모달 열기
+    function openApprovalModal(docNo) {
+        $('#approvalModal').data('docno', docNo).show();
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        $('#approvalModal').hide();
+    }
+
+    // 서명하기 버튼 클릭 시 결재 처리
+    $('#confirmSignBtn').on('click', function() {
+        const docNo = $('#approvalModal').data('docno');
+        submitApproval(docNo);
+    });
+
+    // 결재 처리 함수
+    function submitApproval(docNo) {
+        const signImg = $('#signatureImage').attr('src').split('/').pop(); // 파일 이름만 가져오기
+        console.log(signImg);
+        $.ajax({
+            url: '/group/doc/approveDocument',
+            method: 'POST',
+            data: { docNo: docNo, signImg: signImg }
+        })
+        .done(function(data) {
+            Swal.fire({
+                icon: 'success',
+                title: '결재 완료',
+                text: data,
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const approverIndex = getCurrentApproverIndex();
+                    if (approverIndex !== -1) {
+                        const imgElement = $('#signature-pad-' + approverIndex);
+                        imgElement.attr('src', '/files/signatures/' + signImg); // 새로운 서명 이미지로 대체
                     }
-                })
-                .fail(function() {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '권한 없음',
-                        text: '결재 순서가 아닙니다.',
-                        confirmButtonText: '확인'
-                    });
-                });
-        }
-
-        // 모달 열기
-        function openApprovalModal(docNo) {
-            $('#approvalModal').data('docno', docNo).show();
-        }
-
-        // 모달 닫기
-        function closeModal() {
-            $('#approvalModal').hide();
-        }
-
-        // 서명하기 버튼 클릭 시 결재 처리
-        $('#confirmSignBtn').on('click', function() {
-            const docNo = $('#approvalModal').data('docno');
-            submitApproval(docNo);
-        });
-
-        // 결재 처리 함수
-        function submitApproval(docNo) {
-        	const signImg = $('#signatureImage').attr('src').split('/').pop(); // 파일 이름만 가져오기
-        	console.log(signImg);
-            $.post('/group/doc/approveDocument', { docNo: docNo, signImg: signImg })
-                .done(function(data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '결재 완료',
-                        text: data,
-                        confirmButtonText: '확인'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                        	 // 새로고침 없이 페이지에 서명 이미지 바로 추가
-                            const approverIndex = getCurrentApproverIndex();
-                            if (approverIndex !== -1) {
-                                const imgElement = $('#signature-pad-' + approverIndex);
-                                imgElement.attr('src', '/files/signatures/' + signImg); // 새로운 서명 이미지로 대체
-                            }
-                            closeModal();
-                        }
-                    });
-                })
-                .fail(function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '오류 발생',
-                        text: '결재 처리 중 오류가 발생했습니다.',
-                        confirmButtonText: '확인'
-                    });
-                });
-        }
-
-        // 현재 결재자의 인덱스를 가져오는 함수
-        function getCurrentApproverIndex() {
-            let currentIndex = -1;
-            const apprInfo = /*[[${apprInfo}]]*/ [];
-            const employeeNo = /*[[${employeeNo}]]*/ 0;
-            apprInfo.forEach((appr, index) => {
-                if (appr.employeeNo === employeeNo) {
-                    currentIndex = index;
+                    closeModal();
                 }
             });
-            return currentIndex;
+        })
+        .fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '오류 발생',
+                text: '결재 처리 중 오류가 발생했습니다.',
+                confirmButtonText: '확인'
+            });
+        });
+    }
+
+    // 현재 결재자의 인덱스를 가져오는 함수
+    function getCurrentApproverIndex() {
+        let currentIndex = -1;
+        const apprInfo = /*[[${apprInfo}]]*/ [];
+        const employeeNo = /*[[${employeeNo}]]*/ 0;
+        apprInfo.forEach((appr, index) => {
+            if (appr.employeeNo === employeeNo) {
+                currentIndex = index;
+            }
+        });
+        return currentIndex;
+    }
+
+    $('#rejectBtn').on('click', function() {
+        const docNo = this.getAttribute('data-doc-no');
+        checkCanReject(docNo);
+    });
+
+    // 반려 가능 여부 확인
+    function checkCanReject(docNo) {
+        $.ajax({
+            url: '/group/doc/checkCanReject',
+            method: 'POST',
+            data: { docNo: docNo }
+        })
+        .done(function(canReject) {
+            if (canReject > 0) { // 반려 가능
+                $('#rejectModal').show();
+            } else { // 반려 불가능
+                Swal.fire({
+                    icon: 'warning',
+                    title: '반려 불가',
+                    text: '이미 결재한 문서는 반려할 수 없습니다.',
+                    confirmButtonText: '확인'
+                });
+            }
+        })
+        .fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '오류 발생',
+                text: '반려 가능 여부 확인 중 오류가 발생했습니다.',
+                confirmButtonText: '확인'
+            });
+        });
+    }
+
+    // 반려 모달 닫기
+    function closeRejectModal() {
+        $('#rejectModal').hide();
+    }
+
+    // 반려하기 버튼 클릭 시 반려 처리
+    $('#confirmRejectBtn').on('click', function() {
+        const docNo = this.getAttribute('data-doc-no');
+        const apprReason = $('#rejectReason').val();
+
+        if (apprReason === "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '반려 사유 입력',
+                text: '반려 사유를 입력해주세요.',
+                confirmButtonText: '확인'
+            });
+            return; // 반려 처리를 중단
         }
 
+        $.ajax({
+            url: '/group/doc/rejectDocument',
+            method: 'POST',
+            data: { docNo: docNo, apprReason: apprReason }
+        })
+        .done(function(data) {
+            Swal.fire({
+                icon: 'success',
+                title: '반려 완료',
+                text: data,
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    closeRejectModal();
+                    location.reload(); // 페이지를 새로고침하여 반영된 내용을 확인
+                }
+            });
+        })
+        .fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '오류 발생',
+                text: '반려 처리 중 오류가 발생했습니다.',
+                confirmButtonText: '확인'
+            });
+        });
+    });
 </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ import lombok.Data;
 public class ApprovalVO {
 	private int apprNo;
 	private String apprStatus;
-	private String reason;
+	private String apprReason;
 	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date signDate;
 	private int sequence;

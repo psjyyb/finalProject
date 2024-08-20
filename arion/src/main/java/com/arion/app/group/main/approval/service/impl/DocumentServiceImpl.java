@@ -128,12 +128,16 @@ public class DocumentServiceImpl implements DocumentService{
 	@Transactional
 	public void updateApprStatus(int docNo, String companyCode, int employeeNo, String signImg) {
 		
+		//결재자 결재완료 등록
 		asvc.approveDocument(employeeNo, docNo, companyCode);
 		
+		//다음 결재 순번 추가
 		asvc.updateNextLine(docNo, companyCode);
 		
+		//서명 FK값 조회
 		int apprNo = asvc.getApprNo(employeeNo, docNo, companyCode);
 		
+		//서명 등록
 		SignVO signVO = new SignVO();
 		signVO.setSignImg(signImg);
 		signVO.setApprNo(apprNo); 
@@ -142,7 +146,23 @@ public class DocumentServiceImpl implements DocumentService{
 		signVO.setCompanyCode(companyCode);
 		ssvc.apprSign(signVO);
 		
+		//문서 결재상태 변경
 		mapper.updateApprStatus(docNo, companyCode);		
+	}
+
+	@Override
+	@Transactional
+	public void updateRejectStatus(int docNo, String companyCode, int employeeNo, String apprReason) {
+		
+		//문서 반려상태 등록
+		mapper.updateRejectStatus(docNo, companyCode);
+		
+		//결재자 반려상태 등록
+		asvc.rejectDocument(docNo, companyCode, employeeNo, apprReason);
+		
+		//다음 결재자 미결 처리
+		asvc.nextApprStatus(docNo, companyCode, employeeNo);
+		
 	}
 
 }

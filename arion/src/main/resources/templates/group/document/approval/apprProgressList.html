@@ -121,14 +121,18 @@
 			<form th:action="@{/group/doc/apprProgress}" method="get"
 				th:object="${criteria}">
 				<div>
-					<label>제목</label> <input type="text" name="docTitle"
-						th:value="${criteria.docTitle}"> <label>기안자</label> <input
-						type="text" name="writer" th:value="${criteria.writer}">
+					<label>제목</label> 
+					<input type="text" name="docTitle" th:value="${criteria.docTitle}"> 
+					<label>기안자</label> 
+					<input type="text" name="writer" th:value="${criteria.writer}">
+					
 				</div>
 				<div>
-					<label>상신일자</label> <input type="date" name="startDate"
-						th:value="${criteria.startDate}"> <label> ~ </label> <input
-						type="date" name="endDate" th:value="${criteria.endDate}">
+					<label>상신일자</label> 
+					<input type="date" name="startDate" th:value="${criteria.startDate}"> 
+					<label> ~ </label> 
+					<input type="date" name="endDate" th:value="${criteria.endDate}">
+					
 					<button type="submit">검색</button>
 				</div>
 			</form>
@@ -158,7 +162,7 @@
 							<td th:text="${document.docTitle}"></td>
 							<td th:text="${document.employeeName}"></td>
 							<td th:text="${document.rankName}"></td>
-							<td th:text="${document.docStatus}"></td>
+							<td th:text="${document.apprStatus}"></td>
 							<td th:text="${#dates.format(document.createDate, 'yyyy-MM-dd')}"></td>
 						</tr>
 					</th:block>

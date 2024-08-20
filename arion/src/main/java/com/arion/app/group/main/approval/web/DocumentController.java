@@ -244,10 +244,36 @@ public class DocumentController {
 	 public String approveDocument(HttpSession session, @RequestParam int docNo, @RequestParam String signImg) {
 		 String companyCode = (String) session.getAttribute("companyCode");
 		 int employeeNo = (int) session.getAttribute("employeeNo");
-
-	
 		 dsvc.updateApprStatus(docNo, companyCode, employeeNo, signImg);
 		 return "결재가 성공적으로 처리되었습니다.";
 		
+	 }
+	 
+	 @PostMapping("/group/doc/checkCanReject")
+	 @ResponseBody
+	 public String checkCanReject(HttpSession session, @RequestParam int docNo) {
+	     String companyCode = (String) session.getAttribute("companyCode");
+	     int employeeNo = (int) session.getAttribute("employeeNo");
+	     
+	     int approvalCount = asvc.hasApproved(employeeNo, docNo, companyCode);
+	     if(approvalCount > 0) {	    	 
+	    	 return "이미 결재된 문서는 반려할 수 없습니다";
+	     }
+	     return "반려할 수 있습니다";
+	 }	
+	 
+	 @PostMapping("/group/doc/rejectDocument")
+	 @ResponseBody
+	 public String rejectDocument(HttpSession session, @RequestParam int docNo, @RequestParam String reason) {
+	     String companyCode = (String) session.getAttribute("companyCode");
+	     int employeeNo = (int) session.getAttribute("employeeNo");
+
+	     try {
+	    	 dsvc.updateRejectStatus(docNo, companyCode, employeeNo, reason);	    	 
+	    	 return "문서가 성공적으로 반려되었습니다.";
+	     }catch (Exception e) {
+	    	 return "반려 처리중 오류가 발생했습니다.";
+	     }
+	  
 	 }
 }

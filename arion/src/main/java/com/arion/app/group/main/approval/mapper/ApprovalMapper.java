@@ -20,4 +20,10 @@ public interface ApprovalMapper {
 	public void updateNextLine(int docNo, String companyCode);
 	
 	public int getApprNo(@Param("employeeNo") int employeeNo, @Param("docNo") int docNo, @Param("companyCode") String companyCode);
+
+	public int hasApproved(@Param("employeeNo") int employeeNo, @Param("docNo") int docNo, @Param("companyCode") String companyCode);
+	
+	public void rejectDocument(@Param("docNo") int docNo, @Param("companyCode") String companyCode, @Param("employeeNo") int employeeNo, @Param("apprReason") String apprReason);
+	public void nextApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode, @Param("employeeNo") int employeeNo);
+
 }

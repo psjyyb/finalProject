@@ -95,4 +95,22 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return mapper.getApprNo(employeeNo, docNo, companyCode);
 	}
 
+	@Override
+	public int hasApproved(int employeeNo, int docNo, String companyCode) {
+		
+		return mapper.hasApproved(employeeNo, docNo, companyCode);
+	}
+
+	@Override
+	public void rejectDocument(int docNo, String companyCode, int employeeNo, String apprReason) {
+		
+		mapper.rejectDocument(docNo, companyCode, employeeNo, apprReason);
+	}
+	
+	@Override
+	public void nextApprStatus(int docNo, String companyCode, int employeeNo) {
+		
+		mapper.nextApprStatus(docNo, companyCode, employeeNo);
+	}
+
 }

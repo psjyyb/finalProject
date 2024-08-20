@@ -133,7 +133,7 @@
 							, create_date
 							, ROWNUM AS rn
 			FROM (
-				SELECT d.doc_no
+				SELECT DISTINCT d.doc_no
 					  , e.department_name
 					  , d.doc_name
 					  , d.doc_title
@@ -162,7 +162,7 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
-				ORDER BY d.doc_no DESC
+				ORDER BY doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)
@@ -199,7 +199,7 @@
 			  , d.doc_title
 			  , d.doc_name
 			  , d.create_date
-			  , d.doc_status
+			  , d.appr_status
 			  , d.finish_date
 			  , d.doc_content
 			  , d.company_code
@@ -211,5 +211,12 @@
 		WHERE d.doc_no = #{docNo}
 		AND d.company_code = #{companyCode}
 	</select>
+	
+	<update id="updateApprStatus">
+		UPDATE document
+		SET appr_status = '결재진행중'
+		WHERE doc_no = #{docNo}
+		AND company_code = #{companyCode}
+	</update>
 	
 </mapper>

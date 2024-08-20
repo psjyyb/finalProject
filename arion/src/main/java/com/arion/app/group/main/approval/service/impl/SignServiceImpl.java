@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.main.approval.mapper.SignMapper;
 import com.arion.app.group.main.approval.service.SignService;
+import com.arion.app.group.main.approval.service.SignVO;
 
 @Service
 public class SignServiceImpl implements SignService {
-	
+
 	@Autowired
 	SignMapper mapper;
-	
+
 	@Override
 	public String empSign(String companyCode, String employeeId) {
 		return mapper.empSign(companyCode, employeeId);
@@ -26,15 +27,23 @@ public class SignServiceImpl implements SignService {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 		int result = mapper.insertSign(employeeVO);
-		
-		if(result == 1) {
+
+		if (result == 1) {
 			isSuccessed = true;
 		}
-		
+
 		map.put("result", isSuccessed);
 		map.put("target", employeeVO);
-		
+
 		return map;
+	}
+
+	@Override
+	public void apprSign(SignVO signVO) {
+
+		if (signVO != null) {
+			mapper.apprSign(signVO);
+		}
 	}
 
 }

@@ -31,7 +31,7 @@
 								SELECT department_name
 								FROM employees
 								WHERE employee_no = #{employeeNo})
-		OR employee_resp IN ('관리직' , '임원'))
+		OR employee_resp IN ('임원'))
 	</select>
 	
 	<select id="referenceInfo" resultType="DocAccessVO">
@@ -51,5 +51,14 @@
 		AND da.doc_no = #{docNo}
 		AND da.company_code = #{companyCode}
 		ORDER BY r.rank_ranking ASC
+	</select>
+	
+	<select id="accessAppr" resultType="int">
+		SELECT MAX(access_appr)
+		FROM doc_access
+		WHERE 1=1
+		AND doc_no = #{docNo}
+		AND company_code = #{companyCode}
+		AND employee_no = #{employeeNo}
 	</select>
 </mapper>

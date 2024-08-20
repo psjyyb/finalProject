@@ -17,4 +17,21 @@
 		AND employee_id = #{employeeId}
 		AND company_code = #{companyCode}
 	</update>
+	
+	<insert id="apprSign" parameterType="SignVO">
+		INSERT INTO sign (sign_no
+			  		, sign_img
+			  		, appr_no
+			  		, doc_no
+			  		, employee_no
+			  		, company_code
+		) VALUES (sign_seq.NEXTVAL
+				, #{signImg}
+				, #{apprNo}
+				, #{docNo}
+				, #{employeeNo}
+				, #{companyCode}
+		)
+	</insert>
+	
 </mapper>

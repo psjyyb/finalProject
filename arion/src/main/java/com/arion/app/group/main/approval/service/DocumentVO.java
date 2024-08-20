@@ -22,6 +22,7 @@ public class DocumentVO {
 	private String docStatus;
 	private String companyCode;
 	private int employeeNo;
+	private String apprStatus;
 	
 	private String employeeName;
 	private String rankName;

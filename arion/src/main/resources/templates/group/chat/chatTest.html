@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>ARION</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+    <div id="chat-box"></div>
+    
+    <input type="text" id="chat-outgoing-msg" placeholder="Type a message...">
+    <button id="chat-send">Send</button>
+
+    <script>
+        var stompClient = null;
+		
+        function connect() {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/messages', function (message) {
+                    showMessage(JSON.parse(message.body));
+                });
+            });
+        }
+
+        function sendMessage() {
+            var messageContent = document.getElementById('chat-outgoing-msg').value;
+            stompClient.send("/app/chat", {}, JSON.stringify({
+                'senderId': 'User1', 
+                'content': messageContent
+            }));
+            document.getElementById('chat-outgoing-msg').value = '';
+        }
+
+        function showMessage(message) {
+            var chatBox = document.getElementById('chat-box');
+            var messageElement = document.createElement('div');
+            messageElement.innerHTML = `<b>${message.sender}:</b> ${message.content}`;
+            chatBox.appendChild(messageElement);
+        }
+
+        document.getElementById('chat-send').onclick = function() {
+            sendMessage();
+        }
+
+        window.onload = connect;
+    </script>
+</body>
+</html>

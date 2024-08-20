@@ -36,11 +36,11 @@ public class SpringSecurityConfig {
         //http.headers().cacheControl().disable();
         
         http.authorizeHttpRequests()
-                .antMatchers("/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**").permitAll()
+                .antMatchers("/**", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**", "/wsocket/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/pay/**").hasAnyRole("NO")
-                .antMatchers("/group/**").hasAnyRole("임원", "일반사원", "사원관리자")
+                .antMatchers("/group/**").hasAnyRole("임원", "일반직", "관리직")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()

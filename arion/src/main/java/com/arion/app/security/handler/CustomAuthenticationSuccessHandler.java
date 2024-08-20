@@ -47,14 +47,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	 
 
 	    System.out.println("세션에 저장되는 정보들");
-	    System.out.println("회사코드 : " + userDetail.getCompanyCode());
-	    System.out.println("아이디 : " + userDetail.getUsername());
-	    System.out.println("직급 : " + userDetail.getRankName());
-	    System.out.println("부서이름 : " + userDetail.getDepartmentName());
-	    System.out.println("사원이름 : " + userDetail.getEmpName());
-	    System.out.println("대표이름 : " + userDetail.getCeoName());
-	    System.out.println("사원번호 : " + userDetail.getEmployeeNo());
-	    System.out.println("사이트권한 : " + userDetail.getSiteResp());
+	    System.out.println("회사코드 : companyCode : " + userDetail.getCompanyCode());
+	    System.out.println("아이디 : loginId : " + userDetail.getUsername());
+	    System.out.println("직급 : rankName : " + userDetail.getRankName());
+	    System.out.println("부서이름 : department : " + userDetail.getDepartmentName());
+	    System.out.println("사원이름 : empName : " + userDetail.getEmpName());
+	    System.out.println("대표이름 : ceoName : " + userDetail.getCeoName());
+	    System.out.println("사원번호 : employeeNo : " + userDetail.getEmployeeNo());
+	    System.out.println("사이트권한 : siteResp : " + userDetail.getSiteResp());
 
 	    	getModuleVO  getmodule= new getModuleVO();
 	        // 상위 모듈 리스트 조회
@@ -88,7 +88,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			} else if (roleName.equals("ROLE_NO")) {
 				redirectUrl = "/home";
 				break;
-			} else if (roleName.equals("ROLE_일반사원") || roleName.equals("ROLE_사원관리자")) {
+			} else if (roleName.equals("ROLE_일반직") || roleName.equals("ROLE_관리직") || roleName.equals("ROLE_임원")) {
 				redirectUrl = "/group";
 				break;
 			}

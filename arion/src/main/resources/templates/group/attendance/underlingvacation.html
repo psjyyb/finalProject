@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+
+<title>underlingvacation</title>
+</head>
+<input type="hidden" id="employeeno"  th:value="${employeeNo}")>
+<h2 th:text="${underlingName}+'의 휴가 기록'"></h2>
+
+<body onload="autoReload();">
+	
+	       <div >
+				<label >연차별 기록:</label> <select id="years" name="years">
+					
+					<option th:each=" years :${yearsList}" th:value="${years.years}"
+						th:text="${years.period}">없음</option>
+				</select>
+			</div>
+	<span>사용일수</span><p id="used"></p><span>남은일수</span><p id="remaining"></p><span>총휴가일수</span><p id="vacation"></p><span>유효기간</span><p id="expirationdate"></p>
+			<div colspan="4" align="right">
+			<button id="download">다운로드</button>
+			<a href="/group/attendance/underlingvacationlist">되돌아가기</a>
+	
+	</div>
+	<table align="center" id="vacationtable" width="80%"  height ="30%">
+		<tr>
+		    <th width="20%">일자</th>
+			<th width="10%">휴가 유형</th>
+			<th width="8%">휴가일수</th>
+			<th width="7%">상태</th>
+			<th width="17%">신청일자</th>
+		</tr>
+		
+	</table>
+			
+	<script th:src="@{/js/group/attendance/vacation.js}"></script>
+</body>
+</html >

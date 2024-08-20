@@ -1,0 +1,164 @@
+@charset "EUC-KR";
+
+.container2 {
+	background-color: #fff;
+	padding: 30px;
+	border-radius: 15px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	max-width: 100%;
+	margin: 40px auto;
+}
+
+.header2 {
+	font-size: 24px;
+	font-weight: bold;
+	color: #007bff;
+	margin-bottom: 30px;
+}
+
+.row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	align-items: flex-start;
+}
+
+.button-container {
+	flex: 1;
+	margin-right: 20px;
+}
+
+.form-group input[type="text"], .form-group select, .form-group input[type="file"]
+	{
+	padding: 10px;
+	border-radius: 4px;
+	border: 1px solid #ced4da;
+	font-size: 16px;
+	color: #495057;
+	width: 100%;
+	background-color: #f8f9fa;
+}
+
+.form-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 30px;
+	table-layout: fixed;
+}
+
+.form-table th, .form-table td {
+	border: 1px solid #dee2e6;
+	padding: 15px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.form-table th {
+	background-color: #e9ecef;
+	font-weight: bold;
+	color: #495057;
+	width: 20%;
+}
+
+.form-table td {
+	width: 40%;
+}
+
+.btn-group {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.btn-group button {
+	padding: 12px 25px;
+	margin-left: 15px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.btn-group .save {
+	background-color: #007bff;
+	color: #fff;
+}
+
+.btn-group .cancel {
+	background-color: #6c757d;
+	color: #fff;
+}
+
+.placeholder-message {
+	text-align: center;
+	color: #888;
+	font-size: 16px;
+	padding: 40px 0;
+	border: 1px dashed #ced4da;
+	border-radius: 4px;
+}
+
+h5 {
+	margin: 0;
+	font-size: 18px;
+	color: #495057;
+}
+
+.modal-body {
+	display: flex;
+	padding: 20px;
+}
+
+.department-list {
+	width: 40%;
+	padding-right: 20px;
+	border-right: 1px solid #dee2e6;
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+.department-item {
+	padding: 10px;
+	cursor: pointer;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.employee-list {
+	width: 60%;
+	padding-left: 20px;
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+.employee-item {
+	padding: 10px;
+	border-bottom: 1px solid #dee2e6;
+	cursor: pointer;
+}
+
+#selectedApproversList, #selectedReferencesList {
+	list-style-type: none;
+	padding: 0;
+	margin-top: 10px;
+}
+
+#selectedApproversList li, #selectedReferencesList li {
+	padding: 5px;
+	border: 1px solid #dee2e6;
+	margin-bottom: 5px;
+	border-radius: 4px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#selectedApproversList li button, #selectedReferencesList li button {
+	margin-left: 10px;
+	border: none;
+	background-color: #ff4d4d;
+	color: white;
+	padding: 2px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+

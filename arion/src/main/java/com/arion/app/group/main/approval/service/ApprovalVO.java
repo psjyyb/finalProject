@@ -4,6 +4,11 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.arion.app.group.admin.service.RankVO;
+
+import lombok.Data;
+
+@Data
 public class ApprovalVO {
 	private int apprNo;
 	private String apprStatus;
@@ -15,4 +20,5 @@ public class ApprovalVO {
 	private int docNo;
 	private int employeeNo;
 	
+	private RankVO rank;
 }

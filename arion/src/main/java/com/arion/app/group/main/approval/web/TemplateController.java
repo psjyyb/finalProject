@@ -73,6 +73,7 @@ public class TemplateController {
 		System.out.println("docType: " + tempVO.getDocType());
 		System.out.println("files" + files[0]);
 		System.out.println("files" + files[1]);
+		System.out.println("docName: " +tempVO.getDocName());
 
 		if (files.length > 0) {
 			MultipartFile docFile = files[0];

@@ -190,7 +190,7 @@
   });
   
         
-        console.log();
+        
   
 		//특일       
         let endday = new Date(today.getFullYear(), today.getMonth()+1, 0);

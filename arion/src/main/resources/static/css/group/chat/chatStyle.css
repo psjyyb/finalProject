@@ -87,12 +87,12 @@ html, body {
 
 .sidebar {
     background-color: #f8f9fa;
-    padding: 20px;
     border-right: 1px solid #ddd;
+    width: 250px !important; /* 사이드바의 고정 너비 */
     height: 100vh;
     overflow: hidden; /* 사이드바에서 스크롤바 제거 */
+    position: relative;
 }
-
 .chat-rooms {
     margin-bottom: 20px;
 }

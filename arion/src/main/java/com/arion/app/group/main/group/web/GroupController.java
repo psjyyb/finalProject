@@ -112,7 +112,7 @@ public class GroupController {
         newAddress.setAddrEmail(addrEmail);
         newAddress.setAddrRank(addrRank);
         newAddress.setEmployeeId(employeeId);
-
+        System.out.println(employeeId+"ddddddddddddddddddddddddddddddd");
         try {
             gsvc.registerAddress(newAddress);
             model.addAttribute("message", "주소록이 성공적으로 등록되었습니다.");
@@ -136,6 +136,7 @@ public class GroupController {
     @ResponseBody
     public Map<String, Object> addressEdit(@RequestBody AddressVO addressVO) {
         return gsvc.updateAddress(addressVO);
+   
     }
     
     // 주소록 삭제 처리

@@ -15,6 +15,7 @@ public class Criteria {
 	private String writer; // 기안자 검색어
 	private String startDate; // 검색 시작 날짜
 	private String endDate; // 검색 종료 날짜
+	private String boardCategory; //게시판 유형
 
 	public Criteria() {
 		this(1, 10);

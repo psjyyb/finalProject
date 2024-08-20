@@ -20,6 +20,8 @@ public class BoardVO {
 	private String companyCode;		//회사번호
 	private int viewCnt;		    //조회수
 	
+	private int rankName;			//직급이름
+	
 	private int fileNo;				 //파일번호
 	private String fileName;		 //파일이름
 	private String fileoriginalName; //파일원본이름

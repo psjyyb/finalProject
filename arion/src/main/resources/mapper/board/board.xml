@@ -1,138 +1,251 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.board.mapper.BoardMapper">
-	
-	<sql id="search">
-		<where>
-			<if test="keyword != null and keyword != ''">
-			<choose>
-                <!-- 검색 유형이 있을 때 -->
-                <when test="searchType != null and searchType != ''">
-                    <choose>
-                        <when test="'boardTitle'.equals( searchType )">
-                            AND board_title LIKE '%' || #{keyword} || '%'
-                        </when>
-                        <when test="'boardContent'.equals( searchType )">
-                            AND board_content LIKE '%' || #{keyword} || '%'
-                        </when>
-                        <when test="'employeeName'.equals( searchType )">
-                           AND employee_no in ( select employee_no
-                    							from employees
-                    		    				where employee_name like '%' ||  #{keyword} || '%' )
-                        </when>
-                    </choose>
-                </when>
-            </choose>
-        </if>
-		</where>
-	</sql>
-	
-	<!-- 전체 게시글 조회 + 페이징 -->
- 	<select id="selectBoardAll" resultType="BoardVO">
-    SELECT *
-    FROM (
-        SELECT
-            rownum AS rnum, 
-            board_no, 
-            board_title, 
-            board_content, 
-            write_date, 
-            employee_no,
-            viewCnt,
-            find_emp_name(b.employee_no) AS employee_name
+
+    <sql id="search">
+        <where>
+            board_category = #{boardCategory}
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <!-- 검색 유형이 있을 때 -->
+                    <when test="searchType != null and searchType != ''">
+                        <choose>
+                            <when test="'boardTitle'.equals(searchType)">
+                                AND board_title LIKE '%' || #{keyword} || '%'
+                            </when>
+                            <when test="'boardContent'.equals(searchType)">
+                                AND board_content LIKE '%' || #{keyword} || '%'
+                            </when>
+                            <when test="'employeeName'.equals(searchType)">
+                                AND employee_no IN (
+                                    SELECT employee_no
+                                    FROM employees
+                                    WHERE employee_name LIKE '%' || #{keyword} || '%'
+                                )
+                            </when>
+                        </choose>
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 게시글 조회 + 페이징 -->
+    <select id="selectBoardAll" resultType="BoardVO">
+        SELECT *
         FROM (
-            SELECT 
+            SELECT
+                rownum AS rnum, 
                 board_no, 
-                board_title,
+                board_title, 
                 board_content, 
                 write_date, 
                 employee_no,
-                viewCnt
-            FROM board
-            <include refid="search"></include>
-            ORDER BY board_no DESC
-        ) b
-        WHERE rownum <![CDATA[<=  ]]> #{pageNum} * #{amount}
-    )
-    WHERE rnum > (#{pageNum} - 1) * #{amount}
+                viewCnt,
+                find_emp_name(b.employee_no) AS employee_name
+            FROM (
+                SELECT 
+                    board_no, 
+                    board_title,
+                    board_content, 
+                    write_date, 
+                    employee_no,
+                    viewCnt
+                FROM board
+                <include refid="search" />
+                ORDER BY board_no DESC
+            ) b
+            WHERE rownum <![CDATA[<=]]> #{pageNum} * #{amount}
+        )
+        WHERE rnum > (#{pageNum} - 1) * #{amount}
+    </select>
 
-	</select>
+    <!-- 조회수 -->
+    <update id="ViewCnt" parameterType="int">
+        UPDATE board
+        SET viewCnt = viewCnt + 1
+        WHERE board_no = #{boardNo}
+    </update>
 
-	<!-- 글 상세조회 -->
-	<select id="selectBoardInfo" resultType="BoardVO">
-		SELECT board_no
-        		, board_title
-        		, board_content
-        		, write_date
-        		, employee_no
-        		, viewCnt
-        		, find_emp_name(employee_no)  AS employee_name
-		FROM board
-		WHERE board_no = #{boardNo} 
-	</select>
-	
-	<!-- 글 등록 -->
- 	<insert id="insertBoardInfo" parameterType="BoardVO">
-	<selectKey keyProperty="boardNo"
-				   resultType="Integer"
-				   order="BEFORE">
-			SELECT NVL(MAX(board_no),0) + 1
-			FROM board
-		</selectKey>
-	INSERT INTO board
-		(
-			board_no
-			, board_title
-			, board_content
-			, employee_no
-			, write_date
-			, viewCnt
-			, board_category
-			, company_code
-			)	
-		VALUES
-		(
-			#{boardNo}
-			, #{boardTitle}
-			, #{boardContent}
-			, #{employeeNo}
-			, sysDate
-			, #{viewCnt}
-			, #{boardCategory}
-			, #{companyCode}
-		)
-	</insert>
-	
-	<!-- 수정 -->
-	<update id="updateBoardInfo" parameterType="BoardVO">
-		UPDATE board
-		   SET
-		   		board_title = #{boardTitle}
-		   		, board_content = #{boardContent}
-		 WHERE board_no = #{boardNo}
-	</update>
-	
-	<!-- 글 삭제 -->
-	<delete id="deleteBoardInfo" parameterType="int">
-		DELETE FROM board
-		WHERE board_no = #{boardNo}
-	</delete>
-	
-	<!-- 조회수 -->
-	<update id="ViewCnt" parameterType="int">
-	UPDATE board
-	SET viewCnt = viewCnt + 1
-	WHERE board_no = #{boardNo}
-	</update>
-	
-	<!-- 게시글 수 -->
-	<select id="getTotal" resultType="int">
-	SELECT COUNT(*)
-	FROM board
-	<include refid="search"></include>
-	
-	<!-- 작성자 검색 -->
-	</select >
+    <!-- 게시글 수 -->
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM board
+        <include refid="search" />
+    </select>
 
-	
+    <!-- 공지사항 상세조회 -->
+    <select id="noticeselectBoardInfo" resultType="BoardVO">
+        SELECT 
+            board_no,
+            board_title,
+            board_content,
+            write_date,
+            employee_no,
+            viewCnt,
+            find_emp_name(employee_no) AS employee_name
+        FROM board
+        WHERE board_no = #{boardNo}
+    </select>
+
+    <!-- 공지사항 글등록 -->
+    <insert id="noticeinsertBoardInfo" parameterType="BoardVO">
+        <selectKey keyProperty="boardNo" resultType="Integer" order="BEFORE">
+            SELECT NVL(MAX(board_no), 0) + 1 FROM board
+        </selectKey>
+        INSERT INTO board
+        (
+            board_no,
+            board_title,
+            board_content,
+            employee_no,
+            write_date,
+            viewCnt,
+            board_category,
+            company_code
+        )
+        VALUES
+        (
+            #{boardNo},
+            #{boardTitle},
+            #{boardContent},
+            #{employeeNo},
+            sysDate,
+            #{viewCnt},
+            #{boardCategory},
+            #{companyCode}
+        )
+    </insert>
+
+    <!-- 공지사항 글 수정 -->
+    <update id="noticeupdateBoardInfo" parameterType="BoardVO">
+        UPDATE board
+        SET
+            board_title = #{boardTitle},
+            board_content = #{boardContent}
+        WHERE board_no = #{boardNo}
+    </update>
+
+    <!-- 공지사항 글 삭제 -->
+    <delete id="noticedeleteBoardInfo" parameterType="int">
+        DELETE FROM board
+        WHERE board_no = #{boardNo}
+    </delete>
+
+    <!-- 자유게시판 글 상세조회 -->
+    <select id="selectBoardInfo" resultType="BoardVO">
+        SELECT 
+            board_no,
+            board_title,
+            board_content,
+            write_date,
+            employee_no,
+            viewCnt,
+            find_emp_name(employee_no) AS employee_name
+        FROM board
+        WHERE board_no = #{boardNo}
+    </select>
+
+    <!-- 자유게시판 글 등록 -->
+    <insert id="insertBoardInfo" parameterType="BoardVO">
+        <selectKey keyProperty="boardNo" resultType="Integer" order="BEFORE">
+            SELECT NVL(MAX(board_no), 0) + 1 FROM board
+        </selectKey>
+        INSERT INTO board
+        (
+            board_no,
+            board_title,
+            board_content,
+            employee_no,
+            write_date,
+            viewCnt,
+            board_category,
+            company_code
+        )
+        VALUES
+        (
+            #{boardNo},
+            #{boardTitle},
+            #{boardContent},
+            #{employeeNo},
+            sysDate,
+            #{viewCnt},
+            #{boardCategory},
+            #{companyCode}
+        )
+    </insert>
+
+    <!-- 자유게시판 글 수정 -->
+    <update id="updateBoardInfo" parameterType="BoardVO">
+        UPDATE board
+        SET
+            board_title = #{boardTitle},
+            board_content = #{boardContent}
+        WHERE board_no = #{boardNo}
+    </update>
+
+    <!-- 자유게시판 글 삭제 -->
+    <delete id="deleteBoardInfo" parameterType="int">
+        DELETE FROM board
+        WHERE board_no = #{boardNo}
+    </delete>
+
+    <!-- 부서게시판 상세조회 -->
+    <select id="deptselectBoardInfo" resultType="BoardVO">
+        SELECT 
+            board_no,
+            board_title,
+            board_content,
+            write_date,
+            employee_no,
+            viewCnt,
+            find_emp_name(employee_no) AS employee_name
+        FROM board
+        WHERE board_no = #{boardNo}
+    </select>
+
+    <!-- 부서게시판 글 등록 -->
+    <insert id="deptinsertBoardInfo" parameterType="BoardVO">
+        <selectKey keyProperty="boardNo" resultType="Integer" order="BEFORE">
+            SELECT NVL(MAX(board_no), 0) + 1 FROM board
+        </selectKey>
+        INSERT INTO board
+        (
+            board_no,
+            board_title,
+            board_content,
+            employee_no,
+            write_date,
+            viewCnt,
+            board_category,
+            company_code
+        )
+        VALUES
+        (
+            #{boardNo},
+            #{boardTitle},
+            #{boardContent},
+            #{employeeNo},
+            sysDate,
+            #{viewCnt},
+            #{boardCategory},
+            #{companyCode}
+        )
+    </insert>
+
+    <!-- 부서게시판 글 수정 -->
+    <update id="deptupdateBoardInfo" parameterType="BoardVO">
+        UPDATE board
+        SET
+            board_title = #{boardTitle},
+            board_content = #{boardContent}
+        WHERE board_no = #{boardNo}
+    </update>
+
+    <!-- 부서게시판 글 삭제 -->
+    <delete id="deptdeleteBoardInfo" parameterType="int">
+        DELETE FROM board
+        WHERE board_no = #{boardNo}
+    </delete>
+
 </mapper>

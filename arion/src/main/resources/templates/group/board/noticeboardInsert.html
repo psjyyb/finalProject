@@ -1,9 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
+    <script type="text/javascript" src="@{/smarteditor2/quick_photo_uploader/plugin/hp_SE2M_AttachQuickPhoto.js}" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>ARION</title>
 </head>
+
 <body>
+    <div>
+        <h3>공지사항 글 등록</h3>
+        <form name="insertForm" th:action="@{/noticeboardInsert}" method="POST" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <td><input type="text" name="boardTitle"></td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td width="100%" height="100%">
+                        <textarea name="boardContent" id="boardContent" placeholder="내용을 입력해주세요" rows="10px" cols="75px"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th>파일 첨부</th>
+                    <td>
+                        <input type="file" name="files" multiple />
+                    </td>
+                </tr>
+            </table>
+            <button type="submit">등록</button>
+            <button type="button" th:onclick="|location.href='@{noticeboardList}'|">취소</button>
+        </form>
+    </div>
+
+    <script>
+        $(function() {
+            var oEditors = [];
+
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef: oEditors,
+                elPlaceHolder: "boardContent",
+                sSkinURI: "/smarteditor2/SmartEditor2Skin.html",
+                fCreator: "createSEditor2"
+            });
+
+            $('form[name=insertForm]').on('submit', boardInsertHandler);
+
+            function boardInsertHandler(event) {
+                event.preventDefault();
+
+                // 에디터의 내용을 textarea에 적용
+                oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                let title = $('input[name="boardTitle"]').val().trim();
+                let content = $('textarea[name="boardContent"]').val().trim();
+
+                // HTML 태그를 제거하고 텍스트만 추출
+                let contentText = content.replace(/<[^>]*>/g, '').trim();
+
+                if (title === '') {
+                    Swal.fire('오류', '제목이 입력되지 않았습니다.', 'error');
+                    $('input[name="boardTitle"]').focus();
+                    return;
+                }
+
+                if (contentText === '') {
+                    Swal.fire('오류', '내용이 입력되지 않았습니다.', 'error');
+                    $('textarea[name="boardContent"]').focus();
+                    return;
+                }
+
+                Swal.fire({
+                    title: '등록 완료',
+                    text: '게시글이 성공적으로 등록되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.forms['insertForm'].submit();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

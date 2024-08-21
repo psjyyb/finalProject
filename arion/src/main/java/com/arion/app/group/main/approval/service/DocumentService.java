@@ -13,7 +13,7 @@ public interface DocumentService {
 	List<String> selectDepartment(@Param("companyCode") String companyCode);
 	List<EmployeesVO> selectEmployeeList(@Param("companyCode") String companyCode, @Param("departmentName") String departmentName );
 	
-	public int insertDocument(DocumentVO documentVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode);
+	public int insertDocument(DocumentVO documentVO, HolDocVO holDocVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode);
 
 	//결재대기 리스트
 	List<DocumentVO> apprWaitList(DocAccessVO docAccessVO, Criteria criteria);

@@ -3,12 +3,35 @@ document.addEventListener('DOMContentLoaded', function() {
 	let selectedApprovers = []; // 선택된 결재자 목록
 	let selectedReferences = []; // 선택된 참조자 목록
 
+	// 휴가신청서 양식 요소를 숨김 처리
+	const leaveForm = document.querySelector('#leaveForm');
+	leaveForm.style.display = 'none';
+
 	// CKEditor 초기화
 	$('#templateSelect').on('change', function() {
 		let tempNo = $(this).val();
 		let tempName = $(this).find('option:selected').text(); // 선택된 템플릿의 이름 가져오기
-		
-		if (tempNo) {
+
+		if (tempName === '휴가신청서') { 
+			// 휴가 신청서 템플릿이 선택된 경우
+			$('#docName').val('휴가신청서');
+			$('#editor').hide(); // CKEditor 숨기기
+			$('#placeholder').hide(); // 안내 메시지 숨기기
+			leaveForm.style.display = 'block'; // 휴가 신청서 양식 보이기
+
+			if (editorInstance !== null) {
+				// 이미 CKEditor가 초기화된 경우, 에디터를 제거
+				editorInstance.destroy()
+					.then(() => {
+						editorInstance = null;
+					})
+					.catch(error => {
+						console.error('Error destroying editor:', error);
+					});
+			}
+		} else {
+			// 다른 템플릿이 선택된 경우
+			leaveForm.style.display = 'none'; // 휴가 신청서 양식 숨기기
 			$('#docName').val(tempName); // docName 필드에 템플릿 이름 설정
 			$('#placeholder').hide(); // 안내 메시지 숨기기
 			$('#editor').show(); // 에디터 표시
@@ -29,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							.done(function(data) {
 								editor.setData(data); // 불러온 데이터로 CKEditor 내용 설정
 							})
-							.fail(function(error) {
+								.fail(function(error) {
 								console.log(error);
 							});
 					})
@@ -48,20 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					})
 					.fail(function(error) {
 						console.log('Error:', error);
-					});
-			}
-		} else {
-			// 템플릿 선택이 해제된 경우
-			$('#docName').val(''); // 선택 해제 시 docName 필드 값 비우기
-			if (editorInstance !== null) {
-				editorInstance.destroy()  // CKEditor 인스턴스 제거
-					.then(() => {
-						editorInstance = null;
-						$('#editor').hide(); // 에디터 숨기기
-						$('#placeholder').show(); // 안내 메시지 표시
-					})
-					.catch(error => {
-						console.error('Error destroying editor:', error);
 					});
 			}
 		}
@@ -287,73 +296,149 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	 $('#submitDocument').on('click', function(event) {
-        event.preventDefault();
+	$('#submitDocument').on('click', function(event) {
+		event.preventDefault();
 
-        // 필수 항목 확인
-        const docTitle = $('input[name="docTitle"]').val();
-        const templateSelected = $('#templateSelect').val();
-        if (selectedApprovers.length === 0) {
-            Swal.fire({
-                icon: "warning",
-                text: "결재자를 선택해주세요."
-            });
-            return;
-        }
-        if (!docTitle) {
-            Swal.fire({
-                icon: "warning",
-                text: "제목을 입력해주세요."
-            });
-            return;
-        }
-        if (!templateSelected) {
-            Swal.fire({
-                icon: "warning",
-                text: "템플릿을 선택해주세요."
-            });
-            return;
-        }
+		// 필수 항목 확인
+		const docTitle = $('input[name="docTitle"]').val();
+		const templateSelected = $('#templateSelect').val();
+		const templateName = $('#templateSelect option:selected').text(); // 선택된 템플릿의 이름 가져오기
 
-        const formData = new FormData($('#writeDoc')[0]);
+		if (selectedApprovers.length === 0) {
+			Swal.fire({
+				icon: "warning",
+				text: "결재자를 선택해주세요."
+			});
+			return;
+		}
+		if (!docTitle) {
+			Swal.fire({
+				icon: "warning",
+				text: "제목을 입력해주세요."
+			});
+			return;
+		}
+		if (!templateSelected) {
+			Swal.fire({
+				icon: "warning",
+				text: "템플릿을 선택해주세요."
+			});
+			return;
+		}
 
-        // 결재자 및 참조자 목록을 FormData에 추가
-        selectedApprovers.forEach((approver, index) => {
-            formData.append(`approverIds`, approver.employeeNo);
-        });
+		if (templateName === '휴가신청서') {
+			// 휴가 신청서의 경우
+			const startDate = $('input[name="startDate"]').val();
+			const startDateTime = $('select[name="startDateTime"]').val() || '00:00';
+			const endDate = $('input[name="endDate"]').val();
+			const endDateTime = $('select[name="endDateTime"]').val() || '18:00';
 
-        selectedReferences.forEach((reference, index) => {
-            formData.append(`referenceIds`, reference.employeeNo);
-        });
-    
-        // CKEditor의 내용을 formData에 추가
-        if (editorInstance) {
-            const content = editorInstance.getData(); // CKEditor 내용 가져오기
-            formData.append('docContent', content);
-        }
-        
-        $.ajax({
-            url: '/writeDoc',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                Swal.fire({
-                    icon: "success",
-                    text: "문서가 상신되었습니다.",
-                    willClose: () => {
-                        window.location.href = '/group/doc/apprProgress';    
-                    }
-                });
-            },
-            error: function(error) {
-                console.log('Error:', error);
-                Swal.fire({
-                    icon: "error",
-                    text: "상신 중 오류가 발생했습니다."
-                });
-            }
-        });
-    });
+			if (startDate === '') {
+				Swal.fire({
+					icon: 'warning',
+					text: '시작일을 선택해주세요.'
+				});
+				return;
+			}
+
+			if (endDate === '') {
+				Swal.fire({
+					icon: 'warning',
+					text: '종료일을 선택해주세요.'
+				});
+				return;
+			}
+
+			const fullStartDate = startDate + ' ' + startDateTime;
+			const fullEndDate = endDate + ' ' + endDateTime;
+
+			const formData = new FormData($('#writeDoc')[0]);
+
+			// 기존에 있던 startDate와 endDate를 삭제
+			formData.delete('startDate');
+			formData.delete('endDate');
+
+			// 병합된 날짜와 시간을 다시 추가
+			formData.append('startDate', fullStartDate);
+			formData.append('endDate', fullEndDate);
+
+			// 결재자 및 참조자 목록을 FormData에 추가
+			selectedApprovers.forEach((approver, index) => {
+				formData.append(`approverIds`, approver.employeeNo);
+			});
+
+			selectedReferences.forEach((reference, index) => {
+				formData.append(`referenceIds`, reference.employeeNo);
+			});
+
+			// AJAX 요청 보내기
+			$.ajax({
+				url: '/writeLeaveDoc', // 휴가 신청서에 대한 별도의 URL
+				type: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(response) {
+					Swal.fire({
+						icon: "success",
+						text: "휴가 신청서가 상신되었습니다.",
+						willClose: () => {
+							window.location.href = '/group/doc/apprProgress';
+						}
+					});
+				},
+				error: function(error) {
+					console.log('Error:', error);
+					Swal.fire({
+						icon: "error",
+						text: "상신 중 오류가 발생했습니다."
+					});
+				}
+			});
+
+		} else {
+			// 일반 템플릿의 경우
+			const formData = new FormData($('#writeDoc')[0]);
+
+			// 결재자 및 참조자 목록을 FormData에 추가
+			selectedApprovers.forEach((approver, index) => {
+				formData.append(`approverIds`, approver.employeeNo);
+			});
+
+			selectedReferences.forEach((reference, index) => {
+				formData.append(`referenceIds`, reference.employeeNo);
+			});
+
+			// CKEditor의 내용을 formData에 추가
+			if (editorInstance) {
+				const content = editorInstance.getData(); // CKEditor 내용 가져오기
+				formData.append('docContent', content);
+			}
+
+			// AJAX 요청 보내기
+			$.ajax({
+				url: '/writeDoc', // 일반 문서 처리 URL
+				type: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(response) {
+					Swal.fire({
+						icon: "success",
+						text: "문서가 상신되었습니다.",
+						willClose: () => {
+							window.location.href = '/group/doc/apprProgress';
+						}
+					});
+				},
+				error: function(error) {
+					console.log('Error:', error);
+					Swal.fire({
+						icon: "error",
+						text: "상신 중 오류가 발생했습니다."
+					});
+				}
+			});
+		}
+	});
 });

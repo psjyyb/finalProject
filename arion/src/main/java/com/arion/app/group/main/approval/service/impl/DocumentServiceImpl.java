@@ -20,6 +20,8 @@ import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
+import com.arion.app.group.main.approval.service.HolDocService;
+import com.arion.app.group.main.approval.service.HolDocVO;
 import com.arion.app.group.main.approval.service.SignService;
 import com.arion.app.group.main.approval.service.SignVO;
 import com.arion.app.home.board.service.impl.QnaServiceImpl;
@@ -45,6 +47,9 @@ public class DocumentServiceImpl implements DocumentService{
 	@Autowired
 	SignService ssvc;
 	
+	@Autowired
+	HolDocService hdsvc;
+	
 	@Override
 	public List<String> selectDepartment(String companyCode) {
 		
@@ -59,7 +64,7 @@ public class DocumentServiceImpl implements DocumentService{
 
 	@Transactional
 	@Override
-	public int insertDocument(DocumentVO documentVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode) {
+	public int insertDocument(DocumentVO documentVO, HolDocVO holDocVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode) {
 		try {					
 			int result = mapper.insertDocument(documentVO);
 			log.debug("docNo " + documentVO.getDocNo());
@@ -85,7 +90,14 @@ public class DocumentServiceImpl implements DocumentService{
 			//작성자와 동일한 부서원, 임원 추가
 			List<EmployeesVO> referenceList = dasvc.selectAddReference(documentVO.getEmployeeNo(), companyCode);
 			dasvc.insertAddReference(referenceList, documentVO.getDocNo(), companyCode);		
-		
+			
+			//휴가신청서 데이터 추가
+			if("휴가신청서".equals(documentVO.getDocName())) {
+				holDocVO.setDocNo(documentVO.getDocNo());
+				hdsvc.insertHolDoc(holDocVO);
+				
+			}
+
 			return result;
 			
 		}catch (Exception err) {

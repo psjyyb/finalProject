@@ -4,11 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,7 @@ import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
+import com.arion.app.group.main.approval.service.HolDocVO;
 import com.arion.app.group.main.approval.service.SignService;
 import com.arion.app.group.main.approval.service.SignVO;
 import com.arion.app.group.main.approval.service.TemplateService;
@@ -143,6 +148,7 @@ public class DocumentController {
 	@ResponseBody
 	public String insertDoc(
 	        	DocumentVO documentVO,
+	        	HolDocVO holDocVO,
 	        	@RequestParam List<Integer> approverIds,
 	        	@RequestParam(value = "referenceIds", required = false) List<Integer> referenceIds,
 	        	HttpSession session,
@@ -150,14 +156,17 @@ public class DocumentController {
 		
 		System.out.println("Approver IDs: " + approverIds);
 	    System.out.println("Reference IDs: " + referenceIds);
-		
+
+	    
 	    String companyCode = (String) session.getAttribute("companyCode");
 	    int employeeNo = (int) session.getAttribute("employeeNo");
 
 	    documentVO.setCompanyCode(companyCode);
 	    documentVO.setEmployeeNo(employeeNo);
-
-	    dsvc.insertDocument(documentVO, approverIds, referenceIds, files, companyCode);
+	    holDocVO.setEmployeeNo(employeeNo);
+	    holDocVO.setCompanyCode(companyCode);
+	    
+	    dsvc.insertDocument(documentVO, holDocVO, approverIds, referenceIds, files, companyCode);
 
 	    return "등록되었습니다";
 	}

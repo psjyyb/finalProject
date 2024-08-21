@@ -140,6 +140,7 @@ public class DocumentController {
 	}
 	
 	@PostMapping("/writeDoc")
+	@ResponseBody
 	public String insertDoc(
 	        	DocumentVO documentVO,
 	        	@RequestParam List<Integer> approverIds,

@@ -86,7 +86,7 @@ function autoReload()
 		{
 			
 		    let date =  new Date(value);						
-			datax.push('\''+ date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+'\'');
+			datax.push(''+ date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+'');
 		}
 		if(key=='worktimeminute')
 		{

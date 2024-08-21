@@ -9,18 +9,35 @@
 <input type="hidden" id="companycode"  th:value="${session.companyCode}">
 <input type="hidden" id="ranking"  th:value="${ranking}">
 </head>
+
+
 <body onload="autoReload();">
-	
-	<div >
+	 
+	           <div id="createforder">
+	           <input type="hidden" name="superforderid">
+	           <span class="label">상위폴더이름:</span><input type="text" id="fsuperforder" value="" readonly>
+	           <span class="label">폴더이름:</span><input type="text" name="fordername">
 				<select id="underrank" name="underrank">
 					
 					<option th:each=" underrank :${underranks}" th:value="${underrank.rankranking}"
 						th:text="${underrank.rankname}">없음</option>
 				</select>
+				<button>폴더생성</button>
 			</div>
-	
-	
+			<div id="uploadfile">
+	           <input type="hidden" name="superforderid">
+	           <span class="label">상위폴더이름:</span><input type="text" id="usuperforder" value="" readonly>
+	           <span class="label">파일이름:</span><input type="text" name="fordername" readonly>
+				<label for="files">첨부파일</label>
+                <input type="file" id="files" name="files" multiple>
+				<button>업로드</button>
+			</div>
+			<div id="popMenu"  style="display: none; width:300px; border: 1px solid;">        
+            <p id="mforder">하위폴더 생성</p>
+            <p id="mupload">파일 업로드</p>        
+    </div>
 	<table id="datatable" align="center" border="1"  width="80%"  >
+	
 	</table>
 	
 	<script th:src="@{/js/group/database/database.js}"></script>

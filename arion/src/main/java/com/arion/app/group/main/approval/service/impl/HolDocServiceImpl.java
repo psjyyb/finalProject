@@ -16,7 +16,7 @@ public class HolDocServiceImpl implements HolDocService {
 	@Override
 	public void insertHolDoc(HolDocVO holDocVO) {
 		
-		
+		mapper.insertHolDoc(holDocVO);
 	}
 
 }

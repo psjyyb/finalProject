@@ -9,5 +9,19 @@
         WHERE company_code=#{companycode} AND rank_name = #{rankname}
 	</select>
 
+<select id="start" resultType="CFileVO">
+      
+ 		SELECT me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,department_no,rank_id,c_form
+        FROM CLOUDS
+        WHERE company_code=#{companycode} 
+        AND parent = 0
+	</select>
+	
+	<select id="underrank" resultType="UnderRankVO">
+      
+ 		SELECT rank_name,rank_ranking
+        FROM RANK
+        WHERE rank_ranking  <![CDATA[<=]]>#{ranking} 
+	</select>
    
 </mapper>

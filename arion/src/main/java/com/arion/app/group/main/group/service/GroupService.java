@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.group.admin.service.DepartmentVO;
 
 public interface GroupService {
 	  //부서
@@ -28,5 +29,11 @@ public interface GroupService {
 	  Map<String, Object> updateAddress(AddressVO address);
 	  //주소록 삭제
 	  Map<String, Object> deleteAddress(int addrNo);
+	  
+	  
+	  List<AddressVO> getAddressesByCompanyAndEmployee(String companyName, String employeeId);
+	
+	  List<DepartmentVO> getOrganizationalChartByCompanyCode(String companyCode);
+
 }
 

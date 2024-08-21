@@ -8,18 +8,24 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.arion.app.common.service.DepartmentsVO;
+import com.arion.app.common.service.FileService;
+import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.board.service.PageDTO;
+import com.arion.app.group.main.group.service.GroupService;
 import com.arion.app.group.main.mail.service.MailService;
 import com.arion.app.group.main.mail.service.MailVO;
 
@@ -33,7 +39,12 @@ public class MailController {
     @Autowired
     private HttpSession httpSession;
 
-
+	@Autowired
+	FileService fsvc;
+	
+	@Autowired
+	private GroupService groupService;
+	
     // 받은 메일 조회 (페이지)
     @GetMapping("/Mymail")
     public String mailList(Model model, Criteria criteria) {
@@ -99,8 +110,10 @@ public class MailController {
         mailVO.setCompanyCode(companyCode);
         mailVO.setSenderId(employeeId);
         MailVO mailDetails = mailService.mailInfo(mailVO);
+        List<FileVO> fileVOList = fsvc.selectFiles("MAIL", mailVO.getMailNo(), companyCode);
         model.addAttribute("mailInfo", mailDetails);
-
+        model.addAttribute("fileInfo", fileVOList);
+        
         return "group/mail/mailInfo";
     }
     
@@ -114,10 +127,10 @@ public class MailController {
         mailVO.setSenderId(employeeId);
         mailVO.setMailStatus("SEND");
         List<MailVO> sendMailAll = mailService.sendMailList(mailVO, criteria);
-        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        int totalCount = mailService.selectMailTotalCount(mailVO, criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
-       
-        model.addAttribute("sendMailAll",sendMailAll);
+      
+        model.addAttribute("sendMailAll", sendMailAll);
         model.addAttribute("pageDTO", pageDTO);
         model.addAttribute("criteria", criteria);
         return "group/mail/sendmail";
@@ -125,16 +138,14 @@ public class MailController {
     
     // 메일 보내기 폼 페이지
     @GetMapping("/writemail")
-    public String mailSendForm(Model model) {
-    	String employeeId=(String) httpSession.getAttribute("loginId");
-    	
-    	//조직도    	
-    
+    public String mailSendForm(Model model, HttpSession httpSession) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+       
+ 
         model.addAttribute("employeeId", employeeId);
         
         return "group/mail/writemail";
     }
-    
     
     //보내기
     @PostMapping("/writemail")
@@ -150,20 +161,28 @@ public class MailController {
         mailVO.setSenderName(senderName);
         mailVO.setCompanyCode(companyCode);
 
+        // 수신자 ID 배열로 변환
         mailVO.setReceiverIds(mailVO.getReceiverId().split(","));
+        
         // 메일을 전송합니다.
         int result = mailService.sendMail(mailVO, files);
         return result;
-        
     }
-    // 메일 삭제 (처리)
-    @PostMapping("/delete")
-    @ResponseBody
-    public Map<String, Object> deleteMail(MailVO mailVO) {
-    	String employeeId=(String) httpSession.getAttribute("loginId");
-    	mailVO.setCompanyCode((String) httpSession.getAttribute("companyCode"));
-        mailVO.setSenderId(employeeId);
+    //메일 상태변경
+    
 
-        return mailService.deleteMail(mailVO);
+    @PostMapping("/moveToImportant")
+    public ResponseEntity<String> moveToImportant(@RequestBody Map<String, List<Integer>> request) {
+        List<Integer> mailIds = request.get("ids");
+        mailService.updateMailStatus(mailIds, "IMPORT");
+        return ResponseEntity.ok("중요 메일로 이동되었습니다.");
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteMails(@RequestBody Map<String, List<Integer>> request) {
+        List<Integer> mailIds = request.get("ids");
+        mailService.updateMailStatus(mailIds, "TRASH");
+        return ResponseEntity.ok("메일이 삭제되었습니다.");
+    }
+
 }

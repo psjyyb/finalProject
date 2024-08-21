@@ -13,8 +13,8 @@ public class MailVO {
     private int mailNo;
     private String senderId;
     private String senderName;   
-    private String receiverId;     // 단일 수신자 ID(이전)
-    private String[] receiverIds;  // 다중 수신자 ID 리스트(내부 수신자)
+    private String receiverId;     
+    private String[] receiverIds;  
     private String mailTitle;
     private String mailContent;
     private String mailStatus;

@@ -4,104 +4,22 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
+
+    <meta charset="UTF-8">
     <title>ARION</title>
- 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            color: #444;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin: 0;
-            background-color: #fff;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .checkbox-container {
-            text-align: center;
-        }
-
-        .compose-btn, .delete-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .compose-btn {
-            background-color: #4CAF50;
-        }
-
-        .compose-btn:hover {
-            background-color: #45a049;
-        }
-
-        .delete-btn {
-            background-color: #f44336;
-            margin-left: 10px;
-        }
-
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        .actions-container {
-            margin: 20px 0;
-        }
-
-        .actions-container label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>받은 메일함</h1>
     <form action="/group/mail/Mymail" method="GET" th:object="${criteria}">
-      			<div>
-				<select th:field="*{searchType}">
-					<option value="" th:selected="${criteria.searchType == ''}">전체</option>
-					<option value="mailtitle"
-						th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-					<option value="senderId"
-						th:selected="${criteria.searchType == 'senderId'}">작성자</option>
-				</select> <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
-			</div>
-			<button type="submit">검색</button>
+        <div>
+            <select th:field="*{searchType}">
+                <option value="" th:selected="${criteria.searchType == ''}">전체</option>
+                <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+                <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+            </select> 
+            <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+        </div>
+        <button type="submit">검색</button>
     </form>
     <table>
         <thead>
@@ -122,7 +40,6 @@
                 </td>
                 <td th:text="${mail.senderName}">발송자 이름</td>
                 <td>
-                    <!-- 메일 제목을 클릭하면 메일 상세 정보로 이동 -->
                     <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
                 </td>
                 <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
@@ -135,41 +52,54 @@
         <button id="deleteSelected" class="delete-btn">휴지통</button>
     </div>
 
-<ul class="pagination">
-			<li th:if="${pageDTO.prev}"><a
-				th:href="@{|/home/qna?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
-			</li>
-			<li
-				th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
-				th:classappend="${pageNum == criteria.pageNum} ? 'active'"><a
-				th:href="@{|/home/qna?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
-			</li>
-			<li th:if="${pageDTO.next}"><a
-				th:href="@{|/home/qna?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
-			</li>
-		</ul>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const isChecked = this.checked;
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
+    <ul class="pagination">
+        <!-- 페이지 네비게이션 (생략) -->
+    </ul>
+    
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const isChecked = this.checked;
+        const checkboxes = document.querySelectorAll('input[name="mailIds"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = isChecked;
         });
+    });
 
-        document.getElementById('deleteSelected').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
-            if (checkboxes.length > 0) {
-                if (confirm('선택한 메일을 삭제하시겠습니까?')) {
-                    const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
-                    // axios.post('/group/mail/delete', { ids: ids });
-                    alert(`삭제 요청: ${ids.join(', ')}`);
-                }
-            } else {
-                alert('삭제할 메일을 선택하세요.');
+    document.getElementById('importSelected').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
+        if (checkboxes.length > 0) {
+            const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
+            axios.post('/group/mail/moveToImportant', { ids: ids })
+                .then(response => {
+                    alert('중요 메일로 이동되었습니다.');
+                    location.reload(); // 페이지 새로고침
+                })
+                .catch(error => {
+                    console.error('중요 메일로 이동 실패:', error);
+                });
+        } else {
+            alert('중요로 설정할 메일을 선택하세요.');
+        }
+    });
+    document.getElementById('deleteSelected').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
+        if (checkboxes.length > 0) {
+            if (confirm('선택한 메일을 휴지통으로 이동하시겠습니까?')) {
+                const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
+                axios.post('/group/mail/moveToTrash', ids)
+                    .then(response => {
+                        alert('메일이 휴지통으로 이동되었습니다.');
+                        location.reload(); // 페이지 새로고침
+                    })
+                    .catch(error => {
+                        console.error('메일 휴지통 이동 실패:', error);
+                    });
             }
-        });
-    </script>
+        } else {
+            alert('휴지통으로 이동할 메일을 선택하세요.');
+        }
+    });
+</script>
 </body>
 </html>

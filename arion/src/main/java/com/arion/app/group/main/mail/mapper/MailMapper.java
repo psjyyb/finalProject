@@ -39,14 +39,19 @@ public interface MailMapper {
     // 수신자 정보 조회
     List<MailReceiveVO> selectReceivers(@Param("companyCode") String companyCode);
     
-    //메일 검색
-    
+    //상태변경
+    void updateMailStatusToImportant(@Param("mailIds") List<Integer> mailIds);
+
+    void updateMailStatusToTrash(@Param("mailIds") List<Integer> mailIds);
     
     // 메일 삭제
     int mailDelete(int mailNo);
     
     //메일 상세조회
     MailVO selectMailInfo(MailVO mailVO);
+    //메일 파일조회
+    MailVO selectfiles(MailVO mailVO);
+    
     // 메일 수신 기록 삽입 메서드
     int insertMailReceive(MailReceiveVO receiveVO);
     //시퀀스

@@ -4,19 +4,24 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>ARION</title>
     <style>
         h1 {
             color: #444;
             border-bottom: 2px solid #4CAF50;
             padding-bottom: 10px;
+            margin: 0;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            background-color: #fff;
             border: 1px solid #ddd;
         }
 
@@ -74,21 +79,47 @@
             font-weight: bold;
             margin-right: 10px;
         }
+        
+        .pagination {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 10px;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
     <h1>중요 메일함</h1>
-  <form action="/group/mail/importmail" method="GET" th:object="${criteria}">
-    <div>
-        <select th:field="*{searchType}">
-            <option value="" th:selected="${criteria.searchType == ''}">전체</option>
-            <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-            <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
-        </select>
-        <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
-    </div>
-    <button type="submit">검색</button>
-</form>
+    <form action="/group/mail/importmail" method="GET" th:object="${criteria}">
+        <div>
+            <select th:field="*{searchType}">
+                <option value="" th:selected="${criteria.searchType == ''}">전체</option>
+                <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+                <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+            </select>
+            <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+        </div>
+        <button type="submit">검색</button>
+    </form>
     <table>
         <thead>
             <tr>
@@ -106,7 +137,10 @@
                     <input type="checkbox" name="mailIds" value="${mail.mailNo}"> 
                 </td>
                 <td th:text="${mail.senderName}">발송자 이름</td>
-                <td th:text="${mail.mailTitle}">메일 제목</td>
+                <td>
+                    <!-- 메일 제목을 클릭하면 메일 상세 정보로 이동 -->
+                    <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
+                </td>
                 <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
             </tr>
         </tbody>
@@ -115,19 +149,15 @@
     <div class="actions-container">
         <button id="deleteSelected" class="delete-btn">삭제</button>
     </div>
-<ul class="pagination">
-			<li th:if="${pageDTO.prev}"><a
-				th:href="@{|/home/qna?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
-			</li>
-			<li
-				th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
-				th:classappend="${pageNum == criteria.pageNum} ? 'active'"><a
-				th:href="@{|/home/qna?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
-			</li>
-			<li th:if="${pageDTO.next}"><a
-				th:href="@{|/home/qna?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
-			</li>
-		</ul>
+
+    <ul class="pagination">
+        <li th:if="${pageDTO.prev}"><a th:href="@{|/group/mail/importmail?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a></li>
+        <li th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}" th:classappend="${pageNum == criteria.pageNum} ? 'active'">
+            <a th:href="@{|/group/mail/importmail?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
+        </li>
+        <li th:if="${pageDTO.next}"><a th:href="@{|/group/mail/importmail?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a></li>
+    </ul>
+
     <script>
         document.getElementById('selectAll').addEventListener('change', function() {
             const isChecked = this.checked;
@@ -142,7 +172,7 @@
             if (checkboxes.length > 0) {
                 if (confirm('선택한 메일을 삭제하시겠습니까?')) {
                     const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
-                    //  axios.post('/group/mail/delete', { ids: ids });
+                    // axios.post('/group/mail/delete', { ids: ids });
                     alert(`삭제 요청: ${ids.join(', ')}`);
                 }
             } else {

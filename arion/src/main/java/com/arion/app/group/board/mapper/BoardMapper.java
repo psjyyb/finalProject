@@ -23,7 +23,7 @@ public interface BoardMapper {
 	// total
 	public int getTotal(Criteria cri);
 
-	// noticeboard //
+	// noticeboard
 	// 공지사항 글 상세조회
 	public BoardVO noticeselectBoardInfo(BoardVO boardVO);
 
@@ -37,7 +37,7 @@ public interface BoardMapper {
 	public int noticedeleteBoardInfo(int boardNO);
 
 	
-	// freeboard //
+	// freeboard
 	// 자유게시판 글 상세조회
 	public BoardVO selectBoardInfo(BoardVO boardVO);
 
@@ -51,7 +51,7 @@ public interface BoardMapper {
 	public int deleteBoardInfo(int boardNO);
 
 	
-	// deptboard //
+	// deptboard
 	// 부서게시판 글 상세조회
 	public BoardVO deptselectBoardInfo(BoardVO boardVO);
 

@@ -3,8 +3,12 @@
 <mapper namespace="com.arion.app.group.board.mapper.BoardMapper">
 
     <sql id="search">
-        <where>
-            board_category = #{boardCategory}
+        where company_code = #{companyCode}            
+          and board_category = #{boardCategory}
+         <if test="boardCategory == 'Y03'.toString()">
+           and department_Name = #{department}
+         </if>   
+            
             <if test="keyword != null and keyword != ''">
                 <choose>
                     <!-- 검색 유형이 있을 때 -->
@@ -27,7 +31,6 @@
                     </when>
                 </choose>
             </if>
-        </where>
     </sql>
 
     <!-- 게시글 조회 + 페이징 -->
@@ -86,6 +89,7 @@
             find_emp_name(employee_no) AS employee_name
         FROM board
         WHERE board_no = #{boardNo}
+        AND   company_code = #{companyCode} 
     </select>
 
     <!-- 공지사항 글등록 -->
@@ -144,6 +148,7 @@
             find_emp_name(employee_no) AS employee_name
         FROM board
         WHERE board_no = #{boardNo}
+        AND   company_code = #{companyCode}
     </select>
 
     <!-- 자유게시판 글 등록 -->
@@ -202,6 +207,7 @@
             find_emp_name(employee_no) AS employee_name
         FROM board
         WHERE board_no = #{boardNo}
+        AND   company_code = #{companyCode}
     </select>
 
     <!-- 부서게시판 글 등록 -->
@@ -218,7 +224,8 @@
             write_date,
             viewCnt,
             board_category,
-            company_code
+            company_code,
+            department_name
         )
         VALUES
         (
@@ -229,7 +236,8 @@
             sysDate,
             #{viewCnt},
             #{boardCategory},
-            #{companyCode}
+            #{companyCode},
+            #{department}
         )
     </insert>
 

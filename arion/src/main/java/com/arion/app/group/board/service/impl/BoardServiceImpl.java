@@ -51,7 +51,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	
-	// noticeboard //
+	// noticeboard
 	// 공지사항 게시글 조회
 	@Override
 	public List<BoardVO> noticeboardList(Criteria cri) {
@@ -162,7 +162,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	
-	// deptboard //
+	// deptboard
 	// 부서게시판 게시글 조회
 	@Override
 	public List<BoardVO> deptboardList(Criteria cri) {

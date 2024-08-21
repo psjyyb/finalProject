@@ -140,6 +140,7 @@ public class DocumentController {
 	}
 	
 	@PostMapping("/writeDoc")
+	@ResponseBody
 	public String insertDoc(
 	        	DocumentVO documentVO,
 	        	@RequestParam List<Integer> approverIds,
@@ -162,7 +163,7 @@ public class DocumentController {
 	}
 	
 	@GetMapping("/group/doc/apprProgress")
-	public String waitApprList(Model model, Criteria criteria, HttpSession session) {
+	public String apprProgressList(Model model, Criteria criteria, HttpSession session) {
 		int employeeNo = (int) session.getAttribute("employeeNo");
 		String companyCode = (String) session.getAttribute("companyCode");
 		
@@ -213,7 +214,6 @@ public class DocumentController {
 				break;
 			}
 		}
-		
 		SignVO signVO = new SignVO();
 		signVO.setCompanyCode(companyCode);
 		signVO.setEmployeeId(employeeId);
@@ -251,29 +251,89 @@ public class DocumentController {
 	 
 	 @PostMapping("/group/doc/checkCanReject")
 	 @ResponseBody
-	 public String checkCanReject(HttpSession session, @RequestParam int docNo) {
+	 public int checkCanReject(HttpSession session, @RequestParam int docNo) {
 	     String companyCode = (String) session.getAttribute("companyCode");
 	     int employeeNo = (int) session.getAttribute("employeeNo");
 	     
 	     int approvalCount = asvc.hasApproved(employeeNo, docNo, companyCode);
-	     if(approvalCount > 0) {	    	 
-	    	 return "이미 결재된 문서는 반려할 수 없습니다";
-	     }
-	     return "반려할 수 있습니다";
+	     System.out.println("Approval Count: " + approvalCount);
+	    
+	     return approvalCount;
 	 }	
 	 
 	 @PostMapping("/group/doc/rejectDocument")
 	 @ResponseBody
-	 public String rejectDocument(HttpSession session, @RequestParam int docNo, @RequestParam String reason) {
+	 public String rejectDocument(HttpSession session, @RequestParam int docNo, @RequestParam String apprReason) {
 	     String companyCode = (String) session.getAttribute("companyCode");
 	     int employeeNo = (int) session.getAttribute("employeeNo");
 
 	     try {
-	    	 dsvc.updateRejectStatus(docNo, companyCode, employeeNo, reason);	    	 
+	    	 dsvc.updateRejectStatus(docNo, companyCode, employeeNo, apprReason);	    	 
 	    	 return "문서가 성공적으로 반려되었습니다.";
 	     }catch (Exception e) {
 	    	 return "반려 처리중 오류가 발생했습니다.";
 	     }
-	  
 	 }
+	 
+	 @GetMapping("/group/doc/apprReject")
+	 public String apprRejectList(Model model, Criteria criteria, HttpSession session) {
+		 int employeeNo = (int) session.getAttribute("employeeNo");
+		 String companyCode = (String) session.getAttribute("companyCode");
+			
+		 DocAccessVO docAccessVO = new DocAccessVO();
+		 docAccessVO.setEmployeeNo(employeeNo);
+		 docAccessVO.setCompanyCode(companyCode);
+			
+		 List<DocumentVO> apprRejectList = dsvc.apprRejectList(docAccessVO, criteria);
+		 int totalCount = dsvc.countApprRejectList(docAccessVO, criteria);
+		 
+		 PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		 model.addAttribute("pageDTO", pageDTO);
+		 model.addAttribute("reDoc", apprRejectList);
+		 model.addAttribute("critera", criteria);
+		 
+		 return "group/document/approval/apprRejectList";
+	 }
+	 
+	 @GetMapping("/group/doc/apprFinish")
+	 public String apprFinishList(Model model, Criteria criteria, HttpSession session) {
+		 int employeeNo = (int) session.getAttribute("employeeNo");
+		 String companyCode = (String) session.getAttribute("companyCode");
+			
+		 DocAccessVO docAccessVO = new DocAccessVO();
+		 docAccessVO.setEmployeeNo(employeeNo);
+		 docAccessVO.setCompanyCode(companyCode);
+			
+		 List<DocumentVO> apprFinishList = dsvc.apprFinishList(docAccessVO, criteria);
+		 int totalCount = dsvc.countApprFinishList(docAccessVO, criteria);
+		 
+		 PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		 model.addAttribute("pageDTO", pageDTO);
+		 model.addAttribute("finishDoc", apprFinishList);
+		 model.addAttribute("critera", criteria);
+		 
+		 return "group/document/approval/apprFinishList";
+	 }
+	 
+	 @GetMapping("/group/doc/apprWait")
+	 public String apprWaitList(Model model, Criteria criteria, HttpSession session) {
+		 int employeeNo = (int) session.getAttribute("employeeNo");
+		 String companyCode = (String) session.getAttribute("companyCode");
+			
+		 DocAccessVO docAccessVO = new DocAccessVO();
+		 docAccessVO.setEmployeeNo(employeeNo);
+		 docAccessVO.setCompanyCode(companyCode);
+			
+		 List<DocumentVO> apprWaitList = dsvc.apprWaitList(docAccessVO, criteria);
+		 int totalCount = dsvc.countApprWaitList(docAccessVO, criteria);
+		 
+		 PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
+		 model.addAttribute("pageDTO", pageDTO);
+		 model.addAttribute("waitDoc", apprWaitList);
+		 model.addAttribute("critera", criteria);
+		 
+		 return "group/document/approval/apprWaitList";
+	}
+	 
+	 
 }

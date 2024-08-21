@@ -15,13 +15,23 @@ public interface DocumentService {
 	
 	public int insertDocument(DocumentVO documentVO, List<Integer> approverIds, List<Integer> referenceIds, MultipartFile[] files, String companyCode);
 
-	
+	//결재대기 리스트
 	List<DocumentVO> apprWaitList(DocAccessVO docAccessVO, Criteria criteria);
 	public int countApprWaitList(DocAccessVO docAccessVO, Criteria criteria);
 	
+	//결재진행중인 리스트
 	List<DocumentVO> apprProgressList(DocAccessVO docAccessVO, Criteria criteria);
 	public int countApprProgressList(DocAccessVO docAccessVO, Criteria criteria);
 
+	//결재완료 리스트
+	List<DocumentVO> apprFinishList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
+	public int countApprFinishList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
+		
+	//반려 리스트
+	List<DocumentVO> apprRejectList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
+	public int countApprRejectList(@Param("docAccessVO") DocAccessVO docAccessVO, @Param("criteria") Criteria criteria);
+	
+	
 	public DocumentVO documentInfo(DocumentVO documentVO);
 	
 	public void updateApprStatus(@Param("docNo") int docNo, @Param("companyCode") String companyCode, int employeeNo, String signImg);

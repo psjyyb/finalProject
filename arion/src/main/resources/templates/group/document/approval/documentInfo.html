@@ -20,6 +20,7 @@
             <div class="approver-info" id="approver-[[${status.index}]]">
                 <label>결재자</label>
                 <div>[[${appr.departmentName}]] | [[${appr.employeeName}]] [[${appr.rankName}]]</div>
+                <div>결재상태 : [[${appr.apprStatus}]]</div>
                 <div>결재시간 : <span th:text="${#dates.format(appr.signDate, 'yyyy-MM-dd')}"></span></div>
                 <th:block th:if="${appr.signImg != null}">
             		<img th:src="@{/files/signatures/{fileName}(fileName=${appr.signImg})}" id="signature-pad-[[${status.index}]]" alt="서명 이미지" width="120" height="100"/>
@@ -229,11 +230,7 @@
                 confirmButtonText: '확인'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const approverIndex = getCurrentApproverIndex();
-                    if (approverIndex !== -1) {
-                        const imgElement = $('#signature-pad-' + approverIndex);
-                        imgElement.attr('src', '/files/signatures/' + signImg); // 새로운 서명 이미지로 대체
-                    }
+                	location.reload();
                     closeModal();
                 }
             });
@@ -248,18 +245,6 @@
         });
     }
 
-    // 현재 결재자의 인덱스를 가져오는 함수
-    function getCurrentApproverIndex() {
-        let currentIndex = -1;
-        const apprInfo = /*[[${apprInfo}]]*/ [];
-        const employeeNo = /*[[${employeeNo}]]*/ 0;
-        apprInfo.forEach((appr, index) => {
-            if (appr.employeeNo === employeeNo) {
-                currentIndex = index;
-            }
-        });
-        return currentIndex;
-    }
 
     $('#rejectBtn').on('click', function() {
         const docNo = this.getAttribute('data-doc-no');
@@ -273,14 +258,16 @@
             method: 'POST',
             data: { docNo: docNo }
         })
-        .done(function(canReject) {
-            if (canReject > 0) { // 반려 가능
-                $('#rejectModal').show();
+        .done(function(approvalCount) {
+        	 if (approvalCount > 0) {
+        		 console.log(approvalCount);
+        	        $('#rejectModal').show();
             } else { // 반려 불가능
-                Swal.fire({
+            	console.log(approvalCount + "!!!");
+            	Swal.fire({
                     icon: 'warning',
                     title: '반려 불가',
-                    text: '이미 결재한 문서는 반려할 수 없습니다.',
+                    text: '반려할 수 없습니다.',
                     confirmButtonText: '확인'
                 });
             }
@@ -329,7 +316,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     closeRejectModal();
-                    location.reload(); // 페이지를 새로고침하여 반영된 내용을 확인
+                    location.reload(); 
                 }
             });
         })

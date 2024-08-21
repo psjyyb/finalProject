@@ -25,8 +25,10 @@
                e.department_name AS departmentName,
                e.employee_name AS empName,
                e.employee_no AS employeeNo,
+               d.department_no,
                'employee' AS loginType
-        FROM employees e 
+        FROM employees e JOIN departments d
+        				 ON e.department_name = d.department_name
         WHERE e.company_code = #{companyCode} 
           AND e.employee_id = #{userId}
     </select>

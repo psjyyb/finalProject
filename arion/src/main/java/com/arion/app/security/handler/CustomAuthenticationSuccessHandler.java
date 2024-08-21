@@ -45,7 +45,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		session.setAttribute("employeeNo", userDetail.getEmployeeNo());
 		session.setAttribute("siteResp", userDetail.getSiteResp());
 		session.setAttribute("companyName", userDetail.getCompanyName());
-
+		session.setAttribute("departmentNo", userDetail.getDepartmentNo());
+		
+		
 	    System.out.println("세션에 저장되는 정보들");
 	    System.out.println("회사코드 : companyCode : " + userDetail.getCompanyCode());
 	    System.out.println("아이디 : loginId : " + userDetail.getUsername());
@@ -56,6 +58,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	    System.out.println("사원번호 : employeeNo : " + userDetail.getEmployeeNo());
 	    System.out.println("사이트권한 : siteResp : " + userDetail.getSiteResp());
 	    System.out.println("회사이름 : companyName : " + userDetail.getCompanyName());
+	    System.out.println("부서코드 : departmentNo : " + userDetail.getDepartmentNo());
 
 	    	getModuleVO  getmodule= new getModuleVO();
 	        // 상위 모듈 리스트 조회

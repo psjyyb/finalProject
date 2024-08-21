@@ -34,6 +34,11 @@ public class DocAccessServiceimpl implements DocAccessService {
 
 	@Override
 	public void insertAccessReference(List<Integer> referenceIds, int DocNo, String companyCode) {
+		
+		if (referenceIds == null || referenceIds.isEmpty()) {
+			return;
+		}
+		
 		for (Integer referenceId : referenceIds) {
             DocAccessVO docAccessVO = new DocAccessVO();
             docAccessVO.setDocNo(DocNo);
@@ -48,6 +53,10 @@ public class DocAccessServiceimpl implements DocAccessService {
 	
 	@Override
 	public void insertAddReference(List<EmployeesVO> referenceList, int DocNo, String companyCode) {
+		
+		if (referenceList == null || referenceList.isEmpty()) {
+			return;
+		}
 		for (EmployeesVO employee : referenceList) {
             DocAccessVO docAccessVO = new DocAccessVO();
             docAccessVO.setDocNo(DocNo);

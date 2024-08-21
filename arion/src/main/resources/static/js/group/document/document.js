@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					icon: "success",
 					text: "문서가 상신되었습니다.",
 					willClose: () => {
-						window.location.href = '/group';	
+						window.location.href = '/group/doc/apprProgress';	
 					}
 				});
 			},

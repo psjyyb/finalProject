@@ -64,7 +64,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 		return 1;
 	}
-
+	
 	@Override
 	public List<ApprovalVO> apprInfo(ApprovalVO approvalVO) {
 

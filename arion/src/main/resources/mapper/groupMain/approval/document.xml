@@ -45,81 +45,6 @@
 		)
 	</insert>
 	
-<!-- 	<select id="apprWaitList" parameterType="map" resultType="DocumentVO">
-		SELECT *
-		FROM (
-			SELECT DISTINCT doc_no
-							, department_name
-							, doc_name
-							, doc_title
-							, employee_name
-							, rank_name
-							, doc_status
-							, create_date
-							ROWNUM AS rn
-			FROM (
-				SELECT d.doc_no
-					  , e.department_name
-					  , d.doc_name
-					  , d.doc_title
-					  , e.employee_name
-					  , e.rank_name
-					  , d.doc_status
-					  , d.create_date
-				FROM document d JOIN doc_access da
-								ON d.doc_no = da.doc_no
-								JOIN employees e
-								ON d.employee_no = e.employee_no
-				WHERE 1=1
-				AND da.company_code = #{docAccessVO.companyCode}
-				AND da.employee_no = #{docAccessVO.employeeNo}
-				AND (da.access_appr = 1 OR da.reference = 1)
-				AND d.doc_status IN ('상신완료', '결재진행중')
-				<if test="criteria.docTitle != null and criteria.docTitle != ''">
-					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
-				</if>
-				<if test="criteria.writer != null and criteria.writer != ''">
-					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
-				</if>
-				<if test="criteria.startDate != null and criteria.startDate != ''">
-					AND d.create_date <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
-				</if>
-				<if test="criteria.endDate != null and criteria.endDate != ''">
-					AND d.create_date <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
-				</if>
-				ORDER BY d.doc_no DESC
-			)
-			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
-		)
-		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
-	</select>
-	
-	<select id="countApprWaitList" parameterType ="map" resultType="int">
-		SEELCT COUNT(DISTINCT d.doc_no)
-		FROM document d JOIN doc_access da
-						ON d.doc_no = da.doc_no
-						JOIN employees e
-						ON d.employee_no = d.employee_no
-		WHERE 1=1 
-		AND da.company_code = #{docAccessVO.companyCode}
-		AND da.employee_no = #{docAccessVO.employeeNo}
-		AND (da.access_appr = 1 OR da.reference = 1)
-		AND d.doc_status IN ('상신완료', '결재진행중')
-		<if test="criteria.docTitle != null and criteria.docTitle != ''">
-			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
-		</if>
-		<if test="criteria.writer != null and criteria.writer != ''">
-			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
-		</if>
-		<if test="criteria.startDate != null and criteria.startDate != ''">
-			AND d.create_date <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
-		</if>
-		<if test="criteria.endDate != null and criteria.endDate != ''">
-			AND d.create_date <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
-		</if>
-	</select> -->
-	
-	
 	<select id="apprProgressList" parameterType="map" resultType="DocumentVO">
 		SELECT *
 		FROM (
@@ -151,7 +76,7 @@
 				AND da.company_code = #{docAccessVO.companyCode}
 				AND da.employee_no = #{docAccessVO.employeeNo}
 				AND (da.access_appr = 1 OR da.reference = 1)
-				AND d.doc_status IN ('상신완료', '결재진행중')
+				AND d.appr_status IN ('결재대기', '결재진행중')
 				<if test="criteria.docTitle != null and criteria.docTitle != ''">
 					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 				</if>
@@ -166,9 +91,9 @@
 				</if>
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
-			ORDER BY doc_no DESC
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
+				ORDER BY doc_no DESC
 	</select>
 	
 	<select id="countApprProgressList" parameterType ="map" resultType="int">
@@ -181,7 +106,7 @@
 		AND da.company_code = #{docAccessVO.companyCode}
 		AND da.employee_no = #{docAccessVO.employeeNo}
 		AND (da.access_appr = 1 OR da.reference = 1)
-		AND d.doc_status IN ('상신완료', '결재진행중')
+		AND d.appr_status IN ('결재대기', '결재진행중')
 		<if test="criteria.docTitle != null and criteria.docTitle != ''">
 			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 		</if>
@@ -224,7 +149,263 @@
 	<update id="updateRejectStatus">
 		UPDATE document
 		SET appr_status = '반려'
+			, doc_status = '반려'
+			, finish_date = sysdate
 		WHERE doc_no = #{docNo}
 		AND company_code = #{companyCode}
 	</update>
+	
+	<update id="updateDocumentStatusAllApproved">
+    	UPDATE document
+    	SET appr_status = '결재완료'
+    		, doc_status = '결재완료'
+    		, finish_date = sysdate
+    	WHERE doc_no = #{docNo}
+      	AND company_code = #{companyCode}
+      	AND NOT EXISTS (
+          				SELECT 1
+          				FROM approval
+          				WHERE doc_no = #{docNo}
+            			AND company_code = #{companyCode}
+            			AND appr_status != '결재완료'
+      	)
+	</update>
+	<select id="apprFinishList" parameterType="map" resultType="DocumentVO">
+		SELECT *
+		FROM (
+			SELECT DISTINCT doc_no
+							, department_name
+							, doc_name
+							, doc_title
+							, employee_name
+							, rank_name
+							, doc_status
+							, create_date
+							, appr_status
+							, finish_date
+							, ROWNUM AS rn
+			FROM (
+				SELECT DISTINCT d.doc_no
+					  , e.department_name
+					  , d.doc_name
+					  , d.doc_title
+					  , e.employee_name
+					  , e.rank_name
+					  , d.doc_status
+					  , d.appr_status
+					  , d.create_date
+					  , d.finish_date
+				FROM document d JOIN doc_access da
+								ON d.doc_no = da.doc_no
+								JOIN employees e
+								ON d.employee_no = e.employee_no
+				WHERE 1=1
+				AND da.company_code = #{docAccessVO.companyCode}
+				AND d.doc_status = '결재완료'
+				<if test="criteria.docTitle != null and criteria.docTitle != ''">
+					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+				</if>
+				<if test="criteria.writer != null and criteria.writer != ''">
+					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+				</if>
+				<if test="criteria.startDate != null and criteria.startDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.endDate != null and criteria.endDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+				</if>
+			)
+			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+		)
+		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
+				ORDER BY doc_no DESC
+	</select>
+	
+	<select id="countApprFinishList" parameterType ="map" resultType="int">
+		SELECT COUNT(DISTINCT d.doc_no)
+		FROM document d JOIN doc_access da
+						ON d.doc_no = da.doc_no
+						JOIN employees e
+						ON d.employee_no = d.employee_no
+		WHERE 1=1 
+		AND da.company_code = #{docAccessVO.companyCode}
+		AND d.doc_status = '결재완료'
+		<if test="criteria.docTitle != null and criteria.docTitle != ''">
+			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+		</if>
+		<if test="criteria.writer != null and criteria.writer != ''">
+			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+		</if>
+		<if test="criteria.startDate != null and criteria.startDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.endDate != null and criteria.endDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+		</if>
+	</select>
+	
+	<select id="apprRejectList" parameterType="map" resultType="DocumentVO">
+		SELECT *
+		FROM (
+			SELECT DISTINCT doc_no
+							, department_name
+							, doc_name
+							, doc_title
+							, employee_name
+							, rank_name
+							, doc_status
+							, create_date
+							, appr_status
+							, finish_date
+							, ROWNUM AS rn
+			FROM (
+				SELECT DISTINCT d.doc_no
+					  , e.department_name
+					  , d.doc_name
+					  , d.doc_title
+					  , e.employee_name
+					  , e.rank_name
+					  , d.doc_status
+					  , d.create_date
+					  , d.appr_status
+					  , d.finish_date
+				FROM document d JOIN doc_access da
+								ON d.doc_no = da.doc_no
+								JOIN employees e
+								ON d.employee_no = e.employee_no
+				WHERE 1=1
+				AND da.company_code = #{docAccessVO.companyCode}
+				AND da.employee_no = #{docAccessVO.employeeNo}
+				AND (da.access_appr = 1 OR da.reference = 1)
+				AND d.doc_status IN ('반려')
+				<if test="criteria.docTitle != null and criteria.docTitle != ''">
+					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+				</if>
+				<if test="criteria.writer != null and criteria.writer != ''">
+					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+				</if>
+				<if test="criteria.startDate != null and criteria.startDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.endDate != null and criteria.endDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+				</if>
+			)
+			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+		)
+		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
+				ORDER BY doc_no DESC
+	</select>
+	
+	<select id="countApprRejectList" parameterType ="map" resultType="int">
+		SELECT COUNT(DISTINCT d.doc_no)
+		FROM document d JOIN doc_access da
+						ON d.doc_no = da.doc_no
+						JOIN employees e
+						ON d.employee_no = d.employee_no
+		WHERE 1=1 
+		AND da.company_code = #{docAccessVO.companyCode}
+		AND da.employee_no = #{docAccessVO.employeeNo}
+		AND (da.access_appr = 1 OR da.reference = 1)
+		AND d.doc_status IN ('반려')
+		<if test="criteria.docTitle != null and criteria.docTitle != ''">
+			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+		</if>
+		<if test="criteria.writer != null and criteria.writer != ''">
+			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+		</if>
+		<if test="criteria.startDate != null and criteria.startDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.endDate != null and criteria.endDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+		</if>
+	</select>
+	
+	
+	<select id="apprWaitList" parameterType="map" resultType="DocumentVO">
+		SELECT *
+		FROM (
+			SELECT DISTINCT doc_no
+							, department_name
+							, doc_name
+							, doc_title
+							, employee_name
+							, rank_name
+							, doc_status
+							, appr_status
+							, create_date
+							, ROWNUM AS rn
+			FROM (
+				SELECT DISTINCT d.doc_no
+					  , e.department_name
+					  , d.doc_name
+					  , d.doc_title
+					  , e.employee_name
+					  , e.rank_name
+					  , d.doc_status
+					  , d.appr_status
+					  , d.create_date
+				FROM document d JOIN doc_access da
+								ON d.doc_no = da.doc_no
+								JOIN approval a
+								ON d.doc_no = a.doc_no
+								JOIN employees e
+								ON d.employee_no = e.employee_no
+				WHERE 1=1
+				AND da.company_code = #{docAccessVO.companyCode}
+				AND da.employee_no = #{docAccessVO.employeeNo}
+				AND da.access_appr = 1
+				AND a.appr_status = '결재대기'
+				AND d.appr_status IN ('결재대기', '결재진행중')
+				<if test="criteria.docTitle != null and criteria.docTitle != ''">
+					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+				</if>
+				<if test="criteria.writer != null and criteria.writer != ''">
+					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+				</if>
+				<if test="criteria.startDate != null and criteria.startDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.endDate != null and criteria.endDate != ''">
+					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+				</if>
+			)
+			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+		)
+		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
+				ORDER BY doc_no DESC
+	</select>
+	
+	<select id="countApprWaitList" parameterType ="map" resultType="int">
+		SELECT COUNT(DISTINCT d.doc_no)
+		FROM document d JOIN doc_access da
+						ON d.doc_no = da.doc_no
+						JOIN approval a
+						ON d.doc_no = a.doc_no
+						JOIN employees e
+						ON d.employee_no = d.employee_no
+		WHERE 1=1 
+		AND da.company_code = #{docAccessVO.companyCode}
+		AND da.employee_no = #{docAccessVO.employeeNo}
+		AND da.access_appr = 1
+		AND a.appr_status = '결재대기'
+		AND d.appr_status IN ('결재대기', '결재진행중')
+		<if test="criteria.docTitle != null and criteria.docTitle != ''">
+			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
+		</if>
+		<if test="criteria.writer != null and criteria.writer != ''">
+			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
+		</if>
+		<if test="criteria.startDate != null and criteria.startDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.endDate != null and criteria.endDate != ''">
+			AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+		</if>
+	</select>
+	
+	
+	
+	
 </mapper>

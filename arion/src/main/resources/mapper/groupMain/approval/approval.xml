@@ -92,41 +92,48 @@
 	
 	<select id="hasApproved" resultType="int">
 		SELECT COUNT(*)
-   		FROM approval
+    	FROM approval
     	WHERE employee_no = #{employeeNo}
       	AND doc_no = #{docNo}
       	AND company_code = #{companyCode}
-      	AND sequence = appr_line
-      	AND appr_status = '결재완료'
+      	AND appr_status = '결재대기' 
+      	AND sequence = (
+          				SELECT MIN(sequence)
+          				FROM approval
+          				WHERE doc_no = #{docNo}
+            			AND company_code = #{companyCode}
+        AND appr_status = '결재대기'
+      )
 	</select>
 	
 	<update id="rejectDocument">
 		UPDATE approval
 		SET appr_status = '반려'
 			, appr_reason = #{apprReason}
+			, sign_date = sysdate
 		WHERE doc_no = #{docNo}
 		AND company_code = #{companyCode}
 		AND employee_no = #{employeeNo}
 	</update>
 	
 	<update id="nextApprStatus">
-		UPDATE approval
-		SET appr_status = '미결'
-		WHERE doc_no = #{docNo} 
-  		AND company_code = #{companyCode}
-  		AND sequence = (
-      					SELECT sequence 
-      					FROM approval 
-      					WHERE doc_no = #{docNo} 
-        				AND company_code = #{companyCode} 
-        				AND sequence > (
-            							SELECT sequence 
-            							FROM approval 
-            							WHERE doc_no = #{docNo} 
-              							AND company_code = #{companyCode} 
-              							AND employee_no = #{employeeNo}
-        								)
-  						)
-  		AND appr_status = '결재대기'
-	</update>
+    UPDATE approval
+    SET appr_status = '미결'
+    WHERE doc_no = #{docNo}
+      AND company_code = #{companyCode}
+      AND sequence > (
+          SELECT sequence 
+          FROM approval 
+          WHERE doc_no = #{docNo} 
+            AND company_code = #{companyCode} 
+            AND employee_no = #{employeeNo}
+      )
+      AND appr_status = '결재대기'
+      AND sequence IN (
+          SELECT sequence
+          FROM approval
+          WHERE doc_no = #{docNo}
+            AND company_code = #{companyCode}
+      )
+</update>
 </mapper>

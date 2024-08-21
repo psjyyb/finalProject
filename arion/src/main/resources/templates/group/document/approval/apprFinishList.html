@@ -118,7 +118,7 @@
 	<div class="container2">
 		<!-- 검색 영역 -->
 		<div class="search-container">
-			<form th:action="@{/group/doc/apprProgress}" method="get"
+			<form th:action="@{/group/doc/apprFinish}" method="get"
 				th:object="${criteria}">
 				<div>
 					<label>제목</label> 
@@ -151,10 +151,11 @@
 						<th>직급</th>
 						<th>결재상태</th>
 						<th>상신일자</th>
+						<th>완료일자</th>
 					</tr>
 				</thead>
 				<tbody>
-					<th:block th:each="document : ${proDoc}">
+					<th:block th:each="document : ${finishDoc}">
 						<tr th:data-doc-no="${document.docNo}">
 							<td th:text="${document.docNo}"></td>
 							<td th:text="${document.departmentName}"></td>
@@ -164,6 +165,7 @@
 							<td th:text="${document.rankName}"></td>
 							<td th:text="${document.apprStatus}"></td>
 							<td th:text="${#dates.format(document.createDate, 'yyyy-MM-dd')}"></td>
+							<td th:text="${#dates.format(document.finishDate, 'yyyy-MM-dd')}"></td>
 						</tr>
 					</th:block>
 				</tbody>
@@ -174,15 +176,15 @@
 		<div class="pagination">
 			<ul>
 				<li th:if="${pageDTO.prev}"><a
-					th:href="@{|/group/doc/apprProgress?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
+					th:href="@{|/group/doc/apprFinish?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
 				</li>
 				<li
 					th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}"
 					th:classappend="${pageNum == criteria.pageNum} ? 'active'"><a
-					th:href="@{|/group/doc/apprProgress?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
+					th:href="@{|/group/doc/apprFinish?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
 				</li>
 				<li th:if="${pageDTO.next}"><a
-					th:href="@{|/group/doc/apprProgress?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
+					th:href="@{|/group/doc/apprFinish?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
 				</li>
 			</ul>
 		</div>

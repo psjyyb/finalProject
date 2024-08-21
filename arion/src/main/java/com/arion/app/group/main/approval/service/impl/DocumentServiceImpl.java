@@ -94,7 +94,7 @@ public class DocumentServiceImpl implements DocumentService{
 		}
 			
 	}
-
+	//결재대기 리스트
 	@Override
 	public List<DocumentVO> apprWaitList(DocAccessVO docAccessVO, Criteria criteria) {
 		List<DocumentVO> apprWait = mapper.apprWaitList(docAccessVO, criteria);
@@ -147,7 +147,11 @@ public class DocumentServiceImpl implements DocumentService{
 		ssvc.apprSign(signVO);
 		
 		//문서 결재상태 변경
-		mapper.updateApprStatus(docNo, companyCode);		
+		mapper.updateApprStatus(docNo, companyCode);
+		
+		// 모든 결재가 완료되었는지 확인 후, 문서 상태를 '결재완료'로 업데이트
+	    finalizeApproval(docNo, companyCode, employeeNo);
+		
 	}
 
 	@Override
@@ -162,7 +166,38 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		//다음 결재자 미결 처리
 		asvc.nextApprStatus(docNo, companyCode, employeeNo);
+				
+	}
+	
+	public void finalizeApproval(int docNo, String companyCode, int employeeNo) {
+	    // 현재 결재자의 결재를 완료 처리
+		asvc.approveDocument(employeeNo, docNo, companyCode);
+
+	    // 남아있는 결재자들이 모두 결재완료 상태인지 확인하고, 문서 상태를 '결재완료'로 업데이트
+	    mapper.updateDocumentStatusAllApproved(docNo, companyCode);
+	}
+
+	@Override
+	public List<DocumentVO> apprFinishList(DocAccessVO docAccessVO, Criteria criteria) {
+		List<DocumentVO> apprFinish = mapper.apprFinishList(docAccessVO, criteria);
+		return apprFinish;
+	}
+
+	@Override
+	public int countApprFinishList(DocAccessVO docAccessVO, Criteria criteria) {
 		
+		return mapper.countApprFinishList(docAccessVO, criteria);
+	}
+
+	@Override
+	public List<DocumentVO> apprRejectList(DocAccessVO docAccessVO, Criteria criteria) {
+		List<DocumentVO> apprReject = mapper.apprRejectList(docAccessVO, criteria);
+		return apprReject;
+	}
+
+	@Override
+	public int countApprRejectList(DocAccessVO docAccessVO, Criteria criteria) {
+		return mapper.countApprRejectList(docAccessVO, criteria);
 	}
 
 }

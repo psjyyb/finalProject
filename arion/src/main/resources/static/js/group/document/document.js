@@ -287,48 +287,73 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	// 문서 작성 완료 버튼 클릭 시 Ajax로 데이터 전송
-	$('#submitDocument').on('click', function(event) {
-		event.preventDefault();
-		const formData = new FormData($('#writeDoc')[0]);
+	 $('#submitDocument').on('click', function(event) {
+        event.preventDefault();
 
-		// 결재자 및 참조자 목록을 FormData에 추가
-		selectedApprovers.forEach((approver, index) => {
-			formData.append(`approverIds`, approver.employeeNo);
-		});
+        // 필수 항목 확인
+        const docTitle = $('input[name="docTitle"]').val();
+        const templateSelected = $('#templateSelect').val();
+        if (selectedApprovers.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                text: "결재자를 선택해주세요."
+            });
+            return;
+        }
+        if (!docTitle) {
+            Swal.fire({
+                icon: "warning",
+                text: "제목을 입력해주세요."
+            });
+            return;
+        }
+        if (!templateSelected) {
+            Swal.fire({
+                icon: "warning",
+                text: "템플릿을 선택해주세요."
+            });
+            return;
+        }
 
-		selectedReferences.forEach((reference, index) => {
-			formData.append(`referenceIds`, reference.employeeNo);
-		});
-	
-		// CKEditor의 내용을 formData에 추가
-   		if (editorInstance) {
-        	const content = editorInstance.getData(); // CKEditor 내용 가져오기
-        	formData.append('docContent', content);
-    	}
-		
-		$.ajax({
-			url: '/writeDoc',
-			type: 'POST',
-			data: formData,
-			contentType: false,
-			processData: false,
-			success: function(response) {
-				Swal.fire({
-					icon: "success",
-					text: "문서가 상신되었습니다.",
-					willClose: () => {
-						window.location.href = '/group/doc/apprProgress';	
-					}
-				});
-			},
-			error: function(error) {
-				console.log('Error:', error);
-				Swal.fire({
-					icon: "error",
-					text: "상신 중 오류가 발생했습니다."
-				});
-			}
-		});
-	});
+        const formData = new FormData($('#writeDoc')[0]);
+
+        // 결재자 및 참조자 목록을 FormData에 추가
+        selectedApprovers.forEach((approver, index) => {
+            formData.append(`approverIds`, approver.employeeNo);
+        });
+
+        selectedReferences.forEach((reference, index) => {
+            formData.append(`referenceIds`, reference.employeeNo);
+        });
+    
+        // CKEditor의 내용을 formData에 추가
+        if (editorInstance) {
+            const content = editorInstance.getData(); // CKEditor 내용 가져오기
+            formData.append('docContent', content);
+        }
+        
+        $.ajax({
+            url: '/writeDoc',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: "success",
+                    text: "문서가 상신되었습니다.",
+                    willClose: () => {
+                        window.location.href = '/group/doc/apprProgress';    
+                    }
+                });
+            },
+            error: function(error) {
+                console.log('Error:', error);
+                Swal.fire({
+                    icon: "error",
+                    text: "상신 중 오류가 발생했습니다."
+                });
+            }
+        });
+    });
 });

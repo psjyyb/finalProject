@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.schedule.mapper.ScheduleMapper">
+	
+	<select id="selecteEmpScheduleList" resultType="ScheduleVO">
+		SELECT schedule_no
+		      ,schedule_title
+		      ,TO_CHAR(schedule_start,'yyyy-MM-dd HH24:mi') AS schedule_starts
+		      ,TO_CHAR(schedule_end,'yyyy-MM-dd HH24:mi') AS schedule_ends
+		      ,employee_no
+		      ,department_no
+		FROM schedule WHERE employee_no = #{employeNo}
+	</select>
+
+	<insert id="insertEmpSchedule" parameterType="ScheduleVO">
+			<selectKey keyProperty="scheduleNo"
+				   resultType="Integer"
+				   order="BEFORE">
+			SELECT NVL(MAX(schedule_no), 0) + 1
+			FROM schedule
+		</selectKey>
+		INSERT INTO schedule (schedule_no
+							 ,schedule_title
+							 ,schedule_start
+							 ,schedule_end
+							 ,employee_no
+							 ,company_code
+							 <if test="departmentNo != null and departmentNo !=''">
+							 ,department_no
+							 </if>
+							 )
+		VALUES(#{scheduleNo}
+			  ,#{scheduleTitle}
+			  ,TO_DATE(#{scheduleStarts},'yyyy-MM-dd HH24:mi')
+			  ,TO_DATE(#{scheduleEnds},'yyyy-MM-dd HH24:mi')
+			  ,#{employeeNo}
+			  ,#{companyCode}
+			  <if test="departmentNo != null and departmentNo !=''">
+			  ,#{departmentNo}
+			  </if>
+			   )
+	</insert>
+	<delete id="deleteEmpSchedule">
+		DELETE FROM schedule 
+		WHERE schedule_no = #{scheduleNo}
+	</delete>
+
+	<update id="updateEmpSchedule" parameterType="ScheduleVO">
+		UPDATE schedule 
+		SET schedule_title = #{scheduleTitle}
+		   ,schedule_start = TO_DATE(#{scheduleStarts},'YYYY-MM-dd HH24:MI')
+		   ,schedule_end = TO_DATE(#{scheduleEnds},'YYYY-MM-dd HH24:MI')
+		WHERE schedule_no= #{scheduleNo}
+	</update>
+</mapper>

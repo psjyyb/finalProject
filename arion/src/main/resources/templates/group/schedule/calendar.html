@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/group/layouts/group_layout}"
-    layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <style>
-  /* 부모 컨테이너 */
+  /* 전체 레이아웃 */
   .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin: 20px;
+    background-color: #f0f0f0; /* 전체 배경을 연한 그레이로 설정 */
+    border-radius: 8px; /* 라운드된 모서리 추가 */
+    padding: 20px;
   }
 
+  /* 달력 스타일 */
   #calendar {
-    max-width: 700px;
+    max-width: calc(100% - 370px); /* 폼이 있을 때는 폼의 너비를 제외한 크기 */
     max-height: 600px;
     flex-grow: 1;
+    transition: max-width 0.3s ease; /* 부드러운 애니메이션 추가 */
+    border: 1px solid #ddd; /* 경계선 색상 추가 */
+    border-radius: 8px; /* 라운드된 모서리 추가 */
+    background-color: #ffffff; /* 달력 배경을 흰색으로 설정 */
   }
 
+  /* 이벤트 폼 스타일 */
   #eventForm {
     width: 350px; /* 폼의 너비를 더 크게 설정 */
     max-height: 600px;
     margin-left: 20px;
     padding: 20px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border-radius: 8px; /* 라운드된 모서리 추가 */
+    background-color: #ffffff; /* 폼 배경을 흰색으로 설정 */
     display: none; /* 초기에는 숨김 처리 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
   }
 
   #eventForm h2 {
     font-size: 18px;
     margin-bottom: 15px;
+    color: #004080; /* 제목 색상 설정 */
   }
 
   #eventForm label {
     display: block;
     margin: 10px 0 5px;
+    color: #333; /* 레이블 색상 설정 */
   }
 
   #eventForm input, #eventForm button {
@@ -50,18 +64,24 @@
     margin-bottom: 10px;
   }
 
+  #eventForm input {
+    border: 1px solid #ddd; /* 입력 필드 테두리 색상 */
+    border-radius: 4px; /* 라운드된 모서리 추가 */
+  }
+
   #eventForm button {
-    background-color: #007bff;
+    background-color: #004080; /* 버튼 배경 색상 */
     border: none;
     color: white;
     cursor: pointer;
+    border-radius: 4px; /* 버튼 라운드된 모서리 추가 */
   }
 
   #eventForm button:hover {
-    background-color: #0056b3;
+    background-color: #003366; /* 버튼 호버 색상 */
   }
 
-  /* 버튼 섹션 */
+  /* 버튼 섹션 스타일 */
   .toggle-btns {
     display: flex;
     flex-direction: column;
@@ -74,206 +94,286 @@
     padding: 10px 15px;
     margin-bottom: 10px;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: #004080; /* 버튼 배경 색상 */
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px; /* 버튼 라운드된 모서리 추가 */
   }
 
   .toggle-btns button:hover {
-    background-color: #0056b3;
+    background-color: #003366; /* 버튼 호버 색상 */
   }
+.header-container {
+    background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+    padding: 20px;
+    border-bottom: 2px solid #0288d1; /* 아래쪽 테두리: 파랑 */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 부드러운 그림자 */
+    margin: 20px auto; /* 중앙 정렬을 위한 여백 */
+    max-width: 80%; /* 최대 너비 설정 */
+}
+
+/* 제목 스타일 */
+.header-container h1 {
+    color: #0288d1; /* 제목 텍스트 색상: 파랑 */
+    font-size: 2em; /* 제목 크기 조정 */
+    margin: 0; /* 기본 여백 제거 */
+    font-weight: 700; /* 두꺼운 글씨체 */
+}
 </style>
 </head>
 <body>
+<div class="header-container">
+		<h1>사원일정</h1>
+	</div>
+	<div class="container">
+		
+		<div id="calendar"></div>
+		
+		<div id="eventForm">
+			<h2>사원일정</h2>
+			<form>
+				<label for="eventTitle">이벤트 제목:</label> <input type="text"
+					id="eventTitle" placeholder="이벤트 제목 입력"> <label
+					for="startDate">시작 날짜 및 시간:</label> <input type="text"
+					id="startDate" placeholder="yyyy-MM-dd HH:mm"> <label
+					for="endDate">종료 날짜 및 시간:</label> <input type="text" id="endDate"
+					placeholder="yyyy-MM-dd HH:mm">
 
-  <div class="container">
-    <div id="calendar"></div>
+				<button type="button" id="addEventBtn">이벤트 추가</button>
+				<button type="button" id="updateEventBtn">이벤트 수정</button>
+				<button type="button" id="deleteEventBtn">이벤트 삭제</button>
+				<button id="hideFormBtn">폼 숨기기</button>
+			</form>
+		</div>
+	</div>
 
-    <div class="toggle-btns">
-      <button id="toggleFormBtn">등록 폼 보이기/숨기기</button>
-    </div>
+	<script>
+	$(document).ready(function() {
+		  var calendarEl = $('#calendar');
+		  var eventTitleInput = $('#eventTitle');
+		  var startDateInput = $('#startDate');
+		  var endDateInput = $('#endDate');
+		  var selectedEvent = null;
+		  var eventForm = $('#eventForm');
+		  var hideFormBtn = $('#hideFormBtn');
 
-    <div id="eventForm">
-      <h2>이벤트 세부사항</h2>
-      <form>
-        <label for="eventTitle">이벤트 제목:</label>
-        <input type="text" id="eventTitle" placeholder="이벤트 제목 입력">
-        
-        <label for="startDate">시작 날짜 및 시간:</label>
-        <input type="text" id="startDate" placeholder="yyyy-MM-dd HH:mm">
-        
-        <label for="endDate">종료 날짜 및 시간:</label>
-        <input type="text" id="endDate" placeholder="yyyy-MM-dd HH:mm">
-        
-        <button type="button" id="addEventBtn">이벤트 추가</button>
-        <button type="button" id="updateEventBtn">이벤트 수정</button>
-        <button type="button" id="deleteEventBtn">이벤트 삭제</button>
-      </form>
-    </div>
-  </div>
+		  var calendar = new FullCalendar.Calendar(calendarEl[0], {
+		    initialDate: new Date(),
+		    initialView: 'dayGridMonth',
+		    nowIndicator: true,
+		    headerToolbar: {
+		      left: 'prev,next today',
+		      center: 'title',
+		      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+		    },
+		    navLinks: true, // 클릭하여 날짜/주 선택 가능
+		    editable: true,
+		    selectable: true,
+		    selectMirror: true,
+		    dayMaxEvents: true, // 너무 많은 이벤트가 있을 경우 "더 보기" 링크 허용
+		    events: function(info, successCallback, failureCallback) {
+		      $.ajax({
+		        url: '/group/schedule/empCalendar',
+		        method: 'GET',
+		        success: function(result) {
+		          var events = [];
+		          result.forEach(a => {
+		            events.push({
+		              id: a.scheduleNo,
+		              title: a.scheduleTitle,
+		              start: a.scheduleStarts,
+		              end: a.scheduleEnds
+		            });
+		          });
+		          successCallback(events);
+		        },
+		        error: function(err) {
+		          console.log(err);
+		          failureCallback(err);
+		        }
+		      });
+		    },
+		    dateClick: function(info) {
+		      startDateInput.val(moment(info.date).format('YYYY-MM-DD HH:mm'));
+		      endDateInput.val("");
+		      eventTitleInput.val("");
+		      selectedEvent = null;
+		      eventForm.show(); // 날짜 클릭 시 폼 표시
+		      hideFormBtn.show(); // 숨기기 버튼 표시
+		      adjustCalendarSize(); // 크기 조정 함수 호출
+		    },
+		    eventClick: function(info) {
+		      selectedEvent = info.event;
+		      eventTitleInput.val(selectedEvent.title);
+		      startDateInput.val(moment(selectedEvent.start).format('YYYY-MM-DD HH:mm'));
+		      endDateInput.val(selectedEvent.end ? moment(selectedEvent.end).format('YYYY-MM-DD HH:mm') : ""); // 종료 날짜가 있을 경우에만 설정
+		      eventForm.show(); // 이벤트 클릭 시 폼 표시
+		      hideFormBtn.show(); // 숨기기 버튼 표시
+		      adjustCalendarSize(); // 크기 조정 함수 호출
+		    }
+		  });
 
-<script>
-  $(document).ready(function() {
-    var calendarEl = $('#calendar');
-    var eventTitleInput = $('#eventTitle');
-    var startDateInput = $('#startDate');
-    var endDateInput = $('#endDate');
-    var selectedEvent = null;
-    var toggleFormBtn = $('#toggleFormBtn');
-    var eventForm = $('#eventForm');
+		  calendar.render();
 
-    var calendar = new FullCalendar.Calendar(calendarEl[0], {
-      initialDate: '2023-01-12',
-      initialView: 'dayGridMonth',
-      nowIndicator: true,
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-      },
-      navLinks: true, // 클릭하여 날짜/주 선택 가능
-      editable: true,
-      selectable: true,
-      selectMirror: true,
-      dayMaxEvents: true, // 너무 많은 이벤트가 있을 경우 "더 보기" 링크 허용
-      events: [
-        {
-          title: '하루 종일 이벤트',
-          start: '2023-01-01',
-        },
-        {
-          title: '긴 이벤트',
-          start: '2023-01-07',
-          end: '2023-01-10'
-        },
-        {
-          groupId: 999,
-          title: '반복 이벤트',
-          start: '2023-01-09T16:00:00'
-        },
-        {
-          groupId: 999,
-          title: '반복 이벤트',
-          start: '2023-01-16T16:00:00'
-        },
-        {
-          title: '컨퍼런스',
-          start: '2023-01-11',
-          end: '2023-01-13'
-        },
-        {
-          title: '회의',
-          start: '2023-01-12T10:30:00',
-          end: '2023-01-12T12:30:00'
-        },
-        {
-          title: '점심',
-          start: '2023-01-12T12:00:00'
-        },
-        {
-          title: '회의',
-          start: '2023-01-12T14:30:00'
-        },
-        {
-          title: '해피 아워',
-          start: '2023-01-12T17:30:00'
-        },
-        {
-          title: '저녁',
-          start: '2023-01-12T20:00:00'
-        },
-        {
-          title: '생일 파티',
-          start: '2023-01-13T07:00:00'
-        },
-        {
-          title: '구글로 이동',
-          url: 'http://google.com/',
-          start: '2023-01-28'
-        }
-      ],
-      dateClick: function(info) {
-        startDateInput.val(moment(info.date).format('YYYY-MM-DD HH:mm'));
-        endDateInput.val("");
-        eventTitleInput.val("");
-        selectedEvent = null;
-        toggleFormBtn.hide(); // 버튼 숨기기
-        eventForm.show(); // 날짜 클릭 시 폼 표시
-      },
-      eventClick: function(info) {
-        selectedEvent = info.event;
-        eventTitleInput.val(selectedEvent.title);
-        startDateInput.val(moment(selectedEvent.start).format('YYYY-MM-DD HH:mm'));
-        endDateInput.val(selectedEvent.end ? moment(selectedEvent.end).format('YYYY-MM-DD HH:mm') : ""); // 종료 날짜가 있을 경우에만 설정
-        toggleFormBtn.hide(); // 버튼 숨기기
-        eventForm.show(); // 이벤트 클릭 시 폼 표시
-      }
-    });
+		  $('#addEventBtn').on('click', function() {
+		    let content = eventTitleInput.val();
+		    let startDate = moment(startDateInput.val(), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+		    let finalDate = endDateInput.val() ? moment(endDateInput.val(), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm') : null;
+		    if (startDate > finalDate) {
+		      Swal.fire({
+		        icon: "error",
+		        title: "종료일이 시작일보다 빠를 수 없습니다!",
+		        allowOutsideClick: false
+		      }).then(function() {});
+		    } else {
+		      if (eventTitleInput.val()) {
+		        calendar.addEvent({
+		          title: content,
+		          start: startDate,
+		          end: finalDate,
+		          allDay: false
+		        });
+		        $.ajax({
+		          url: '/group/schedule/empCalcInsert',
+		          method: 'POST',
+		          data: {
+		            scheduleTitle: content,
+		            scheduleStarts: startDate,
+		            scheduleEnds: finalDate
+		          },
+		          success: function(result) {
+		            Swal.fire({
+		              icon: "success",
+		              title: "일정이 등록되었습니다!",
+		              allowOutsideClick: false
+		            }).then(function() {
+		              eventForm.hide();
+		              hideFormBtn.hide(); // 숨기기 버튼 숨기기
+		              adjustCalendarSize(); // 크기 조정 함수 호출
+		            });
+		          },
+		          error: function(err) {
+		            console.log(err);
+		          }
+		        });
+		      }
+		    }
+		  });
 
-    calendar.render();
+		  $('#updateEventBtn').on('click', function() {
+		    let contents = eventTitleInput.val();
+		    let startDate = moment(startDateInput.val(), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+		    let finalDate = endDateInput.val() ? moment(endDateInput.val(), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm') : null;
+		    if (startDate > finalDate) {
+		      Swal.fire({
+		        icon: "error",
+		        title: "종료일이 시작일보다 빠를 수 없습니다!",
+		        allowOutsideClick: false
+		      }).then(function() {});
+		    } else {
+		      if (selectedEvent && eventTitleInput.val()) {
+		        Swal.fire({
+		          title: "일정을 수정하시겠습니까?",
+		          showDenyButton: true,
+		          confirmButtonText: "네",
+		          denyButtonText: "아니요"
+		        }).then((result) => {
+		          if (result.isConfirmed) {
+		            $.ajax({
+		              url: '/group/schedule/empCalcUpdate',
+		              method: 'POST',
+		              data: {
+		                scheduleTitle: contents,
+		                scheduleStarts: startDate,
+		                scheduleEnds: finalDate,
+		                scheduleNo: selectedEvent.id
+		              },
+		              success: function(result) {
+		                Swal.fire({
+		                  icon: "success",
+		                  title: "일정이 수정되었습니다!",
+		                  allowOutsideClick: false
+		                }).then(function() {
+		                  selectedEvent.setProp('title', contents);
+		                  selectedEvent.setStart(startDate);
+		                  selectedEvent.setEnd(finalDate);
+		                  eventForm.hide();
+		                  hideFormBtn.hide(); // 숨기기 버튼 숨기기
+		                  adjustCalendarSize(); // 크기 조정 함수 호출
+		                });
+		              },
+		              error: function(err) {
+		                console.log(err);
+		              }
+		            });
+		          }
+		        });
+		      }
+		    }
+		  });
 
-    $('#addEventBtn').on('click', function() {
-    	let content=eventTitleInput.val();
-    	let startDate = moment(startDateInput.val(), 'YYYY-MM-DD HH:mm').toISOString();
-    	let finalDate = endDateInput.val() ? moment(endDateInput.val(), 'YYYY-MM-DD HH:mm').toISOString() : null;
-      if (eventTitleInput.val()) {
-        calendar.addEvent({
-          title: content ,
-          start:startDate,
-          end: finalDate,
-          allDay: false
-        });
-         $.ajax({
-		url:'/group/schedule/empCalcInsert',
-		method:'POST',
-		data:{scheduleTitle:content,
-			  scheduleStarts:startDate,
-			  scheduleEnds:finalDate}
-         ,success:(result)=>{
-        	 console.log(result);
-         },
-         error:(err)=>{
-        	 console.log(err);
-         }
-		}) 
-        eventForm.hide();
-        toggleFormBtn.show(); // 버튼 다시 보이기
-      }
-    });
+		  $('#deleteEventBtn').on('click', function() {
+		    if (selectedEvent && selectedEvent.id != null) {
+		      Swal.fire({
+		        title: "일정을 삭제하시겠습니까?",
+		        showDenyButton: true,
+		        confirmButtonText: "네",
+		        denyButtonText: "아니요"
+		      }).then((result) => {
+		        if (result.isConfirmed) {
+		          $.ajax({
+		            url: '/group/schedule/empCalcDelete',
+		            method: 'POST',
+		            data: {
+		              scheduleNo: selectedEvent.id
+		            },
+		            success: function(result) {
+		              Swal.fire({
+		                icon: "success",
+		                title: "일정이 삭제되었습니다!",
+		                allowOutsideClick: false
+		              }).then(function() {
+		                selectedEvent.remove();
+		                selectedEvent = null;
+		                eventTitleInput.val("");
+		                startDateInput.val("");
+		                endDateInput.val("");
+		                eventForm.hide();
+		                hideFormBtn.hide(); // 숨기기 버튼 숨기기
+		                adjustCalendarSize(); // 크기 조정 함수 호출
+		              });
+		            },
+		            error: function(err) {
+		              console.log(err);
+		            }
+		          });
+		        }
+		      });
+		    }
+		  });
 
-    $('#updateEventBtn').on('click', function() {
-      if (selectedEvent && eventTitleInput.val()) {
-        selectedEvent.setProp('title', eventTitleInput.val());
-        selectedEvent.setStart(moment(startDateInput.val(), 'YYYY-MM-DD HH:mm').toISOString());
-        selectedEvent.setEnd(endDateInput.val() ? moment(endDateInput.val(), 'YYYY-MM-DD HH:mm').toISOString() : null);
-        eventForm.hide();
-        toggleFormBtn.show(); // 버튼 다시 보이기
-      }
-    });
+		  function adjustCalendarSize() {
+		    if (eventForm.is(':visible')) {
+		      calendarEl.css('max-width', 'calc(100% - 370px)'); // 폼이 있을 때 달력 크기
+		    } else {
+		      calendarEl.css('max-width', '100%'); // 폼이 숨겨질 때 달력 크기
+		    }
+		    setTimeout(function() {
+		      calendar.updateSize(); // 달력 레이아웃 재계산
+		    }, 250); // 100ms 대기 후 크기 조정
+		  }
 
-    $('#deleteEventBtn').on('click', function() {
-      if (selectedEvent) {
-        selectedEvent.remove();
-        selectedEvent = null;
-        eventTitleInput.val("");
-        startDateInput.val("");
-        endDateInput.val("");
-        eventForm.hide();
-        toggleFormBtn.show(); // 버튼 다시 보이기
-      }
-    });
+		  hideFormBtn.on('click', function() {
+		    eventForm.hide();
+		    hideFormBtn.hide(); // 숨기기 버튼 숨기기
+		    adjustCalendarSize(); // 크기 조정 함수 호출
+		  });
 
-    // 폼 토글 버튼 클릭 시 폼의 표시/숨기기 처리
-    toggleFormBtn.on('click', function() {
-      eventForm.toggle();
-      if (eventForm.is(':visible')) {
-        toggleFormBtn.hide(); // 폼이 보일 때 버튼 숨기기
-      } else {
-        toggleFormBtn.show(); // 폼이 숨겨질 때 버튼 보이기
-      }
-    });
-  });
+		  // 초기 크기 조정
+		  adjustCalendarSize();
+		});
+
 </script>
 </body>
 </html>

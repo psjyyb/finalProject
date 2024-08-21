@@ -16,7 +16,7 @@ public class ScheduleVO {
 	private LocalDate scheduleEnd;
 	private int employeeNo;
 	private String companyCode;
-	private int departmentsNo;
+	private int departmentNo;
 	private String scheduleStarts;
 	private String scheduleEnds;
 }

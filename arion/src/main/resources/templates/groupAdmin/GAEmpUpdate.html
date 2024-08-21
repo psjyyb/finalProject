@@ -141,19 +141,37 @@ button.delete:hover {
         event.preventDefault();
 		let ename = $('input[name=employeeName]');
         if(ename.val()==''){
-        	alert('사원명은 필수입니다.');
-        	ename.focus();
-        	return;
+        	Swal.fire({
+				icon: "error",
+	      		title: "사원명은 필수입니다.",
+	      		allowOutsideClick: false,
+	      		}).then(function(){
+	      			ename.focus();
+	      		});
+			
+  			return;
         }
         let eid = $('input[name=employeeId]');
     	if(eid.val()==''){
-    		alert('사원아이디는 필수입니다.');
-    		eid.focus();
-    		return;
+    		Swal.fire({
+				icon: "error",
+	      		title: "아이디는 필수입니다.",
+	      		allowOutsideClick: false,
+	      		}).then(function(){
+	      		});
+			eid.focus();
+			return;
     	}
-    	if(confirm('사원을 수정하시겠습니까?')){
-    		insertEmp.submit();
-    	}
+    	Swal.fire({
+			  title: "사원정보를 수정하시겠습니까?",
+			  showDenyButton: true,
+			  confirmButtonText: "네",
+			  denyButtonText: `아니요`
+			}).then((result) => {
+			  if (result.isConfirmed  && check) {
+				  insertEmp.submit();
+			  }
+			});
     })
     $('#deleteBtn').on('click',function(e){
     	console.log(e);

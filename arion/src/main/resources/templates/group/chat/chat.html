@@ -345,30 +345,44 @@ $(document).ready(function() {
 
         // 채팅방 나가기
         $('#exitRoom').on('click', function () {
-            if (confirm('채팅방을 나가시겠습니까?')) {
-                if (roomNo == null) {
-                    alert('채팅방을 선택해주세요');
-                } else {
-                    $.ajax({
-                        url: '/chat/exitRoom',
-                        method: 'POST',
-                        data: JSON.stringify({ employeeNo: empNo, roomNo: roomNo }),
-                        headers: { 'Content-Type': 'application/json' },
-                        success: (result) => {
-                            // 현재 선택된 채팅방 목록에서 제거
-                            $(`#chat-room-list .chat-room-item input[value="${roomNo}"]`).parent().remove();
-                            
-                            // 메시지 박스와 프로필 이름 초기화
-                            $('#chat-box').empty();
-                            $('#employee-names').text('');
-                            roomNo = null;
-                        },
-                        error: (err) => {
-                            console.log('방나가기 에러', err)
-                        }
-                    })
-                }
-            }
+        	Swal.fire({
+				  title: "채팅방을 나가시겠습니까?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아니요`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					   if (roomNo == null) {
+						   Swal.fire({
+				        		  icon: "error",
+				        		  title: "채팅방을 선택해주세요.",
+				        		  allowOutsideClick: false,
+				        		  }).then(function(){
+				        		  
+				        		});
+		                } else {
+		                    $.ajax({
+		                        url: '/chat/exitRoom',
+		                        method: 'POST',
+		                        data: JSON.stringify({ employeeNo: empNo, roomNo: roomNo }),
+		                        headers: { 'Content-Type': 'application/json' },
+		                        success: (result) => {
+		                            // 현재 선택된 채팅방 목록에서 제거
+		                            $(`#chat-room-list .chat-room-item input[value="${roomNo}"]`).parent().remove();
+		                            
+		                            // 메시지 박스와 프로필 이름 초기화
+		                            $('#chat-box').empty();
+		                            $('#employee-names').text('');
+		                            roomNo = null;
+		                        },
+		                        error: (err) => {
+		                            console.log('방나가기 에러', err)
+		                        }
+		                    })
+		                }
+				  } 
+				});
         })
     });
 </script>

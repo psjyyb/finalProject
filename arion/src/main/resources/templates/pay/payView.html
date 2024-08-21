@@ -319,36 +319,35 @@ h1, h2, h3 {
 		var canvas = document.getElementById('signature-pad');
 		var signaturePad = new SignaturePad(canvas);
 
-		document
-				.getElementById('save')
-				.addEventListener(
-						'click',
-						function(event) {
-							if (confirm('계약서 작성을 완료하시겠습니까?')) {
-								var dataURL = signaturePad
-										.toDataURL('image/png');
-								document.getElementById('signature-data').value = dataURL;
-
-								// 데이터가 제대로 설정되었는지 콘솔에 출력
-								console.log('Data URL:', dataURL);
-								console
-										.log(
-												'Signature data field value:',
-												document
-														.getElementById('signature-data').value);
-
-								if (!dataURL) {
-									alert('서명을 입력해주세요.');
-									event.preventDefault(); // 서명이 없는 경우 폼 제출을 막습니다.
-								} else {
-									document.getElementById('signature-form')
-											.submit();
-									alert('결제 페이지로 이동합니다');
-								}
+		document.getElementById('save').addEventListener('click',function(event) {
+			event.preventDefault();
+			Swal.fire({
+				  title: "계약서 작성을 완료하시겠습니까?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아니요`
+					}).then((result) => {
+						if (result.isConfirmed) {							
+							 var dataURL = signaturePad.toDataURL('image/png');
+							document.getElementById('signature-data').value = dataURL;
+							  if (dataURL=='') {
+								alert('서명을 입력해주세요.');
+								event.preventDefault(); // 서명이 없는 경우 폼 제출을 막습니다.
 							} else {
-								event.preventDefault(); // 사용자가 취소하면 폼 제출을 막습니다.
-							}
-						});
+								Swal.fire({
+					        		  icon: "success",
+					        		  title: "결제페이지로 이동합니다.",
+					        		  allowOutsideClick: false,
+					        		  }).then(function(){
+					        			  document.getElementById('signature-form').submit();
+					        		});
+							}  
+ 						} else {
+							event.preventDefault(); // 사용자가 취소하면 폼 제출을 막습니다.
+						}
+				})
+				
+			});
 	</script>
 </body>
 </html>

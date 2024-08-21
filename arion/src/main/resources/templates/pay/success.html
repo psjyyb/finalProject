@@ -197,18 +197,34 @@
 			            }
 			        })
 			        .done(result=>{
-			        	alert('결제가 성공적으로 되었습니다.');
-			        	location.href='/groupAdmin';
+			        	Swal.fire({
+			        		  icon: "success",
+			        		  title: "결제가 성공적으로 되었습니다.",
+			        		  allowOutsideClick: false,
+			        		  }).then(function(){
+			        			  location.href='/groupAdmin';
+			        		});
 			        })
 			          .fail(err=>{
 			        	console.log(err);
-			        	alert('오류발생');
-			        	location.href='/home';
+			        	Swal.fire({
+			        		  icon: "success",
+			        		  title: "오류발생, 다시 시도해주세요.",
+			        		  allowOutsideClick: false,
+			        		  }).then(function(){
+			        			  location.href='/home';
+			        		});
 			        })
 			    })
 			    .fail(err=> {
 			        console.log(err);
-			        alert('결제 실패');
+			        Swal.fire({
+		        		  icon: "success",
+		        		  title: "결제실패 카드를 확인해주세요.",
+		        		  allowOutsideClick: false,
+		        		  }).then(function(){
+		        			  location.href='/home';
+		        		});
 			    });
 			});
 	</script>

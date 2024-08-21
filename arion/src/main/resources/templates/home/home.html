@@ -43,7 +43,7 @@
                         <th:block th:each="module :${moduleList}">
                         <div class="card">
                             <div class="card-icon">
-                                <span class="fas fa-headphones-alt"></span>
+                                <img th:src="@{'/images/' + ${module.moduleIcon}}" style="width:70px; height:70px">
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title" th:text="${module.moduleName}"></h4>

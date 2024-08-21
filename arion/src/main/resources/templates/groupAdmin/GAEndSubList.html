@@ -49,9 +49,16 @@
 	$('tbody tr').on('click',function(e){
 		let contractNo =  $(e.currentTarget).children().first().text();
 		let url = '/groupAdmin/GASubInfo?contractNo='+contractNo;
-		if(confirm('계약서를를 보시겠습니까 ?')){
-			location.href=url;
-		}
+		Swal.fire({
+			  title: "계약서를 상세 보시겠습니까 ?",
+			  showDenyButton: true,
+			  confirmButtonText: "네",
+			  denyButtonText: `아니요`
+			}).then((result) => {
+			  if (result.isConfirmed) {
+				  location.href=url;
+			  } 
+			});
 	})
 	</script>
 </body>

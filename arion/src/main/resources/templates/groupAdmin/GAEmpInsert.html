@@ -180,27 +180,45 @@ button:hover {
 		event.preventDefault();
 		let ename = $('input[name=employeeName]');
 		if (ename.val() == '') {
-			alert('사원명은 필수입니다.');
-			ename.focus();
-			return;
-		}
-		let eid = $('input[name=employeeId]');
-		if (eid.val() == '') {
-			alert('사원아이디는 필수입니다.');
-			eid.focus();
-			return;
+			Swal.fire({
+				icon: "error",
+	      		title: "사원명은 필수입니다.",
+	      		allowOutsideClick: false,
+	      		}).then(function(){
+	      			ename.focus();
+	      		});
+			
+  			return;
 		}
 		let epw = $('input[name=employeePw]');
 		if (epw.val() == '') {
-			alert('사원비밀번호는 필수입니다.');
+			Swal.fire({
+				icon: "error",
+	      		title: "비밀번호는 필수입니다.",
+	      		allowOutsideClick: false,
+	      		}).then(function(){
+	      		});
 			epw.focus();
 			return;
 		}
-		if (confirm('사원을 등록하시겠습니까?') && check) {
-			insertEmp.submit();
-		} else {
-			alert('아이디 중복을 확인해주세요');
-		}
+		Swal.fire({
+			  title: "사원을 등록하시겠습니까?",
+			  showDenyButton: true,
+			  confirmButtonText: "네",
+			  denyButtonText: `아니요`
+			}).then((result) => {
+			  if (result.isConfirmed  && check) {
+				  insertEmp.submit();
+			  }else {
+					Swal.fire({
+						icon: "error",
+			      		title: "아이디 중복체크를 해주십시오",
+			      		allowOutsideClick: false,
+			      		}).then(function(){
+			      		});
+				}
+			});
+		
 	});
 
 	$('#overlap').on('click', function() {

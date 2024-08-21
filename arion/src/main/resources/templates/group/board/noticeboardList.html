@@ -69,8 +69,8 @@
 		<!-- 글쓰기 버튼 공지사항 부상이상만 권한부여 -->
 		<div>
 			<button type="button" th:onclick="|location.href='@{noticeboardInsert}'|"
-			 th:if="${rankName == '사장' or rankName == '부사장' or rankName == '전무' or rankName == '상무' or rankName == '이사' or rankName == '부장'}"
-			 >글쓰기</button>
+			 th:if="${session.rankName == '사장' or session.rankName == '부사장' or session.rankName == '전무' 
+			 		or session.rankName == '상무' or session.rankName == '이사' or session.rankName == '부장'}">글쓰기</button>
 		</div>
 		
 		<!-- 검색 -->

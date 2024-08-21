@@ -47,31 +47,45 @@ public class BoardController {
 	// noticeboard
 	// 공지사항 전체조회
 	@GetMapping("/group/noticeboardList") // 주소를 어디로 할건지 정해야됨
-	public String noticeboardList(Model model, Criteria cri) {
+	public String noticeboardList(Model model, Criteria cri, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		cri.setCompanyCode(companyCode);
 		cri.setBoardCategory("Y01");
+		
 		List<BoardVO> list = boardService.noticeboardList(cri);
 		model.addAttribute("boards", list);
 		model.addAttribute("page", new PageDTO(10, boardService.getTotal(cri), cri));
+		
 		return "group/board/noticeboardList"; // RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 
 	// 공지사항 게시글 상세조회
 	@GetMapping("/group/noticeboardInfo")
 	public String noticeboardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		// 파라미터 정의
 		String companyCode = (String) session.getAttribute("companyCode");
-		BoardVO findVO = boardService.noticeboardInfo(boardVO);
+		boardVO.setCompanyCode(companyCode);
+
+		// 게시글
+		BoardVO findVO = boardService.boardInfo(boardVO);
+		model.addAttribute("board", findVO);
+		// 첨부파일
 		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
-		boardService.ViewCnt(boardVO.getBoardNo());
-		model.addAttribute("board", findVO);
+
+		// 댓글
 		List<ReplyVO> list = replyService.replyList(boardVO.getBoardNo());
 		model.addAttribute("comments", list);
+
+		// 조회수 증가
+		boardService.ViewCnt(boardVO.getBoardNo());
 		return "group/board/noticeboardInfo";
 	}
 
 	// 공지사항 게시글 등록 (페이지)
 	@GetMapping("/group/noticeboardInsert")
 	public String noticeboardInsertForm() {
+		
 		return "group/board/noticeboardInsert";
 	}
 
@@ -79,19 +93,22 @@ public class BoardController {
 	@PostMapping("/noticeboardInsert")
 	public String noticeboardInsertProcess(BoardVO boardVO, @RequestPart MultipartFile[] files, HttpSession session) {
 		int employeeNo = (int) session.getAttribute("employeeNo"); // HttpSession
-		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setEmployeeNo(employeeNo); // 로그인세션 받아와서 작성자로
-		boardVO.setBoardCategory("Y01"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
+		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode); // 회사코드를 받아서 그룹웨어를 사용하기 때문에 회사코드를 받아야됨
+		boardVO.setBoardCategory("Y01"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
 		long bno = boardService.noticeinsertBoard(boardVO, files, companyCode);
 		return "redirect:/group/noticeboardInfo?boardNo=" + bno;
 	}
 
 	// 공지사항 게시글 수정 (페이지)
 	@GetMapping("/group/noticeboardUpdate")
-	public String noticeboardUpdateForm(BoardVO boardVo, Model model) {
-		BoardVO findVO = boardService.noticeboardInfo(boardVo);
+	public String noticeboardUpdateForm(BoardVO boardVO, Model model) {
+		BoardVO findVO = boardService.noticeboardInfo(boardVO);
 		model.addAttribute("board", findVO);
+		
 		return "group/board/noticeboardUpdate";
 	}
 
@@ -99,6 +116,7 @@ public class BoardController {
 	@PostMapping("/group/noticeboardUpdate")
 	@ResponseBody
 	public Map<String, Object> noticeboardUpdateProcess(@RequestBody BoardVO boardVO) {
+		
 		return boardService.noticeupdateBoard(boardVO);
 	}
 
@@ -106,72 +124,93 @@ public class BoardController {
 	@GetMapping("/group/noticeboardDelete")
 	public String noticeboardDelete(@RequestParam Integer boardNo) {
 		boardService.noticedeleteBoard(boardNo);
+		
 		return "redirect:noticeboardList";
 	}
 
 	
 	// freeboard
-	// 전체조회
+	// 자유게시판 전체조회
 	@GetMapping("/group/freeboardList") // 주소를 어디로 할건지 정해야됨
-	public String boardList(Model model, Criteria cri) {
+	public String boardList(Model model, Criteria cri, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		cri.setCompanyCode(companyCode);
 		cri.setBoardCategory("Y02");
+		
 		List<BoardVO> list = boardService.boardList(cri);
 		model.addAttribute("boards", list);
 		model.addAttribute("page", new PageDTO(10, boardService.getTotal(cri), cri));
+		
 		return "group/board/freeboardList"; // RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 
-	// 게시글 상세조회
+	// 자유게시판 게시글 상세조회
 	@GetMapping("/group/freeboardInfo")
 	public String boardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		// 파라미터 정의
 		String companyCode = (String) session.getAttribute("companyCode");
+		boardVO.setCompanyCode(companyCode);
+
+		// 게시글
 		BoardVO findVO = boardService.boardInfo(boardVO);
+		model.addAttribute("board", findVO);
+
+		// 첨부파일
 		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
-		boardService.ViewCnt(boardVO.getBoardNo());
-		model.addAttribute("board", findVO);
+
+		// 댓글
 		List<ReplyVO> list = replyService.replyList(boardVO.getBoardNo());
 		model.addAttribute("comments", list);
+
+		// 조회수 증가
+		boardService.ViewCnt(boardVO.getBoardNo());
 		return "group/board/freeboardInfo";
 	}
 
-	// 게시글 등록 (페이지)
+	// 자유게시판 게시글 등록 (페이지)
 	@GetMapping("/group/freeboardInsert")
 	public String boardInsertForm() {
+		
 		return "group/board/freeboardInsert";
 	}
 
-	// 게시글 등록 (처리)
+	// 자유게시판 게시글 등록 (처리)
 	@PostMapping("/freeboardInsert")
 	public String boardInsertProcess(BoardVO boardVO, @RequestPart MultipartFile[] files, HttpSession session) {
 		int employeeNo = (int) session.getAttribute("employeeNo"); // HttpSession
-		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setEmployeeNo(employeeNo); // 로그인세션 받아와서 작성자로
-		boardVO.setBoardCategory("Y02"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
+		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode); // 회사코드를 받아서 그룹웨어를 사용하기 때문에 회사코드를 받아야됨
+		boardVO.setBoardCategory("Y02"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
 		long bno = boardService.insertBoard(boardVO, files, companyCode);
 		return "redirect:/group/freeboardInfo?boardNo=" + bno;
 	}
 
-	// 게시글 수정 (페이지)
+	// 자유게시판 게시글 수정 (페이지)
 	@GetMapping("/group/freeboardUpdate")
-	public String boardUpdateForm(BoardVO boardVo, Model model) {
-		BoardVO findVO = boardService.boardInfo(boardVo);
+	public String boardUpdateForm(BoardVO boardVO, Model model) {
+		BoardVO findVO = boardService.boardInfo(boardVO);
 		model.addAttribute("board", findVO);
+		
 		return "group/board/freeboardUpdate";
 	}
 
-	// 게시글 수정 (처리)
+	// 자유게시판 게시글 수정 (처리)
 	@PostMapping("/group/freeboardUpdate")
 	@ResponseBody
 	public Map<String, Object> boardUpdateProcess(@RequestBody BoardVO boardVO, MultipartFile[] files) {
+		
 		return boardService.updateBoard(boardVO, files, null);
 	}
 
-	// 게시글 삭제 (처리)
+	// 자유게시판 게시글 삭제 (처리)
 	@GetMapping("/group/freeboardDelete")
 	public String boardDelete(@RequestParam Integer boardNo) {
 		boardService.deleteBoard(boardNo);
+		
 		return "redirect:freeboardList";
 	}
 
@@ -179,25 +218,42 @@ public class BoardController {
 	// deptboard
 	// 부서게시판 전체조회
 	@GetMapping("/group/deptboardList") // 주소를 어디로 할건지 정해야됨
-	public String deptboardList(Model model, Criteria cri) {
+	public String deptboardList(Model model, Criteria cri, HttpSession session) {
+		String companyCode = (String) session.getAttribute("companyCode");
+		cri.setCompanyCode(companyCode);
+		
+		String department = (String) session.getAttribute("department");
+		cri.setDepartment(department);
 		cri.setBoardCategory("Y03");
+		
 		List<BoardVO> list = boardService.deptboardList(cri);
 		model.addAttribute("boards", list);
 		model.addAttribute("page", new PageDTO(10, boardService.getTotal(cri), cri));
+		
 		return "group/board/deptboardList"; // RETURN은 html 경로로 꼭 맞춰줘야됨
 	}
 
 	// 부서게시판 게시글 상세조회
 	@GetMapping("/group/deptboardInfo")
 	public String deptboardInfo(BoardVO boardVO, Model model, HttpSession session) {
+		// 파라미터 정의
 		String companyCode = (String) session.getAttribute("companyCode");
-		BoardVO findVO = boardService.deptboardInfo(boardVO);
+		boardVO.setCompanyCode(companyCode);
+
+		// 게시글
+		BoardVO findVO = boardService.boardInfo(boardVO);
+		model.addAttribute("board", findVO);
+
+		// 첨부파일
 		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
 		model.addAttribute("fileInfo", fileVOList);
-		boardService.ViewCnt(boardVO.getBoardNo());
-		model.addAttribute("board", findVO);
+
+		// 댓글
 		List<ReplyVO> list = replyService.replyList(boardVO.getBoardNo());
 		model.addAttribute("comments", list);
+
+		// 조회수 증가
+		boardService.ViewCnt(boardVO.getBoardNo());
 		return "group/board/deptboardInfo";
 	}
 
@@ -211,18 +267,31 @@ public class BoardController {
 	@PostMapping("/deptboardInsert")
 	public String deptboardInsertProcess(BoardVO boardVO, @RequestPart MultipartFile[] files, HttpSession session) {
 		int employeeNo = (int) session.getAttribute("employeeNo"); // HttpSession
-		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setEmployeeNo(employeeNo); // 로그인세션 받아와서 작성자로
-		boardVO.setBoardCategory("Y03"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
+		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode); // 회사코드를 받아서 그룹웨어를 사용하기 때문에 회사코드를 받아야됨
+		
+		String department = (String) session.getAttribute("department");
+		boardVO.setDepartment(department);
+		boardVO.setBoardCategory("Y03"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
+		
 		long bno = boardService.deptinsertBoard(boardVO, files, companyCode);
 		return "redirect:/group/deptboardInfo?boardNo=" + bno;
 	}
 
 	// 부서게시판 게시글 수정 (페이지)
 	@GetMapping("/group/deptboardUpdate")
-	public String deptboardUpdateForm(BoardVO boardVo, Model model) {
-		BoardVO findVO = boardService.deptboardInfo(boardVo);
+	public String deptboardUpdateForm(BoardVO boardVO, Model model) {
+		
+		BoardVO findVO = boardService.deptboardInfo(boardVO);
+		if (findVO == null) {
+	        throw new IllegalStateException("게시글 정보를 찾을 수 없습니다.");
+	    }
+		
+		// 디버깅용 로그 출력
+	    System.out.println("Retrieved BoardVO: " + findVO.toString());
+	    
 		model.addAttribute("board", findVO);
 		return "group/board/deptboardUpdate";
 	}
@@ -231,6 +300,7 @@ public class BoardController {
 	@PostMapping("/group/deptboardUpdate")
 	@ResponseBody
 	public Map<String, Object> deptboardUpdateProcess(@RequestBody BoardVO boardVO) {
+		
 		return boardService.deptupdateBoard(boardVO);
 	}
 
@@ -238,6 +308,7 @@ public class BoardController {
 	@GetMapping("/group/deptboardDelete")
 	public String deptboardDelete(@RequestParam Integer boardNo) {
 		boardService.deptdeleteBoard(boardNo);
+		
 		return "redirect:deptboardList";
 	}
 }

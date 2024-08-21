@@ -42,6 +42,15 @@ VALUES
         #{boardNo},
         #{companyCode}
     )
+<!-- 일반댓글 -->
+<!-- <if test="parentCommentNo == 0">
+	NULL
+</if>
+답글
+<if test="parentCommentNo != 0">
+	#{parentCommentNo}
+</if> -->
+
 </insert>
 
 <!-- 댓글 수정 -->

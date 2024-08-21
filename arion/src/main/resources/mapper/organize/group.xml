@@ -104,5 +104,23 @@
     DELETE FROM address
     WHERE addr_no = #{addrNo}
 </delete>
+ <select id="getAddressesByCompanyAndEmployee" resultType="AddressVO">
+        SELECT * FROM Address
+        WHERE company_name = #{companyName} AND employee_id = #{employeeId}
+    </select>
 
+    <select id="getOrganizationalChartByCompanyCode" resultType="DepartmentVO">
+        SELECT * FROM Departments
+        WHERE company_code = #{companyCode}
+    </select>
+    
+  <select id="selectAddressesByCompanyAndEmployee" resultType="AddressVO">
+        SELECT * FROM address_table
+        WHERE company_name = #{companyName} AND employee_id = #{employeeId}
+    </select>
+
+    <select id="selectOrganizationalChartByCompanyCode" resultType="DepartmentVO">
+        SELECT * FROM department_table
+        WHERE company_code = #{companyCode}
+    </select>
 </mapper>

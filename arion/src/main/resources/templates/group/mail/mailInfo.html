@@ -99,6 +99,14 @@
         <div class="mail-content">
             <p th:text="${mailInfo.mailContent}">메일 내용</p>
         </div>
+            <div class="content-section">
+        <h4>첨부파일</h4>	
+    	<div th:each="file : ${fileInfo}">
+            <div class="file-links" th:if="${!file.fileType.startsWith('image/')}">
+            <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}" ></a>
+        </div>
+        </div>
+	</div>
     </div>
 
     <div class="actions-container">

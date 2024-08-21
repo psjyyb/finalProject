@@ -10,4 +10,5 @@ public class MailReceiveVO {
     private String employeeId;     // 수신자 사원 ID
     private String receiveEmail;   // 수신자 이메일 (SMTP용)
     private String companyCode;    // 회사 코드
+    private String mailStatus;
 }

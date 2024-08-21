@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.main.group.service.AddressVO;
 
 public interface GroupMapper {
@@ -35,4 +36,11 @@ public interface GroupMapper {
 
     // 주소록 삭제
     public int deleteAddress(int addrNo);
+    //사원아이디불러오기
+    List<AddressVO> getAddressesByCompanyAndEmployee(String companyName, String employeeId);
+    //주소록 이메일불러오기
+    List<DepartmentVO> getOrganizationalChartByCompanyCode(String companyCode);
+    
+    List<AddressVO> selectAddressesByCompanyAndEmployee(String companyName, String employeeId);
+    List<DepartmentVO> selectOrganizationalChartByCompanyCode(String companyCode);
 }

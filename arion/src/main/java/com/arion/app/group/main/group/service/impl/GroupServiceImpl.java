@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.EmployeesVO;
+import com.arion.app.group.admin.service.DepartmentVO;
 import com.arion.app.group.main.group.mapper.GroupMapper;
 import com.arion.app.group.main.group.service.AddressVO;
 import com.arion.app.group.main.group.service.GroupService;
@@ -85,5 +86,13 @@ public class GroupServiceImpl implements GroupService{
 	        map.put("target", addrNo);
 	        return map;
 	    }
-	    
+	    @Override
+	    public List<AddressVO> getAddressesByCompanyAndEmployee(String companyName, String employeeId) {
+	        return mapper.selectAddressesByCompanyAndEmployee(companyName, employeeId);
+	    }
+
+	    @Override
+	    public List<DepartmentVO> getOrganizationalChartByCompanyCode(String companyCode) {
+	        return mapper.selectOrganizationalChartByCompanyCode(companyCode);
+	    }
 }

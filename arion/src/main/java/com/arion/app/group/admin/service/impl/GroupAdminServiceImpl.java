@@ -115,15 +115,18 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		int result = gaMapper.rankDeSave(companyCode);
 		String ranks = rankVO.getRankName();
 		String rankN = rankVO.getRankRangkings();
+		System.out.println(rankN);
 		String rankNarr[] = rankN.split(",");
 		String rankArr[] = ranks.split(",");
 		List<String> list = Arrays.asList(rankArr);
+		System.out.println(list);
 		RankVO rvo = new RankVO();
 		AtomicInteger indexHolder = new AtomicInteger();
 		list.forEach(i -> {
 			rvo.setRankName(i);
 			rvo.setCompanyCode(companyCode);
 			rvo.setRankRangkingQ(rankNarr[indexHolder.getAndIncrement()]);
+			
 			gaMapper.rankInSave(rvo);
 		});
 		return result;

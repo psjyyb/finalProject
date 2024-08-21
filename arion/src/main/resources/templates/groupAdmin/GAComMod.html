@@ -143,50 +143,87 @@
 			event.preventDefault();
 			
 			if(checkObj()== true){
-				if(confirm('회사정보를 수정하시겠습니까?')){
-					comForm.submit();
-				}
+				Swal.fire({
+					  title: "회사정보를 수정하시겠습니까? ?",
+					  showDenyButton: true,
+					  confirmButtonText: "네",
+					  denyButtonText: `아니요`
+					}).then((result) => {
+					  /* Read more about isConfirmed, isDenied below */
+					  if (result.isConfirmed) {
+						  comForm.submit();
+					  } 
+					});
+				
 			}
 			function checkObj(){
 				let comName=$('input[name=companyName]');
 				if(comName.val()==''){
-					alert('회사명은 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "회사명은 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					comName.focus();
 					return false;
 				}
 				let comTel = $('input[name=companyTel]');
 				if(comTel.val()==''){
-					alert('전화번호는은 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "전화번호는 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					comTel.focus();
 					return false;
 				}
 				let comType = $('input[name=companyType]');
 				if(comType.val()==''){
-					alert('회사업종은 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "회사업종은 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					comType.focus();
 					return false;
 				}
 				let comAddress = $('input[name=companyAddress]');
 				if(comAddress.val()==''){
-					alert('회사주소는 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "회사주소는 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					comAddress.focus();
 					return false;
 				}
 				let ceoName = $('input[name=ceoName]');
 				if(ceoName.val()==''){
-					alert('CEO이름은 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "CEO이름은 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					ceoName.focus();
 					return false;
 				}
 				let ceoEmail = $('input[name=ceoEmail]');
 				if(ceoEmail.val()==''){
-					alert('CEO메일은 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "CEO메일은 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					ceoEmail.focus();
 					return false;
 				}
 				let ceoPhone = $('input[name=ceoPhone]');
 				if(ceoPhone.val()==''){
-					alert('CEO번호는 필수값입니다.');
+					Swal.fire({
+		        		  icon: "success",
+		        		  title: "CEO번호는 필수값입니다.",
+		        		  allowOutsideClick: false,
+		        		  })
 					ceoPhone.focus();
 					return false;
 				}

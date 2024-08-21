@@ -208,26 +208,51 @@ to {
 	<script>
 		let conNo = $('#contract_no').text();
 		$('#conMode').on('click', function() {
-			if (confirm('계약을 수정하시게 되면 현재 계약이 해지 됩니다. 수정하시겠습니까 ?')) {
-				$.ajax({
-					url: '/groupAdmin/contractCancle',
-					type: 'POST',
-					data: { contractNo: conNo }
-				})
-				.done(result=>{
-					if (confirm('계약서를 작성하러 가시겠습니까?')) {
-						location.href = '/home/service';
-					}
-				})
-				.fail(err=>{
-					console.log(err);
-				})
-			}
+			Swal.fire({
+				  title: "계약을 수정하시게 되면 현재 계약이 해지 됩니다. 수정하시겠습니까 ?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아니요`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					  $.ajax({
+							url: '/groupAdmin/contractCancle',
+							type: 'POST',
+							data: { contractNo: conNo }
+						})
+						.done(result=>{
+							Swal.fire({
+								  title: "계약서를 작성하러 가시겠습니까?",
+								  showDenyButton: true,
+								  confirmButtonText: "네",
+								  denyButtonText: `아니요`
+								}).then((result) => {
+								  /* Read more about isConfirmed, isDenied below */
+								  if (result.isConfirmed) {
+									  location.href = '/home/service';
+								  } 
+								});
+						})
+						.fail(err=>{
+							console.log(err);
+						})
+				  } 
+				});
+			
 		})
 		$('#conCan').on('click', function() {
-			if (confirm('계약을 철회하시겠습니까?')) {
-				location.href = '/groupAdmin/GAConCan';
-			}
+			Swal.fire({
+				  title: "계약을 철회하시겠습니까?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아니요`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					  location.href = '/groupAdmin/GAConCan';
+				  } 
+				});
 		})
 		$('#conPlus').on('click', function(){
 			$('#contractModal').show();
@@ -250,13 +275,25 @@ to {
             type: 'POST',
             data: { period: selectedPeriod },
             success: function(response) {
-                alert('계약이 성공적으로 연장되었습니다.');
-                $('#contractModal').hide();
-                location.href='/groupAdmin/GANowContract';
+            	Swal.fire({
+          		  icon: "success",
+          		  title: "계약이 성공적으로 연장되었습니다.",
+          		  allowOutsideClick: false,
+          		  }).then(function(){
+          			 $('#contractModal').hide();
+                     location.href='/groupAdmin/GANowContract';
+          		  
+          		});               
                 // 필요 시 화면 갱신
             },
             error: function(error) {
-                alert('계약 연장에 실패했습니다. 다시 시도해 주세요.');
+            	Swal.fire({
+            		  icon: "success",
+            		  title: "계약 연장에 실패했습니다. 다시 시도해 주세요.",
+            		  allowOutsideClick: false,
+            		  }).then(function(){
+            		  
+            		});     
             }
         });
     });

@@ -52,9 +52,16 @@
 		let empNo =  $(e.currentTarget).children().first().text();
 		let url = '/groupAdmin/GAEmpUpdate?employeeNo='+empNo;
 		console.log(empNo);
-		if(confirm('사원상세보기를 하시겠습니까 ?')){
-			location.href=url;
-		}
+		Swal.fire({
+			  title: "사원상세보기를 하시겠습니까 ?",
+			  showDenyButton: true,
+			  confirmButtonText: "네",
+			  denyButtonText: `아니요`
+			}).then((result) => {
+			  if (result.isConfirmed) {
+				  location.href=url;
+			  } 
+			});
 	})
 	</script>
 </body>

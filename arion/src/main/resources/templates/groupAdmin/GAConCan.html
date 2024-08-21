@@ -138,9 +138,17 @@ label {
 				checkAllAgreed);
 		$('[name="canForm"]').on('submit',function(event){
 			event.preventDefault();
-			if(confirm('정말 계약을 해지 하시겠습니까?')){
-				canForm.submit();
-			}
+			Swal.fire({
+				  title: "정말 계약을 해지 하시겠습니까?",
+				  showDenyButton: true,
+				  confirmButtonText: "네",
+				  denyButtonText: `아니요`
+				}).then((result) => {
+				  /* Read more about isConfirmed, isDenied below */
+				  if (result.isConfirmed) {
+					  canForm.submit();
+				  } 
+				});
 		})
 		
 	</script>

@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.arion.app.group.main.attendance.service.AttendanceService;
+import com.arion.app.group.main.database.service.CFileVO;
 import com.arion.app.group.main.database.service.DatabaseService;
+import com.arion.app.group.main.database.service.UnderRankVO;
 
 @Controller
 @RequestMapping("/group/database")
@@ -36,19 +38,42 @@ public class DatabaseController {
 			String companyCode = (String)session.getAttribute("companyCode");
 			String rankName = (String)session.getAttribute("rankName");
 			int ranking= databaseservice.ranking(companyCode, rankName);
+			List<UnderRankVO> UnderRank= databaseservice.underank(ranking);
+		
+			model.addAttribute("underranks", UnderRank);
 			model.addAttribute("ranking", ranking);
 			return "group/database/database";
 		}
 		
 		
-		//ajax db 첫접속
+		       //ajax db 첫접속
 				@RequestMapping("/start")
 				@ResponseBody
 				public Map<String, Object> start(HttpServletRequest request,
 						@RequestParam(value = "companycode",required = false) String companycode) throws Exception {
 					
+					List<CFileVO> startforder= databaseservice.startforder(companycode);				
+					System.out.println(startforder);
 					Map<String, Object> result = new HashMap<String, Object>();
-					
+					result.put("startforder", startforder);
 					return result;
 				}
+				
+				//ajax db 파일 호출
+				@RequestMapping("/callfile")
+				@ResponseBody
+				public Map<String, Object> callfile(HttpServletRequest request,
+						@RequestParam(value = "companycode",required = false) String companycode,
+						@RequestParam(value = "parent",required = false) int parent) throws Exception {
+					
+                    
+					
+					Map<String, Object> result = new HashMap<String, Object>();
+				
+					return result;
+				}		
+				
+				
+				
+				
 }

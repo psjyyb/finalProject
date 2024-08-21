@@ -219,7 +219,19 @@
 			
 			console.log(attendancelist);
 			$.each(attendancelist, function(key, value) {
+				if((value.state=="지각") || (value.state=="정상출근")){
 				$('#'+ value.attdate).html("출근"+value.starttime+"<br>퇴근"+value.endtime+"<br>"+value.state);
+				}
+				
+				if(value.state=="휴가"){
+				$('#'+ value.attdate).html(""+"<br>"+"<br>"+value.state);
+				$('#h'+ value.attdate).css("color","#ed5353");        
+		        $('#'+ value.attdate).parent().css("backgroundColor","#f7f7f7");		      		      
+				}
+				
+				if(value.state=="결근"){
+					$('#'+ value.attdate).html(""+"<br>"+"<br>"+value.state);
+					}
 				
 			})
 		   }

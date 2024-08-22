@@ -1,0 +1,134 @@
+@charset "UTF-8";
+/* 게시판 전체 조회 css */
+
+/* 전체적인 폼 */
+body {
+    font-family: 'Arial', sans-serif; /* 기본 글꼴 */
+    line-height: 1.6; /* 줄 간격 */
+    margin: 0;
+    background-color: #f4f4f4; /* 배경색 */
+}
+
+h2 {
+    color: #333; /* 제목 색상 */
+    margin-bottom: 20px; /* 아래 여백 */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse; /* 테이블 셀 간의 간격 제거 */
+    margin-bottom: 20px;
+    background-color: white; /* 테이블 배경색 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 테이블 그림자 */
+}
+
+.table th, .table td {
+    padding: 12px 15px; /* 셀의 내부 여백 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    border-bottom: 1px solid #ddd; /* 셀 간의 구분선 */
+}
+
+.table th {
+    background-color: #007bff; /* 헤더 배경색 */
+    color: white; /* 헤더 글자색 */
+    text-transform: uppercase; /* 헤더 텍스트 대문자 */
+}
+
+.table tr:hover {
+    background-color: #f1f1f1; /* 마우스 오버 시 배경색 */
+}
+
+.pagination {
+    list-style-type: none; /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    margin-top: 20px;
+}
+
+.pagination li {
+    margin: 0 5px; /* 페이지 링크 간의 간격 */
+}
+
+.pagination a {
+    display: block;
+    padding: 10px 15px;
+    background-color: white; /* 링크 배경색 */
+    color: #007bff; /* 링크 글자색 */
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 4px;
+    text-decoration: none; /* 밑줄 제거 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 */
+}
+
+.pagination a:hover {
+    background-color: #007bff; /* 마우스 오버 시 배경색 */
+    color: white; /* 마우스 오버 시 글자색 */
+}
+
+.pagination .active span {
+    background-color: #007bff; /* 현재 페이지 배경색 */
+    color: white; /* 현재 페이지 글자색 */
+    border: 1px solid #007bff;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: space-between; /* 버튼과 검색 폼을 양쪽 끝에 배치 */
+    align-items: center; /* 버튼과 검색 폼의 높이를 맞춤 */
+    margin-bottom: 20px; /* 아래쪽 여백 추가 */
+}
+
+form[name="searchform"] {
+    display: flex;
+    align-items: center; /* 검색 폼 내부의 요소 높이 맞춤 */
+}
+
+form[name="searchform"] select, form[name="searchform"] input[type="text"],
+form[name="searchform"] input[type="submit"], .styled-button {
+    height: 40px; /* 높이를 맞추기 위해 고정 */
+    margin-right: 10px; /* 요소들 사이에 간격 추가 */
+    padding: 8px 12px; /* 요소의 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    border-radius: 4px; /* 모서리를 둥글게 */
+    border: 1px solid #ccc; /* 테두리 */
+}
+
+form[name="searchform"] input[type="submit"] {
+    background-color: #4CAF50; /* 버튼 배경색 */
+    color: white; /* 버튼 글자색 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 커서 모양 */
+}
+
+form[name="searchform"] input[type="submit"]:hover {
+    background-color: #45a049; /* 호버 시 배경색 */
+}
+
+.styled-button {
+    padding: 10px 20px; /* 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 4px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+}
+
+.styled-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .styled-button {
+        margin-top: 10px;
+        width: 100%; /* 버튼을 전체 너비로 */
+    }
+}

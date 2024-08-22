@@ -15,7 +15,7 @@ public class ReplyVO {
 	private String companyCode;			//회사코드
 	private String rankName;			//직급
 	private String departmentName;		//부서명
-	private int parentCommentNo;		//답글
+	private int parentNo;		//답글
 	
 	
 	

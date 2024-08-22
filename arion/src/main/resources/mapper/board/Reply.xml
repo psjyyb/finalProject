@@ -7,7 +7,8 @@
 SELECT 
     c.board_no, 
     c.comment_no, 
-    c.comment_content, 
+    c.comment_content,
+    c.parent_no,
     e.employee_name AS comment_write, 
     c.comment_date,
     e.rank_name AS rankName,
@@ -20,6 +21,8 @@ JOIN
     employees e ON b.employee_no = e.employee_no
 WHERE 
     c.board_no = #{boardNo}
+ORDER BY
+	NVL(c.parent_no, c.comment_no), c.comment_no
 </select>
 
 <!-- 댓글 작성 -->
@@ -28,6 +31,7 @@ INSERT INTO comments
     (
         comment_no,
         comment_content,
+        parent_no,
         comment_write,
         comment_date,
         board_no,
@@ -37,20 +41,12 @@ VALUES
     (
         comm_seq.NEXTVAL,
         #{commentContent},
+        #{parentNo},
         #{commentWrite},
         SYSDATE,
         #{boardNo},
         #{companyCode}
     )
-<!-- 일반댓글 -->
-<!-- <if test="parentCommentNo == 0">
-	NULL
-</if>
-답글
-<if test="parentCommentNo != 0">
-	#{parentCommentNo}
-</if> -->
-
 </insert>
 
 <!-- 댓글 수정 -->
@@ -70,6 +66,7 @@ WHERE comment_no = #{commentNo}
 <select id="total" resultType="int">
 SELECT COUNT(*)
 FROM comments
+WHERE board_no = #{boardNo}
 </select>
 
 </mapper>

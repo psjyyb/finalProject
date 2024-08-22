@@ -33,7 +33,7 @@
             </tr>
 		</table>
 			<div>
-				<button type="button" id="updateBtn">수정</button>
+				<button type="button" id="updateBtn" th:data-bno-no="*{boardNo}">수정</button>
 				<button type="button" th:onclick="|location.href='@{deptboardInfo(boardNo=${board.boardNo})}'|">취소</button>
 			</div>
 		</form>
@@ -49,7 +49,7 @@
 			});
 		
 		$('#updateBtn').on('click', boardUpdateAjax);	
-		
+			let bno = $('#updateBtn').data('bno-no');
 		function boardUpdateAjax(event){
 			event.preventDefault(); // 기본 동작 방지
 			
@@ -93,7 +93,7 @@
 						title: '정상적으로 수정되었습니다',
 						confirmButtonText: '확인'
 					}).then(() => {
-						location.href = "/group/deptboardList";
+						location.href = `/group/freeboardInfo?boardNo=` + bno ;
 					});
 				} else {
 					Swal.fire({

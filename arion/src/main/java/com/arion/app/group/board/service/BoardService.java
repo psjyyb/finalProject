@@ -31,7 +31,7 @@ public interface BoardService {
 	public long noticeinsertBoard(BoardVO boardVO, MultipartFile[] files, String compnayCode);
 
 	// 공지사항 글 수정
-	public Map<String, Object> noticeupdateBoard(BoardVO boardVO);
+	public Map<String, Object> noticeupdateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode);
 
 	// 공지사항 글 삭제
 	public int noticedeleteBoard(int boardNO);
@@ -65,7 +65,7 @@ public interface BoardService {
 	public long deptinsertBoard(BoardVO boardVO, MultipartFile[] files, String compnayCode);
 
 	// 부서게시판 글 수정
-	public Map<String, Object> deptupdateBoard(BoardVO boardVO);
+	public Map<String, Object> deptupdateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode);
 
 	// 부서게시판 글 삭제
 	public int deptdeleteBoard(int boardNO);

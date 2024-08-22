@@ -1,121 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/group/layouts/group_layout}"
-	layout:fragment="Content">
-<head>
-<meta charset="UTF-8">
-<script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
-<title></title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-	<div>
-		<h3>공지사항 글 수정</h3>
-		<form name="UpdateForm" th:object="${board}">
-		<input type="hidden" th:field="*{boardNo}">
-		<table>
-			<tr>
-				<th>제목</th>
-				<td><input type="text" th:field="*{boardTitle}"></td>
-			</tr>
-			<tr>
-				<th>내용</th>
-					<td width="100%" height="100%"><textarea name="boardContent"
-					 th:field="*{boardContent}" id="boardContent" rows="15px" cols="75px" ></textarea></td>
-			</tr>
-			<tr>
-                <th>파일 첨부</th>
-                <td>
-                	<input type="file" name="files" multiple />
-                </td>
-            </tr>
-		</table>
-			<div>
-				<button type="button" id="updateBtn">수정</button>
-				<button type="button" th:onclick="|location.href='@{noticeboardInfo(boardNo=${board.boardNo})}'|">취소</button>
-			</div>
-		</form>
-	</div>
-	<script>
-	$(function(){
-		var oEditors = [];
-		nhn.husky.EZCreator.createInIFrame({
-			  oAppRef : oEditors,
-			  elPlaceHolder : "boardContent",
-			  sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
-			  fCreator : "createSEditor2"
-			});
-		
-		$('#updateBtn').on('click', boardUpdateAjax);	
-		
-		function boardUpdateAjax(event){
-			event.preventDefault(); // 기본 동작 방지
-			
-			oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
-			
-			let title = $('input[name="boardTitle"]').val().trim();
-			let content = $('textarea[name="boardContent"]').val().trim();
-			
-			if (title === '') {
-				Swal.fire({
-					icon: 'warning',
-					title: '제목이 입력되지 않았습니다',
-					text: '제목을 입력해주세요',
-					confirmButtonText: '확인'
-				});
-				return;
-			}
-			if (content === '') {
-				Swal.fire({
-					icon: 'warning',
-					title: '내용이 입력되지 않았습니다',
-					text: '내용을 입력해주세요',
-					confirmButtonText: '확인'
-				});
-				return;
-			}
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
 
-			let info = getBoardInfo();
-			console.log(info);
-			
-			$.ajax({
-				url: 'noticeboardUpdate',
-				type: 'post',
-				contentType: 'application/json',
-				data: JSON.stringify(info)
-			})
-			.done(data => {
-				if (data.result) {
-					Swal.fire({
-						icon: 'success',
-						title: '정상적으로 수정되었습니다',
-						confirmButtonText: '확인'
-					}).then(() => {
-						location.href = "/group/noticeboardList";
-					});
-				} else {
-					Swal.fire({
-						icon: 'error',
-						title: '수정되지 않았습니다',
-						text: '값을 입력해주세요',
-						confirmButtonText: '확인'
-					});
-				}
-			})
-			.fail(err => console.log(err));			
-		};
-		
-		function getBoardInfo() {
-			let formData = $('form[name="UpdateForm"]').serializeArray();
-			let objData = {};
-			$.each(formData, (idx, input) => {
-				objData[input.name] = input.value;
-			});
-			return objData;
-		};
-	});
-	</script>
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 글 수정</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" th:href="@{/css/group/board/boardUpdate.css}">
+</head>
+
+<body>
+    <div class="container">
+        <h3>공지사항 글 수정</h3>
+        <form name="UpdateForm" th:object="${board}">
+            <input type="hidden" th:field="*{boardNo}">
+            <div class="form-group">
+                <label for="boardTitle">제목</label>
+                <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="boardContent">내용</label>
+                <textarea name="boardContent" id="boardContent" th:field="*{boardContent}" placeholder="내용을 입력해주세요"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="fileUpload">파일 첨부</label>
+                <input type="file" id="fileUpload" name="files" multiple />
+            </div>
+            <div class="form-actions">
+                <button type="button" id="updateBtn" th:data-bno-no="*{boardNo}">수정</button>
+                <button type="button" th:onclick="|location.href='@{noticeboardInfo(boardNo=${board.boardNo})}'|">취소</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(function(){
+            var oEditors = [];
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef : oEditors,
+                elPlaceHolder : "boardContent",
+                sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
+                fCreator : "createSEditor2"
+            });
+
+            $('#updateBtn').on('click', boardUpdateAjax);
+            let bno = $('#updateBtn').data('bno-no');
+
+            function boardUpdateAjax(event){
+                event.preventDefault();
+
+                oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                let title = $('input[name="boardTitle"]').val().trim();
+                let content = $('textarea[name="boardContent"]').val().trim();
+
+                if (title === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '제목이 입력되지 않았습니다',
+                        text: '제목을 입력해주세요',
+                        confirmButtonText: '확인'
+                    });
+                    return;
+                }
+                if (content === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '내용이 입력되지 않았습니다',
+                        text: '내용을 입력해주세요',
+                        confirmButtonText: '확인'
+                    });
+                    return;
+                }
+
+                let info = getBoardInfo();
+
+                $.ajax({
+                    url: 'noticeboardUpdate',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(info)
+                })
+                .done(data => {
+                    if (data.result) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '정상적으로 수정되었습니다',
+                            confirmButtonText: '확인'
+                        }).then(() => {
+                            location.href = `/group/freeboardInfo?boardNo=` + bno;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '수정되지 않았습니다',
+                            text: '값을 입력해주세요',
+                            confirmButtonText: '확인'
+                        });
+                    }
+                })
+                .fail(err => console.log(err));
+            }
+
+            function getBoardInfo() {
+                let formData = $('form[name="UpdateForm"]').serializeArray();
+                let objData = {};
+                $.each(formData, (idx, input) => {
+                    objData[input.name] = input.value;
+                });
+                return objData;
+            }
+        });
+    </script>
 </body>
+
 </html>

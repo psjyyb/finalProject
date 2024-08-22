@@ -83,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
 
 	// 공지사항 게시글 수정
 	@Override
-	public Map<String, Object> noticeupdateBoard(BoardVO boardVO) {
+	public Map<String, Object> noticeupdateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 
@@ -194,7 +194,7 @@ public class BoardServiceImpl implements BoardService {
 
 	// 부서게시판 게시글 수정
 	@Override
-	public Map<String, Object> deptupdateBoard(BoardVO boardVO) {
+	public Map<String, Object> deptupdateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
 

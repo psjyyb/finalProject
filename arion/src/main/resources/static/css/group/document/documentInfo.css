@@ -323,3 +323,30 @@ h5 {
     background-color: #dc3545;
     color: white;
 }
+#apprReason {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#apprReason div {
+    padding: 10px;
+    font-size: 16px;
+    color: #495057;
+    line-height: 1.5;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#apprReason div:last-child {
+    border-bottom: none;
+}
+
+#apprReason span {
+    display: block;
+    padding: 10px 0;
+    color: black;
+    font-weight: bold;
+}

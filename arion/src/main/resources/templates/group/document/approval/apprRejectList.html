@@ -18,7 +18,12 @@
 	max-width: 100%;
 	margin: 40px auto;
 }
-
+.header2 {
+	font-size: 24px;
+	font-weight: bold;
+	color: black;
+	margin-bottom: 30px;
+}
 .search-container {
 	display: flex;
 	justify-content: space-between;
@@ -116,6 +121,7 @@
 </head>
 <body>
 	<div class="container2">
+		<div class="header2">반려문서함</div>
 		<!-- 검색 영역 -->
 		<div class="search-container">
 			<form th:action="@{/group/doc/apprProgress}" method="get"

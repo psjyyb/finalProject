@@ -8,8 +8,8 @@
 <title>database</title>
 <input type="hidden" id="companycode"  th:value="${session.companyCode}">
 <input type="hidden" id="ranking"  th:value="${ranking}">
-</head>
 
+</head>
 
 <body onload="autoReload();">
 	 
@@ -36,9 +36,12 @@
             <p id="mforder">하위폴더 생성</p>
             <p id="mupload">파일 업로드</p>        
     </div>
-	<table id="datatable" align="center" border="1"  width="80%"  >
+	<div id="1"   width="80%" class='forder' >
+	자료실
+	</div>
 	
-	</table>
+	
+	
 	
 	<script th:src="@{/js/group/database/database.js}"></script>
 </body>

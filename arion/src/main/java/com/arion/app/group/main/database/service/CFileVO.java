@@ -24,5 +24,5 @@ public class CFileVO {
 	private String departmentno;
 	private String rankid;
 	private String cform;
-	
+	private Integer level;
 }

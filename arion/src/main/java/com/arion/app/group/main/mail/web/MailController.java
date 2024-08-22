@@ -3,24 +3,23 @@ package com.arion.app.group.main.mail.web;
 
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.FileService;
 import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.Criteria;
@@ -105,6 +104,7 @@ public class MailController {
     public String mailInfo(@PathVariable("mailNo") int mailNo, Model model) {
         String employeeId = (String) httpSession.getAttribute("loginId");
         String companyCode = (String) httpSession.getAttribute("companyCode");
+        System.out.println("이건 인포>>>>>>>>>>>>>" + mailNo);
         MailVO mailVO = new MailVO();
         mailVO.setMailNo(mailNo);
         mailVO.setCompanyCode(companyCode);
@@ -168,21 +168,79 @@ public class MailController {
         int result = mailService.sendMail(mailVO, files);
         return result;
     }
-    //메일 상태변경
+    //메일 답장 페이지
+    @GetMapping("/reply/{mailNo}")
+    public String replyMailForm(@PathVariable("mailNo") int mailNo, Model model) {
+        String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        System.out.println(">>>>>>>>>>>>>" + mailNo);
+        // 메일 상세 조회
+        MailVO mailVO = new MailVO();
+        mailVO.setMailNo(mailNo);
+        mailVO.setCompanyCode(companyCode);
+        mailVO.setSenderId(employeeId);
+
+        MailVO mailDetails = mailService.mailInfo(mailVO);
+        List<FileVO> fileVOList = fsvc.selectFiles("MAIL", mailNo, companyCode);
+
+        if (mailDetails != null) {
+            model.addAttribute("mailInfo", mailDetails);
+        } else {
+            // 예외 처리 또는 기본값 설정
+            model.addAttribute("mailInfo", new MailVO());
+        }
+        model.addAttribute("fileInfo", fileVOList);
+        
+        return "group/mail/replymail";
+    }
     
+ // 메일 답장 처리
+    @PostMapping("/reply")
+    public String replyToMail(MailVO mailVO, @RequestPart(required = false) MultipartFile[] files, Model model) {
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        Integer senderId = (Integer) httpSession.getAttribute("employeeNo");
+        String senderName = (String) httpSession.getAttribute("loginName");
 
-    @PostMapping("/moveToImportant")
-    public ResponseEntity<String> moveToImportant(@RequestBody Map<String, List<Integer>> request) {
-        List<Integer> mailIds = request.get("ids");
-        mailService.updateMailStatus(mailIds, "IMPORT");
-        return ResponseEntity.ok("중요 메일로 이동되었습니다.");
+        mailVO.setSenderId(senderId.toString());
+        mailVO.setSenderName(senderName);
+        mailVO.setCompanyCode(companyCode);
+        
+        // Null 체크 및 처리
+        if (mailVO.getReceiverId() != null && !mailVO.getReceiverId().isEmpty()) {
+            mailVO.setReceiverIds(mailVO.getReceiverId().split(","));
+        } else {
+            mailVO.setReceiverIds(new String[0]); // 빈 배열로 초기화
+        }
+
+        int result = mailService.replyToMail(mailVO, files);
+        
+        if (result > 0) {
+            model.addAttribute("successMessage", true);
+        } else {
+            model.addAttribute("errorMessage", true);
+        }
+        
+        return "group/mail/replymail"; 
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteMails(@RequestBody Map<String, List<Integer>> request) {
-        List<Integer> mailIds = request.get("ids");
-        mailService.updateMailStatus(mailIds, "TRASH");
-        return ResponseEntity.ok("메일이 삭제되었습니다.");
+    @PostMapping("/actions")
+    @ResponseBody
+    public int handleMailAction(@RequestParam("actions") String action,
+                                @RequestParam("mailIds") List<Integer> mailIds) {
+        try {
+            String status;
+            if ("import".equals(action)) {
+                status = "IMPORT";
+            } else if ("delete".equals(action)) {
+                status = "TRASH";
+            } else {
+                return 0; //
+            }
+            mailService.updateMailStatus(mailIds, status);
+            return 1; // 
+        } catch (Exception e) {
+            e.printStackTrace(); // 로그에 에러 출력
+            return 0; //
+        }
     }
-
 }

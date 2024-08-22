@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.common.service.EmailService;
 import com.arion.app.common.service.FileService;
-import com.arion.app.common.service.FileVO;
 import com.arion.app.group.board.service.Criteria;
 import com.arion.app.group.main.mail.mapper.MailMapper;
 import com.arion.app.group.main.mail.service.MailReceiveVO;
@@ -40,6 +40,8 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender; 
     
+    @Autowired
+    private HttpSession httpSession;
     
     //받은메일
     @Override
@@ -77,9 +79,8 @@ public class MailServiceImpl implements MailService {
     public MailVO mailInfo(MailVO mailVO) {
         return mailMapper.selectMailInfo(mailVO);
     }
-
-    //메일검색
-
+    
+ 
     //삭제
     @Override
     public Map<String, Object> deleteMail(MailVO mailVO) {
@@ -108,10 +109,10 @@ public class MailServiceImpl implements MailService {
                     if (email.indexOf("@") > 0) {
                         // 외부 메일
                         MimeMessage message = mailSender.createMimeMessage();
-                        MimeMessageHelper helper = new MimeMessageHelper(message, true); // true는 multipart 메시지 여부
+                        MimeMessageHelper helper = new MimeMessageHelper(message, true); 
 
                         helper.setSubject(mailVO.getMailTitle());
-                        helper.setText(mailVO.getMailContent(), true); // true는 HTML 지원 여부
+                        helper.setText(mailVO.getMailContent(), true); 
                         helper.setTo(email);
 
                         // 첨부파일 추가
@@ -119,7 +120,7 @@ public class MailServiceImpl implements MailService {
                             for (MultipartFile file : files) {
                                 if (!file.isEmpty()) {
                                     try {
-                                        byte[] fileBytes = file.getBytes(); // 파일을 바이트 배열로 읽기
+                                        byte[] fileBytes = file.getBytes(); 
                                         ByteArrayResource byteArrayResource = new ByteArrayResource(fileBytes);
                                         helper.addAttachment(file.getOriginalFilename(), byteArrayResource);
                                     } catch (IOException e) {
@@ -129,7 +130,6 @@ public class MailServiceImpl implements MailService {
                                 }
                             }
                         }
-
                         mailSender.send(message);
                     } else {
                         receiveVO.setCompanyCode(mailVO.getCompanyCode());
@@ -138,8 +138,64 @@ public class MailServiceImpl implements MailService {
                     mailMapper.insertMailReceive(receiveVO);
                 }
             }
-
             // 파일 저장 처리
+            if (files != null) {
+                String fileUploadResult = fileService.insertFiles(files, "MAIL", mailVO.getMailNo(), mailVO.getCompanyCode());
+                if (fileUploadResult == null) {
+                    throw new Exception("파일 저장 실패");
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    //답장하기
+    @Transactional
+    @Override
+    public int replyToMail(MailVO mailVO, MultipartFile[] files) {
+        try {
+            mailMapper.replyToMail(mailVO);
+
+            MailReceiveVO receiveVO = new MailReceiveVO();
+            receiveVO.setMailNo(mailVO.getMailNo());
+
+            if (mailVO.getReceiverIds() != null) {
+                for (String email : mailVO.getReceiverIds()) {
+                    receiveVO.setEmployeeId(email);
+
+                    if (email.indexOf("@") > 0) {
+                        MimeMessage message = mailSender.createMimeMessage();
+                        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+                        helper.setSubject(mailVO.getMailTitle());
+                        helper.setText(mailVO.getMailContent(), true);
+                        helper.setTo(email);
+
+                        if (files != null) {
+                            for (MultipartFile file : files) {
+                                if (!file.isEmpty()) {
+                                    try {
+                                        byte[] fileBytes = file.getBytes();
+                                        ByteArrayResource byteArrayResource = new ByteArrayResource(fileBytes);
+                                        helper.addAttachment(file.getOriginalFilename(), byteArrayResource);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        throw new Exception("파일 첨부 실패: " + e.getMessage());
+                                    }
+                                }
+                            }
+                        }
+                        mailSender.send(message);
+                    } else {
+                        receiveVO.setCompanyCode(mailVO.getCompanyCode());
+                    }
+                    System.out.println("Inserting into mail_receive: " + receiveVO+"ㅇㅇㅇㅇㅇㅇㅇ머지");
+                    mailMapper.insertMailReceive(receiveVO);
+                }
+            }
+
             if (files != null) {
                 String fileUploadResult = fileService.insertFiles(files, "MAIL", mailVO.getMailNo(), mailVO.getCompanyCode());
                 if (fileUploadResult == null) {
@@ -154,18 +210,23 @@ public class MailServiceImpl implements MailService {
         }
     }
     @Override
-    public List<MailReceiveVO> selectReceivers(String companyCode) {
-        return mailMapper.selectReceivers(companyCode);
-    }
-    
-    
-    @Override
-    @Transactional
     public void updateMailStatus(List<Integer> mailIds, String status) {
-        if (status.equals("IMPORT")) {
-            mailMapper.updateMailStatusToImportant(mailIds);
-        } else if (status.equals("TRASH")) {
-            mailMapper.updateMailStatusToTrash(mailIds);
+        String employeeId = (String) httpSession.getAttribute("loginId");
+
+        for (Integer mailId : mailIds) {
+            // 현재 상태 조회
+            String currentStatus = mailMapper.selectMailStatus(mailId, employeeId);
+
+            // 상태가 'RECEIVE'인 경우에만 업데이트
+            if ("RECEIVE".equals(currentStatus)) {
+                MailReceiveVO mailReceiveVO = new MailReceiveVO();
+                mailReceiveVO.setMailNo(mailId);
+                mailReceiveVO.setMailStatus(status);
+                mailReceiveVO.setEmployeeId(employeeId);
+
+                mailMapper.updateMailStatus(mailReceiveVO);
+            }
         }
     }
+    
 }

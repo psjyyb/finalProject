@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
+    <title>답장하기</title>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <h1>답장하기</h1>
+    <form action="#" th:action="@{/group/mail/reply}" method="post" enctype="multipart/form-data" id="replyForm">
+        <input type="hidden" name="originalMailNo" th:value="${mailInfo.mailNo}" />
+        
+        <div>
+            <label for="receiverId">수신자:</label>
+            <input type="text" id="receiverId" name="receiverId" th:value="${mailInfo.senderId}" readonly />
+        </div>
+        
+        <div>
+            <label for="mailTitle">제목:</label>
+            <input type="text" id="mailTitle" name="mailTitle" th:value="'Re: ' + ${mailInfo.mailTitle}" />
+        </div>
+        
+        <div>
+            <label for="mailContent">내용:</label>
+            <textarea id="mailContent" name="mailContent" th:text="'[원본 메일 내용]' + ${mailInfo.mailContent}"></textarea>
+        </div>
+
+        <div>
+            <label for="files">첨부파일:</label>
+            <input type="file" id="files" name="files" multiple />
+        </div>
+        
+        <div>
+            <button type="submit">전송</button>
+        </div>
+    </form>
+
+</body>
+</html>

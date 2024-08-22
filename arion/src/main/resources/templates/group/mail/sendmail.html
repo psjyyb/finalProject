@@ -5,206 +5,9 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
+    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            color: #444;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin: 0;
-            background-color: #fff;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .search-container {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-
-        form {
-            display: inline-block;
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        form div {
-            margin-bottom: 15px;
-        }
-
-        form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        form input[type="text"],
-        form select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        button {
-            background: #4CAF50;
-            border: none;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .checkbox-container {
-            text-align: center;
-        }
-
-        .actions-container {
-            margin: 20px 0;
-            text-align: right;
-        }
-
-        .actions-container button {
-            padding: 10px 15px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            margin-left: 10px;
-        }
-
-        .import-btn {
-            background-color: #4CAF50;
-        }
-
-        .import-btn:hover {
-            background-color: #45a049;
-        }
-
-        .delete-btn {
-            background-color: #f44336;
-        }
-
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-
-        .pagination li {
-            margin: 0 5px;
-        }
-
-        .pagination a {
-            text-decoration: none;
-            color: #4CAF50;
-            padding: 10px 15px;
-            border-radius: 4px;
-            border: 1px solid #4CAF50;
-            transition: background 0.3s ease;
-        }
-
-        .pagination a:hover {
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        .pagination .active a {
-            background: #4CAF50;
-            color: #fff;
-            border: 1px solid #4CAF50;
-        }
-
-        .bottom-buttons {
-            display: flex;
-            justify-content: flex-end;
-            margin: 20px 0;
-        }
-
-        .bottom-buttons button {
-            padding: 10px 15px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            margin-left: 10px;
-        }
-
-        .bottom-buttons .compose-btn {
-            background-color: #4CAF50;
-        }
-
-        .bottom-buttons .compose-btn:hover {
-            background-color: #45a049;
-        }
-
-        .bottom-buttons .delete-btn {
-            background-color: #f44336;
-        }
-
-        .bottom-buttons .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-    </style>
+  
 </head>
 <body>
     <div class="container">
@@ -218,7 +21,7 @@
                     <select id="searchType" th:field="*{searchType}">
                         <option value="" th:selected="${criteria.searchType == ''}">전체</option>
                         <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-                        <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">작성자</option>
+                        <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">수신인</option>
                     </select>
                 </div>
                 <div>
@@ -237,7 +40,7 @@
                         <th class="checkbox-container">
                             <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
                         </th>
-                        <th>받은사람</th>
+                        <th>수신인</th>
                         <th>제목</th>
                         <th>발송일</th>
                     </tr>
@@ -247,11 +50,11 @@
                         <td class="checkbox-container">
                             <input type="checkbox" name="mailIds" value="${mail.mailNo}"> 
                         </td>
-                        <td th:text="${mail.receiverId}">수신자 ID</td>
+                        <td th:text="${mail.receiverId}">수신인</td>
                         <td>
                             <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
                         </td>
-                        <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">발송일</td>
+                        <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">발송일</td>
                     </tr>
                 </tbody>
             </table>

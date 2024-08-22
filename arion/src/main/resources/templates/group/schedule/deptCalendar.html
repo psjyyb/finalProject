@@ -193,7 +193,7 @@
 		    dayMaxEvents: true, // 너무 많은 이벤트가 있을 경우 "더 보기" 링크 허용
 		    events: function(info, successCallback, failureCallback) {
 		      $.ajax({
-		        url: '/group/schedule/empCalendar',
+		        url: '/group/schedule/deptSchedule',
 		        method: 'GET',
 		        success: function(result) {
 		          var events = [];
@@ -254,7 +254,7 @@
 		          allDay: false
 		        });
 		        $.ajax({
-		          url: '/group/schedule/empCalcInsert',
+		          url: '/group/schedule/deptCalcInsert',
 		          method: 'POST',
 		          data: {
 		            scheduleTitle: content,

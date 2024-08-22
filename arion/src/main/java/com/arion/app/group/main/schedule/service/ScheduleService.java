@@ -16,4 +16,7 @@ public interface ScheduleService {
 	
 	// 사원 일정 수정
 	int empScheduleUpdate(ScheduleVO scheduleVO);
+	
+	// 부서일정 조회
+	List<ScheduleVO> deptScheduleListSelect(int departmentNo);
 }

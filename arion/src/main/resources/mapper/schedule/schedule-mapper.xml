@@ -10,6 +10,7 @@
 		      ,employee_no
 		      ,department_no
 		FROM schedule WHERE employee_no = #{employeNo}
+		AND department_no IS NULL
 	</select>
 
 	<insert id="insertEmpSchedule" parameterType="ScheduleVO">
@@ -52,4 +53,14 @@
 		   ,schedule_end = TO_DATE(#{scheduleEnds},'YYYY-MM-dd HH24:MI')
 		WHERE schedule_no= #{scheduleNo}
 	</update>
+	
+	<select id="selectDeptScheduleList" resultType="ScheduleVO">
+		SELECT schedule_no
+		      ,schedule_title
+		      ,TO_CHAR(schedule_start,'yyyy-MM-dd HH24:mi') AS schedule_starts
+		      ,TO_CHAR(schedule_end,'yyyy-MM-dd HH24:mi') AS schedule_ends
+		      ,employee_no
+		      ,department_no
+		FROM schedule WHERE department_no = #{deparmentNo}
+	</select>
 </mapper>

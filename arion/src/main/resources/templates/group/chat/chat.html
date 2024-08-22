@@ -1,136 +1,166 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/group/layouts/group_layout}"
-    layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/group/layouts/group_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>ARION</title>
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-<link rel="stylesheet" type="text/css" th:href="@{/css/group/chat/chatStyle.css}">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/group/chat/chatStyle.css}">
 <style>
 /* 모달 배경 스타일 */
 .modal {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed;
-    z-index: 1050; /* 부트스트랩의 z-index 값에 맞게 조정 */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* 모달에서 스크롤바 제거 */
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
-    display: flex;
-    align-items: center;
-    justify-content: center; /* 모달을 중앙에 위치 */
+	display: none; /* 기본적으로 숨김 */
+	position: fixed;
+	z-index: 1050; /* 부트스트랩의 z-index 값에 맞게 조정 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden; /* 모달에서 스크롤바 제거 */
+	background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+	display: flex;
+	align-items: center;
+	justify-content: center; /* 모달을 중앙에 위치 */
 }
 
 /* 모달 콘텐츠 스타일 */
 .modal-content {
-    background-color: #fefefe;
-    border: 1px solid #888;
-    border-radius: 8px; /* 테두리 둥글게 */
-    padding: 20px;
-    width: 50%; /* 너비를 화면의 50%로 설정 */
-    max-width: 400px; /* 최대 너비를 400px로 설정 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
-    position: relative; /* 닫기 버튼의 절대 위치를 설정 */
+	background-color: #fefefe;
+	border: 1px solid #888;
+	border-radius: 8px; /* 테두리 둥글게 */
+	padding: 20px;
+	width: 50%; /* 너비를 화면의 50%로 설정 */
+	max-width: 400px; /* 최대 너비를 400px로 설정 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+	position: relative; /* 닫기 버튼의 절대 위치를 설정 */
 }
 
 /* 모달 닫기 버튼 */
 .modal .close {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
+	color: #aaa;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	font-size: 24px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s ease;
 }
 
 .modal .close:hover, .modal .close:focus {
-    color: black;
-    text-decoration: none;
+	color: black;
+	text-decoration: none;
+}
+
+.chat-room-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.room-name, .room-time {
+	flex-grow: 1;
+}
+
+.btn-light {
+	margin-left: auto;
+}
+.modal .btn-close {
+    margin-left: auto; /* 부모 컨테이너 내에서 오른쪽 정렬 */
+    display: block; /* 버튼이 블록 레벨로 동작하도록 설정 */
 }
 </style>
 </head>
 <body>
-<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
-    <div class="containerdd-fluiddd">
-    <button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close" id="modalClose"></button>
-        <div class="row">
-            <!-- Sidebar for chat rooms -->
-            <div class="col-md-4 col-lg-3 sidebar">
-                <div class="chat-rooms">
-                    <h4>나의 채팅방</h4>
-                    <ul id="chat-room-list" class="list-unstyled">
-                        <!-- Example chat rooms -->
-                        <li class="chat-room-item" th:each="room : ${chatRoomList}">
-                            <input type="hidden" th:value="${room.roomNo}" name="roomNo">
-                            <div class="room-name">[[${room.chatroomName}]]</div>
-                            <div class="room-time">
-                                [[${#dates.format(room.createDate,'MM월dd일')}]]
-                            </div>
-                        </li>
-                    </ul>
-                    <button id="create-room" class="btn create-room-btn mt-3">채팅방 만들기</button>
-                </div>
-            </div>
+	<div class="modal fade" id="chatModal" tabindex="-1"
+		aria-labelledby="chatModalLabel" aria-hidden="true">
+		<div class="containerdd-fluiddd">
+			<button type="button" class="btn-close" data-bs-dismiss="modal"
+				aria-label="Close" id="modalClose"></button>
+			<div class="row">
+				<!-- Sidebar for chat rooms -->
+				<div class="col-md-4 col-lg-3 sidebar">
+					<div class="chat-rooms">
+						<h4>나의 채팅방</h4>
+						<ul id="chat-room-list" class="list-unstyled">
+							<!-- Example chat rooms -->
+							<li class="chat-room-item" th:each="room : ${chatRoomList}">
+								<input type="hidden" th:value="${room.roomNo}" name="roomNo">
+								<div class="room-name">[[${room.chatroomName}]]</div>
+								<div class="room-time">
+									[[${#dates.format(room.createDate,'MM월dd일')}]]</div>
+								<button class="btn-light exitRoom">x</button>
+							</li>
+						</ul>
+						<button id="create-room" class="btn create-room-btn mt-3">채팅방
+							만들기</button>
+					</div>
+				</div>
 
-            <!-- Main chat area -->
-            <div class="col-md-8 col-lg-9">
-                <div id="user_chat_data" class="user_chat_data">
-                    <div class="profile_name d-flex justify-content-between align-items-center">
-                        <span id="employee-names"></span>
-                        <button class="btn btn-danger" id="exitRoom">채팅방 나가기</button>
-                    </div>
+				<!-- Main chat area -->
+				<div class="col-md-8 col-lg-9">
+					<div id="user_chat_data" class="user_chat_data">
+						<div
+							class="profile_name d-flex justify-content-between align-items-center">
+							<span id="employee-names"></span>
 
-                    <div class="container-fluid chat_section" id="chat-box">
-                        <!-- Received messages start -->
-                    </div>
-                    <div class="type_msg">
-                        <div class="input_msg_write">
-                            <input id="chat-outgoing-msg" type="text" class="write_msg" placeholder="메세지를 입력하세요." />
-                            <button id="chat-send" class="msg_send_btn" type="button">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Custom Modal for creating a chat room -->
-    <div id="createRoomModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h5>새로운 채팅방을 생성합니다.</h5>
-            <form id="create-room-form">
-                <div class="form-group">
-                    <label for="room-name">채팅방 이름</label> 
-                    <input type="text" class="form-control" id="room-name" placeholder="채팅방 이름을 설정해주세요" required>
-                </div>
-                <div class="form-group">
-                    <label for="employees">함께할 사원</label>
-                    <div id="employee-list">
-                        <div th:each="emp : ${empList}">
-                            <input type="checkbox" th:id="'emp-' + ${emp.employeeNo}" th:name="employeeIds" th:value="${emp.employeeNo}" /> 
-                            <label th:for="'emp-' + ${emp.employeeNo}" >[[${emp.employeeName}]]([[${emp.departmentName}]] [[${emp.rankName}]])</label>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">채팅 시작하기</button>
-            </form>
-        </div>
-    </div>
-</div>
-<script>
+						</div>
+
+						<div class="container-fluid chat_section" id="chat-box">
+							<!-- Received messages start -->
+						</div>
+						<div class="type_msg">
+							<div class="input_msg_write">
+								<input id="chat-outgoing-msg" type="text" class="write_msg"
+									placeholder="메세지를 입력하세요." />
+								<button id="chat-send" class="msg_send_btn" type="button">
+									<i class="fa fa-paper-plane" aria-hidden="true"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Custom Modal for creating a chat room -->
+		<div id="createRoomModal" class="modal">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<h5>새로운 채팅방을 생성합니다.</h5>
+				<form id="create-room-form">
+					<div class="form-group">
+						<label for="room-name">채팅방 이름</label> <input type="text"
+							class="form-control" id="room-name" placeholder="채팅방 이름을 설정해주세요"
+							required>
+					</div>
+					<div class="form-group">
+						<label for="employees">함께할 사원</label>
+						<div id="employee-list">
+							<div th:each="emp : ${empList}">
+								<input type="checkbox" th:id="'emp-' + ${emp.employeeNo}"
+									th:name="employeeIds" th:value="${emp.employeeNo}" /> <label
+									th:for="'emp-' + ${emp.employeeNo}">[[${emp.employeeName}]]([[${emp.departmentName}]]
+									[[${emp.rankName}]])</label>
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary">채팅 시작하기</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
 $(document).ready(function() {
     // 모달 닫기 버튼 클릭 시 이전 페이지로 이동
     $('#modalClose').click(function() {
@@ -307,8 +337,8 @@ $(document).ready(function() {
             var date = new Date(room.createDate);
             var formattedTime = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
             var $roomTime = $('<div class="room-time"></div>').text(formattedTime);
-
-            $newChatRoom.append($roomNoInput).append($roomName).append($roomTime);
+			var xBtn = $('<button class="btn btn-light exitRoom">x</button>');
+            $newChatRoom.append($roomNoInput).append($roomName).append($roomTime).append(xBtn);
 
             $('#chat-room-list').append($newChatRoom);
         }
@@ -344,46 +374,41 @@ $(document).ready(function() {
         });
 
         // 채팅방 나가기
-        $('#exitRoom').on('click', function () {
-        	Swal.fire({
-				  title: "채팅방을 나가시겠습니까?",
-				  showDenyButton: true,
-				  confirmButtonText: "네",
-				  denyButtonText: `아니요`
-				}).then((result) => {
-				  /* Read more about isConfirmed, isDenied below */
-				  if (result.isConfirmed) {
-					   if (roomNo == null) {
-						   Swal.fire({
-				        		  icon: "error",
-				        		  title: "채팅방을 선택해주세요.",
-				        		  allowOutsideClick: false,
-				        		  }).then(function(){
-				        		  
-				        		});
-		                } else {
-		                    $.ajax({
-		                        url: '/chat/exitRoom',
-		                        method: 'POST',
-		                        data: JSON.stringify({ employeeNo: empNo, roomNo: roomNo }),
-		                        headers: { 'Content-Type': 'application/json' },
-		                        success: (result) => {
-		                            // 현재 선택된 채팅방 목록에서 제거
-		                            $(`#chat-room-list .chat-room-item input[value="${roomNo}"]`).parent().remove();
-		                            
-		                            // 메시지 박스와 프로필 이름 초기화
-		                            $('#chat-box').empty();
-		                            $('#employee-names').text('');
-		                            roomNo = null;
-		                        },
-		                        error: (err) => {
-		                            console.log('방나가기 에러', err)
-		                        }
-		                    })
-		                }
-				  } 
-				});
-        })
+        // 채팅방 나가기 버튼 클릭 이벤트 핸들러
+        $('#chat-room-list').on('click', '.exitRoom', function (event) {
+            event.stopPropagation(); // 클릭 이벤트 전파 방지 (채팅방 선택 이벤트와 구별)
+            const $chatRoomItem = $(this).closest('.chat-room-item');
+            const roomNo = $chatRoomItem.find('input[name="roomNo"]').val();
+
+            Swal.fire({
+                title: "채팅방을 나가시겠습니까?",
+                showDenyButton: true,
+                confirmButtonText: "네",
+                denyButtonText: `아니요`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/chat/exitRoom',
+                        method: 'POST',
+                        data: JSON.stringify({ employeeNo: empNo, roomNo: roomNo }),
+                        headers: { 'Content-Type': 'application/json' },
+                        success: (result) => {
+                            // 현재 선택된 채팅방 목록에서 제거
+                            $chatRoomItem.remove();
+
+                            // 메시지 박스와 프로필 이름 초기화
+                            $('#chat-box').empty();
+                            $('#employee-names').text('');
+                            roomNo = null;
+                        },
+                        error: (err) => {
+                            console.log('방나가기 에러', err);
+                        }
+                    });
+                }
+            });
+        });
+
     });
 </script>
 </body>

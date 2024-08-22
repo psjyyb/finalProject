@@ -42,6 +42,10 @@ public class LoginUserVO implements UserDetails {
         return userVO.getCompanyCode();
     }
     
+    public String getEmployeeResp() {
+        return userVO.getEmployeeResp();
+    }
+    
     public String getDepartmentName() {
         return userVO.getDepartmentName();
     }

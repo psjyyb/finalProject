@@ -25,6 +25,7 @@
                e.department_name AS departmentName,
                e.employee_name AS empName,
                e.employee_no AS employeeNo,
+               e.employee_resp,
                d.department_no,
                'employee' AS loginType
         FROM employees e JOIN departments d

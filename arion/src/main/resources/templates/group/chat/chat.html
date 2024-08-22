@@ -121,7 +121,7 @@
                     <div id="employee-list">
                         <div th:each="emp : ${empList}">
                             <input type="checkbox" th:id="'emp-' + ${emp.employeeNo}" th:name="employeeIds" th:value="${emp.employeeNo}" /> 
-                            <label th:for="'emp-' + ${emp.employeeNo}" th:text="${emp.employeeName}"></label>
+                            <label th:for="'emp-' + ${emp.employeeNo}" >[[${emp.employeeName}]]([[${emp.departmentName}]] [[${emp.rankName}]])</label>
                         </div>
                     </div>
                 </div>

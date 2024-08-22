@@ -357,7 +357,7 @@
 				AND da.employee_no = #{docAccessVO.employeeNo}
 				AND da.access_appr = 1
 				AND a.appr_status = '결재대기'
-				AND d.appr_status IN ('결재대기', '결재진행중')
+				
 				<if test="criteria.docTitle != null and criteria.docTitle != ''">
 					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 				</if>
@@ -390,7 +390,7 @@
 		AND da.employee_no = #{docAccessVO.employeeNo}
 		AND da.access_appr = 1
 		AND a.appr_status = '결재대기'
-		AND d.appr_status IN ('결재대기', '결재진행중')
+		
 		<if test="criteria.docTitle != null and criteria.docTitle != ''">
 			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 		</if>

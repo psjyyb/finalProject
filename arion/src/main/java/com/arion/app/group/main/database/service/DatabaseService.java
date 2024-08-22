@@ -8,4 +8,6 @@ public interface DatabaseService {
 	public List<CFileVO> startforder(String companycode);
 	
 	public List<UnderRankVO> underank(int ranking);
+	
+	public List<CFileVO> filelist(String companycode,int parent);
 }

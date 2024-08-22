@@ -2,26 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arion.app.group.main.database.mapper.DatabaseMapper">
 
-<select id="ranking" resultType="int">
-      
+<select id="ranking" resultType="int">      
  		SELECT rank_ranking
         FROM RANK
         WHERE company_code=#{companycode} AND rank_name = #{rankname}
 	</select>
 
-<select id="start" resultType="CFileVO">
-      
- 		SELECT me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,department_no,rank_id,c_form
-        FROM CLOUDS
-        WHERE company_code=#{companycode} 
-        AND parent = 0
+<select id="start" resultType="CFileVO">      
+ 		
+        SELECT level, me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,department_no,rank_id,c_form
+        FROM (SELECT * FROM CLOUDS WHERE company_code = #{companycode} ) 
+        WHERE PARENT IS NOT NULL
+        START WITH PARENT is null 
+        CONNECT BY PRIOR ME = PARENT
+        AND LEVEL =2
 	</select>
 	
-	<select id="underrank" resultType="UnderRankVO">
-      
+	<select id="underrank" resultType="UnderRankVO">      
  		SELECT rank_name,rank_ranking
         FROM RANK
         WHERE rank_ranking  <![CDATA[<=]]>#{ranking} 
-	</select>
-   
+	</select>   
+	
+	<select id="filelist" resultType="CFileVO">      
+        
+        SELECT level, me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,department_no,rank_id,c_form
+        FROM (SELECT * FROM CLOUDS WHERE company_code = #{companycode}) 
+        WHERE PARENT IS NOT NULL AND PARENT = #{parent}
+        START WITH PARENT is null   
+        CONNECT BY PRIOR ME = PARENT
+	</select>   
 </mapper>

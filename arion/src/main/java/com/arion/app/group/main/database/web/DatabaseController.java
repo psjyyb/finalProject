@@ -66,10 +66,10 @@ public class DatabaseController {
 						@RequestParam(value = "companycode",required = false) String companycode,
 						@RequestParam(value = "parent",required = false) int parent) throws Exception {
 					
-                    
+					List<CFileVO> filelist= databaseservice.filelist(companycode,parent);
 					
 					Map<String, Object> result = new HashMap<String, Object>();
-				
+					result.put("filelist", filelist);
 					return result;
 				}		
 				

@@ -35,4 +35,10 @@ public class DatabaseServicelmpl implements DatabaseService{
 		return databasemapper.underrank(ranking);
 	}
 
+	@Override
+	public List<CFileVO> filelist(String companycode, int parent) {
+		// TODO Auto-generated method stub
+		return databasemapper.filelist(companycode,parent);
+	}
+
 }

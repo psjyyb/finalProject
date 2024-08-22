@@ -3,108 +3,152 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
-<html lang="en">
+<html lang="ko">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>ARION</title>
-    <style>
+    <title>메일쓰기 - ARION</title>
 
-    </style>
-
+    <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .modal-content {
+            border-radius: 8px;
+        }
+        .form-control {
+            border-radius: 8px;
+        }
+        .btn-primary {
+            border-radius: 8px;
+        }
+        .modal-header, .modal-footer {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .modal-footer {
+            border-top: 1px solid #dee2e6;
+        }
+        .list-unstyled {
+            padding-left: 0;
+        }
+        .list-unstyled li {
+            margin-bottom: 10px;
+        }
+        .list-unstyled input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>메일쓰기</h1>
+        <h1 class="mb-4">메일쓰기</h1>
         <form id="sendMail" th:action="|/group/mail/writemail|" method="post" enctype="multipart/form-data">
-            <label for="receiverId">수신인</label>
-            <input type="text" id="receiverId" name="receiverId" required>
-            
-            <label for="subject">제목</label>
-            <input type="text" id="subject" name="mailTitle" required>
-            
-            <label for="content">내용</label>
-            <textarea id="content" name="mailContent" rows="5" required></textarea>
-            
-            <label for="files">첨부파일</label>
-            <input type="file" id="files" name="files" multiple>
-            
-            <!-- 로그인한 사용자 ID 추가 -->
+            <div class="mb-3">
+                <label for="receiverId" class="form-label">수신인</label>
+                <div class="input-group">
+                    <input type="text" id="receiverId" name="receiverId" class="form-control" required>
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#orgChartModal">조직도</button>
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#addressBookModal">주소록</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">제목</label>
+                <input type="text" id="subject" name="mailTitle" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea id="content" name="mailContent" class="form-control" rows="5" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="files" class="form-label">첨부파일</label>
+                <input type="file" id="files" name="files" class="form-control" multiple>
+            </div>
+
             <input type="hidden" id="senderId" name="senderId" th:value="${employeeNo}">
-            
-            <button type="submit">보내기</button>
+
+            <button type="submit" class="btn btn-primary">보내기</button>
         </form>
 
-        <!-- 버튼 추가 -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orgChartModal">조직도</button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressBookModal">주소록</button>
-    </div>
-
-    <!-- 조직도 모달 -->
-    <div class="modal fade" id="orgChartModal" tabindex="-1" aria-labelledby="orgChartModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orgChartModalLabel">조직도</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- 조직도 콘텐츠 삽입 -->
-                    <div class="container">
-                        <div class="departments">
-                            <h2>부서</h2>
-                            <ul id="departmentList"></ul>
-                        </div>
-                        <div class="employees">
-                            <h2>사원</h2>
-                            <ul id="employeeList"></ul>
+        <!-- 조직도 모달 -->
+        <div class="modal fade" id="orgChartModal" tabindex="-1" aria-labelledby="orgChartModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orgChartModalLabel">조직도</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="departments">
+                                <h2>부서</h2>
+                                <ul id="departmentList" class="list-unstyled"></ul>
+                            </div>
+                            <div class="employees">
+                                <h2>사원</h2>
+                                <ul id="employeeList" class="list-unstyled"></ul>
+                            </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary" id="addOrgChartToReceiver">완료</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+
+        <!-- 주소록 모달 -->
+        <div class="modal fade" id="addressBookModal" tabindex="-1" aria-labelledby="addressBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addressBookModalLabel">주소록</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="companies">
+                                <h2>회사 목록</h2>
+                                <ul id="companyList" class="list-unstyled"></ul>
+                            </div>
+                            <div class="addresses">
+                                <h2>주소록</h2>
+                                <ul id="addressList" class="list-unstyled"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary" id="addToReceiver">완료</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 주소록 모달 -->
-    <div class="modal fade" id="addressBookModal" tabindex="-1" aria-labelledby="addressBookModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addressBookModalLabel">주소록</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- 주소록 콘텐츠 삽입 -->
-                    <div class="container">
-                        <div class="companies">
-                            <h2>회사 목록</h2>
-                            <ul id="companyList"></ul>
-                        </div>
-                        <div class="addresses">
-                            <h2>주소록</h2>
-                            <ul id="addressList"></ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" id="addToReceiver">완료</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-  <script>
+    <script>
     $(document).ready(function() {
         // 조직도 모달 스크립트
         $.ajax({
@@ -133,21 +177,27 @@
                     employeeList.empty();
 
                     data.forEach(function(employee) {
-                        employeeList.append('<li><a href="#" class="employee" data-id="' + employee.employeeNo + '" data-email="' + employee.email + '">' + employee.employeeName + ' (' + employee.rankName + ')</a></li>');
+                        // 체크박스를 추가하여 선택 가능하도록 함
+                        employeeList.append('<li><input type="checkbox" class="employeeCheckbox" data-id="' + employee.employeeId + '">' + employee.employeeName + ' (' + employee.rankName + ')</li>');
                     });
                 }
             });
         });
 
-        $(document).on('click', '.employee', function(e) {
-            e.preventDefault();
-            let employeeId = $(this).data('id');
-            let email = $(this).data('email');
+        // 완료 버튼 클릭 시 조직도에서 ID 추가
+        $('#addOrgChartToReceiver').click(function() {
+            let ids = [];
+            $('.employeeCheckbox:checked').each(function() {
+                ids.push($(this).data('id'));
+            });
 
-            // 수신인 입력 필드에 사원 ID 설정
-            $('#receiverId').val(employeeId);
+            let currentReceiver = $('#receiverId').val();
+            if (currentReceiver) {
+                $('#receiverId').val(currentReceiver + ', ' + ids.join(', '));
+            } else {
+                $('#receiverId').val(ids.join(', '));
+            }
 
-            // 조직도 모달 닫기
             $('#orgChartModal').modal('hide');
         });
 
@@ -184,60 +234,93 @@
             });
         });
 
-        // 완료 버튼 클릭 시 이메일 추가
-        $('#addToReceiver').click(function() {
-            let emails = [];
-            $('.addressCheckbox:checked').each(function() {
-                emails.push($(this).data('email'));
-            });
-
-            let currentReceiver = $('#receiverId').val();
-            if (currentReceiver) {
-                $('#receiverId').val(currentReceiver + ', ' + emails.join(', '));
-            } else {
-                $('#receiverId').val(emails.join(', '));
-            }
-
-            $('#addressBookModal').modal('hide');
-        });
-
-        // 폼 제출 시 처리
-        $('#sendMail').on('submit', function(e) {
-            e.preventDefault(); // 기본 제출 방지
-
+            // 주소록 모달 스크립트
             $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                data: new FormData(this),
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    Swal.fire({
-                        title: '성공!',
-                        text: '메일이 성공적으로 전송되었습니다.',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'http://localhost:8080/group/mail/Mymail';
-                        }
-                    });
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire({
-                        title: '실패!',
-                        text: '메일 전송에 실패했습니다. 다시 시도해 주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'http://localhost:8080/group/mail/writemail';
-                        }
+                url: '/group/Gang/companyNames',
+                method: 'GET',
+                success: function(data) {
+                    let companyList = $('#companyList');
+                    companyList.empty();
+
+                    data.forEach(function(company) {
+                        companyList.append('<li><a href="#" class="company" data-name="' + company + '">' + company + '</a></li>');
                     });
                 }
             });
+
+            $(document).on('click', '.company', function(e) {
+                e.preventDefault();
+                let companyName = $(this).data('name');
+
+                $.ajax({
+                    url: '/group/Gang/addresses',
+                    method: 'GET',
+                    data: { companyName: companyName },
+                    success: function(data) {
+                        let addressList = $('#addressList');
+                        addressList.empty();
+
+                        data.forEach(function(address) {
+                            addressList.append('<li><input type="checkbox" class="addressCheckbox" data-email="' + address.addrEmail + '">' + address.addrName + '</li>');
+                        });
+                    }
+                });
+            });
+
+            // 완료 버튼 클릭 시 주소록에서 이메일 추가
+            $('#addToReceiver').click(function() {
+                let emails = [];
+                $('.addressCheckbox:checked').each(function() {
+                    emails.push($(this).data('email'));
+                });
+
+                let currentReceiver = $('#receiverId').val();
+                if (currentReceiver) {
+                    $('#receiverId').val(currentReceiver + ', ' + emails.join(', '));
+                } else {
+                    $('#receiverId').val(emails.join(', '));
+                }
+
+                $('#addressBookModal').modal('hide');
+            });
+
+            // 폼 제출 시 처리
+            $('#sendMail').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        Swal.fire({
+                            title: '성공!',
+                            text: '메일이 성공적으로 전송되었습니다.',
+                            icon: 'success',
+                            confirmButtonText: '확인'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'http://localhost:8080/group/mail/Mymail';
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: '실패!',
+                            text: '메일 전송에 실패했습니다. 다시 시도해 주세요.',
+                            icon: 'error',
+                            confirmButtonText: '확인'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'http://localhost:8080/group/mail/writemail';
+                            }
+                        });
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>

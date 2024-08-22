@@ -19,7 +19,7 @@
                    m.mail_title
             FROM mail m
             JOIN mail_receive mr ON m.mail_no = mr.mail_no
-            WHERE mr.employee_id = #{mailVO.senderId}  <!-- 로그인한 사용자의 ID -->
+            WHERE mr.employee_id = #{mailVO.senderId} 
             AND mr.mail_status = 'RECEIVED'
             AND m.company_code = #{mailVO.companyCode}
             <if test="criteria.searchType != null and criteria.searchType != ''">
@@ -208,19 +208,27 @@
 	<select id="selectMailInfo" parameterType="MailVO"
 		resultType="MailVO">
     
-    	SELECT FIND_EMP_NAME(m.sender_id) AS sender_name
-    				 , LISTAGG(mr.employee_id, ', ') WITHIN GROUP (ORDER BY mr.employee_id) AS receiver_ids
-    				 , m.mail_title
-    				 , m.mail_content
-    				 , m.send_date 
-		FROM mail m
-		JOIN mail_receive mr 
-		ON m.mail_no = mr.mail_no
-		WHERE m.mail_no = #{mailNo}
-		GROUP BY FIND_EMP_NAME(m.sender_id),
-					 m.mail_title,
-					 m.mail_content, 
-					 m.send_date
+    SELECT 
+        e.employee_id AS sender_id,  <!-- sender_id를 employee_id로 변환 -->
+        FIND_EMP_NAME(m.sender_id) AS sender_name,
+        LISTAGG(mr.employee_id, ', ') WITHIN GROUP (ORDER BY mr.employee_id) AS receiver_ids,
+        m.mail_title,
+        m.mail_content,
+        m.send_date,
+        m.mail_no 
+    FROM mail m
+    JOIN mail_receive mr 
+    ON m.mail_no = mr.mail_no
+    JOIN employees e 
+    ON m.sender_id = e.employee_no  <!-- employees 테이블과 조인하여 sender_id를 employee_id로 변환 -->
+    WHERE m.mail_no = #{mailNo}
+    GROUP BY 
+        e.employee_id,  <!-- employee_id를 그룹화에 포함 -->
+        FIND_EMP_NAME(m.sender_id),
+        m.mail_title,
+        m.mail_content,
+        m.send_date,
+        m.mail_no
 	</select>
 
 
@@ -268,25 +276,40 @@
             #{companyCode}
         )
     </insert>
+    
+    <insert id="replyToMail" parameterType="MailVO">
+        <selectKey keyProperty="mailNo" order="BEFORE" resultType="int">
+            SELECT MAIL_NO_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO mail (
+            mail_no,
+            sender_id,
+            mail_title,
+            mail_content,
+            mail_status,
+            company_code
+        ) VALUES (
+            #{mailNo},
+            #{senderId},
+            #{mailTitle},
+            #{mailContent},
+            'SEND', 
+            #{companyCode}
+        )
+    </insert>
 
+<select id="selectMailStatus" parameterType="map" resultType="String">
+    SELECT mail_status
+    FROM mail_receive
+    WHERE mail_no = #{mailNo}
+    AND employee_id = #{employeeId}
+</select>
 
-<update id="updateMailStatusToImportant">
-    UPDATE mail
-    SET mail_status = 'IMPORTANT'
-    WHERE mail_no IN
-    <foreach item="mailId" collection="mailIds" open="(" separator="," close=")">
-        #{mailId}
-    </foreach>
+<update id="updateMailStatus">
+    UPDATE mail_receive
+    SET mail_status = #{mailStatus}
+    WHERE mail_no = #{mailNo}
+    AND employee_id = #{employeeId}
 </update>
-
-<update id="updateMailStatusToTrash">
-    UPDATE mail
-    SET mail_status = 'TRASH'
-    WHERE mail_no IN
-    <foreach item="mailId" collection="mailIds" open="(" separator="," close=")">
-        #{mailId}
-    </foreach>
-</update>
-
 </mapper>
 

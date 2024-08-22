@@ -16,6 +16,7 @@
 			  , e.rank_name
 			  , r.rank_ranking
 			  , e.employee_phone
+			  , e.employee_id
         FROM employees e JOIN rank r 
         				 ON e.rank_name = r.rank_name 
         				 AND e.company_code = r.company_code

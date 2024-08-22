@@ -1,87 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/group/layouts/group_layout}"
-    layout:fragment="Content">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/group/layouts/group_layout}"
+      layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-    <title>ARION</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin: 0;
-            font-size: 24px;
-            background-color: #fff;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .mail-details {
-            background: #fff;
-            border-radius: 5px;
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 800px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .mail-details h2 {
-            margin-top: 0;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .mail-details .info {
-            margin: 10px 0;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .mail-details .info:last-child {
-            border-bottom: none;
-        }
-
-        .mail-details .label {
-            font-weight: bold;
-            color: #666;
-        }
-
-        .mail-content {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #fff;
-            margin: 20px 0;
-        }
-
-        .actions-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .actions-container a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .actions-container a:hover {
-            background-color: #45a049;
-        }
-    </style>
+<link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <title>메일 상세보기</title>
+ 
 </head>
 <body>
     <h1>메일 상세보기</h1>
@@ -99,18 +25,19 @@
         <div class="mail-content">
             <p th:text="${mailInfo.mailContent}">메일 내용</p>
         </div>
-            <div class="content-section">
-        <h4>첨부파일</h4>	
-    	<div th:each="file : ${fileInfo}">
-            <div class="file-links" th:if="${!file.fileType.startsWith('image/')}">
-            <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}" ></a>
+        <div class="content-section">
+            <h4>첨부파일</h4>    
+            <div th:each="file : ${fileInfo}">
+                <div class="file-links" th:if="${!file.fileType.startsWith('image/')}">
+                    <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+                </div>
+            </div>
         </div>
+        
+        <div class="actions-container">
+            <!-- 답장하기 링크 수정 -->
+         <a th:href="@{/group/mail/reply/{mailNo}(mailNo=${mailInfo.mailNo})}">답장하기</a>
         </div>
-	</div>
-    </div>
-
-    <div class="actions-container">
-        <a href="/group/mail/Mymail" class="back-btn">목록으로 돌아가기</a>
     </div>
 </body>
 </html>

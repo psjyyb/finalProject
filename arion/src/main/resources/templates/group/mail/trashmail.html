@@ -5,76 +5,9 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
+    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
-    <style>
-        h1 {
-            color: #444;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .checkbox-container {
-            text-align: center;
-        }
-
-        .compose-btn, .delete-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .compose-btn {
-            background-color: #4CAF50;
-        }
-
-        .compose-btn:hover {
-            background-color: #45a049;
-        }
-
-        .delete-btn {
-            background-color: #f44336;
-            margin-left: 10px;
-        }
-
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        .actions-container {
-            margin: 20px 0;
-        }
-
-        .actions-container label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-    </style>
+ 
 </head>
 <body>
     <h1>휴지통</h1>

@@ -34,15 +34,10 @@ public interface MailMapper {
     
     int deleteMailTotalCount(@Param("mailVO")MailVO mailVO,@Param("criteria")Criteria criteria);
     // 메일 보내기
-    public int sendMail(MailVO mailVO);
+    int sendMail(MailVO mailVO);
 
     // 수신자 정보 조회
     List<MailReceiveVO> selectReceivers(@Param("companyCode") String companyCode);
-    
-    //상태변경
-    void updateMailStatusToImportant(@Param("mailIds") List<Integer> mailIds);
-
-    void updateMailStatusToTrash(@Param("mailIds") List<Integer> mailIds);
     
     // 메일 삭제
     int mailDelete(int mailNo);
@@ -51,9 +46,16 @@ public interface MailMapper {
     MailVO selectMailInfo(MailVO mailVO);
     //메일 파일조회
     MailVO selectfiles(MailVO mailVO);
-    
+    //답장하기
+    int replyToMail(MailVO mailVO);
     // 메일 수신 기록 삽입 메서드
     int insertMailReceive(MailReceiveVO receiveVO);
     //시퀀스
     int getMailNoSequence();
+    
+    // 현재 메일 상태 조회
+    String selectMailStatus(@Param("mailNo") Integer mailNo, @Param("employeeId") String employeeId);
+
+    // 메일 상태 업데이트
+    void updateMailStatus(MailReceiveVO mailReceiveVO);
 }

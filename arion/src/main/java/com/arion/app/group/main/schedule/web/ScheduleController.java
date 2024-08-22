@@ -57,4 +57,22 @@ public class ScheduleController {
 	public int empCalcUpdate(ScheduleVO scheduleVO) {
 		return scheduleService.empScheduleUpdate(scheduleVO);
 	}
+	@GetMapping("/group/schedule/deptSchedule")
+	@ResponseBody
+	public List<ScheduleVO>deptCalendar(Model model,HttpSession session){
+		int departmetnNo = (Integer) session.getAttribute("departmentNo");
+		return scheduleService.deptScheduleListSelect(departmetnNo);
+	}
+	@PostMapping("/group/schedule/deptCalcInsert")
+	@ResponseBody
+	public Map<String,Object> deptCalcInsert(ScheduleVO scheduleVO,HttpSession session){
+		String comCode = (String) session.getAttribute("companyCode");
+		int empNo = (Integer) session.getAttribute("employeeNo");
+		int deptNo = (Integer) session.getAttribute("departmentNo");
+		scheduleVO.setCompanyCode(comCode);
+		scheduleVO.setEmployeeNo(empNo);
+		scheduleVO.setDepartmentNo(deptNo);
+		return scheduleService.empScheduleInsert(scheduleVO);
+	}
+
 }

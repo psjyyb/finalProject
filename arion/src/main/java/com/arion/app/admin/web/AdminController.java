@@ -163,4 +163,10 @@ public class AdminController {
 	public List<ChartVO> pieChart(){
 		return adminService.pieChart();
 	}
+	
+	@GetMapping("/arion/error")
+	public String error(){
+		System.out.println("여긴타나?");
+		return "/common/error/404";
+	}
 }

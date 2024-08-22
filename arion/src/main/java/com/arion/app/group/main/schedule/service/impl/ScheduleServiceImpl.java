@@ -49,5 +49,9 @@ public class ScheduleServiceImpl implements ScheduleService{
 		}
 		return scheduleMapper.updateEmpSchedule(scheduleVO);
 	}
+	@Override
+	public List<ScheduleVO> deptScheduleListSelect(int departmentNo) {
+		return scheduleMapper.selectDeptScheduleList(departmentNo);
+	}
 
 }

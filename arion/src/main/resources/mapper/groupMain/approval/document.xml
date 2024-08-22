@@ -89,11 +89,11 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
+				ORDER BY doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
-				ORDER BY doc_no DESC
 	</select>
 	
 	<select id="countApprProgressList" parameterType ="map" resultType="int">
@@ -214,11 +214,11 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
+				ORDER BY d.doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
-				ORDER BY doc_no DESC
 	</select>
 	
 	<select id="countApprFinishList" parameterType ="map" resultType="int">
@@ -290,11 +290,11 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
+				ORDER BY doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
-				ORDER BY doc_no DESC
 	</select>
 	
 	<select id="countApprRejectList" parameterType ="map" resultType="int">
@@ -370,11 +370,11 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
+				ORDER BY doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)
 		WHERE rn > (#{criteria.pageNum} -1) * #{criteria.amount}
-				ORDER BY doc_no DESC
 	</select>
 	
 	<select id="countApprWaitList" parameterType ="map" resultType="int">

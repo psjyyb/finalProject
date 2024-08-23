@@ -6,6 +6,7 @@
 		SELECT DISTINCT department_name
         FROM employees
         WHERE company_code = #{companyCode}
+        AND resign_date IS NULL
 	</select>
 	
 	<!-- 사원조회 -->
@@ -22,6 +23,7 @@
         				 AND e.company_code = r.company_code
         WHERE e.company_code = #{companyCode} 
         AND e.department_name = #{departmentName}
+        AND e.resign_date IS NULL
      </select>
      <!-- 사원상세정보 -->
     <select id="selectEmployeeDetail" parameterType="int" resultType="employeesVO">
@@ -33,6 +35,7 @@
                e.employee_id
         FROM employees e
         WHERE e.employee_no = #{employeeNo}
+        AND e.resign_date IS NULL
     </select>
      <!-- 주소록 회사목록 -->
      <select id="selectCompanyNames" parameterType="String" resultType="String">

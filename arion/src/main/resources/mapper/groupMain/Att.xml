@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arion.app.group.main.mapper.AttMapper">
+
+
+    <select id="selectAttendanceByDate" resultType="AttVO">
+ 			      SELECT *
+       			 FROM attendance
+       			 WHERE employee_no = 6
+         		 AND TRUNC(att_date) = TRUNC(SYSDATE)
+
+        
+    </select>
+
+   <insert id="startAtt" parameterType="AttVO">
+        <selectKey keyProperty="attNo" resultType="int" order="BEFORE">
+            SELECT attendance_seq.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO attendance (
+        						att_no, 
+        						employee_no, 
+        						att_date, 
+        						start_time,
+        						company_code, 
+        						state
+        						)
+       					 VALUES (
+       					 		#{attNo}, 
+       					 		#{empNo}, 
+       					 		#{attDate}, 
+       					 		#{startTime},
+       					 		#{companyCode}, 
+       					 		#{state})
+    </insert>
+
+    <update id="endAtt" parameterType="AttVO">
+        UPDATE attendance
+        SET end_time = #{endTime}
+        WHERE employee_no = #{empNo}
+        AND att_date = #{attDate}
+    </update>
+
+</mapper>

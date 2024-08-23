@@ -69,7 +69,7 @@ public class HomeBoardController {
 		return "home/board/qnaInsert";
 	}
 	
-	@PostMapping("/qnaInsert")
+	@PostMapping("/home/qnaInsert")
     public String insertQna(HomeQnaVO homeQnaVO, @RequestPart MultipartFile[] files,  HttpSession session) {
         String companyCode = (String) session.getAttribute("companyCode");
         homeQnaVO.setQnaCompany(companyCode);
@@ -127,7 +127,7 @@ public class HomeBoardController {
 	    return "home/board/qnaUpdate";
 	}
 	
-	@PostMapping("/qnaUpdate")
+	@PostMapping("/home/qnaUpdate")
 	public String UpdateQna(HomeQnaVO homeQnaVO, @RequestPart MultipartFile[] files,  HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		homeQnaVO.setQnaCompany(companyCode);
@@ -135,7 +135,7 @@ public class HomeBoardController {
 		return "redirect:/home/qna";
 	}
 	
-	@PostMapping("/qnaPw")
+	@PostMapping("/home/qnaPw")
 	@ResponseBody
 	public Map<String, Object> QnaPw(@RequestBody Map<String, String> request) {
 		Integer qnaNo = Integer.valueOf(request.get("qnaNo"));

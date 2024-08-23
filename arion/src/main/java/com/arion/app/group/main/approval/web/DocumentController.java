@@ -144,7 +144,7 @@ public class DocumentController {
 		return dsvc.selectEmployeeList(companyCode, departmentName);
 	}
 	
-	@PostMapping("/writeDoc")
+	@PostMapping("/group/doc/writeDoc")
 	@ResponseBody
 	public String insertDoc(
 	        	DocumentVO documentVO,
@@ -288,7 +288,8 @@ public class DocumentController {
 	 public String apprRejectList(Model model, Criteria criteria, HttpSession session) {
 		 int employeeNo = (int) session.getAttribute("employeeNo");
 		 String companyCode = (String) session.getAttribute("companyCode");
-			
+		
+		 List<String> department = dsvc.selectDepartment(companyCode);
 		 DocAccessVO docAccessVO = new DocAccessVO();
 		 docAccessVO.setEmployeeNo(employeeNo);
 		 docAccessVO.setCompanyCode(companyCode);
@@ -300,6 +301,7 @@ public class DocumentController {
 		 model.addAttribute("pageDTO", pageDTO);
 		 model.addAttribute("reDoc", apprRejectList);
 		 model.addAttribute("critera", criteria);
+		 model.addAttribute("department", department);
 		 
 		 return "group/document/approval/apprRejectList";
 	 }
@@ -308,7 +310,8 @@ public class DocumentController {
 	 public String apprFinishList(Model model, Criteria criteria, HttpSession session) {
 		 int employeeNo = (int) session.getAttribute("employeeNo");
 		 String companyCode = (String) session.getAttribute("companyCode");
-			
+		 
+		 List<String> department = dsvc.selectDepartment(companyCode);
 		 DocAccessVO docAccessVO = new DocAccessVO();
 		 docAccessVO.setEmployeeNo(employeeNo);
 		 docAccessVO.setCompanyCode(companyCode);
@@ -320,6 +323,7 @@ public class DocumentController {
 		 model.addAttribute("pageDTO", pageDTO);
 		 model.addAttribute("finishDoc", apprFinishList);
 		 model.addAttribute("critera", criteria);
+		 model.addAttribute("department", department);
 		 
 		 return "group/document/approval/apprFinishList";
 	 }
@@ -328,7 +332,8 @@ public class DocumentController {
 	 public String apprWaitList(Model model, Criteria criteria, HttpSession session) {
 		 int employeeNo = (int) session.getAttribute("employeeNo");
 		 String companyCode = (String) session.getAttribute("companyCode");
-			
+		 
+		 List<String> department = dsvc.selectDepartment(companyCode);
 		 DocAccessVO docAccessVO = new DocAccessVO();
 		 docAccessVO.setEmployeeNo(employeeNo);
 		 docAccessVO.setCompanyCode(companyCode);
@@ -340,9 +345,8 @@ public class DocumentController {
 		 model.addAttribute("pageDTO", pageDTO);
 		 model.addAttribute("waitDoc", apprWaitList);
 		 model.addAttribute("critera", criteria);
+		 model.addAttribute("department", department);
 		 
 		 return "group/document/approval/apprWaitList";
-	}
-	 
-	 
+	} 
 }

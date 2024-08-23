@@ -28,7 +28,7 @@ $(document).ready(function() {
             formData.append('files', file);
         });
        $.ajax({
-            url: '/qnaUpdate',
+            url: '/home/qnaUpdate',
             type: 'POST',
             data: formData,
             processData: false,

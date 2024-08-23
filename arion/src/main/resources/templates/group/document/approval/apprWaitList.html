@@ -40,11 +40,12 @@
 	margin-right: 10px;
 }
 
-.search-container input[type="text"], .search-container input[type="date"]
+.search-container input[type="text"], .search-container input[type="date"], .search-container select
 	{
 	padding: 10px;
 	border-radius: 4px;
 	border: 1px solid #ced4da;
+	width: 250px;
 	font-size: 16px;
 	color: #495057;
 	background-color: #f8f9fa;
@@ -131,7 +132,13 @@
 					<input type="text" name="docTitle" th:value="${criteria.docTitle}"> 
 					<label>기안자</label> 
 					<input type="text" name="writer" th:value="${criteria.writer}">
-					
+					<label>부서</label> 
+					<select th:field="*{department}">
+						<option value="">전체</option>
+						<th:block th:each="dept : ${department}">
+        					<option th:value="${dept}" th:selected="${dept == criteria.department}" th:text="${dept}"></option>
+    					</th:block>
+					</select>
 				</div>
 				<div>
 					<label>상신일자</label> 

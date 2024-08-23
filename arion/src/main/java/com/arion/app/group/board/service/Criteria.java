@@ -18,6 +18,9 @@ public class Criteria {
 	private String boardCategory; 	// 게시판 유형
 	private String department;		// 부서
 	private String companyCode;		// 회사코드
+	
+	private String finishStartDate;
+	private String finishEndDate;
 
 	public Criteria() {
 		this(1, 10);

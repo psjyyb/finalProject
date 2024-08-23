@@ -23,7 +23,7 @@ $('#passwordConfirmBtn').click(function() {
     var enteredPassword = $('#password').val();
 
     $.ajax({
-        url: '/qnaPw',
+        url: '/home/qnaPw',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

@@ -192,3 +192,14 @@ h5 {
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+.ck-content table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.ck-content th, .ck-content td {
+    border: 1px solid #dee2e6 !important;
+    width: 100px;
+    padding: 10px !important;
+    text-align: left !important;
+}

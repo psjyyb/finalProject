@@ -80,7 +80,7 @@ $(document).ready(function() {
             formData.append('files', file);
         });
        $.ajax({
-            url: '/qnaInsert',
+            url: '/home/qnaInsert',
             type: 'POST',
             data: formData,
             processData: false,

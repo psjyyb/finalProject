@@ -19,6 +19,7 @@
         				 AND e.company_code = r.company_code
         WHERE e.company_code = #{companyCode} 
         AND e.department_name = #{departmentName}
+        AND resign_date IS NULL
         ORDER BY r.rank_ranking ASC
 	</select>
 	
@@ -208,11 +209,20 @@
 				<if test="criteria.writer != null and criteria.writer != ''">
 					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 				</if>
+				<if test="criteria.department != null and criteria.department != ''">
+               		AND e.department_name LIKE '%' || #{criteria.department} || '%'
+           		</if>
 				<if test="criteria.startDate != null and criteria.startDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 				</if>
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.finishStartDate != null and criteria.finishStartDate != ''">
+					AND TRUNC(d.finish_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.finishStartDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.finishEndDate != null and criteria.finishEndDate != ''">
+					AND TRUNC(d.finish_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.finishEndDate}, 'YYYY-MM-DD')
 				</if>
 				ORDER BY d.doc_no DESC
 			)
@@ -236,11 +246,20 @@
 		<if test="criteria.writer != null and criteria.writer != ''">
 			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 		</if>
+		<if test="criteria.department != null and criteria.department != ''">
+           	AND e.department_name LIKE '%' || #{criteria.department} || '%'
+        </if>
 		<if test="criteria.startDate != null and criteria.startDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 		</if>
 		<if test="criteria.endDate != null and criteria.endDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.finishStartDate != null and criteria.finishStartDate != ''">
+			AND TRUNC(d.finish_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.finishStartDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.finishEndDate != null and criteria.finishEndDate != ''">
+			AND TRUNC(d.finish_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.finishEndDate}, 'YYYY-MM-DD')
 		</if>
 	</select>
 	
@@ -284,11 +303,20 @@
 				<if test="criteria.writer != null and criteria.writer != ''">
 					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 				</if>
+				<if test="criteria.department != null and criteria.department != ''">
+           			AND e.department_name LIKE '%' || #{criteria.department} || '%'
+        		</if>
 				<if test="criteria.startDate != null and criteria.startDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 				</if>
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.finishStartDate != null and criteria.finishStartDate != ''">
+					AND TRUNC(d.finish_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.finishStartDate}, 'YYYY-MM-DD')
+				</if>
+				<if test="criteria.finishEndDate != null and criteria.finishEndDate != ''">
+					AND TRUNC(d.finish_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.finishEndDate}, 'YYYY-MM-DD')
 				</if>
 				ORDER BY doc_no DESC
 			)
@@ -314,11 +342,20 @@
 		<if test="criteria.writer != null and criteria.writer != ''">
 			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 		</if>
+		<if test="criteria.department != null and criteria.department != ''">
+           	AND e.department_name LIKE '%' || #{criteria.department} || '%'
+        </if>
 		<if test="criteria.startDate != null and criteria.startDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 		</if>
 		<if test="criteria.endDate != null and criteria.endDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.finishStartDate != null and criteria.finishStartDate != ''">
+			AND TRUNC(d.finish_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.finishStartDate}, 'YYYY-MM-DD')
+		</if>
+		<if test="criteria.finishEndDate != null and criteria.finishEndDate != ''">
+			AND TRUNC(d.finish_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.finishEndDate}, 'YYYY-MM-DD')
 		</if>
 	</select>
 	
@@ -364,6 +401,9 @@
 				<if test="criteria.writer != null and criteria.writer != ''">
 					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 				</if>
+				<if test="criteria.department != null and criteria.department != ''">
+        			AND e.department_name LIKE '%' || #{criteria.department} || '%'
+     			</if>
 				<if test="criteria.startDate != null and criteria.startDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 				</if>
@@ -397,6 +437,9 @@
 		<if test="criteria.writer != null and criteria.writer != ''">
 			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 		</if>
+		<if test="criteria.department != null and criteria.department != ''">
+        	AND e.department_name LIKE '%' || #{criteria.department} || '%'
+     	</if>
 		<if test="criteria.startDate != null and criteria.startDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 		</if>

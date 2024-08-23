@@ -1,21 +1,212 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/group/layouts/group_layout}"
-	layout:fragment="Content">
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{common/group/layouts/group_layout}"
+   layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-<title>ARION</title>
+   <meta charset="UTF-8">
+   <title>ARION</title>
+   <!-- SweetAlert2 CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+   <!-- Custom CSS -->
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         margin: 0;
+         padding: 0;
+         background-color: #f4f4f9;
+      }
+      .container {
+         display: flex;
+         padding: 40px; /* Increased padding */
+      }
+      .left-section, .right-section {
+         padding: 30px; /* Increased padding */
+         background-color: #fff;
+         border-radius: 10px; /* Increased border-radius */
+         box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Increased shadow */
+         margin-right: 30px; /* Increased margin between sections */
+      }
+      .left-section {
+         width: 35%; /* Increased width */
+      }
+      .right-section {
+         width: 65%; /* Decreased width to match left-section */
+      }
+      h2 {
+         margin-top: 0;
+         color: #333;
+         font-size: 2em; /* Increased font size */
+         border-bottom: 3px solid #ddd; /* Increased border thickness */
+         padding-bottom: 15px; /* Increased padding */
+      }
+      table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-bottom: 30px; /* Increased margin */
+      }
+      th, td {
+         border: 1px solid #ddd;
+         padding: 12px; /* Increased padding */
+         text-align: left;
+         font-size: 1.2em; /* Increased font size */
+      }
+      th {
+         background-color: #f4f4f4;
+      }
+      .button-group {
+         display: flex;
+         flex-direction: column;
+      }
+      .button-group label {
+         margin-bottom: 15px; /* Increased margin */
+         display: flex;
+         align-items: center;
+         font-size: 1.2em; /* Increased font size */
+      }
+      .button-group input[type="radio"] {
+         margin-right: 15px; /* Increased margin */
+      }
+      .button-group button {
+         background-color: #007bff;
+         color: #fff;
+         border: none;
+         border-radius: 8px; /* Increased border-radius */
+         padding: 15px 30px; /* Increased padding */
+         font-size: 1.2em; /* Increased font size */
+         cursor: pointer;
+         transition: background-color 0.3s ease;
+         width: 100%;
+      }
+      .button-group button:hover {
+         background-color: #0056b3;
+      }
+   </style>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-	<div>
-		<h1>GangSword.... 조직도</h1>
-		<h1>AlcoholCow.... 주소....</h1>
-		<div>
-			<a th:href="@{/admin}">Admin Page</a>
-			<a th:href="@{/user}">User Page</a> 
-			<a th:href="@{/logout}">Logout</a>
-		</div>
-	</div>
+   <div class="container">
+      <!-- 왼쪽 섹션: 출퇴근 및 로그인 정보 -->
+      <div class="left-section">
+         <div class="session-info">
+            <p>안녕하세요, <span id="empName" th:text="${session.empName}">[로그인한 사용자 이름]</span>님!</p>
+         </div>
+         <div class="time-display" id="currentTime">현재 시간: 00:00:00</div>
+         
+         <!-- 출퇴근 선택 및 버튼 -->
+         <h2>출퇴근</h2>
+         <form id="attForm">
+            <div class="button-group">
+               <label>
+                  <input type="radio" name="attType" value="start" checked>
+                  출근
+               </label>
+               <label>
+                  <input type="radio" name="attType" value="end">
+                  퇴근
+               </label>
+               <button type="submit">처리하기</button>
+            </div>
+         </form>
+      </div>
+
+      <!-- 오른쪽 섹션: 공지사항 및 메일 목록 -->
+      <div class="right-section">
+         <!-- 공지사항 -->
+         <h2>공지사항</h2>
+         <table>
+            <thead>
+               <tr>
+                  <th>제목</th>
+                  <th>작성일</th>
+               </tr>
+            </thead>
+            <tbody>
+               <th:block th:each="notice, iterStat : ${noticeboardList}">
+                   <th:block th:if="${iterStat.count <= 3}">
+                       <tr>
+                           <td><a th:href="@{/group/noticeboardInfo(boardNo=${notice.boardNo})}" th:text="${notice.boardTitle}">공지사항 제목</a></td>
+                           <td th:text="${#dates.format(notice.writeDate, 'yy-MM-dd')}">작성일</td>
+                       </tr>
+                   </th:block>
+               </th:block>
+            </tbody>
+         </table>
+         
+         <!-- 메일 목록 -->
+         <h2>최근 받은 메일</h2>
+         <table>
+            <thead>
+               <tr>
+                  <th>제목</th>
+                  <th>수신일</th>
+               </tr>
+            </thead>
+            <tbody>
+               <th:block th:each="mail, iterStat : ${receivedMails}">
+                   <th:block th:if="${iterStat.count <= 3}">
+                       <tr>
+                           <td><a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a></td>
+                           <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">수신일</td>
+                       </tr>
+                   </th:block>
+               </th:block>
+            </tbody>
+         </table>
+      </div>
+   </div>
+
+   <!-- SweetAlert2 사용 JavaScript -->
+   <script>
+      $(document).ready(function() {
+          // 출퇴근 버튼 처리
+          $('#attForm').on('submit', function(event) {
+              event.preventDefault();
+              
+              var attType = $('input[name="attType"]:checked').val();
+              var url = (attType === 'start') ? '/group/startAtt' : '/group/endAtt';
+              var successTitle = (attType === 'start') ? '출근 성공' : '퇴근 성공';
+              var successText = (attType === 'start') ? '출근 처리가 완료되었습니다.' : '퇴근 처리가 완료되었습니다.';
+              var errorText = (attType === 'start') ? '출근 처리에 실패했습니다. 다시 시도해 주세요.' : '퇴근 처리에 실패했습니다. 출근 기록이 있는지 확인하세요.';
+
+              $.ajax({
+                  url: url,
+                  type: 'POST',
+                  success: function(response) {
+                      Swal.fire({
+                          icon: 'success',
+                          title: successTitle,
+                          text: successText,
+                          confirmButtonText: '확인'
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: '처리 실패',
+                          text: errorText,
+                          confirmButtonText: '확인'
+                      });
+                  }
+              });
+          });
+
+          // 현재 시간 표시
+          function updateTime() {
+              var now = new Date();
+              var hours = String(now.getHours()).padStart(2, '0');
+              var minutes = String(now.getMinutes()).padStart(2, '0');
+              var seconds = String(now.getSeconds()).padStart(2, '0');
+              $('#currentTime').text('현재 시간: ' + hours + ':' + minutes + ':' + seconds);
+          }
+          
+          // 시간 업데이트
+          setInterval(updateTime, 1000);
+          
+          // 페이지 로드 시 초기 시간 설정
+          updateTime();
+      });
+   </script>
 </body>
 </html>

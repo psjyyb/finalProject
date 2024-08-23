@@ -18,7 +18,7 @@ public class Messages{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_messages_seq_gen")
     @SequenceGenerator(name = "chat_messages_seq_gen", sequenceName = "chat_messages_seq", allocationSize = 1)
     private Long messageNo;
-
+    
     private String senderId;
     private String content;
     private int employeeNo;

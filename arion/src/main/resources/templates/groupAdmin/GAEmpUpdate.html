@@ -63,8 +63,8 @@ button:hover {
 }
 
 .button-group {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 button.delete {
@@ -74,6 +74,18 @@ button.delete {
 button.delete:hover {
 	background-color: #c82333;
 }
+button.resign {
+    background-color: #ffc107;
+}
+
+button.resign:hover {
+    background-color: #e0a800;
+}
+
+#resignModal button {
+    padding: 5px 10px; /* 모달 버튼의 크기를 줄임 */
+    font-size: 14px;  /* 버튼 텍스트 크기 조정 */
+}
 </style>
 </head>
 <body>
@@ -82,8 +94,8 @@ button.delete:hover {
 		<form th:action="@{/groupAdmin/GAEmpUpdate}" method="POST"
 			name="insertEmp" th:object="${empInfo}">
 			<div class="form-group">
-				<label for="name">사원번호:</label> <input type="text" 
-				 readonly th:field="*{employeeNo}">
+				<label for="name">사원번호:</label> <input type="text" readonly
+					th:field="*{employeeNo}">
 			</div>
 			<div class="form-group">
 				<label for="name">사원명:</label> <input type="text" id="name"
@@ -98,8 +110,8 @@ button.delete:hover {
 					id="password" name="employeePw">
 			</div>
 			<div class="form-group">
-				<label for="phone">전화번호:</label>
-				<input type="text" id="phone" name="employeePhone" th:field=*{employeePhone}>
+				<label for="phone">전화번호:</label> <input type="text" id="phone"
+					name="employeePhone" th:field=*{employeePhone}>
 			</div>
 			<div class="form-group">
 				<label for="startDate">입사일:</label> <input type="date"
@@ -126,16 +138,29 @@ button.delete:hover {
 				<label for="department">부서:</label> <select id="department"
 					name="departmentName">
 					<option value="없음">없음</option>
-					<option th:each="dept :${deptList}" th:value="${dept.departmentName}"
-						th:text="${dept.departmentName}"></option>
+					<option th:each="dept :${deptList}"
+						th:value="${dept.departmentName}" th:text="${dept.departmentName}"></option>
 				</select>
 			</div>
 			<div class="button-group">
 				<button type="submit">수정</button>
-				<button type="button" class="delete" id="deleteBtn" th:onclick="|location.href='@{/groupAdmin/GAEmpDelete(employeeNo=${empInfo.employeeNo})}'|">삭제</button>
+				<button type="button" class="delete" id="deleteBtn"
+					th:onclick="|location.href='@{/groupAdmin/GAEmpDelete(employeeNo=${empInfo.employeeNo})}'|">삭제</button>
+				<button type="button" class="resign" id="resignBtn">퇴사 처리</button>
 			</div>
 		</form>
 	</div>
+	<div id="resignModal"
+		style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+		<h3>퇴사 날짜 선택</h3>
+		<input type="date" id="resignDate">
+		<div style="margin-top: 20px; text-align: right;">
+			<button type="button" id="confirmResign" style="padding: 5px 10px;">확인</button>
+			<button type="button" id="cancelResign" style="padding: 5px 10px;">취소</button>
+		</div>
+	</div>
+	<div id="modalOverlay"
+		style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 	<script>
     $('[name="insertEmp"]').on('submit',function(event){
         event.preventDefault();
@@ -176,6 +201,68 @@ button.delete:hover {
     $('#deleteBtn').on('click',function(e){
     	console.log(e);
     })
+    $(document).ready(function() {
+    $('#resignBtn').on('click', function() {
+        $('#resignModal').show();
+        $('#modalOverlay').show();
+    });
+
+    $('#cancelResign').on('click', function() {
+        $('#resignModal').hide();
+        $('#modalOverlay').hide();
+    });
+
+    $('#confirmResign').on('click', function() {
+        let resignDate = $('#resignDate').val();
+        if (!resignDate) {
+            Swal.fire({
+                icon: "error",
+                title: "퇴사 날짜를 선택해주세요.",
+                allowOutsideClick: false,
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: "퇴사 처리를 하시겠습니까?",
+            showDenyButton: true,
+            confirmButtonText: "네",
+            denyButtonText: `아니요`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 퇴사 처리 Ajax 요청
+                $.ajax({
+                    url: '/groupAdmin/GAEmpResign',  // 퇴사 처리 API 경로
+                    method: 'POST',
+                    data: {
+                        employeeNo: $('[name="insertEmp"] input[name="employeeNo"]').val(),
+                        resignDates: resignDate
+                    },
+                    success: (response) => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "퇴사 처리가 완료되었습니다.",
+                            allowOutsideClick: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        Swal.fire({
+                            icon: "error",
+                            title: "퇴사 처리 중 오류가 발생했습니다.",
+                            allowOutsideClick: false,
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#resignModal').hide();
+        $('#modalOverlay').hide();
+    });
+});
     </script>
 </body>
 </html>

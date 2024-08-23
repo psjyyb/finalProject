@@ -59,4 +59,6 @@ public interface GroupAdminMapper {
 	int updateContract(LocalDate finalDate, int contractNo); // 계약 갱신
 	
 	EmployeeVO checkOverlapId(String companyCode, String employeeId);
+
+	int resignEmp(EmployeeVO employeeVO); // 퇴사처리
 }

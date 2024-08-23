@@ -1,10 +1,12 @@
 package com.arion.app.group.admin.web;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.admin.service.AdminService;
 import com.arion.app.admin.service.AdminVO;
@@ -69,14 +72,12 @@ public class GroupAdminController {
 		GroupAdminVO userCnt = gaService.userCntSelect(comCode);
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("rankList", rankList);
-		System.out.println(userCnt.getUsersCnt());
 		model.addAttribute("userInfo",userCnt);
 		return "groupAdmin/GAEmpInsert";
 	}
 
 	@PostMapping("/groupAdmin/GAEmpInsert")
 	public String GAEmpInsertPro(EmployeeVO empVO, HttpSession session) {
-		System.out.println(empVO+"@@@@@@@@@@@@@@@@@@@@@@@");
 		String comCode = (String) session.getAttribute("companyCode");
 		empVO.setCompanyCode(comCode);
 		int result = gaService.empInsert(empVO);
@@ -95,7 +96,6 @@ public class GroupAdminController {
 		EmployeeVO employeeVO = new EmployeeVO();
 		employeeVO.setEmployeeNo(employeeNo);
 		EmployeeVO evo = gaService.empInfoSelect(employeeVO);
-		System.out.println(evo);
 		List<DepartmentVO> deptList = gaService.deptListSelect(comCode);
 		List<RankVO> rankList = gaService.rankListSelect(comCode);
 		model.addAttribute("deptList", deptList);
@@ -235,5 +235,16 @@ public class GroupAdminController {
 		String comCode = (String) session.getAttribute("companyCode");
 	return gaService.checkOverlapId(comCode, employeeId);
 	}
+	@PostMapping("/groupAdmin/GAEmpExcelInsert")
+	@ResponseBody
+	public List<EmployeeVO> excelEmpInsert(@RequestParam("excelFile") MultipartFile excelFile ,Model model,HttpSession session) throws IOException{
+		String companyCode = (String) session.getAttribute("companyCode");
+		return gaService.excelEmpInsert(excelFile,companyCode);
 	
+	}
+	@PostMapping("/groupAdmin/GAEmpResign")
+	@ResponseBody
+	public int empResign(EmployeeVO employeeVO) {
+		return gaService.resignEmp(employeeVO);
+	}
 }

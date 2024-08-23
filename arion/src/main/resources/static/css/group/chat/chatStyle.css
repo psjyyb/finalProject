@@ -5,7 +5,7 @@ html, body {
 }
 
 .containerdd-fluiddd {
-    height: 800px; 
+    height: 650px; 
     width: 1000px;
     overflow: hidden;
     background-color:#fff;
@@ -51,6 +51,7 @@ html, body {
 
 #chat-box, #chat-room-list {
     overflow-y: auto;
+    overflow-x:visible;
 }
 
 #chat-box {
@@ -203,17 +204,17 @@ html, body {
     display: inline-block;
     padding: 0 0 0 10px;
     vertical-align: top;
-    width: 700px;
+    width: 650px;
 }
 
 .received_withd_msg p {
-    background: #ebebeb none repeat scroll 0 0;
+    background: #ebebeb none repeat scroll ;
     border-radius: 6px;
     color: #646464;
     font-size: 14px;
     margin: 0;
     padding: 5px 10px 5px 12px;
-    width: 400px;
+    width: 350px;
 }
 
 .time_date {
@@ -234,19 +235,19 @@ html, body {
 }
 
 .sent_msg p {
-    background: #050f8f none repeat scroll 0 0;
+    background: #050f8f none repeat scroll ;
     border-radius: 6px;
     font-size: 14px;
     margin: 0;
     color: #fff;
     padding: 5px 10px 5px 12px;
-    width: 400px;
+    width: 350px;
 }
 
 .outgoing_msg {
     overflow: hidden;
     margin: 26px 0 26px;
-    width:700px;
+    width:650px;
 }
 
 .sent_msg {

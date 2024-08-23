@@ -27,6 +27,7 @@
 								<th>직급</th>
 								<th>부서</th>
 								<th>입사일</th>
+								<th>재직상태</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -38,6 +39,8 @@
 									<td th:text="${emp.rankName}"></td>
 									<td th:text="${emp.departmentName}"></td>
 									<td th:text="${#dates.format(emp.hireDate,'yyyy-MM-dd')}"></td>
+									<td th:if="${emp.resignDate == null}">재직중</td>
+									<td th:if="${emp.resignDate != null}">퇴사</td>
 								</tr>
 							</th:block>
 						</tbody>

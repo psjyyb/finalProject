@@ -1,7 +1,9 @@
 package com.arion.app.group.admin.service.impl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,10 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.arion.app.group.admin.mapper.GroupAdminMapper;
 import com.arion.app.group.admin.service.DepartmentListVO;
@@ -96,13 +103,10 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	@Transactional
 	@Override
 	public int saveDept(DepartmentListVO list, String companyCode) {
-		System.out.println(list);
 		int result = gaMapper.deptDeSave(companyCode);
 		List<DepartmentVO> departments = list.getDepartments();
 
 		for (DepartmentVO deptVO : departments) {
-			System.out.println("Department Name: " + deptVO.getDepartmentName());
-			System.out.println("Manager ID: " + deptVO.getManagerId());
 			deptVO.setCompanyCode(companyCode);
 			result += gaMapper.deptInSave(deptVO);
 		}
@@ -115,11 +119,9 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		int result = gaMapper.rankDeSave(companyCode);
 		String ranks = rankVO.getRankName();
 		String rankN = rankVO.getRankRangkings();
-		System.out.println(rankN);
 		String rankNarr[] = rankN.split(",");
 		String rankArr[] = ranks.split(",");
 		List<String> list = Arrays.asList(rankArr);
-		System.out.println(list);
 		RankVO rvo = new RankVO();
 		AtomicInteger indexHolder = new AtomicInteger();
 		list.forEach(i -> {
@@ -203,7 +205,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate newDate = localDate.plusMonths(period);
 
-		System.out.println(newDate + "갱신된 날짜가 어떻게 나오는지 ");
 		int result = gaMapper.updateContract(newDate, gvo.getContractNo());
 		if (result > 1) {
 			isSuccessed = true;
@@ -213,13 +214,45 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 	}
 	@Override
 	public boolean checkOverlapId(String Comcode, String employeeId) {
-		Map<String,Object> map = new HashMap<>();
 		boolean isSuccess = false;
 		EmployeeVO evo = gaMapper.checkOverlapId(Comcode, employeeId);
-		System.out.println(evo+"@@@@@@@@@@@@@@@@@@@@@@@");
 		if(evo==null) {
 			isSuccess=true;
 		}
 		return isSuccess;
+	}
+	@Override
+	public List<EmployeeVO> excelEmpInsert(MultipartFile excelFile,String companyCode) {
+		List<EmployeeVO> failList = new ArrayList<>();
+		  try {
+			Workbook workbook = new XSSFWorkbook(excelFile.getInputStream());
+			Sheet sheet = workbook.getSheetAt(0);
+			for(int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+				Row row = sheet.getRow(i);
+				EmployeeVO evo = new EmployeeVO();
+				evo.setEmployeeName(row.getCell(0).getStringCellValue());
+				evo.setEmployeeId(row.getCell(1).getStringCellValue());
+				evo.setEmployeePw(row.getCell(2).getStringCellValue());
+				evo.setEmployeePhone(row.getCell(3).getStringCellValue());
+				evo.setHireDate(row.getCell(4).getDateCellValue());
+				evo.setEmployeeResp(row.getCell(5).getStringCellValue());
+				evo.setRankName(row.getCell(6).getStringCellValue());
+				evo.setDepartmentName(row.getCell(7).getStringCellValue());
+				evo.setCompanyCode(companyCode);
+				GroupAdminVO check =  userCntSelect(companyCode);
+				if(checkOverlapId(companyCode,evo.getEmployeeId())&&check.getUsersCnt()>0) {
+					empInsert(evo);
+				}else {
+					failList.add(evo);
+				}
+			}
+		  } catch (IOException e) {
+			e.printStackTrace();
+		}
+		return failList;
+	}
+	@Override
+	public int resignEmp(EmployeeVO employeeVO) {
+		return gaMapper.resignEmp(employeeVO);
 	}
 }

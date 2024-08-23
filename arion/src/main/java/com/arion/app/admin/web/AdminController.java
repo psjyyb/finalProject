@@ -55,7 +55,6 @@ public class AdminController {
 	@GetMapping("/adminSubInfo")
 	public String adminSunInfo(AdminVO adminVO, Model model) {
 		AdminVO avo = adminService.subInfoSelect(adminVO);
-		System.out.println(avo);
 		model.addAttribute("suncon", avo);
 		return "admin/adminSubInfo";
 	}
@@ -98,7 +97,6 @@ public class AdminController {
 
 	@PostMapping("/adminQnAInfo")
 	public String adminQnAReply(QnAVO qnaVO) {
-		System.out.println(qnaVO);
 		int result = adminService.qnaReply(qnaVO);
 		String url = null;
 		if (result > 0) {
@@ -113,7 +111,6 @@ public class AdminController {
 		List<ModuleFileVO> list = adminService.modFileSelect(moduleVO);
 		model.addAttribute("fileList", list);
 		model.addAttribute("modInfo", mvo);
-		System.out.println(moduleVO);
 		return "admin/adminModInfo";
 	}
 
@@ -155,7 +152,6 @@ public class AdminController {
 	@ResponseBody
 	public List<ChartVO> areaChart(){
 		List<ChartVO> list = adminService.areaChart();
-		System.out.println(list);
 		return list;
 	}
 	@PostMapping("/adminPieChart")
@@ -166,7 +162,7 @@ public class AdminController {
 	
 	@GetMapping("/arion/error")
 	public String error(){
-		System.out.println("여긴타나?");
+		System.out.println("이거 찍히면 에러난거임");
 		return "/common/error/404";
 	}
 }

@@ -93,7 +93,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int modUpdate(ModuleVO moduleVO) {
 		MultipartFile icon = moduleVO.getModuleIcons();
-		System.out.println(icon+"이게 뭔데 ? 말해 ?");
 		if(icon != null) {
 			UUID uuid = UUID.randomUUID();
 			String iconName = uuid + "_" + icon.getOriginalFilename();

@@ -3,6 +3,8 @@ package com.arion.app.group.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.arion.app.security.service.CompanyVO;
 
 public interface GroupAdminService {
@@ -49,4 +51,8 @@ public interface GroupAdminService {
 	Map<String, Object>extendContract(int period,String comCode); // 계약서 갱신
 	
 	boolean checkOverlapId(String Comcode,String employeeId);
+	
+	List<EmployeeVO> excelEmpInsert(MultipartFile excelFile,String companyCode);
+	
+	int resignEmp(EmployeeVO employeeVO); // 퇴사처리
 }

@@ -21,6 +21,7 @@ public class EmployeeVO {
 	private String companyCode;
 	private String signImg;
 	private String employeePhone;
+	private String resignDates;
 	
 	
 	

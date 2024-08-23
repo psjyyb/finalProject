@@ -8,12 +8,15 @@
 <title>ARION</title>
 <style>
 .container {
-	width: 60%;
+	width: 90%;
 	margin: 50px auto;
 	background: #fff;
 	padding: 20px;
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	display: flex; /* 추가 */
+	flex-wrap: wrap; /* 추가 */
+	justify-content: space-between; /* 추가 */
 }
 
 h2 {
@@ -34,12 +37,12 @@ label {
 	margin-top: 8px;
 }
 
-input[type="text"], input[type="password"], select {
+input[type="text"], input[type="password"], input[type="date"], select {
 	width: calc(100% - 140px);
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	box-sizing: border-box; /* 추가 */
+	box-sizing: border-box;
 }
 
 input[type="text"]:focus, input[type="password"]:focus, select:focus {
@@ -68,7 +71,7 @@ button:hover {
 	width: auto;
 	display: inline-block;
 	position: absolute;
-	right: 10px; /* 오른쪽으로 10px 띄워서 밀림을 방지 */
+	right: 10px;
 	top: 50%;
 	transform: translateY(-50%);
 	padding: 8px;
@@ -76,10 +79,9 @@ button:hover {
 	color: white;
 	border-radius: 5px;
 	cursor: pointer;
-	border: 1px solid #0056b3; /* 추가 */
-	box-sizing: border-box; /* 추가 */
+	border: 1px solid #0056b3;
+	box-sizing: border-box;
 }
-
 
 .message-container {
 	background-color: #ffffff;
@@ -108,65 +110,137 @@ button:hover {
 	margin-bottom: 5px;
 	display: none;
 }
+
+.left-section, .right-section {
+	width: 48%; /* 추가: 양쪽 섹션 크기 */
+}
+
+.right-section {
+	background-color: #f9f9f9;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.right-section h2 {
+	color: #007bff;
+	text-align: center;
+}
+
+.instructions {
+	margin-top: 20px;
+	padding: 10px;
+	background-color: #e9ecef;
+	border-radius: 5px;
+	font-size: 14px;
+	color: #555;
+}
+
+.instructions p {
+	margin-bottom: 5px;
+}
 </style>
 </head>
 <body>
-	<div class="container" th:if="${userInfo.usersCnt >0}">
-		<h2>사원 등록</h2>
-		<form th:action="@{/groupAdmin/GAEmpInsert}" method="POST"
-			name="insertEmp">
-			<div class="form-group">
-				<label for="name">사원명:</label>
-				<input type="text" id="name" name="employeeName">
+	<div class="container" th:if="${userInfo.usersCnt > 0}">
+		<div class="left-section">
+			<h2>사원 등록</h2>
+			<form th:action="@{/groupAdmin/GAEmpInsert}" method="POST"
+				name="insertEmp">
+				<div class="form-group">
+					<label for="name">사원명:</label> <input type="text" id="name"
+						name="employeeName">
+				</div>
+				<div id="id-message">중복된 아이디입니다.</div>
+				<div class="form-group">
+					<label for="id">아이디:</label> <input type="text" id="id"
+						name="employeeId">
+					<button type="button" id="overlap">중복체크</button>
+				</div>
+				<div class="form-group">
+					<label for="password">비밀번호:</label> <input type="password"
+						id="password" name="employeePw">
+				</div>
+				<div class="form-group">
+					<label for="phone">전화번호:</label> <input type="text" id="phone"
+						name="employeePhone">
+				</div>
+				<div class="form-group">
+					<label for="startDate">입사일:</label> <input type="date"
+						id="startDate" name="hireDate">
+				</div>
+				<div class="form-group">
+					<label for="position">직책:</label> <select id="position"
+						name="employeeResp">
+						<option value="없음">없음</option>
+						<option value="임원">임원</option>
+						<option value="사원관리자">사원관리자</option>
+						<option value="일반사원">일반사원</option>
+						<option value="아르바이트">아르바이트</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="rank">직급:</label> <select id="rank" name="rankName">
+						<option value="">없음</option>
+						<option th:each=" rank :${rankList}" th:value="${rank.rankName}"
+							th:text="${rank.rankName}">없음</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="department">부서:</label> <select id="department"
+						name="departmentName">
+						<option value="없음">없음</option>
+						<option th:each="dept :${deptList}"
+							th:value="${dept.departmentName}"
+							th:text="${dept.departmentName}"></option>
+					</select>
+				</div>
+				<button type="submit">등록</button>
+			</form>
+		</div>
+
+		<div class="right-section">
+			<h2>엑셀로 사원 등록하기</h2>
+			<form th:action="@{/groupAdmin/GAEmpExcelInsert}" method="POST"
+				enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="excelFile">엑셀 파일 :</label> <input type="file"
+						id="excelFile" name="excelFile" accept=".xlsx">
+				</div>
+				<button type="button" id="insertBtn">엑셀로 등록</button>
+			</form>
+			<div class="instructions">
+				<h3>엑셀 파일 형식 안내</h3>
+				<p>- 첫 번째 열: 사원명 (필수)</p>
+				<p>- 두 번째 열: 아이디 (필수)</p>
+				<p>- 세 번째 열: 비밀번호 (필수)</p>
+				<p>- 네 번째 열: 전화번호</p>
+				<p>- 다섯 번째 열: 입사일 (YYYY-MM-DD 형식,미입력시 금일기준)</p>
+				<p>- 여섯 번째 열: 직책</p>
+				<p>- 일곱 번째 열: 직급</p>
+				<p>- 여덟 번째 열: 부서</p>
 			</div>
-			<div id="id-message">중복된 아이디입니다.</div>
-			<div class="form-group">
-				<label for="id">아이디:</label>
-				
-				<input type="text" id="id" name="employeeId">
-				<button type="button" id="overlap">중복체크</button>
+			<div id="unregisteredEmployees" class="instructions"
+				style="display: none;">
+				<h3>등록되지 않은 사원 목록</h3>
+				<table id="unregisteredList"
+					style="width: 100%; border-collapse: collapse; text-align: left;">
+					<thead>
+						<tr>
+							<th>사원명</th>
+							<th>아이디</th>
+							<th>비밀번호</th>
+							<th>전화번호</th>
+							<th>입사일</th>
+							<th>직책</th>
+							<th>직급</th>
+							<th>부서</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
 			</div>
-			<div class="form-group">
-				<label for="password">비밀번호:</label>
-				<input type="password" id="password" name="employeePw">
-			</div>
-			<div class="form-group">
-				<label for="phone">전화번호:</label>
-				<input type="text" id="phone" name="employeePhone">
-			</div>
-			<div class="form-group">
-				<label for="startDate">입사일:</label>
-				<input type="date" id="startDate" name="hireDate">
-			</div>
-			
-			<div class="form-group">
-				<label for="position">직책:</label>
-				<select id="position" name="employeeResp">
-					<option value="없음">없음</option>
-					<option value="임원">임원</option>
-					<option value="사원관리자">사원관리자</option>
-					<option value="일반사원">일반사원</option>
-					<option value="아르바이트">아르바이트</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="rank">직급:</label>
-				<select id="rank" name="rankName">
-					<option value="">없음</option>
-					<option th:each=" rank :${rankList}" th:value="${rank.rankName}"
-						th:text="${rank.rankName}">없음</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="department">부서:</label>
-				<select id="department" name="departmentName">
-					<option value="없음">없음</option>
-					<option th:each="dept :${deptList}" th:value="${dept.departmentName}"
-						th:text="${dept.departmentName}"></option>
-				</select>
-			</div>
-			<button type="submit">등록</button>
-		</form>
+		</div>
 	</div>
 	<div class="container" th:if="${userInfo.usersCnt <= 0}">
 		<div class="message-container">
@@ -175,6 +249,86 @@ button:hover {
 		</div>
 	</div>
 	<script>
+	$('#insertBtn').on('click', function(e) {
+	    e.preventDefault();
+
+	    let formData = new FormData();
+	    let excel = $('input[name=excelFile]')[0].files[0];
+
+	    // 파일이 선택되었는지 확인
+	    if (excel) {
+	        // 파일 확장자 추출
+	        let fileExtension = excel.name.split('.').pop().toLowerCase();
+
+	        // 확장자가 'xlsx'인지 확인
+	        if (fileExtension !== 'xlsx') {
+	         	Swal.fire({
+	          		  icon: "error",
+	          		  title: "엑셀파일만 등록가능합니다",
+	          		  allowOutsideClick: false,
+	          		  }).then(function(){
+	          			  return; 	          		  
+	          		});  
+	        }
+	        formData.append('excelFile', excel);
+	        $.ajax({
+	            url: '/groupAdmin/GAEmpExcelInsert',
+	            method: 'POST',
+	            data: formData,
+	            processData: false,
+	            contentType: false,
+	            success: (result) => {
+	                if(result==''||result==null){
+	                	Swal.fire({
+	  	          		  icon: "success",
+	  	          		  title: "사원등록이 완료되었습니다!",
+	  	          		  allowOutsideClick: false,
+	  	          		  }).then(function(){
+	  	          			  return; 	          		  
+	  	          		});  
+	                } else {
+	                	Swal.fire({
+		  	          		  icon: "error",
+		  	          		  title: "등록되지 않은 사원이있습니다, 아이디 중복체크 또는 등록가능 사원수를 확인해주세요.",
+		  	          		  allowOutsideClick: false,
+		  	          		  }).then(function(){
+		  	          		  let unregisteredListBody = $('#unregisteredList tbody');
+			                    unregisteredListBody.empty(); // 기존 목록 초기화
+
+			                    result.forEach(employee => {
+			                        unregisteredListBody.append(`
+			                            <tr>
+			                                <td>${employee.employeeName}</td>
+			                                <td>${employee.employeeId}</td>
+			                                <td>${employee.employeePw}</td>
+			                                <td>${employee.employeePhone}</td>
+			                                <td>${new Date(employee.hireDate).toLocaleDateString()}</td>
+			                                <td>${employee.employeeResp}</td>
+			                                <td>${employee.rankName}</td>
+			                                <td>${employee.departmentName}</td>
+			                            </tr>
+			                        `);
+			                    });
+
+			                    $('#unregisteredEmployees').show(); // 목록을 표시        		  
+		  	          		});
+	                  
+	                }
+	            },
+	            error: (err) => {
+	                console.log(err);
+	            }
+	        });
+	    } else {
+	    	Swal.fire({
+        		  icon: "error",
+        		  title: "파일을 선택하여주세요",
+        		  allowOutsideClick: false,
+        		  }).then(function(){
+        			  return; 	          		  
+        		}); 
+	    }
+	});
 	let check = false;
 	$('[name="insertEmp"]').on('submit', function(event) {
 		event.preventDefault();

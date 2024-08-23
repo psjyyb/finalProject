@@ -9,6 +9,7 @@
 		,employee_id
 		,department_name
 		,rank_name
+		,resign_date
 		FROM employees
 		WHERE company_code =  #{companyCode}
 		ORDER BY employee_no
@@ -119,7 +120,7 @@
 		LEFT JOIN 
 		    (SELECT company_code, COUNT(*) AS emp_count 
 		     FROM employees 
-		     WHERE company_code = #{companyCode}
+		     WHERE company_code = #{companyCode} AND resign_date IS NULL
 		     GROUP BY company_code) e
 		ON 
 		    c.company_code = e.company_code
@@ -300,4 +301,10 @@
 		WHERE company_code=#{companyCode}
 		AND employee_id=#{employeeId}
 	</select>
+	<update id="resignEmp" parameterType="EmployeeVO">
+		UPDATE employees 
+		SET employee_resp = '퇴사'
+		   ,resign_date = #{resignDates}
+		WHERE employee_no = #{employeeNo}
+	</update>
 </mapper>

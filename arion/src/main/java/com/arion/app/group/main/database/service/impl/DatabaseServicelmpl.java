@@ -41,4 +41,28 @@ public class DatabaseServicelmpl implements DatabaseService{
 		return databasemapper.filelist(companycode,parent);
 	}
 
+	@Override
+	public int forderupload(String companycode, int parent, String uploader, String rankname, String filename) {
+		
+		return databasemapper.forderupload(companycode, parent, uploader, rankname, filename);
+	}
+
+	@Override
+	public List<CFileVO> forder(String companycode) {
+		// TODO Auto-generated method stub
+		return databasemapper.forder(companycode);
+	}
+
+	@Override
+	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long size,
+			String string, String rankname) {
+		// TODO Auto-generated method stub
+		return databasemapper.fileupload(companycode, parent, uploader, rankname, originalFilename, parent);
+	}
+
+	@Override
+	public List<CFileVO> file(String companycode) {
+		// TODO Auto-generated method stub
+		return databasemapper.file(companycode);
+	}
 }

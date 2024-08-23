@@ -11,7 +11,7 @@
 <title></title>
 </head>
 <body>
-<div>
+<div class="container">
 	<h3><a th:href="@{/group/deptboardList}">부서게시판</a></h3>
 		
 	<table>
@@ -29,7 +29,7 @@
 		</tr>
 		<tr>
 			<th>내용</th>
-			<td style="height:300px; width:500px;" th:utext="${board.boardContent}" />
+			<td th:utext="${board.boardContent}"></td>
 		</tr>
 		<tr>
 			<th>작성일자</th>
@@ -39,7 +39,6 @@
 			<th>조회수</th>
 			<td>[[${board.viewCnt}]]</td>
 		</tr>
-		<!-- 파일 첨부 목록 -->
 		<tr>
 			<th>첨부 파일</th>
 			<td>
@@ -48,20 +47,21 @@
 				  <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" 
 				     th:text="${file.fileOriginalName}"></a>
 				</li>
-				</ul>
+			  </ul>
 			</td>
 		</tr>	
 	</table>
-		<div>
-			<button type="button" th:onclick="|location.href='@{deptboardUpdate(boardNo=${board.boardNo})}'|"
-					th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
-			<button type="button" th:onclick="|location.href='@{deptboardList}'|">목록</button>
-			<button type="button" id="deleteButton" data-url="#" th:data-url="@{/group/deptboardDelete(boardNo=${board.boardNo})}"
-					th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
-		</div>
+	<!-- 게시글 상세보기 버튼들 -->
+	<div class="action-buttons">
+	    <button type="button" class="btn-edit" th:onclick="|location.href='@{deptboardUpdate(boardNo=${board.boardNo})}'|"
+	            th:if="${board.employeeNo}==${session.employeeNo}">수정</button>
+	    <button type="button" class="btn-list" th:onclick="|location.href='@{deptboardList}'|">목록</button>
+	    <button type="button" id="deleteButton" class="btn-delete" data-url="#" th:data-url="@{/group/deptboardDelete(boardNo=${board.boardNo})}"
+	            th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
 	</div>
+</div>
 	
-	  <!-- 댓글 영역 시작 -->
+<!-- 댓글 영역 -->
 <div class="comments-section">
     <h4>댓글</h4>
     <ul class="comments-list" th:each="reply : ${comments}">
@@ -83,29 +83,33 @@
                 <button type="button" class="delete-reply" th:data-commentNo="${reply.commentNo}" th:data-boardNo="${board.boardNo}"
                 		th:if="${board.employeeNo}==${session.employeeNo}">삭제</button>
             </div>
-            <!-- 수정 폼 공간, 기본적으로 숨김 -->
-                <div class="comment-edit-container" style="display: none;">
-                    <h3>댓글 수정</h3>
-                    <form class="editReplyForm">
-                        <input type="hidden" name="commentNo" class="editCommentNo" />
-                        <input type="hidden" name="boardNo" class="editBoardNo" />
-                        <textarea name="commentContent" class="editCommentContent" required></textarea>
-                        <button type="submit">입력</button>
-                        <button type="button" class="cancelEdit">취소</button>
-                    </form>
-                </div>
+            <!-- 댓글 수정 폼 -->
+			<div class="comment-edit-container">
+			    <h3>댓글 수정</h3>
+			    <form class="editReplyForm">
+			        <input type="hidden" name="commentNo" class="editCommentNo" />
+			        <input type="hidden" name="boardNo" class="editBoardNo" />
+			        <textarea name="commentContent" class="editCommentContent" required></textarea>
+			        <div class="form-actions">
+			            <button type="submit" class="btn-primary">입력</button>
+			            <button type="button" class="btn-secondary cancelEdit">취소</button>
+			        </div>
+			    </form>
+			</div>
         </li>
     </ul>
 </div>
 
-
-   <!-- 댓글 입력 폼 -->
+<!-- 댓글 입력 폼 -->
 <div class="comment-container">
     <h3>댓글 입력</h3>
     <form id="replyForm" action="/deptboardInfo" method="POST">
-    	<input type="hidden" name="commentNo" id="commentNo" />
+        <input type="hidden" name="commentNo" id="commentNo" />
         <textarea name="commentContent" id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
-        <button type="submit" th:data-url="@{/group/deptboardDelete(boardNo=${board.boardNo})}">댓글 등록</button>
+        <!-- 댓글 입력 폼 -->
+		<div class="form-actions">
+    		<button type="submit" class="btn-primary">댓글 등록</button>
+		</div>
     </form>
 </div>
 

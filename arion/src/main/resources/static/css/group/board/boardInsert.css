@@ -80,6 +80,14 @@ h3 {
     background-color: #0056b3; /* 호버 시 배경색 */
 }
 
+.remove-file {
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
 .form-actions {
     flex-direction: column;
         align-items: stretch;

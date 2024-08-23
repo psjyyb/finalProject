@@ -6,33 +6,46 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 글 수정</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" th:src="@{/smarteditor2/js/HuskyEZCreator.js}" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" th:href="@{/css/group/board/boardUpdate.css}">
+    <title></title>
 </head>
-
 <body>
     <div class="container">
         <h3>공지사항 글 수정</h3>
-        <form name="UpdateForm" th:object="${board}">
+        <form name="UpdateForm" th:object="${board}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{boardNo}">
             <div class="form-group">
                 <label for="boardTitle">제목</label>
-                <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목을 입력하세요">
+                <input type="text" id="boardTitle" th:field="*{boardTitle}">
             </div>
             <div class="form-group">
                 <label for="boardContent">내용</label>
-                <textarea name="boardContent" id="boardContent" th:field="*{boardContent}" placeholder="내용을 입력해주세요"></textarea>
+                <textarea name="boardContent" th:field="*{boardContent}" id="boardContent" rows="10"></textarea>
             </div>
             <div class="form-group">
-                <label for="fileUpload">파일 첨부</label>
-                <input type="file" id="fileUpload" name="files" multiple />
-            </div>
+				<label>첨부파일</label> <label for="files" class="custom-file-upload"></label> 
+				<input type="file" id="files" name="files" multiple>
+				<table id="fileListTable">
+					<thead>
+						<tr>
+							<th>파일명</th>
+							<th>삭제</th>
+						</tr>
+					</thead>
+					<tbody>
+                        <tr th:each="file : ${fileInfo}">
+                            <td th:text="${file.fileOriginalName}"></td>
+                            <td><span class="remove-file" onclick="removeFile(this)">x</span></td>
+                        </tr>
+                    </tbody>
+				</table>
+			</div>
             <div class="form-actions">
-                <button type="button" id="updateBtn" th:data-bno-no="*{boardNo}">수정</button>
-                <button type="button" th:onclick="|location.href='@{noticeboardInfo(boardNo=${board.boardNo})}'|">취소</button>
+                <button type="button" class="btn-primary" id="updateBtn" th:data-bno-no="*{boardNo}">수정</button>
+                <button type="button" class="btn-secondary" th:onclick="|location.href='@{noticeboardInfo(boardNo=${board.boardNo})}'|">취소</button>
             </div>
         </form>
     </div>
@@ -47,6 +60,27 @@
                 fCreator : "createSEditor2"
             });
 
+            let fileList = [];
+            
+            $('#files').on('change', function(e) {
+                const fileListTable = $('#fileListTable tbody');
+
+                $.each(e.target.files, function(index, file) {
+                    fileList.push(file);
+                    const newRow = $('<tr>');
+                    newRow.append($('<td>').text(file.name));
+                    const removeButton = $('<td>').append($('<span class="remove-file">x</span>').on('click', function() {
+                        const rowIndex = $(this).closest('tr').index();
+                        fileList.splice(rowIndex, 1);
+                        $(this).closest('tr').remove();
+                    }));
+                    newRow.append(removeButton);
+                    fileListTable.append(newRow);
+                });
+
+                $('#files').val('');
+            });
+            
             $('#updateBtn').on('click', boardUpdateAjax);
             let bno = $('#updateBtn').data('bno-no');
 
@@ -79,11 +113,20 @@
 
                 let info = getBoardInfo();
 
+				//FormData 객체를 생성하고, 폼의 모든 데이터를 추가합니다.
+				const formData = new FormData($('form[name="UpdateForm"]')[0]);
+
+				// 파일 데이터를 추가합니다.
+				$.each(fileList, function(index, file) {
+				    formData.append('files', file);
+				});
+					
                 $.ajax({
                     url: 'noticeboardUpdate',
                     type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(info)
+                    data: formData,
+                    processData: false, // FormData 객체를 문자열로 변환하지 않음
+                    contentType: false  // 요청의 Content-Type을 설정하지 않음
                 })
                 .done(data => {
                     if (data.result) {
@@ -92,7 +135,7 @@
                             title: '정상적으로 수정되었습니다',
                             confirmButtonText: '확인'
                         }).then(() => {
-                            location.href = `/group/freeboardInfo?boardNo=` + bno;
+                            location.href = `/group/noticeboardInfo?boardNo=` + bno;
                         });
                     } else {
                         Swal.fire({

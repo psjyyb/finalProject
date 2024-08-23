@@ -133,10 +133,12 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	// 자유게시판 게시글 수정
+	@Transactional
 	@Override
 	public Map<String, Object> updateBoard(BoardVO boardVO, MultipartFile[] files, String companyCode) {
 		Map<String, Object> map = new HashMap<>();
 		boolean isSuccessed = false;
+		int result = boardMapper.updateBoardInfo(boardVO);
 
 		if (files != null && files.length > 0) {
 			log.debug("파일이 존재합니다. 파일 저장을 시작합니다.");
@@ -145,7 +147,6 @@ public class BoardServiceImpl implements BoardService {
 			log.debug("파일이 없습니다. 파일 저장을 건너뜁니다.");
 		}
 
-		int result = boardMapper.updateBoardInfo(boardVO);
 		if (result == 1) {
 			isSuccessed = true;
 		}

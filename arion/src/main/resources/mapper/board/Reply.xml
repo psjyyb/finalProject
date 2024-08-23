@@ -25,6 +25,9 @@ ORDER BY
 	NVL(c.parent_no, c.comment_no), c.comment_no
 </select>
 
+
+
+
 <!-- 댓글 작성 -->
 <insert id="insertReply" parameterType="ReplyVO">
 INSERT INTO comments
@@ -41,7 +44,14 @@ VALUES
     (
         comm_seq.NEXTVAL,
         #{commentContent},
-        #{parentNo},
+        <choose>
+            <when test="parentNo != null and parentNo > 0">
+                #{parentNo}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
         #{commentWrite},
         SYSDATE,
         #{boardNo},

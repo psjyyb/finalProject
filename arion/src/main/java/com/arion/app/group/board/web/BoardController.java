@@ -195,8 +195,13 @@ public class BoardController {
 	// 자유게시판 게시글 수정 (페이지)
 	@GetMapping("/group/freeboardUpdate")
 	public String boardUpdateForm(BoardVO boardVO, Model model, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
+		
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
+		model.addAttribute("fileInfo", fileVOList);
+		
 		BoardVO findVO = boardService.boardInfo(boardVO);
 		model.addAttribute("board", findVO);
 		
@@ -206,9 +211,12 @@ public class BoardController {
 	// 자유게시판 게시글 수정 (처리)
 	@PostMapping("/group/freeboardUpdate")
 	@ResponseBody
-	public Map<String, Object> boardUpdateProcess(@RequestBody BoardVO boardVO, MultipartFile[] files, HttpSession session) {
+	public Map<String, Object> boardUpdateProcess(BoardVO boardVO, 
+			 @RequestParam("files") MultipartFile[] files, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
+		
 		return boardService.updateBoard(boardVO, files, companyCode);
 	}
 

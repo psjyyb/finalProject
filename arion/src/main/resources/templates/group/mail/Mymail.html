@@ -9,18 +9,8 @@
     <title>ARION</title>
 </head>
 <body>
-    <h1>받은 메일함</h1>
-    <form action="/group/mail/Mymail" method="GET" th:object="${criteria}">
-        <div>
-            <select th:field="*{searchType}">
-                <option value="" th:selected="${criteria.searchType == ''}">전체</option>
-                <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-                <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">발신자</option>
-            </select> 
-            <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
-        </div>
-        <button type="submit">검색</button>    
-    </form>
+    <h1>최근 받은 메일</h1>
+    
     <form id="mailActionForm" action="/group/mail/actions" method="POST">
         <table>
             <thead>
@@ -34,16 +24,16 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 메일 리스트를 반복해서 출력 -->
-                <tr th:each="mail : ${receivedMails}">
-                    <td class="checkbox-container">
+                <!-- 메일 리스트에서 상위 3개 항목만 반복해서 출력 -->
+                <tr th:each="mail, iterStat : ${receivedMails}">
+                    <td th:if="${iterStat.count <= 3}" class="checkbox-container">
                         <input type="checkbox" class="mailCheckbox" data-mail-no="${mail.mailNo}"> <!-- 각 메일의 ID를 데이터-셋으로 설정 -->
                     </td>
-                    <td th:text="${mail.senderName}">발신자</td>
-                    <td>
+                    <td th:if="${iterStat.count <= 3}" th:text="${mail.senderName}">발신자</td>
+                    <td th:if="${iterStat.count <= 3}">
                         <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
                     </td>
-                    <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">수신일</td>
+                    <td th:if="${iterStat.count <= 3}" th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">수신일</td>
                 </tr>
             </tbody>
         </table>
@@ -74,13 +64,11 @@
             input.value = 'import'; // 'IMPORT' 상태로 설정
             form.appendChild(input);
 
-       
             var mailIdsInput = document.createElement('input');
             mailIdsInput.type = 'hidden';
             mailIdsInput.name = 'mailIds';
             mailIdsInput.value = JSON.stringify(getCheckedMailIds());
             form.appendChild(mailIdsInput);
-
 
             var existingInputs = document.querySelectorAll('input[name="actions"], input[name="mailIds"]');
             existingInputs.forEach(existingInput => form.removeChild(existingInput));
@@ -96,14 +84,12 @@
             input.value = 'TRASH'; // 'TRASH' 상태로 설정
             form.appendChild(input);
 
-       
             var mailIdsInput = document.createElement('input');
             mailIdsInput.type = 'hidden';
-            mailIdsInput.name = 'mailIds'; 
+            mailIdsInput.name = 'mailIds';
             mailIdsInput.value = JSON.stringify(getCheckedMailIds());
             form.appendChild(mailIdsInput);
 
-        
             var existingInputs = document.querySelectorAll('input[name="actions"], input[name="mailIds"]');
             existingInputs.forEach(existingInput => form.removeChild(existingInput));
 

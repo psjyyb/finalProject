@@ -10,4 +10,14 @@ public interface DatabaseService {
 	public List<UnderRankVO> underank(int ranking);
 	
 	public List<CFileVO> filelist(String companycode,int parent);
+
+	public int forderupload(String companycode,int parent,String uploader,String rankname,String filename);
+
+	public List<CFileVO> forder(String companycode);
+
+	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long size,
+			String string, String rankname);
+
+	public List<CFileVO> file(String companycode);
+
 }

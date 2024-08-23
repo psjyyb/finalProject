@@ -147,10 +147,10 @@
 					<div class="form-group">
 						<label for="employees">함께할 사원</label>
 						<div id="employee-list">
-							<div th:each="emp : ${empList}">
+							<div th:each="emp : ${empList}" th:if="${emp.employeeNo!= empNo}">
 								<input type="checkbox" th:id="'emp-' + ${emp.employeeNo}"
 									th:name="employeeIds" th:value="${emp.employeeNo}" /> <label
-									th:for="'emp-' + ${emp.employeeNo}">[[${emp.employeeName}]]([[${emp.departmentName}]]
+									th:for="'emp-' + ${emp.employeeNo}" >[[${emp.employeeName}]]([[${emp.departmentName}]]
 									[[${emp.rankName}]])</label>
 							</div>
 						</div>

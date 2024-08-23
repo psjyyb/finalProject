@@ -33,17 +33,10 @@ public class ChatRoomController {
 	    int[] originalEmployeeIds = chatRoomVO.getEmployeeIds();
 	    int[] employeeids = new int[originalEmployeeIds.length + 1];
 	    
-	    // 기존 employeeIds 복사
 	    System.arraycopy(originalEmployeeIds, 0, employeeids, 0, originalEmployeeIds.length);
 	    
-	    // 로그인된 사원번호 추가
 	    employeeids[employeeids.length - 1] = empNo;
-	    
-	    // 디버깅용 출력 (필요시 삭제)
-	    for (int id : employeeids) {
-	        System.out.println(id + "    111121212@@@#@#@#@#@#@");
-	    }
-	    
+
 	    chatRoomVO.setEmployeeIds(employeeids);
 	    return chatRoomService.createChatRoom(chatRoomVO);
 	}

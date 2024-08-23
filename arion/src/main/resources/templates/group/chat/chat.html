@@ -337,7 +337,7 @@ $(document).ready(function() {
             var date = new Date(room.createDate);
             var formattedTime = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
             var $roomTime = $('<div class="room-time"></div>').text(formattedTime);
-			var xBtn = $('<button class="btn btn-light exitRoom">x</button>');
+			var xBtn = $('	<button class="btn-light exitRoom">x</button>');
             $newChatRoom.append($roomNoInput).append($roomName).append($roomTime).append(xBtn);
 
             $('#chat-room-list').append($newChatRoom);

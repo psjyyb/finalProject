@@ -119,7 +119,7 @@ button.resign:hover {
 			</div>
 			<div class="form-group">
 				<label for="position">직책:</label> <select id="position"
-					name="employeeResp">
+					name="employeeResp" th:field="*{employeeResp}">
 					<option value="없음">없음</option>
 					<option value="임원">임원</option>
 					<option value="관리직">관리직</option>
@@ -128,7 +128,7 @@ button.resign:hover {
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="rank">직급:</label> <select id="rank" name="rankName">
+				<label for="rank">직급:</label> <select id="rank" name="rankName" th:field="*{rankName}">
 					<option value="">없음</option>
 					<option th:each=" rank :${rankList}" th:value="${rank.rankName}"
 						th:text="${rank.rankName}">없음</option>
@@ -136,7 +136,7 @@ button.resign:hover {
 			</div>
 			<div class="form-group">
 				<label for="department">부서:</label> <select id="department"
-					name="departmentName">
+					name="departmentName" th:field="*{departmentName}">
 					<option value="없음">없음</option>
 					<option th:each="dept :${deptList}"
 						th:value="${dept.departmentName}" th:text="${dept.departmentName}"></option>
@@ -244,7 +244,7 @@ button.resign:hover {
                             title: "퇴사 처리가 완료되었습니다.",
                             allowOutsideClick: false,
                         }).then(() => {
-                            location.reload();
+                            location.href='/groupAdmin'
                         });
                     },
                     error: (err) => {

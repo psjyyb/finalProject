@@ -49,4 +49,14 @@
 		WHERE employee_no= #{employeeNo}
 		AND room_no= #{roomNo}
 	</delete>
+	<select id="chatEmpList" resultType="EmployeeVO">
+		SELECT employee_no
+			  ,employee_name
+			  ,employee_id
+			  ,department_name
+			  ,rank_name
+		FROM employees
+		WHERE company_code = #{companyCode} AND resign_date IS NULL
+		ORDER BY employee_no
+	</select>
 </mapper>

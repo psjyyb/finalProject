@@ -2,6 +2,7 @@ package com.arion.app.group.main.chat.mapper;
 
 import java.util.List;
 
+import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.main.chat.service.ChatMemberVO;
 import com.arion.app.group.main.chat.service.ChatRoomVO;
 import com.arion.app.group.main.chat.service.ChatVO;
@@ -15,4 +16,6 @@ public interface ChatRoomMapper {
 	List<ChatRoomVO> selectChatRooms(String companyCode, int employeeNo);
 	// 채팅방 나가기
 	int exitChatRoom(ChatVO chatVO);
+	// 사원목록
+	List<EmployeeVO> chatEmpList(String companyCode);
 }

@@ -26,10 +26,28 @@ public class ChatRoomController {
 	@PostMapping("/chat/chatrooms")
 	@ResponseBody
 	public ChatRoomVO createChatRoom(@RequestBody ChatRoomVO chatRoomVO, HttpSession session) {
-		String comCode = (String) session.getAttribute("companyCode");
-		chatRoomVO.setCompanyCode(comCode);
-		return chatRoomService.createChatRoom(chatRoomVO);
+	    String comCode = (String) session.getAttribute("companyCode");
+	    chatRoomVO.setCompanyCode(comCode);
+	    int empNo = (Integer) session.getAttribute("employeeNo");
+	    
+	    int[] originalEmployeeIds = chatRoomVO.getEmployeeIds();
+	    int[] employeeids = new int[originalEmployeeIds.length + 1];
+	    
+	    // 기존 employeeIds 복사
+	    System.arraycopy(originalEmployeeIds, 0, employeeids, 0, originalEmployeeIds.length);
+	    
+	    // 로그인된 사원번호 추가
+	    employeeids[employeeids.length - 1] = empNo;
+	    
+	    // 디버깅용 출력 (필요시 삭제)
+	    for (int id : employeeids) {
+	        System.out.println(id + "    111121212@@@#@#@#@#@#@");
+	    }
+	    
+	    chatRoomVO.setEmployeeIds(employeeids);
+	    return chatRoomService.createChatRoom(chatRoomVO);
 	}
+
 	@PostMapping("/chat/exitRoom")
 	@ResponseBody
 	public Map<String,Object> exitChatRoom(@RequestBody ChatVO chatVO){

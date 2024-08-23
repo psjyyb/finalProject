@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.main.chat.mapper.ChatRoomMapper;
 import com.arion.app.group.main.chat.service.ChatMemberVO;
 import com.arion.app.group.main.chat.service.ChatRoomService;
@@ -61,5 +62,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     	map.put("result", isSuccess);
 		map.put("target", chatVO);
     	return map;
+    }
+    @Override
+    public List<EmployeeVO> chatEmpList(String comCode) {
+    	return chatRoomMapper.chatEmpList(comCode);
     }
 }

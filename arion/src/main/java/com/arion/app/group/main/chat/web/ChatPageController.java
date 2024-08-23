@@ -20,13 +20,11 @@ import com.arion.app.group.main.chat.service.ChatRoomVO;
 public class ChatPageController {
 
 	@Autowired
-	private GroupAdminService gaService;
 	private ChatMessageRepository chatMessageRepository;
 	private ChatRoomService chatRoomService;
 
 	public ChatPageController(GroupAdminService gaService, ChatMessageRepository chatMessageRepository,
 			ChatRoomService chatRoomService) {
-		this.gaService = gaService;
 		this.chatMessageRepository = chatMessageRepository;
 		this.chatRoomService = chatRoomService;
 	}
@@ -36,8 +34,7 @@ public class ChatPageController {
 		int empNo = (Integer) session.getAttribute("employeeNo");
 		String comCode = (String) session.getAttribute("companyCode");
 		String empName = (String) session.getAttribute("empName");
-		List<Messages> previousMessages = chatMessageRepository.findAll(); // 이걸 해당하는 방넘버를 가지고  대화내용 불러오는걸ㄹ ㅗ바꿔야돼
-		List<EmployeeVO> list = gaService.empListSelect(comCode);
+		List<EmployeeVO> list = chatRoomService.chatEmpList(comCode);
 		List<ChatRoomVO> chatRoomList = chatRoomService.chatRoomsSelect(comCode, empNo);
 		model.addAttribute("empName",empName);
 		model.addAttribute("chatRoomList", chatRoomList);

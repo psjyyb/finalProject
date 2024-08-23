@@ -84,6 +84,9 @@
 				<if test="criteria.writer != null and criteria.writer != ''">
 					AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 				</if>
+				<if test="criteria.department != null and criteria.department != ''">
+               		AND e.department_name LIKE '%' || #{criteria.department} || '%'
+           		</if>
 				<if test="criteria.startDate != null and criteria.startDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 				</if>
@@ -114,6 +117,9 @@
 		<if test="criteria.writer != null and criteria.writer != ''">
 			AND e.employee_name LIKE '%' || #{criteria.writer} || '%'
 		</if>
+		<if test="criteria.department != null and criteria.department != ''">
+            AND e.department_name LIKE '%' || #{criteria.department} || '%'
+        </if>
 		<if test="criteria.startDate != null and criteria.startDate != ''">
 			AND TRUNC(d.create_date) <![CDATA[ >= ]]> TO_DATE(#{criteria.startDate}, 'YYYY-MM-DD')
 		</if>

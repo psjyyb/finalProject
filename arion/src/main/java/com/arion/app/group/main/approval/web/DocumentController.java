@@ -176,6 +176,7 @@ public class DocumentController {
 		int employeeNo = (int) session.getAttribute("employeeNo");
 		String companyCode = (String) session.getAttribute("companyCode");
 		
+		List<String> department = dsvc.selectDepartment(companyCode);
 		DocAccessVO docAccessVO = new DocAccessVO();
 		docAccessVO.setEmployeeNo(employeeNo);
 		docAccessVO.setCompanyCode(companyCode);
@@ -187,6 +188,7 @@ public class DocumentController {
 		model.addAttribute("pageDTO", pageDTO);
 		model.addAttribute("proDoc", apprProgressList);
 		model.addAttribute("critera", criteria);
+		model.addAttribute("department", department);
 		
 		return "group/document/approval/apprProgressList";
 	}

@@ -305,11 +305,16 @@
     AND employee_id = #{employeeId}
 </select>
 
-<update id="updateMailStatus">
+<!-- 메일상태변경 -->
+<update id="updateMailStatus" parameterType="map">
     UPDATE mail_receive
-    SET mail_status = #{mailStatus}
-    WHERE mail_no = #{mailNo}
+    SET mail_status = #{status}
+    WHERE mail_no IN
+    <foreach collection="mailIds" item="mailNo" open="(" separator="," close=")">
+        #{mailNo}
+    </foreach>
     AND employee_id = #{employeeId}
 </update>
+
 </mapper>
 

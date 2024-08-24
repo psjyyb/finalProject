@@ -99,20 +99,22 @@
 
     <script>
         $(document).ready(function() {
-            let allEmployees = []; // 전체 사원 정보를 저장할 배열
+            let allEmployees = []; 
+			console.log(allEmployees);
 
-            // 전체 사원 목록을 불러오는 AJAX 요청
          function loadEmployees() {
     $.ajax({
         url: '/group/Gang/employees/all',
         method: 'GET',
         success: function(data) {
-            console.log(data); // 서버에서 받은 데이터를 로그에 출력
+            console.log(data+'dddddddddddddd'); 
             allEmployees = data;
             displayEmployees(allEmployees);
         },
         error: function(xhr, status, error) {
-            console.error("Error fetching employees:", status, error);
+            console.error("안됌:", status, error);
+            console.log('흠?:', allEmployees);
+
         }
     });
 }

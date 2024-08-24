@@ -55,7 +55,6 @@ public interface MailMapper {
     
     // 현재 메일 상태 조회
     String selectMailStatus(@Param("mailNo") Integer mailNo, @Param("employeeId") String employeeId);
-
-    // 메일 상태 업데이트
-    void updateMailStatus(MailReceiveVO mailReceiveVO);
+    void updateMailStatus(List<Integer> mailIds, String employeeId, String status);
+  
 }

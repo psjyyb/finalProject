@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.EmployeesVO;
 import com.arion.app.group.admin.service.DepartmentVO;
+import com.arion.app.group.admin.service.EmployeeVO;
 import com.arion.app.group.main.group.service.AddressVO;
 
 public interface GroupMapper {

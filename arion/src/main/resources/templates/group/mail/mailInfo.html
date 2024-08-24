@@ -4,39 +4,204 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-<link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <meta charset="UTF-8">
     <title>메일 상세보기</title>
- 
+  
+    <style>
+        /* 제목을 왼쪽 상단에 배치 */
+        h1 {
+            margin: 20px;
+            display: inline-block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 메일 세부 사항 */
+        .mail-details {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* 정보 레이아웃 */
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-container .info {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .info-container .info label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .info-container .info .value {
+            color: #333;
+        }
+
+        .mail-content {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        /* 첨부파일 섹션 */
+        .content-section {
+            margin-top: 20px;
+        }
+
+        .content-section h4 {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .file-links, .image-links {
+            margin-bottom: 10px;
+        }
+
+        .file-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .file-links a:hover {
+            text-decoration: underline;
+        }
+
+        .image-links img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        /* 액션 버튼 */
+        .actions-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004080;
+        }
+
+        /* 최근 메일 섹션 */
+        .recent-mails {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .recent-mails h4 {
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .recent-mails ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .recent-mails li {
+            margin-bottom: 10px;
+        }
+
+        .recent-mails a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .recent-mails a:hover {
+            text-decoration: underline;
+        }
+
+        .recent-mails span {
+            color: #666;
+            font-size: 0.875rem;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>메일 상세보기</h1>
+    <div class="container">
+        <!-- 제목을 왼쪽 상단에 배치 -->
+        <h1>메일 상세보기</h1>
 
-    <div class="mail-details">
-        <div class="info">
-            <span class="label">발신자:</span> <span th:text="${mailInfo.senderName}">발신자 이름</span>
-        </div>
-        <div class="info">
-            <span class="label">제목:</span> <span th:text="${mailInfo.mailTitle}">메일 제목</span>
-        </div>
-        <div class="info">
-            <span class="label">수신일:</span> <span th:text="${#dates.format(mailInfo.sendDate, 'yyyy-MM-dd')}">수신일</span>
-        </div>
-        <div class="mail-content">
-            <p th:text="${mailInfo.mailContent}">메일 내용</p>
-        </div>
-        <div class="content-section">
-            <h4>첨부파일</h4>    
-            <div th:each="file : ${fileInfo}">
-                <div class="file-links" th:if="${!file.fileType.startsWith('image/')}">
-                    <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+        <div class="mail-details">
+            <!-- 발신자, 제목, 수신일을 한 줄에 배치 -->
+            <div class="info-container">
+                <div class="info">
+                    <label for="sender">발신자:</label>
+                    <span id="sender" class="value" th:text="${mailInfo.senderName}">발신자 이름</span>
+                </div>
+                <div class="info">
+                    <label for="title">제목:</label>
+                    <span id="title" class="value" th:text="${mailInfo.mailTitle}">메일 제목</span>
+                </div>
+                <div class="info">
+                    <label for="sendDate">수신일:</label>
+                    <span id="sendDate" class="value" th:text="${#dates.format(mailInfo.sendDate, 'yyyy-MM-dd')}">수신일</span>
                 </div>
             </div>
+
+            <div class="mail-content">
+                <p th:text="${mailInfo.mailContent}">메일 내용</p>
+            </div>
+            <div class="content-section">
+                <h4>첨부파일</h4>
+                <div th:each="file : ${fileInfo}">
+                    <div class="file-links" th:if="${!file.fileType.startsWith('image/')}">
+                        <a th:href="@{/files/{fileName}(fileName=${file.filePath})}" th:text="${file.fileOriginalName}"></a>
+                    </div>
+                    <div class="image-links" th:if="${file.fileType.startsWith('image/')}">
+                        <a th:href="@{/files/{fileName}(fileName=${file.filePath})}">
+                            <img th:src="@{/files/{fileName}(fileName=${file.filePath})}" th:alt="${file.fileOriginalName}" class="img-thumbnail"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions-container">
+                <!-- 답장하기 버튼 -->
+                <a class="btn-primary" th:href="@{/group/mail/reply/{mailNo}(mailNo=${mailInfo.mailNo})}">답장하기</a>
+            </div>
         </div>
-        
-        <div class="actions-container">
-            <!-- 답장하기 링크 수정 -->
-         <a th:href="@{/group/mail/reply/{mailNo}(mailNo=${mailInfo.mailNo})}">답장하기</a>
+
+        <!-- 발신자가 보낸 최근 메일 -->
+        <div class="recent-mails">
+            <h4>발신자 최근 메일</h4>
+            <ul>
+                <li th:each="recentMail : ${recentMails}">
+                    <a th:href="@{/group/mail/detail/{mailNo}(mailNo=${recentMail.mailNo})}" th:text="${recentMail.mailTitle}"></a>
+                    <span th:text="${#dates.format(recentMail.sendDate, 'yyyy-MM-dd')}"></span>
+                </li>
+            </ul>
         </div>
     </div>
 </body>

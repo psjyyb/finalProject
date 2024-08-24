@@ -18,7 +18,8 @@ public class MailVO {
     private String mailTitle;
     private String mailContent;
     private String mailStatus;
-    
+    private String action;
+    private List<Integer> mailIds;
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date sendDate;
     

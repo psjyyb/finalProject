@@ -208,25 +208,11 @@ public class MailServiceImpl implements MailService {
             e.printStackTrace();
             return 0;
         }
+       
     }
     @Override
-    public void updateMailStatus(List<Integer> mailIds, String status) {
-        String employeeId = (String) httpSession.getAttribute("loginId");
-
-        for (Integer mailId : mailIds) {
-            // 현재 상태 조회
-            String currentStatus = mailMapper.selectMailStatus(mailId, employeeId);
-
-            // 상태가 'RECEIVE'인 경우에만 업데이트
-            if ("RECEIVE".equals(currentStatus)) {
-                MailReceiveVO mailReceiveVO = new MailReceiveVO();
-                mailReceiveVO.setMailNo(mailId);
-                mailReceiveVO.setMailStatus(status);
-                mailReceiveVO.setEmployeeId(employeeId);
-
-                mailMapper.updateMailStatus(mailReceiveVO);
-            }
-        }
+    @Transactional
+    public void updateMailStatus(List<Integer> mailIds, String employeeId, String status) {
+        mailMapper.updateMailStatus(mailIds, employeeId, status);
     }
-    
 }

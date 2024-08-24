@@ -6,6 +6,7 @@ import java.util.Map;
 import com.arion.app.common.service.DepartmentsVO;
 import com.arion.app.common.service.EmployeesVO;
 import com.arion.app.group.admin.service.DepartmentVO;
+import com.arion.app.group.admin.service.EmployeeVO;
 
 public interface GroupService {
 	  //부서

@@ -4,13 +4,88 @@
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
 <head>
-    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <meta charset="UTF-8">
+    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
+    <style>
+        /* 제목을 왼쪽 상단에 배치 */
+        h1 {
+            margin: 20px;
+            display: inline-block;
+        }
+
+        /* 검색 폼을 우측 상단에 배치 (헤더를 가리지 않도록 위치 조정) */
+        .search-container {
+            display: inline-block;
+            float: right;
+            margin: 20px;
+        }
+        .search-container select,
+        .search-container input {
+            margin-right: 5px;
+            padding: 5px;
+            font-size: 0.8rem;
+        }
+        .search-container button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        /* 휴지통 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 */
+        .actions-container {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th.checkbox-container,
+        td.checkbox-container {
+            width: 5%;
+            text-align: center;
+        }
+
+        th, td a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* 페이지네이션을 가운데 아래에 배치 */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <!-- 제목을 왼쪽 상단에 배치 -->
     <h1>최근 받은 메일</h1>
-    
+
+    <!-- 검색 폼 -->
+    <div class="search-container">
+        <form action="/group/mail/importmail" method="GET" th:object="${criteria}">
+            <select th:field="*{searchType}">
+                <option value="" th:selected="${criteria.searchType == ''}">전체</option>
+                <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+                <option value="senderId" th:selected="${criteria.searchType == 'senderId'}">발신자</option>
+            </select>
+            <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <!-- 메일 테이블 -->
     <form id="mailActionForm" action="/group/mail/actions" method="POST">
         <table>
             <thead>
@@ -24,81 +99,78 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 메일 리스트에서 상위 3개 항목만 반복해서 출력 -->
-                <tr th:each="mail, iterStat : ${receivedMails}">
-                    <td th:if="${iterStat.count <= 3}" class="checkbox-container">
-                        <input type="checkbox" class="mailCheckbox" data-mail-no="${mail.mailNo}"> <!-- 각 메일의 ID를 데이터-셋으로 설정 -->
+                <!-- 전체 메일을 표시 -->
+                <tr th:each="mail : ${receivedMails}">
+                    <td class="checkbox-container">
+                        <input type="checkbox" class="mailCheckbox" th:data-mail-no="${mail.mailNo}"> <!-- 각 메일의 ID를 데이터-셋으로 설정 -->
                     </td>
-                    <td th:if="${iterStat.count <= 3}" th:text="${mail.senderName}">발신자</td>
-                    <td th:if="${iterStat.count <= 3}">
+                    <td th:text="${mail.senderName}">발신자</td>
+                    <td>
                         <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
                     </td>
-                    <td th:if="${iterStat.count <= 3}" th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">수신일</td>
+                    <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">수신일</td>
                 </tr>
             </tbody>
         </table>
 
+        <!-- 휴지통 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 -->
         <div class="actions-container">
             <button type="button" id="importSelected" class="compose-btn">중요메일함</button>
             <button type="button" id="deleteSelected" class="delete-btn">휴지통</button>
         </div>
 
+        <!-- 페이지네이션을 가운데 아래에 배치 -->
         <ul class="pagination"></ul>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         function getCheckedMailIds() {
-            const checkedMailIds = [];
-            document.querySelectorAll('input.mailCheckbox:checked').forEach(checkbox => {
-                checkedMailIds.push(checkbox.dataset.mailNo);
-            });
-            return checkedMailIds;
+            const checkboxes = document.querySelectorAll('.mailCheckbox:checked');
+            const mailIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-mail-no'));
+            return mailIds;
         }
 
         document.getElementById('importSelected').addEventListener('click', function() {
-            var form = document.getElementById('mailActionForm');
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'actions';
-            input.value = 'import'; // 'IMPORT' 상태로 설정
-            form.appendChild(input);
+            const mailIds = getCheckedMailIds();
+            if (mailIds.length === 0) {
+                alert('메일을 선택해 주세요.');
+                return;
+            }
 
-            var mailIdsInput = document.createElement('input');
-            mailIdsInput.type = 'hidden';
-            mailIdsInput.name = 'mailIds';
-            mailIdsInput.value = JSON.stringify(getCheckedMailIds());
-            form.appendChild(mailIdsInput);
-
-            var existingInputs = document.querySelectorAll('input[name="actions"], input[name="mailIds"]');
-            existingInputs.forEach(existingInput => form.removeChild(existingInput));
-
-            form.submit();
+            axios.post('/group/mail/actions', {
+                action: 'IMPORT', 
+                mailIds: mailIds
+            }).then(function(response) {
+                window.location.href = '/group/mail/Mymail';
+            }).catch(function(error) {
+                console.error('Error:', error);
+            });
         });
 
         document.getElementById('deleteSelected').addEventListener('click', function() {
-            var form = document.getElementById('mailActionForm');
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'actions';
-            input.value = 'TRASH'; // 'TRASH' 상태로 설정
-            form.appendChild(input);
+            const mailIds = getCheckedMailIds();
+            if (mailIds.length === 0) {
+                alert('메일을 선택해 주세요.');
+                return;
+            }
 
-            var mailIdsInput = document.createElement('input');
-            mailIdsInput.type = 'hidden';
-            mailIdsInput.name = 'mailIds';
-            mailIdsInput.value = JSON.stringify(getCheckedMailIds());
-            form.appendChild(mailIdsInput);
-
-            var existingInputs = document.querySelectorAll('input[name="actions"], input[name="mailIds"]');
-            existingInputs.forEach(existingInput => form.removeChild(existingInput));
-
-            form.submit();
+            axios.post('/group/mail/actions', {
+                action: 'TRASH', 
+                mailIds: mailIds
+            }).then(function(response) {
+                window.location.href = '/group/mail/Mymail'; 
+            }).catch(function(error) {
+                console.error('Error:', error);
+            });
         });
 
         document.getElementById('selectAll').addEventListener('change', function() {
-            var checkboxes = document.querySelectorAll('input.mailCheckbox');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            const isChecked = this.checked;
+            const checkboxes = document.querySelectorAll('.mailCheckbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
         });
     </script>
 </body>

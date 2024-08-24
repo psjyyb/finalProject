@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -224,25 +225,22 @@ public class MailController {
         
         return "group/mail/replymail"; 
     }
-
+ // 메일 상태 변경 핸들러 수정
     @PostMapping("/actions")
-    @ResponseBody
-    public int handleMailAction(@RequestParam("actions") String action,
-                                @RequestParam("mailIds") List<Integer> mailIds) {
-        try {
-            String status;
-            if ("import".equals(action)) {
-                status = "IMPORT";
-            } else if ("delete".equals(action)) {
-                status = "TRASH";
-            } else {
-                return 0; //
-            }
-            mailService.updateMailStatus(mailIds, status);
-            return 1; // 
-        } catch (Exception e) {
-            e.printStackTrace(); // 로그에 에러 출력
-            return 0; //
+    
+    public ResponseEntity<String> handleMailActions(@RequestBody MailVO mailVO) {
+        System.out.println("Action: " + mailVO.getAction()); // 액션 값 출력
+        System.out.println("Mail IDs: " + mailVO.getMailIds()); // 메일 ID 출력
+
+        String employeeId = (String) httpSession.getAttribute("loginId");
+
+        if ("IMPORT".equals(mailVO.getAction())) {
+            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "IMPORT");
+        } else if ("TRASH".equals(mailVO.getAction())) {
+            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "TRASH");
         }
+        
+        return ResponseEntity.ok("Success");
     }
+
 }

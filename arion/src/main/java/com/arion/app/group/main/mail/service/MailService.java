@@ -40,6 +40,6 @@ public interface MailService {
     //메일 상세조회
     MailVO mailInfo(MailVO mailVO);
     //메일 상태변경
-    void updateMailStatus(List<Integer> mailIds, String status);
+    void updateMailStatus(List<Integer> mailIds, String employeeId,String status);
     
 }

@@ -8,6 +8,7 @@
     <title>주소록</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -111,6 +112,13 @@
         .register-button:hover {
             background-color: #218838;
         }
+        .email-button {
+            background-color: #17a2b8;
+        }
+        .email-button:hover {
+            background-color: #138496;
+        }
+
     </style>
 </head>
 <body>
@@ -132,15 +140,15 @@
             <div class="button-group">
                 <button id="editButton">수정</button>
                 <button id="deleteButton" class="delete">삭제</button>
+                <button id="emailButton" class="email-button">메일 보내기</button>
             </div>
         </div>
-        <!-- 등록 버튼 -->
         <button class="register-button" onclick="window.location.href='/group/Gang/AddrInsert'">주소록 등록</button>
     </div>
 
     <script>
     $(document).ready(function() {
-        // 회사 목록을 불러오는 AJAX 요청
+        // 회사 목록 불러오기
         $.ajax({
             url: '/group/Gang/companyNames',
             method: 'GET',
@@ -154,7 +162,7 @@
             }
         });
 
-        // 회사 클릭 시 주소록 목록을 불러오는 AJAX 요청
+        // 회사 클릭 시 주소록 목록 불러오기
         $(document).on('click', '.company', function(e) {
             e.preventDefault();
             let companyName = $(this).data('name');
@@ -166,7 +174,7 @@
                 success: function(data) {
                     let addressList = $('#addressList');
                     addressList.empty();
-                    $('#addressDetail').hide(); // 주소록 정보는 숨김
+                    $('#addressDetail').hide();
 
                     data.forEach(function(address) {
                         addressList.append('<li><a href="#" class="address" data-id="' + address.addrNo + '">' + address.addrName + '</a></li>');
@@ -175,7 +183,7 @@
             });
         });
 
-        // 주소록 클릭 시 상세 정보를 불러오는 AJAX 요청
+        // 주소록 클릭 시 상세 정보 불러오기
         $(document).on('click', '.address', function(e) {
             e.preventDefault();
             let addressId = $(this).data('id');
@@ -189,8 +197,9 @@
                     $('#detailPhone').text(address.addrPhone);
                     $('#detailEmail').text(address.addrEmail);
                     $('#detailRank').text(address.addrRank);
-                    $('#addressDetail').data('id', address.addrNo); // 주소록 상세 정보를 저장
-                    $('#addressDetail').show(); // 주소록 정보 표시
+                    $('#addressDetail').data('id', address.addrNo);
+                    $('#addressDetail').data('email', address.addrEmail);
+                    $('#addressDetail').show();
                 }
             });
         });
@@ -217,6 +226,16 @@
                     alert('주소록 삭제에 실패했습니다.');
                 }
             });
+        });
+
+        // 메일 보내기 버튼 클릭 시 이메일 보내기 페이지로 이동
+        $('#emailButton').click(function() {
+            let email = $('#addressDetail').data('email');
+            if (email) {
+                window.location.href = '/group/mail/writemail?receiver=' + encodeURIComponent(email);
+            } else {
+                alert('이메일 주소가 없습니다.');
+            }
         });
     });
     </script>

@@ -35,5 +35,7 @@ public interface GroupService {
 	
 	  List<DepartmentVO> getOrganizationalChartByCompanyCode(String companyCode);
 
+	  //전체사원조회
+	   List<EmployeesVO> getAllEmployees();
 }
 

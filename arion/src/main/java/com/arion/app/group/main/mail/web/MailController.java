@@ -138,12 +138,14 @@ public class MailController {
     
     // 메일 보내기 폼 페이지
     @GetMapping("/writemail")
-    public String mailSendForm(Model model, HttpSession httpSession) {
-        String employeeId = (String) httpSession.getAttribute("loginId");
-       
- 
-        model.addAttribute("employeeId", employeeId);
-        
+    public String mailSendForm(@RequestParam(required = false) String employeeId, Model model) {
+        String senderId = (String) httpSession.getAttribute("loginId");
+        model.addAttribute("senderId", senderId);
+
+        if (employeeId != null) {
+            model.addAttribute("receiverId", employeeId);
+        }
+
         return "group/mail/writemail";
     }
     

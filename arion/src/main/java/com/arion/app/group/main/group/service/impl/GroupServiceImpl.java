@@ -95,4 +95,9 @@ public class GroupServiceImpl implements GroupService{
 	    public List<DepartmentVO> getOrganizationalChartByCompanyCode(String companyCode) {
 	        return mapper.selectOrganizationalChartByCompanyCode(companyCode);
 	    }
+	    //전체사원조회
+	    @Override
+	    public List<EmployeesVO> getAllEmployees() {
+	        return mapper.getAllEmployees();
+	    }
 }

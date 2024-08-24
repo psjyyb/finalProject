@@ -3,9 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/group/layouts/group_layout}"
       layout:fragment="Content">
-<html lang="ko">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>메일쓰기 - ARION</title>
 
@@ -19,46 +17,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom Styles -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .modal-content {
-            border-radius: 8px;
-        }
-        .form-control {
-            border-radius: 8px;
-        }
-        .btn-primary {
-            border-radius: 8px;
-        }
-        .modal-header, .modal-footer {
-            border-bottom: 1px solid #dee2e6;
-        }
-        .modal-footer {
-            border-top: 1px solid #dee2e6;
-        }
-        .list-unstyled {
-            padding-left: 0;
-        }
-        .list-unstyled li {
-            margin-bottom: 10px;
-        }
-        .list-unstyled input[type="checkbox"] {
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
-
     <div class="container">
         <h1 class="mb-4">메일쓰기</h1>
         <form id="sendMail" th:action="|/group/mail/writemail|" method="post" enctype="multipart/form-data">
@@ -149,90 +109,50 @@
     </div>
 
     <script>
-    $(document).ready(function() {
-        // 조직도 모달 스크립트
-        $.ajax({
-            url: '/group/Gang/departments',
-            method: 'GET',
-            success: function(data) {
-                let departmentList = $('#departmentList');
-                departmentList.empty();
-
-                data.forEach(function(department) {
-                    departmentList.append('<li><a href="#" class="department" data-name="' + department.departmentName + '">' + department.departmentName + '</a></li>');
-                });
-            }
-        });
-
-        $(document).on('click', '.department', function(e) {
-            e.preventDefault();
-            let departmentName = $(this).data('name');
-
+        $(document).ready(function() {
+            // 조직도 모달 스크립트
             $.ajax({
-                url: '/group/Gang/employees',
+                url: '/group/Gang/departments',
                 method: 'GET',
-                data: { departmentName: departmentName },
                 success: function(data) {
-                    let employeeList = $('#employeeList');
-                    employeeList.empty();
+                    let departmentList = $('#departmentList');
+                    departmentList.empty();
 
-                    data.forEach(function(employee) {
-                        // 체크박스를 추가하여 선택 가능하도록 함
-                        employeeList.append('<li><input type="checkbox" class="employeeCheckbox" data-id="' + employee.employeeId + '">' + employee.employeeName + ' (' + employee.rankName + ')</li>');
+                    data.forEach(function(department) {
+                        departmentList.append('<li><a href="#" class="department" data-name="' + department.departmentName + '">' + department.departmentName + '</a></li>');
                     });
                 }
             });
-        });
 
-        // 완료 버튼 클릭 시 조직도에서 ID 추가
-        $('#addOrgChartToReceiver').click(function() {
-            let ids = [];
-            $('.employeeCheckbox:checked').each(function() {
-                ids.push($(this).data('id'));
-            });
+            $(document).on('click', '.department', function(e) {
+                e.preventDefault();
+                let departmentName = $(this).data('name');
 
-            let currentReceiver = $('#receiverId').val();
-            if (currentReceiver) {
-                $('#receiverId').val(currentReceiver + ', ' + ids.join(', '));
-            } else {
-                $('#receiverId').val(ids.join(', '));
-            }
+                $.ajax({
+                    url: '/group/Gang/employees',
+                    method: 'GET',
+                    data: { departmentName: departmentName },
+                    success: function(data) {
+                        let employeeList = $('#employeeList');
+                        employeeList.empty();
 
-            $('#orgChartModal').modal('hide');
-        });
-
-        // 주소록 모달 스크립트
-        $.ajax({
-            url: '/group/Gang/companyNames',
-            method: 'GET',
-            success: function(data) {
-                let companyList = $('#companyList');
-                companyList.empty();
-
-                data.forEach(function(company) {
-                    companyList.append('<li><a href="#" class="company" data-name="' + company + '">' + company + '</a></li>');
+                        data.forEach(function(employee) {
+                            employeeList.append('<li><input type="checkbox" class="employeeCheckbox" data-id="' + employee.employeeId + '">' + employee.employeeName + ' (' + employee.rankName + ')</li>');
+                        });
+                    }
                 });
-            }
-        });
-
-        $(document).on('click', '.company', function(e) {
-            e.preventDefault();
-            let companyName = $(this).data('name');
-
-            $.ajax({
-                url: '/group/Gang/addresses',
-                method: 'GET',
-                data: { companyName: companyName },
-                success: function(data) {
-                    let addressList = $('#addressList');
-                    addressList.empty();
-
-                    data.forEach(function(address) {
-                        addressList.append('<li><input type="checkbox" class="addressCheckbox" data-email="' + address.addrEmail + '">' + address.addrName + '</li>');
-                    });
-                }
             });
-        });
+
+            $('#addOrgChartToReceiver').click(function() {
+                let ids = [];
+                $('.employeeCheckbox:checked').each(function() {
+                    ids.push($(this).data('id'));
+                });
+
+                let currentReceiver = $('#receiverId').val();
+                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + ids.join(', ') : ids.join(', '));
+                $('#orgChartModal').modal('hide');
+            });
 
             // 주소록 모달 스크립트
             $.ajax({
@@ -267,7 +187,6 @@
                 });
             });
 
-            // 완료 버튼 클릭 시 주소록에서 이메일 추가
             $('#addToReceiver').click(function() {
                 let emails = [];
                 $('.addressCheckbox:checked').each(function() {
@@ -275,12 +194,7 @@
                 });
 
                 let currentReceiver = $('#receiverId').val();
-                if (currentReceiver) {
-                    $('#receiverId').val(currentReceiver + ', ' + emails.join(', '));
-                } else {
-                    $('#receiverId').val(emails.join(', '));
-                }
-
+                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + emails.join(', ') : emails.join(', '));
                 $('#addressBookModal').modal('hide');
             });
 
@@ -320,6 +234,29 @@
                     }
                 });
             });
+
+            // URL 파라미터를 수신인 필드에 추가
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            // 페이지 로드 시 URL 파라미터를 수신인 필드에 추가
+            let receiverEmailFromUrl = getParameterByName('receiver');
+            let employeeIdFromUrl = getParameterByName('employeeId');
+            if (receiverEmailFromUrl) {
+                let currentReceiver = $('#receiverId').val();
+                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + receiverEmailFromUrl : receiverEmailFromUrl);
+            }
+            if (employeeIdFromUrl) {
+                let currentReceiver = $('#receiverId').val();
+                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + employeeIdFromUrl : employeeIdFromUrl);
+            }
         });
     </script>
 </body>

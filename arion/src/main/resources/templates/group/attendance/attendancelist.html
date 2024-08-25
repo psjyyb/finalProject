@@ -5,20 +5,21 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/group/attendance/attendancelist.css}">
 <title>attendancelist</title>
 </head>
 </head>
 <body>
-	<div >
+		<a class="styled-button" href="/group/attendance/attendances">되돌아가기</a>
+	<div class="container">
 		<!-- DataTales Example -->
-		<a href="/group/attendance/attendances">되돌아가기</a>
 		<div align="center" width="50%">
 			<div >
-				<h6 >부하직원 목록</h6><h6 th:text="'인원 수:'+${#lists.size(emplist)}"></h6>
+				<h2 >부하직원 목록</h2><h6 th:text="'인원 수:'+${#lists.size(emplist)}"></h6>
 			</div>
 			<div >
 				<div >
-					<table >
+					<table class="list">
 						<thead>
 							<tr>
 								<th>번호</th>

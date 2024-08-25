@@ -5,24 +5,25 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/group/attendance/myvacation.css}">
 <title>myvacation</title>
 <input type="hidden" id="employeeno"  th:value="${session.employeeNo}">
 </head>
 <body onload="autoReload();">
 	
-	       <div >
+	       <div class="divvacation">
 				<label >연차별 기록:</label> <select id="years" name="years">
 					
 					<option th:each=" years :${yearsList}" th:value="${years.years}"
 						th:text="${years.period}">없음</option>
 				</select>
 			</div>
-	 <div >
+	 <div class="divvacation">
 	 <span>사용일수</span><p id="used"></p><span>남은일수</span><p id="remaining"></p><span>총휴가일수</span><p id="vacation"></p><span>유효기간</span><p id="expirationdate"></p>
 	</div>
 			<div colspan="4" align="right">
-			<button id="download">다운로드</button>
-			<a href="/group/attendance/underlingvacationlist">부하직원 휴가기록</a>
+			<button id="download" class="styled-button">다운로드</button>
+			<a class="styled-button" href="/group/attendance/underlingvacationlist">부하직원 휴가기록</a>
 	
 	</div>
 	<table align="center" id="vacationtable" width="80%"  height ="30%">

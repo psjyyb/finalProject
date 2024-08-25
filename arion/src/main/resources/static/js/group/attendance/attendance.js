@@ -249,7 +249,8 @@ document.getElementById("download").addEventListener('click',download);
 		 
 		 var employeeno =  $('#employeeno').val();
 		 console.log(employeeno);
-		
+		console.log(startdate);
+		console.log(enddate);
           //엑셀 다운로드
            $.ajax({
 			url : '/files/attendancedownload',

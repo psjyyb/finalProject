@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.arion.app.group.main.database.mapper.DatabaseMapper;
 import com.arion.app.group.main.database.service.CFileVO;
 import com.arion.app.group.main.database.service.DatabaseService;
+import com.arion.app.group.main.database.service.FileinfoVO;
 import com.arion.app.group.main.database.service.UnderRankVO;
 
 @Service
@@ -54,15 +55,33 @@ public class DatabaseServicelmpl implements DatabaseService{
 	}
 
 	@Override
-	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long size,
-			String string, String rankname) {
+	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long filesize,
+			String filename, String rankname) {
 		// TODO Auto-generated method stub
-		return databasemapper.fileupload(companycode, parent, uploader, rankname, originalFilename, parent);
+		return databasemapper.fileupload(companycode, parent, uploader, originalFilename,filesize,filename,rankname);
 	}
 
 	@Override
-	public List<CFileVO> file(String companycode) {
+	public CFileVO file(String companycode) {
 		// TODO Auto-generated method stub
 		return databasemapper.file(companycode);
+	}
+	
+	@Override
+	public List<FileinfoVO> fileinfo(String companycode, int me) {
+		// TODO Auto-generated method stub
+		return databasemapper.datainfo(companycode,me);
+	}
+	
+	@Override
+	public int filedelete(String companycode, int deleteid) {
+		// TODO Auto-generated method stub
+		return databasemapper.filedelete(companycode,deleteid);
+	}
+
+	@Override
+	public int forderdelete(String companycode, int deleteid) {
+		// TODO Auto-generated method stub
+		return databasemapper.forderdelete(companycode, deleteid);
 	}
 }

@@ -11,7 +11,7 @@
                department_name,
                rank_name 
         FROM employees
-        WHERE employee_no=#{employeeno}
+        WHERE employee_no=#{employeeno} 
 	</select>
 
 <select id="aEmployeeList" resultType="AEmployeeVO">
@@ -27,11 +27,12 @@
         FROM employees e JOIN RANK r 
         ON e.rank_name=r.rank_name 
         AND e.company_code=r.company_code
-        WHERE e.company_code = #{companycode} AND rank_ranking>(
+        WHERE e.company_code = #{companycode} 
+        AND rank_ranking>(
         select rank_ranking
         from RANK
-        WHERE rank_name = #{rankname} AND company_code = #{companycode}
-        )
+        WHERE rank_name = #{rankname} AND company_code = #{companycode})
+        AND resign_date IS NULL
         ORDER BY rank_ranking  
 	</select>
 	

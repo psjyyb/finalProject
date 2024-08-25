@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.styled-button {
+    padding: 5px 10px; /* 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    
+    border-radius: 4px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+      border: 1px solid black;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: center; /* 버튼과 검색 폼을 양쪽 끝에 배치 */
+    align-items: center; /* 버튼과 검색 폼의 높이를 맞춤 */
+    margin-bottom: 20px; /* 아래쪽 여백 추가 */
+     gap: 20px;
+}
+
+#yearmonth {
+    font-size: 24px;
+}
+
+h2 {
+  margin-bottom: -5px;
+}
+#worktimetable {
+    
+    background-color: white; /* 테이블 배경색 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 테이블 그림자 */
+    border: 1px solid black;
+   
+}
+
+#worktimetable th {
+    background-color: #007bff; /* 헤더 배경색 */
+    color: white; /* 헤더 글자색 */
+    text-transform: uppercase; /* 헤더 텍스트 대문자 */
+}
+
+.month{
+	 padding: 5px 10px; /* 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    
+    border-radius: 4px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+	 border: 1px solid black;
+}

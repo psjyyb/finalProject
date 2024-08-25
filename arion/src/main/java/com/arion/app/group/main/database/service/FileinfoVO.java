@@ -4,16 +4,11 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.arion.app.group.main.attendance.service.VacationVO;
-
 import lombok.Data;
 
 @Data
-public class CFileVO {
-
+public class FileinfoVO {
 	private Integer me;
-	private String companycode;
-	private Integer parent;
 	private String uploader;
 	private String filename;
 	@DateTimeFormat(pattern="yyyy-MM-dd hh:mm:ss")
@@ -21,8 +16,4 @@ public class CFileVO {
 	private Integer csize;
 	private String forder;
 	private String cname;
-	private Integer departmentno;
-	private Integer  rankid;
-	private String cform;
-	private Integer level;
 }

@@ -1,6 +1,9 @@
  var selectid=null;
   var selectname=null;
 
+var selectdataid=null;
+ var selectdataname=null;
+ 
 function autoReload()
 	{     
 		      /*  var dt = document.getElementById("1"); 
@@ -10,6 +13,7 @@ function autoReload()
 		    		 $('#1').val('open').addClass('forder');   
 		    		    $('#1').on('contextmenu', contextmenuClick);
 							$('#1').on('click', folderClick);
+							
 		$.ajax({
 			url : '/group/database/start',
 			
@@ -28,6 +32,7 @@ function autoReload()
 							let newDiv = $('<div></div>').addClass('forder').css({'white-space':'pre'}).attr('id', value.me).val('close').text(' '+value.filename);
 							newDiv.on('contextmenu', contextmenuClick);
 							newDiv.on('click', folderClick);
+							
 							$('#1').append(newDiv);
 								                		          
 		     })							
@@ -79,9 +84,33 @@ function autoReload()
 				
                 else if($(this).attr('id')==='mupload'){
 				console.log('업로드선택');	
-				
 				$('#usuperforder').val(selectname);
 				$('#usuperforderid').val(selectid);
+				
+				}
+				
+				 else if($(this).attr('id')==='forderdelete'){
+				console.log('폴더삭제');	
+				
+				$.ajax({
+			url : '/group/database/forderdelete',			
+           type : 'POST',
+           data : {
+             'deleteforderid' : selectid        
+              },
+		 dataType:"json",
+		 async: false,
+           success : function(data) {
+								
+			if(data.forderdelete>0){
+				console.log("삭제성공");
+				$('#'+selectid).remove();				
+			    selectid=null;
+                selectname=null;																															
+				}
+							 
+		   }
+		})				
 				}
 				
                 $('#popMenu').hide(); // 클릭 후 메뉴 숨기기
@@ -131,6 +160,7 @@ function autoReload()
 			               newDiv = $('<div></div>').addClass('forder').css({'white-space':'pre'}).attr('id', value.me).val('close').text(gap+value.filename);
 							newDiv.on('contextmenu', contextmenuClick);
 							newDiv.on('click', folderClick);
+							
 							}
 							else if(type=='file'){
 							newDiv = $('<div></div>').addClass('file').css({'white-space':'pre'}).attr('id', value.me).text(gap+value.filename);
@@ -156,7 +186,45 @@ function autoReload()
 	 
 	  function fileClick(event) {
 		event.stopPropagation();
-		console.log('파일클릭');
+			
+			console.log('파일정보클릭');
+			selectdataid=$(this).attr('id');
+			console.log('파일정보아이디'+selectdataid);
+			selectdataname= $(this).html().split('<')[0].trim();
+			console.log('파일정보이름:'+selectdataname);
+			let parentdataname = $(this).parent().html().split('<')[0].trim();
+			//정보등록
+			$('#supername').text(parentdataname);
+			$('#filename').text(selectdataname);			
+			$('#download').attr('href', '/group/database/download?selectdataid='+selectdataid);
+			
+		 $.ajax({
+			url : '/group/database/datainfo',			
+           type : 'POST',
+           data : {
+             'selectdataid' :$(this).attr('id')         
+              },
+		 dataType:"json",
+		 async: false,
+           success : function(data) {
+			console.log('파일정보호출성공');
+			 			let datainfo = data.datainfo ;
+                       console.log('파일정보:'+datainfo);
+					$.each(datainfo, function(key, value) {
+							$('#uploadername').text(value.uploader);
+							let date = new Date(value.uploaddate);
+							 let month = String(date.getMonth() + 1).padStart(2, '0');
+                             let day = String(date.getDate()).padStart(2, '0');
+                             let year = date.getFullYear();
+
+                               let formattedDate = `${year}/${day}/${day}`;
+							$('#uploaddate').text(formattedDate);
+							$('#size').text(value.csize +"byte");														
+					})			 
+		   }
+		})
+				
+		
 		}
 	 
 	 $('#forderup').on('click', function(event) {
@@ -180,15 +248,19 @@ function autoReload()
 		 dataType:"json",
 		 async: false,
            success : function(data) {
-			 			let returnfile = data.returnfile;
+			 			let returnforder = data.returnforder;
 
-						$.each(returnfile, function(key, value) {
+						$.each(returnforder, function(key, value) {
 							console.log(value.level);
-							 let gap=' '.repeat(value.level*3);
-						newDiv = $('<div></div>').addClass('file').css({'white-space':'pre'}).attr('id', value.me).val('close').text(gap+value.filename);
 							
+							if($('#'+$('#csuperforderid').val()).val()=='open'){
+							 let gap=' '.repeat(value.level*3);
+							 let newDiv;
+						     newDiv = $('<div></div>').addClass('forder').css({'white-space':'pre'}).attr('id', value.me).val('close').text(gap+value.filename);
+							newDiv.on('contextmenu', contextmenuClick);
 							newDiv.on('click', folderClick);
 							$('#'+$('#csuperforderid').val()).append(newDiv);
+							}
 					})
 			 
 		   }
@@ -205,9 +277,7 @@ function autoReload()
 		
 		filesArr.forEach(function (f) {
 			content_files.push(f);
-			
-			
-						
+									
 		})
 				
 	  })
@@ -229,8 +299,7 @@ function autoReload()
 			     
 		}
 			    formData.append("parent", $('#usuperforderid').val());			   
-			    
-                    
+			                       
          $.ajax({
    	      type: "POST",
    	   	  enctype: "multipart/form-data",
@@ -240,20 +309,57 @@ function autoReload()
    	      contentType: false,
    	      success: function (data) {
    	    	
-   	    	
-   	    	
-   	    	
-   	    		console.log("파일업로드 성공");
+   	    	console.log("파일업로드 성공");
+   	    	   let returnfile = data.returnfile;
+   	    	//
+   	    	$.each(returnfile, function(key, value) {
+							console.log(value.level);
+							 let gap=' '.repeat(value.level*3);
+							 let newDiv;
+						    newDiv = $('<div></div>').addClass('file').css({'white-space':'pre'}).attr('id', value.me).val('close').text(gap+value.filename);
+							
+							newDiv.on('click', fileClick);
+							if($('#'+$('#usuperforderid').val()).val()=='open'){
+							$('#'+$('#usuperforderid').val()).append(newDiv);
+							}
+					})
+   	    	//
 			
    	      },
    	      error: function (xhr, status, error) {
    	    	alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
    	     return false;
    	      }
-   	    });
-   
-	                                           
-           
+   	    });	                                                            
+      });
+      
+      //파일삭제
+      
+      $('#delete').on('click', function(event) {
+            
+               $.ajax({
+			url : '/group/database/filedelete',			
+           type : 'POST',
+           data : {
+             'deleteid' : selectdataid      
+              },
+		 dataType:"json",
+		 async: false,
+           success : function(data) {
+			console.log("삭제성공");
+			if(data.datadelete==1){
+			$('#'+selectdataid ).remove();
+			 			selectdataid   = null;
+           $('#supername').text(parentdataname);
+           $('#uploadername').text(parentdataname);
+			$('#filename').text(selectdataname);	
+			$('#uploaddate').text(selectdataname);			
+			$('#size').text(selectdataname);	
+			}	 
+		   }
+		})	   
                   
       });
+      
+      
 	

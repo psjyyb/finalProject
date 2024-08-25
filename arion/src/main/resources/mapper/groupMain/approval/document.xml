@@ -93,7 +93,7 @@
 				<if test="criteria.endDate != null and criteria.endDate != ''">
 					AND TRUNC(d.create_date) <![CDATA[ <= ]]> TO_DATE(#{criteria.endDate}, 'YYYY-MM-DD')
 				</if>
-				ORDER BY doc_no DESC
+				ORDER BY d.doc_no DESC
 			)
 			WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
 		)

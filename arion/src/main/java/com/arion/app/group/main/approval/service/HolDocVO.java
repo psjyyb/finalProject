@@ -17,5 +17,11 @@ public class HolDocVO {
 	private String companyCode;
 	private int docNo;
 	private int employeeNo;
+	private String employeeName;
+	private String departmentName;
+	private String rankName;
+	private String appliDate;
+	private String holReason;
+	private String holNote;
 	
 }

@@ -19,4 +19,10 @@ public class HolDocServiceImpl implements HolDocService {
 		mapper.insertHolDoc(holDocVO);
 	}
 
+	@Override
+	public HolDocVO holDocInfo(HolDocVO holDocVO) {
+		// TODO Auto-generated method stub
+		return mapper.holDocInfo(holDocVO);
+	}
+
 }

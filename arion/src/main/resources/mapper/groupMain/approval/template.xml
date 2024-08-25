@@ -10,7 +10,7 @@
 				, doc_img
 		FROM template
 		WHERE 1=1 
-		AND company_code = #{companyCode}
+		AND company_code IN ('company', #{companyCode})
 		ORDER BY temp_no ASC
 	</select>
 	
@@ -44,7 +44,7 @@
 				, doc_img
 		FROM template
 		WHERE 1=1
-		AND company_code = #{companyCode}
+		AND company_code IN ('company', #{companyCode})
 		AND temp_no = #{tempNo}
 	</select>
 	

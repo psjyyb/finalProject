@@ -33,6 +33,7 @@ import com.arion.app.group.main.approval.service.DocAccessService;
 import com.arion.app.group.main.approval.service.DocAccessVO;
 import com.arion.app.group.main.approval.service.DocumentService;
 import com.arion.app.group.main.approval.service.DocumentVO;
+import com.arion.app.group.main.approval.service.HolDocService;
 import com.arion.app.group.main.approval.service.HolDocVO;
 import com.arion.app.group.main.approval.service.SignService;
 import com.arion.app.group.main.approval.service.SignVO;
@@ -64,6 +65,20 @@ public class DocumentController {
 	
 	@Autowired
 	SignService ssavc;
+	
+	@Autowired
+	HolDocService hdsvc;
+	
+	 // 날짜와 시간을 포맷팅하는 메서드
+    private String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return (date != null) ? dateFormat.format(date) : "";
+    }
+
+    private String formatTime(Date date) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        return (date != null) ? timeFormat.format(date) : "";
+    }
 	
 	@GetMapping("/group/doc/document")
 	public String document(Model model, HttpSession session) {
@@ -230,6 +245,24 @@ public class DocumentController {
 		signVO.setEmployeeId(employeeId);
 		String employeeSign = ssavc.empSign(companyCode, employeeId);		
 		
+		HolDocVO holDocVO = new HolDocVO();
+		holDocVO.setCompanyCode(companyCode);
+		holDocVO.setDocNo(docNo);
+		HolDocVO holDocInfo = hdsvc.holDocInfo(holDocVO);
+		
+		 // 날짜 및 시간 포맷팅
+        if (holDocInfo != null) {
+            String formatStartDate = formatDate(holDocInfo.getStartDate());
+            String formatStartTime = formatTime(holDocInfo.getStartDate());
+            String formatEndDate = formatDate(holDocInfo.getEndDate());
+            String formatEndTime = formatTime(holDocInfo.getEndDate());
+
+            model.addAttribute("formatStartDate", formatStartDate);
+            model.addAttribute("formatStartTime", formatStartTime);
+            model.addAttribute("formatEndDate", formatEndDate);
+            model.addAttribute("formatEndTime", formatEndTime);
+        }
+		
 		model.addAttribute("apprInfo", apprInfo);
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("docInfo", docInfo);
@@ -237,7 +270,8 @@ public class DocumentController {
 		model.addAttribute("accessAppr", accessAppr);
 		model.addAttribute("empSign", employeeSign);
 		model.addAttribute("approverIndex", approverIndex);
-		System.out.println(">>>>>>>>>>>> " + employeeSign);
+		model.addAttribute("holInfo", holDocInfo);	
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + holDocInfo);
 		return "group/document/approval/documentInfo";
 	}
 	
@@ -351,4 +385,5 @@ public class DocumentController {
 		 
 		 return "group/document/approval/apprWaitList";
 	} 
+	 
 }

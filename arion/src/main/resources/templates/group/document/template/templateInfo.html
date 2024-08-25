@@ -93,7 +93,7 @@ h1 {
 		</div>
 		<div class="text-right mb-3">
 			<button type="button" th:onclick="|location.href='@{/group/doc/template}'|" class="btn btn-primary">목록으로</button>
-			<button type="button" th:onclick="|location.href='@{/group/doc/tempDelete(tempNo=${tempInfo.tempNo})}'|" class="btn btn-danger">삭제</button>
+			<button type="button" th:if="${tempInfo.companyCode != 'company' and tempInfo.companyCode == session.companyCode}" th:onclick="|location.href='@{/group/doc/tempDelete(tempNo=${tempInfo.tempNo})}'|" class="btn btn-danger">삭제</button>
 		</div>
 	</div>
 

@@ -111,7 +111,96 @@
                 <th>내용</th>
                 <td>
                     <div>
-                        <span th:utext="${docInfo.docContent}"></span>
+                        <span th:if="${docInfo.docContent}" th:utext="${docInfo.docContent}"></span>
+                    	<div  th:if="${holInfo.holType != null}" id="leaveForm" style="width: 100%;">
+						    <table class="form-table" style="border: 0px solid rgb(0, 0, 0); width: 1300px; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 1px; border-collapse: collapse;">
+						        <!-- Header -->
+						        <colgroup>
+						            <col width="310">
+						            <col width="490">
+						        </colgroup>
+						        <tbody>
+						            <tr>
+						                <td style="background: white; padding: 0px; border: 0px solid black; height: 65px; text-align: left; color: black; font-size: 30px; font-weight: bold; vertical-align: middle;">
+						                    &nbsp;휴가 신청서
+						                </td>
+						                <td style="background: white; padding: 0px; border: 0px solid black; text-align: right; color: black; font-size: 12px; vertical-align: top;">
+						                </td>
+						            </tr>
+						        </tbody>
+						    </table>
+						        <table class="form-table" style="width: 100%; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 1px; border-collapse: collapse;">
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    성명
+						                </td>
+						                <td style="text-align: left; font-size: 18px; vertical-align: middle;">
+						                    <span th:text="${holInfo.employeeName}"></span>
+						                </td>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    부서
+						                </td>
+						                <td style="text-align: left; font-size: 18px; vertical-align: middle;">
+						                  	<span th:text="${holInfo.departmentName}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    직위
+						                </td>
+						                <td style="text-align: left; font-size: 18px; vertical-align: middle;">
+						                    <span th:text="${holInfo.rankName}"></span>
+						                </td>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    신청일
+						                </td>
+						                <td style="text-align: left; font-size: 18px; vertical-align: middle;">
+						                    <span th:text="${holInfo.appliDate}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    휴가 종류
+						                </td>
+						                <td style="padding: 5px; text-align: left; font-size: 18px; vertical-align: middle;" colspan="3">
+						                    <span th:text="${holInfo.holType}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    휴가 기간
+						                </td>
+						                <td style="padding: 5px; text-align: left; font-size: 18px; vertical-align: middle;" colspan="3">
+						                    시작일: <span th:text="${formatStartDate}"></span> 
+    										시작시간: <span th:text="${formatStartTime}"></span><br>
+    										종료일: <span th:text="${formatEndDate}"></span> 
+   											종료시간: <span th:text="${formatEndTime}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    휴가 사유
+						                </td>
+						                <td style="padding: 5px; text-align: left; font-size: 18px; vertical-align: middle;" colspan="3">
+						                    <span th:text="${holInfo.holReason}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+						                <td style="padding: 5px; height: 25px; text-align: center; font-size: 14px; font-weight: bold; vertical-align: middle;">
+						                    비고
+						                </td>
+						                <td style="padding: 5px; text-align: left; font-size: 18px; vertical-align: middle;" colspan="3">
+						                    <span th:text="${holInfo.holNote}"></span>
+						                </td>
+						            </tr>
+						            <tr>
+                						<td style="background: rgb(255, 255, 255); padding: 10px; text-align: center; color: rgb(0, 0, 0); font-size: 18px; vertical-align: middle; height: 100px;" colspan="4">
+                    						상기와 같이 휴가를 신청하오니 검토 후 승인하여 주시기 바랍니다.
+                						</td>
+            						</tr> 
+						        </table>
+						</div>
+                    
                     </div>
                 </td>
             </tr>

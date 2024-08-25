@@ -9,6 +9,12 @@
 							, company_code
 							, doc_no
 							, employee_no
+							, employee_name
+							, department_name
+							, rank_name
+							, appli_date
+							, hol_reason
+							, hol_note
 		) VALUES (hol_doc_seq.NEXTVAL
 				 , #{holType}
 				 , #{startDate}
@@ -16,6 +22,18 @@
 				 , #{companyCode}
 				 , #{docNo}
 				 , #{employeeNo}
+				 , #{employeeName}
+				 , #{departmentName}
+				 , #{rankName}
+				 , #{appliDate}
+				 , #{holReason}
+				 , #{holNote}
 		)
 	</insert>
+	<select id="holDocInfo" resultType="HolDocVO">
+		SELECT *
+		FROM hol_doc
+		WHERE doc_no = #{docNo}
+		AND company_code = #{companyCode}
+	</select>
 </mapper>

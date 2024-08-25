@@ -5,7 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		// 휴가신청서 양식 요소를 숨김 처리
 		const leaveForm = document.querySelector('#leaveForm');
-		leaveForm.style.display = 'none';
+        leaveForm.style.display = 'none';
+ 
+ 		setInterval(function () {
+        	if (leaveForm.style.display !== 'none' && !leaveForm.classList.contains('visible')) {
+            	leaveForm.style.display = 'none';
+            	leaveForm.style.overflow = 'hidden';
+        	}
+    	}, 0);
+
 
 		// CKEditor 초기화
 		$('#templateSelect').on('change', function() {
@@ -32,11 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			if (tempName === '휴가신청서') { 
 				// 휴가 신청서 템플릿이 선택된 경우
-				 $('#docName').val('휴가신청서');
+				$('#docName').val('휴가신청서');
 				$('#editor').hide(); // CKEditor 숨기기
 				$('#placeholder').hide(); // 안내 메시지 숨기기
 				leaveForm.style.display = 'block'; // 휴가 신청서 양식 보이기
-
+				leaveForm.classList.add('visible');  // 요소를 표시할 때만 'visible' 클래스를 추가합니다.
+				
 				if (editorInstance !== null) {
 					// 이미 CKEditor가 초기화된 경우, 에디터를 제거
 					editorInstance.destroy()
@@ -50,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			} else {
 				// 다른 템플릿이 선택된 경우
 				leaveForm.style.display = 'none'; // 휴가 신청서 양식 숨기기
+				leaveForm.classList.remove('visible');  // 다른 템플릿이 선택되면 'visible' 클래스를 제거합니다.
 				$('#docName').val(tempName); // docName 필드에 템플릿 이름 설정
 				$('#placeholder').hide(); // 안내 메시지 숨기기
 				$('#editor').show(); // 에디터 표시

@@ -88,7 +88,12 @@ public class DocumentController {
 
 		return "group/document/approval/document";
 	}
-
+	
+	@GetMapping("/group/doc/leaveFormFragment")
+	public String getLeaveFormFragment() {
+		return "fragments/leaveForm :: leaveFormFragment";
+	}
+	
 	@GetMapping("/group/doc/templateContent")
 	@ResponseBody
 	public String getTemplateContent(@RequestParam String tempNo, HttpSession session) {

@@ -15,9 +15,14 @@ public interface DatabaseService {
 
 	public List<CFileVO> forder(String companycode);
 
-	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long size,
-			String string, String rankname);
+	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long filesize,
+			String filename, String rankname);
 
-	public List<CFileVO> file(String companycode);
+	public CFileVO file(String companycode);
 
+	public List<FileinfoVO> fileinfo(String companycode, int me);
+
+	public int filedelete(String companycode, int deleteid);
+	
+	public int forderdelete(String companycode, int deleteid);
 }

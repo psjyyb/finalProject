@@ -168,11 +168,7 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.yedam</groupId>
-			<artifactId>app</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>

@@ -58,11 +58,11 @@
 	</select>
 	
 	<insert id="fileupload">
- 		INSERT INTO CLOUDS(me,company_code,parent,uploader,file_name,upload_date,c_size,forder,rank_id)
+ 		INSERT INTO CLOUDS(me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,rank_id)
         VALUES((SELECT MAX(me)+1
         FROM CLOUDS
         WHERE company_code = #{companycode})        
-        ,#{companycode},#{parent},#{uploader},#{filename},sysdate,#{filesize},'N',
+        ,#{companycode},#{parent},#{uploader},#{originalFilename},sysdate,#{filesize},'N',#{filename},
         (SELECT rank_id
         FROM RANK
         WHERE rank_name = #{rankname} AND company_code = #{companycode})
@@ -80,4 +80,25 @@
         START WITH PARENT is null   
         CONNECT BY PRIOR ME = PARENT
 	</select>
+	
+	<select id="datainfo" resultType="FileinfoVO">      
+        
+        SELECT me,uploader,file_name,upload_date,forder,c_name,c_size      
+        FROM CLOUDS
+        WHERE company_code = #{companycode} 
+        AND  me = #{me}        
+	</select>
+	
+	<delete id="filedelete" >      
+        
+        DELETE FROM CLOUDS
+        WHERE company_code = #{companycode} 
+        AND  me = #{deleteid}        
+	</delete>
+	
+	<delete id="forderdelete" >      
+        DELETE FROM CLOUDS
+        WHERE me in (
+        SELECT me FROM (SELECT * FROM CLOUDS WHERE company_code = #{companycode}) START WITH me= #{deleteid} CONNECT BY PRIOR me = parent) AND company_code = #{companycode}
+   	</delete>
 </mapper>

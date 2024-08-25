@@ -81,9 +81,13 @@ public class ExcelController {
                 bodyCell = bodyRow.createCell(0);
                 bodyCell.setCellValue(attdate); // 데이터 추가                                      
                 bodyCell = bodyRow.createCell(1);
+                if(attendancedownload.getStarttime()!=null) {
                 bodyCell.setCellValue(attendancedownload.getStarttime()); // 데이터 추가                               
+                }
                 bodyCell = bodyRow.createCell(2);
-                bodyCell.setCellValue(attendancedownload.getEndtime()); // 데이터 추가                                
+                if(attendancedownload.getEndtime()!=null) {
+                bodyCell.setCellValue(attendancedownload.getEndtime());
+                }// 데이터 추가                                
                 bodyCell = bodyRow.createCell(3);
                 bodyCell.setCellValue(attendancedownload.getState()); // 데이터 추가                          
         }

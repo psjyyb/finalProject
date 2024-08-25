@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.arion.app.group.main.database.service.CFileVO;
+import com.arion.app.group.main.database.service.FileinfoVO;
 import com.arion.app.group.main.database.service.UnderRankVO;
 
 @Mapper
@@ -22,7 +23,13 @@ public interface DatabaseMapper {
 
 	public List<CFileVO> forder(String companycode);
 
-	public int fileupload(String companycode, int parent, String uploader, String rankname, String filename, int filesize);
+	public int fileupload(String companycode, int parent, String uploader, String originalFilename, long filesize, String filename, String rankname);
 
-	public List<CFileVO> file(String companycode);
+	public CFileVO file(String companycode);
+	
+	public List<FileinfoVO> datainfo(String companycode,int me);
+	
+	public int filedelete(String companycode,int deleteid);
+	
+	public int forderdelete(String companycode,int deleteid);
 }

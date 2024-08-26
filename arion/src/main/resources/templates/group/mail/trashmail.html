@@ -7,66 +7,7 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
-    <style>
-        /* 중요 메일함 제목을 왼쪽 상단에 배치 */
-        h1 {
-            margin: 20px;
-            display: inline-block;
-        }
 
-        /* 검색 폼을 우측 상단에 배치 (헤더를 가리지 않도록 위치 조정) */
-        .search-container {
-            display: inline-block;
-            float: right;
-            margin: 20px;
-        }
-        .search-container select,
-        .search-container input {
-            margin-right: 5px;
-            padding: 5px;
-            font-size: 0.8rem;
-        }
-        .search-container button {
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-
-        /* 휴지통 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 */
-        .actions-container {
-            margin-top: 20px;
-            text-align: right;
-        }
-
-        /* 테이블 스타일 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th.checkbox-container,
-        td.checkbox-container {
-            width: 5%;
-            text-align: center;
-        }
-
-        th, td a {
-            text-decoration: none;
-            color: #333;
-        }
-
-        /* 페이지네이션을 가운데 아래에 배치 */
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <!-- 중요 메일함 제목 -->

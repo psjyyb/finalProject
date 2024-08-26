@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import com.arion.app.security.handler.CustomAuthenticationSuccessHandler;
 
@@ -36,7 +39,7 @@ public class SpringSecurityConfig {
         //http.headers().cacheControl().disable();
         
         http.authorizeHttpRequests()
-                .antMatchers("/error", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**", "/wsocket/**" ).permitAll()
+                .antMatchers("/error", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**", "/wsocket/**", "//**" ).permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/pay/**").hasAnyRole("NO")
@@ -60,6 +63,6 @@ public class SpringSecurityConfig {
         		.permitAll();
         return http.build();
     }
-    
+
     
 }

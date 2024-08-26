@@ -56,8 +56,8 @@ $(document).ready(function() {
     // 회사코드/아이디 찾기 처리
     $("#findIdBtn").on("click", function() {
         let ceoName = $("#ceoName").val();
-        let businessNumber = $("#businessNumber").val();
-
+        let businessNumber = Number$("#businessNumber").val();
+        
         $.ajax({
             type: "POST",
             url: "/home/findId",

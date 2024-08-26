@@ -13,7 +13,7 @@ public class CompanyVO {
     private String companyTel;
     private String companyId;
     private String companyPw;
-    private String companyBusinessNumber;
+    private long companyBusinessNumber;
     private String companyAddress;
     private String companyType;
     private int companyPost;

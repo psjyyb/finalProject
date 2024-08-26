@@ -11,7 +11,7 @@ public interface CompanyService {
 	boolean IdCheck(String companyId);
 	String selectCompanyName(@Param("companyCode") String companyCode);
 	
-	CompanyVO findId (@Param("ceoName") String ceoName, @Param("companyBusinessNumber") int companyBusinessNumber);
+	CompanyVO findId (@Param("ceoName") String ceoName, @Param("companyBusinessNumber") long companyBusinessNumber);
     int updatePw (@Param("companyCode") String companyCode, @Param("companyId") String companyId);
     String selectEmail (@Param("companyCode") String companyCode, @Param("companyId") String companyId);
 }

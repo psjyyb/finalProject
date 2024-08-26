@@ -69,7 +69,6 @@
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 30px;
-	table-layout: fixed;
 }
 
 .doc-table th, .doc-table td {
@@ -84,10 +83,11 @@
 	font-weight: bold;
 	color: #495057;
 	width: 15%;
+	
 }
 
 .doc-table td {
-	width: 85%;
+	width: 100px;
 }
 
 .btn-group {
@@ -303,6 +303,7 @@ h5 {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
+    margin-top: 20px;
     cursor: pointer;
     font-weight: bold;
     font-size: 16px;
@@ -310,16 +311,19 @@ h5 {
 
 .modal .button-group .cancel {
     background-color: #6c757d;
+    margin-top: 20px;
     color: white;
 }
 
 .modal .button-group .save {
     background-color: #007bff;
+    margin-top: 20px;
     color: white;
 }
 
 .modal .button-group .clear {
     background-color: #dc3545;
+    margin-top: 20px;
     color: white;
 }
 #apprReason {
@@ -350,33 +354,13 @@ h5 {
     font-weight: bold;
 }
 
-.form-table {
-    appearance: none; /* 기본 브라우저 스타일 제거 */
-    -webkit-appearance: none; /* 크롬, 사파리 브라우저의 기본 스타일 제거 */
-    -moz-appearance: none; /* 파이어폭스 브라우저의 기본 스타일 제거 */
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 16px;
-    color: #495057;
-    width: 100%;
-    background-image: none; /* 드롭다운 화살표 제거 */
-    background-repeat: no-repeat;
-    background-position: right center;
+.container2 .doc-content table {
+    width: 100% !important;
+    border-collapse: collapse !important;
 }
 
-.form-table select {
-    padding-right: 30px; /* 선택된 텍스트가 드롭다운 버튼과 겹치지 않도록 여백 추가 */
-}
-
-.form-table select::-ms-expand {
-    display: none; /* IE에서 드롭다운 화살표 숨기기 */
-}
-
-/* 필요할 경우 추가 스타일 적용 */
-.form-table input[type="text"]:focus, .form-group select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+.container2 .doc-content th, .doc-content td {
+    border: 1px solid #dee2e6 !important;
+    padding: 10px !important; 
+    text-align: left !important;
 }

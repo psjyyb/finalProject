@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>ARION</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link th:href="@{/css/group/document/documentInfo.css}" rel="stylesheet"/>
 </head>
@@ -111,8 +110,10 @@
                 <th>내용</th>
                 <td>
                     <div>
-                        <span th:if="${docInfo.docContent}" th:utext="${docInfo.docContent}"></span>
-                    	<div  th:if="${holInfo.holType != null}" id="leaveForm" style="width: 100%;">
+                        <div class="doc-content">
+    						<span th:utext="${docInfo.docContent}"></span>
+						</div>
+                    	<div th:if="${holInfo != null} and ${holInfo.holType != null}" id="leaveForm" >
 						    <table class="form-table" style="border: 0px solid rgb(0, 0, 0); width: 1300px; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 1px; border-collapse: collapse;">
 						        <!-- Header -->
 						        <colgroup>

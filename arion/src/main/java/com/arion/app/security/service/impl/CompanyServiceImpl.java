@@ -47,7 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public CompanyVO findId(String ceoName, int companyBusinessNumber) {
+	public CompanyVO findId(String ceoName, long companyBusinessNumber) {
 		
 		CompanyVO companyVO = mapper.findId(ceoName, companyBusinessNumber);
 		if(companyVO != null) {

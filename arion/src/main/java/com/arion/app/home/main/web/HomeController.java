@@ -133,7 +133,7 @@ public class HomeController {
     
     @PostMapping("/home/findId")
     @ResponseBody
-    public Map<String, String> findCompanyId(@RequestParam("ceoName") String ceoName, @RequestParam("companyBusinessNumber") int companyBusinessNumber, Model model) {
+    public Map<String, String> findCompanyId(@RequestParam("ceoName") String ceoName, @RequestParam("companyBusinessNumber") long companyBusinessNumber, Model model) {
     	CompanyVO companyVO = csvc.findId(ceoName, companyBusinessNumber);
     	Map<String, String> response = new HashMap<>();
 		if(companyVO != null) {

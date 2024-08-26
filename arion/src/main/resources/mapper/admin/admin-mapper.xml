@@ -65,9 +65,7 @@
 		FROM company c 
 		JOIN contract t
 		ON c.company_code = t.company_code
-					<![CDATA[
-		WHERE final_date > sysdate
-							]]>
+		WHERE t.contract_state != '계약중'
 		ORDER BY t.contract_no
 	</select>
 	
@@ -199,7 +197,7 @@
 		SELECT COMPANY_TYPE AS label
 			  ,COUNT(*) AS result_value
 		FROM company
-		WHERE COMPANY_TYPE != 'ADMIN'
+		WHERE COMPANY_TYPE != 'admin'
 		GROUP BY COMPANY_TYPE	
 	</select>
 	<select id="areaChart" resultType="ChartVO">

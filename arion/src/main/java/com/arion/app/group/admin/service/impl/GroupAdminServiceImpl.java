@@ -241,7 +241,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 				evo.setCompanyCode(companyCode);
 				GroupAdminVO check =  userCntSelect(companyCode);
 				if(checkOverlapId(companyCode,evo.getEmployeeId())&&check.getUsersCnt()>0) {
-					System.out.println(evo+"비비비비ㅣ비비비비");
 					empInsert(evo);
 				}else {
 					failList.add(evo);

@@ -163,7 +163,7 @@ public class PayServiceImpl implements PayService {
 		return payMapper.updateComResp(contractVO);
 	}
 	@Transactional
-	//@Scheduled(cron = "0 0 12 * * ?") // 매일 낮 12 시에 실행, 초 분 시 월 요일
+	@Scheduled(cron = "0 0 12 * * ?") // 매일 낮 12 시에 실행, 초 분 시 월 요일
 	//@Scheduled(fixedDelay = 10000, initialDelay = 5000)
 	@Override
 	public Map<String, Object> schedulePayEnd() {
@@ -210,9 +210,6 @@ public class PayServiceImpl implements PayService {
 				String text = "안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 고객님의 계약기간이 5일 남았습니다. 서비스를 계속 이용하고 싶으시면 계약 갱신 또는 계약 수정을 해주시 바랍니다.";
 				String subject = "ARION 계약기간이 만료 5일전입니다.";
 				sendSimpleEmail(contract.getCeoEmail(),subject,text);
-
-
-
 			}
 			
 		});

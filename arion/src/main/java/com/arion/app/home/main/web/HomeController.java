@@ -118,14 +118,14 @@ public class HomeController {
     }
     
     
-    @PostMapping("/signUpForm")
+    @PostMapping("/home/signUpForm")
     public String signUpProcess(CompanyVO companyVO, Model model) {
         String companyCode = csvc.insertCompany(companyVO);
         model.addAttribute("companyCode", companyCode);
         return "home/signup/success";
     }
     
-    @GetMapping("/checkId")
+    @GetMapping("/home/checkId")
     @ResponseBody
     public boolean checkId(@RequestParam String companyId) {
         return csvc.IdCheck(companyId);

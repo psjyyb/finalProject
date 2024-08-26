@@ -120,7 +120,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: `/checkId?companyId=${companyId}`,
+            url: `/home/checkId?companyId=${companyId}`,
             type: "GET",
             dataType: "json",
             success: function(data) {

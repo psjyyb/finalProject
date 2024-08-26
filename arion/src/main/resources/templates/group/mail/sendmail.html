@@ -5,62 +5,61 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-     <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
+    <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>보낸 메일함</h1>
-        
-        <!-- 검색 기능 -->
-        <div class="search-container">
-            <form action="/group/mail/sendmail" method="GET" th:object="${criteria}">
-                <div>
-                    <label for="searchType">검색 유형</label>
-                    <select id="searchType" th:field="*{searchType}">
-                        <option value="" th:selected="${criteria.searchType == ''}">전체</option>
-                        <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
-                        <option value="receiverId" th:selected="${criteria.searchType == 'receiverId'}">수신인</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="keyword">검색어</label>
-                    <input type="text" id="keyword" th:field="*{keyword}" placeholder="검색어 입력" />
-                </div>
-                <button type="submit">검색</button>
-            </form>
+    <!-- 제목을 왼쪽 상단에 배치 -->
+    <h1>보낸 메일함</h1>
+
+    <!-- 검색 폼 -->
+    <div class="search-container">
+        <form action="/group/mail/sendmail" method="GET" th:object="${criteria}">
+            <select th:field="*{searchType}">
+                <option value="" th:selected="${criteria.searchType == ''}">전체</option>
+                <option value="mailtitle" th:selected="${criteria.searchType == 'mailtitle'}">제목</option>
+                <option value="receiverId" th:selected="${criteria.searchType == 'receiverId'}">수신인</option>
+            </select>
+            <input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <!-- 메일 테이블 -->
+    <form id="mailActionForm" action="/group/mail/removes" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox-container">
+                        <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
+                    </th>
+                    <th>수신인</th>
+                    <th>제목</th>
+                    <th>발송일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 전체 메일을 표시 -->
+                <tr th:each="mail : ${sendMailAll}">
+                    <td class="checkbox-container">
+                        <input type="checkbox" class="mailCheckbox" th:data-mail-no="${mail.mailNo}"> <!-- 각 메일의 ID를 데이터-셋으로 설정 -->
+                    </td>
+                    <td th:text="${mail.receiverId}">수신인</td>
+                    <td>
+                        <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
+                    </td>
+                    <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">발송일</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 삭제 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 -->
+        <div class="actions-container">
+            <button type="button" id="deleteSelected" class="delete-btn">휴지통</button>
         </div>
 
-        <!-- 메일 목록 테이블 -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="checkbox-container">
-                            <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
-                        </th>
-                        <th>수신인</th>
-                        <th>제목</th>
-                        <th>발송일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="mail : ${sendMailAll}">
-                        <td class="checkbox-container">
-                            <input type="checkbox" name="mailIds" value="${mail.mailNo}"> 
-                        </td>
-                        <td th:text="${mail.receiverId}">수신인</td>
-                        <td>
-                            <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
-                        </td>
-                        <td th:text="${#dates.format(mail.sendDate, 'yy-MM-dd HH:mm')}">발송일</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 페이지 네이션 -->
+        <!-- 페이지네이션을 가운데 아래에 배치 -->
         <ul class="pagination">
             <li th:if="${pageDTO.prev}">
                 <a th:href="@{|/group/mail/sendmail?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a>
@@ -73,35 +72,57 @@
                 <a th:href="@{|/group/mail/sendmail?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a>
             </li>
         </ul>
-        
-        <!-- 중요 메일함과 휴지통 버튼 -->
-        <div class="bottom-buttons">
-            <button id="importSelected" class="compose-btn">중요 메일함</button>
-            <button id="deleteSelected" class="delete-btn">휴지통</button>
-        </div>
-    </div>
+    </form>
 
+    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const isChecked = this.checked;
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
+        function getCheckedMailIds() {
+            const checkboxes = document.querySelectorAll('.mailCheckbox:checked');
+            const mailIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-mail-no'));
+            return mailIds;
+        }
+
+        document.getElementById('deleteSelected').addEventListener('click', function() {
+            const mailIds = getCheckedMailIds();
+            if (mailIds.length === 0) {
+                Swal.fire('메일을 선택해 주세요.');
+                return;
+            }
+
+            Swal.fire({
+                title: '정말로 삭제하시겠습니까?',
+                text: "선택한 메일을 삭제합니다.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '삭제하기',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/group/mail/removes', {
+                        action: 'DELETE',
+                        mailIds: mailIds
+                    }).then(function(response) {
+                        Swal.fire('성공!', '선택한 메일이 삭제되었습니다.', 'success').then(() => {
+                            window.location.href = '/group/mail/sendmail';
+                        });
+                    }).catch(function(error) {
+                        Swal.fire('실패!', '메일을 삭제하는 데 실패했습니다.', 'error');
+                        console.error('Error:', error);
+                    });
+                }
             });
         });
 
-        document.getElementById('deleteSelected').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
-            if (checkboxes.length > 0) {
-                if (confirm('선택한 메일을 삭제하시겠습니까?')) {
-                    const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
-                    // axios.post('/group/mail/delete', { ids: ids });
-                    alert(`삭제 요청: ${ids.join(', ')}`);
-                }
-            } else {
-                alert('삭제할 메일을 선택하세요.');
-            }
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const isChecked = this.checked;
+            const checkboxes = document.querySelectorAll('.mailCheckbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
         });
     </script>
 </body>

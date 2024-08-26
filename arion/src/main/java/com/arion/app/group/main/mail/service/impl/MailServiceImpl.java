@@ -91,6 +91,19 @@ public class MailServiceImpl implements MailService {
         return map;
     }
     
+    @Override
+    public Map<String, Object> removeMail(int mailNo) {
+        Map<String, Object> map = new HashMap<>();
+        boolean isSuccessed = false;
+        
+        int result = mailMapper.mailremove(mailNo);
+        if (result == 1) {
+            isSuccessed = true;
+        }
+        map.put("result", isSuccessed);
+        map.put("target", mailNo);
+        return map;
+    }
     //메일보내기
     @Transactional
     @Override
@@ -215,4 +228,13 @@ public class MailServiceImpl implements MailService {
     public void updateMailStatus(List<Integer> mailIds, String employeeId, String status) {
         mailMapper.updateMailStatus(mailIds, employeeId, status);
     }
+    
+    @Override
+    @Transactional
+    public void deleteMailStatus(List<Integer> mailIds, String employeeId, String status) {
+        mailMapper.updateMailStatus(mailIds, employeeId, status);
+    }
+    
+    
+    
 }

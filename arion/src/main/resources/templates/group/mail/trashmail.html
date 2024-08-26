@@ -7,10 +7,10 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/group/mail/mail.css}" rel="stylesheet" />
     <title>ARION</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <!-- 중요 메일함 제목 -->
+    <!-- 휴지통 제목 -->
     <h1>휴지통</h1>
 
     <!-- 검색 폼 -->
@@ -27,96 +27,127 @@
     </div>
 
     <!-- 메일 테이블 -->
-    <table>
-        <thead>
-            <tr>
-                <th class="checkbox-container">
-                    <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
-                </th>
-                <th>발신자</th>
-                <th>제목</th>
-                <th>수신일</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="mail : ${deleteMailAll}">
-                <td class="checkbox-container">
-                    <input type="checkbox" name="mailIds" value="${mail.mailNo}"> <!-- 각 메일의 ID를 값으로 설정 -->
-                </td>
-                <td th:text="${mail.senderName}">발신자 이름</td>
-                <td>
-                    <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
-                </td>
-                <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
-            </tr>
-        </tbody>
-    </table>
+    <form id="mailActionForm" action="/group/mail/actions" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox-container">
+                        <input type="checkbox" id="selectAll"> <!-- 전체 선택 체크박스 -->
+                    </th>
+                    <th>발신자</th>
+                    <th>제목</th>
+                    <th>수신일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="mail : ${deleteMailAll}">
+                    <td class="checkbox-container">
+                        <input type="checkbox" class="mailCheckbox" name="mailIds" th:value="${mail.mailNo}"> <!-- 각 메일의 ID를 value 속성에 설정 -->
+                    </td>
+                    <td th:text="${mail.senderName}">발신자 이름</td>
+                    <td>
+                        <a th:href="@{/group/mail/mailInfo/{mailNo}(mailNo=${mail.mailNo})}" th:text="${mail.mailTitle}">메일 제목</a>
+                    </td>
+                    <td th:text="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}">수신일</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <!-- 휴지통 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 -->
-    <div class="actions-container">
-        <button id="importSelected">복원</button>
-        <button id="deleteSelected">영구 삭제</button>
-    </div>
+        <!-- 휴지통 버튼을 테이블 끝나는 지점 오른쪽 아래에 배치 -->
+        <div class="actions-container">
+            <button type="button" id="restoreSelected">복원하기</button>
+            <button type="button" id="deleteSelected">영구 삭제</button>
+        </div>
 
-    <!-- 페이지네이션을 가운데 아래에 배치 -->
-    <ul class="pagination">
-        <li th:if="${pageDTO.prev}"><a th:href="@{|/group/mail/trash?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a></li>
-        <li th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}" th:classappend="${pageNum == criteria.pageNum} ? 'active'">
-            <a th:href="@{|/group/mail/trash?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
-        </li>
-        <li th:if="${pageDTO.next}"><a th:href="@{|/group/mail/trash?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a></li>
-    </ul>
+        <!-- 페이지네이션을 가운데 아래에 배치 -->
+        <ul class="pagination">
+            <li th:if="${pageDTO.prev}"><a th:href="@{|/group/mail/trashmail?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a></li>
+            <li th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}" th:classappend="${pageNum == criteria.pageNum} ? 'active'">
+                <a th:href="@{|/group/mail/trashmail?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
+            </li>
+            <li th:if="${pageDTO.next}"><a th:href="@{|/group/mail/trashmail?pageNum=${pageDTO.endPage + 1}|}">&raquo;</a></li>
+        </ul>
+    </form>
 
+    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const isChecked = this.checked;
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
+        document.getElementById('restoreSelected').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('input.mailCheckbox:checked');
+            const mailIds = Array.from(checkboxes).map(checkbox => checkbox.getAttribute('value'));
+
+            if (mailIds.length === 0) {
+                Swal.fire('메일을 선택해 주세요.');
+                return;
+            }
+
+            Swal.fire({
+                title: '메일 복원 확인',
+                text: "선택한 메일을 복원하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '복원하기',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/group/mail/actions', {
+                        action: 'RECEIVED',
+                        mailIds: mailIds
+                    }).then(function(response) {
+                        Swal.fire('성공!', '선택한 메일이 복원되었습니다.', 'success').then(() => {
+                            window.location.href = '/group/mail/trashmail';
+                        });
+                    }).catch(function(error) {
+                        Swal.fire('실패!', '메일을 복원하는 데 실패했습니다.', 'error');
+                        console.error('Error:', error);
+                    });
+                }
             });
         });
 
-        document.getElementById('importSelected').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
-            const mailIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+        document.getElementById('deleteSelected').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('input.mailCheckbox:checked');
+            const mailIds = Array.from(checkboxes).map(checkbox => checkbox.getAttribute('value'));
 
             if (mailIds.length === 0) {
-                alert('메일을 선택해 주세요.');
+                Swal.fire('메일을 선택해 주세요.');
                 return;
             }
 
-            if (confirm('선택한 메일을 복원하시겠습니까?')) {
-                axios.post('/group/mail/actions', {
-                    action: 'RESTORE',
-                    mailIds: mailIds
-                }).then(function(response) {
-                    window.location.href = '/group/mail/trash';
-                }).catch(function(error) {
-                    console.error('Error:', error);
-                });
-            }
+            Swal.fire({
+                title: '메일 영구 삭제 확인',
+                text: "선택한 메일을 영구 삭제하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '삭제하기',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/group/mail/actions', {
+                        action: 'DELETE',
+                        mailIds: mailIds
+                    }).then(function(response) {
+                        Swal.fire('성공!', '선택한 메일이 영구 삭제되었습니다.', 'success').then(() => {
+                            window.location.href = '/group/mail/trashmail';
+                        });
+                    }).catch(function(error) {
+                        Swal.fire('실패!', '메일을 삭제하는 데 실패했습니다.', 'error');
+                        console.error('Error:', error);
+                    });
+                }
+            });
         });
 
-        document.getElementById('deleteSelected').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="mailIds"]:checked');
-            const mailIds = Array.from(checkboxes).map(checkbox => checkbox.value);
-
-            if (mailIds.length === 0) {
-                alert('메일을 선택해 주세요.');
-                return;
-            }
-
-            if (confirm('선택한 메일을 영구 삭제하시겠습니까?')) {
-                axios.post('/group/mail/actions', {
-                    action: 'DELETE',
-                    mailIds: mailIds
-                }).then(function(response) {
-                    window.location.href = '/group/mail/trash';
-                }).catch(function(error) {
-                    console.error('Error:', error);
-                });
-            }
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const isChecked = this.checked;
+            const checkboxes = document.querySelectorAll('.mailCheckbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
         });
     </script>
 </body>

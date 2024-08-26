@@ -210,6 +210,9 @@ public class PayServiceImpl implements PayService {
 				String text = "안녕하세요 고객님! 저희 ARION 을 이용해 주셔서 감사합니다. 고객님의 계약기간이 5일 남았습니다. 서비스를 계속 이용하고 싶으시면 계약 갱신 또는 계약 수정을 해주시 바랍니다.";
 				String subject = "ARION 계약기간이 만료 5일전입니다.";
 				sendSimpleEmail(contract.getCeoEmail(),subject,text);
+
+
+
 			}
 			
 		});

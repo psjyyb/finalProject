@@ -297,7 +297,7 @@
             #{companyCode}
         )
     </insert>
-
+<!-- 수신메일 기준 삭제 -->
 <select id="selectMailStatus" parameterType="map" resultType="String">
     SELECT mail_status
     FROM mail_receive
@@ -305,7 +305,7 @@
     AND employee_id = #{employeeId}
 </select>
 
-<!-- 메일상태변경 -->
+<!-- 수신메일 기준 상태변경 -->
 <update id="updateMailStatus" parameterType="map">
     UPDATE mail_receive
     SET mail_status = #{status}
@@ -314,7 +314,25 @@
         #{mailNo}
     </foreach>
     AND employee_id = #{employeeId}
+   
 </update>
-
+ <!-- 보낸메일 기준 삭제 -->
+<select id="chooseMailStatus" parameterType="map" resultType="String">
+    SELECT mail_status
+    FROM mail
+    WHERE mail_no = #{mailNo}
+    AND employee_id = #{employeeId}
+</select>
+<!-- 수신메일 기준 상태변경 -->
+<update id="deleteMailStatus" parameterType="map">
+    UPDATE mail
+    SET mail_status = #{status}
+    WHERE mail_no IN
+    <foreach collection="mailIds" item="mailNo" open="(" separator="," close=")">
+        #{mailNo}
+    </foreach>
+    AND employee_id = #{employeeId}
+   
+</update>
 </mapper>
 

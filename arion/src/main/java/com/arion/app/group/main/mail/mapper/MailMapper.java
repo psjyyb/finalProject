@@ -42,6 +42,7 @@ public interface MailMapper {
     // 메일 삭제
     int mailDelete(int mailNo);
     
+    int mailremove(int mailNo);
     //메일 상세조회
     MailVO selectMailInfo(MailVO mailVO);
     //메일 파일조회
@@ -57,4 +58,7 @@ public interface MailMapper {
     String selectMailStatus(@Param("mailNo") Integer mailNo, @Param("employeeId") String employeeId);
     void updateMailStatus(List<Integer> mailIds, String employeeId, String status);
   
+    //보낸메일 삭제조회
+    String chooseMailStatus(@Param("mailNo") Integer mailNo, @Param("employeeId") String employeeId);
+    void deleteMailStatus(List<Integer> mailIds, String employeeId, String status);
 }

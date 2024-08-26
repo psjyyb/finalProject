@@ -1,91 +1,141 @@
-@charset "UTF-8";
-/* mail.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+/* General Styles */
 
 h1 {
-    margin: 20px;
-    display: inline-block;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
+/* Search Container Styles */
 .search-container {
-    display: inline-block;
-    float: right;
-    margin: 20px;
+    margin-bottom: 20px;
+}
+
+.search-container form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .search-container select,
-.search-container input {
-    margin-right: 5px;
-    padding: 5px;
-    font-size: 0.8rem;
+.search-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .search-container button {
-    padding: 5px 10px;
-    font-size: 0.8rem;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styles */
 .table-container {
-    margin: 20px;
+    margin-bottom: 20px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-th, td {
-    padding: 10px;
+table th, table td {
+    padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-th.checkbox-container,
-td.checkbox-container {
-    width: 5%;
+th.checkbox-container, td.checkbox-container {
+    width: 40px;
     text-align: center;
 }
 
-th, td a {
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+a {
+    color: #007bff;
     text-decoration: none;
-    color: #333;
 }
 
-.actions-container, .bottom-buttons {
-    margin-top: 20px;
-    text-align: right;
+a:hover {
+    text-decoration: underline;
 }
 
-.actions-container button, .bottom-buttons button {
-    padding: 5px 10px;
-    font-size: 0.8rem;
+/* Button Styles */
+.actions-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+button.compose-btn,
+button.delete-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    color: white;
+    font-size: 14px;
 }
 
-.pagination {
-    text-align: center;
+button.compose-btn {
+    background-color: #28a745;
+}
+
+button.delete-btn {
+    background-color: #dc3545;
+}
+
+button.compose-btn:hover {
+    background-color: #218838;
+}
+
+button.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Pagination Styles */
+ul.pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
     margin-top: 20px;
 }
 
-.pagination li {
-    display: inline;
+ul.pagination li {
     margin: 0 5px;
 }
 
-.pagination li.active a {
-    font-weight: bold;
-}
-
-.pagination a {
+ul.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #007bff;
     text-decoration: none;
-    color: #333;
+    border-radius: 4px;
 }
 
-.pagination a:hover {
-    text-decoration: underline;
+ul.pagination li a:hover,
+ul.pagination li a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
 }

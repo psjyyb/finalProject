@@ -165,54 +165,62 @@
 
    <!-- SweetAlert2 사용 JavaScript -->
    <script>
-      $(document).ready(function() {
-          // 출퇴근 버튼 처리
-          $('#attForm').on('submit', function(event) {
-              event.preventDefault();
-              
-              var attType = $('input[name="attType"]:checked').val();
-              var url = (attType === 'start') ? '/group/startAtt' : '/group/endAtt';
-              var successTitle = (attType === 'start') ? '출근 성공' : '퇴근 성공';
-              var successText = (attType === 'start') ? '출근 처리가 완료되었습니다.' : '퇴근 처리가 완료되었습니다.';
-              var errorText = (attType === 'start') ? '출근 처리에 실패했습니다. 다시 시도해 주세요.' : '퇴근 처리에 실패했습니다. 출근 기록이 있는지 확인하세요.';
+   $(document).ready(function() {
+	    // 출퇴근 버튼 처리
+	    $('#attForm').on('submit', function(event) {
+	        event.preventDefault();
+	        
+	        var attType = $('input[name="attType"]:checked').val();
+	        var url = (attType === 'start') ? '/group/startAtt' : '/group/endAtt';
+	        var successTitle = (attType === 'start') ? '출근 성공' : '퇴근 성공';
+	        var successText = (attType === 'start') ? '출근 처리가 완료되었습니다.' : '퇴근 처리가 완료되었습니다.';
+	        var errorText;
 
-              $.ajax({
-                  url: url,
-                  type: 'POST',
-                  success: function(response) {
-                      Swal.fire({
-                          icon: 'success',
-                          title: successTitle,
-                          text: successText,
-                          confirmButtonText: '확인'
-                      });
-                  },
-                  error: function(xhr, status, error) {
-                      Swal.fire({
-                          icon: 'error',
-                          title: '처리 실패',
-                          text: errorText,
-                          confirmButtonText: '확인'
-                      });
-                  }
-              });
-          });
+	        $.ajax({
+	            url: url,
+	            type: 'POST',
+	            success: function(response) {
+	                Swal.fire({
+	                    icon: 'success',
+	                    title: successTitle,
+	                    text: successText,
+	                    confirmButtonText: '확인'
+	                });
+	            },
+	            error: function(xhr, status, error) {
+	                if (xhr.responseText === 'already_checked_in') {
+	                    errorText = '이미 출근하셨습니다.';
+	                } else if (xhr.responseText === 'already_checked_out') {
+	                    errorText = '이미 퇴근하셨습니다.';
+	                } else {
+	                    errorText = '처리 중 오류가 발생했습니다.';
+	                }
 
-          // 현재 시간 표시
-          function updateTime() {
-              var now = new Date();
-              var hours = String(now.getHours()).padStart(2, '0');
-              var minutes = String(now.getMinutes()).padStart(2, '0');
-              var seconds = String(now.getSeconds()).padStart(2, '0');
-              $('#currentTime').text('현재 시간: ' + hours + ':' + minutes + ':' + seconds);
-          }
-          
-          // 시간 업데이트
-          setInterval(updateTime, 1000);
-          
-          // 페이지 로드 시 초기 시간 설정
-          updateTime();
-      });
+	                Swal.fire({
+	                    icon: 'error',
+	                    title: '',
+	                    text: errorText,
+	                    confirmButtonText: '확인'
+	                });
+	            }
+	        });
+	    });
+
+	    // 현재 시간 표시
+	    function updateTime() {
+	        var now = new Date();
+	        var hours = String(now.getHours()).padStart(2, '0');
+	        var minutes = String(now.getMinutes()).padStart(2, '0');
+	        var seconds = String(now.getSeconds()).padStart(2, '0');
+	        $('#currentTime').text('현재 시간: ' + hours + ':' + minutes + ':' + seconds);
+	    }
+
+	    // 시간 업데이트
+	    setInterval(updateTime, 1000);
+	    
+	    // 페이지 로드 시 초기 시간 설정
+	    updateTime();
+	});
    </script>
 </body>
 </html>

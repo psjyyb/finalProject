@@ -227,7 +227,6 @@ public class MailController {
     }
  // 메일 상태 변경 핸들러 수정
     @PostMapping("/actions")
-    
     public ResponseEntity<String> handleMailActions(@RequestBody MailVO mailVO) {
         System.out.println("Action: " + mailVO.getAction()); // 액션 값 출력
         System.out.println("Mail IDs: " + mailVO.getMailIds()); // 메일 ID 출력
@@ -238,9 +237,27 @@ public class MailController {
             mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "IMPORT");
         } else if ("TRASH".equals(mailVO.getAction())) {
             mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "TRASH");
+        } else if ("RECEIVED".equals(mailVO.getAction())) {
+            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "RECEIVED");
         }
         
         return ResponseEntity.ok("Success");
     }
+    
+    // 메일 상태 변경 핸들러 수정
+    @PostMapping("/removes")
+    public ResponseEntity<String> handleMail(@RequestBody MailVO mailVO) {
+        System.out.println("Action: " + mailVO.getAction()); // 액션 값 출력
+        System.out.println("Mail IDs: " + mailVO.getMailIds()); // 메일 ID 출력
 
+        String employeeId = (String) httpSession.getAttribute("loginId");
+
+        if ("DELETE".equals(mailVO.getAction())) {
+            // 메일 상태를 DELETE로 업데이트합니다.
+            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "DELETE");
+            System.out.println(mailVO.getAction()+"123123123123");
+        } 
+        
+        return ResponseEntity.ok("Success");
+    }
 }

@@ -119,27 +119,31 @@ public class GroupEmployeeController {
     @PostMapping("/group/endAtt")
     public ResponseEntity<String> endAtt() {
         Integer empNo = (Integer) httpSession.getAttribute("employeeNo");
-        System.out.println("됐냐 ?: " + empNo);
-        
+
         // empNo가 null인지 확인
         if (empNo == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("empNo내놔 ㅋ");
         }
-        
+
         // 출근 기록 조회
         AttVO attVO = attService.getAttendanceByDate(empNo, new Date());
-        
+
         if (attVO == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("님 출근아직안함 ㅋ");
         }
-        
+
+        // endTime이 이미 설정된 경우 (퇴근 처리된 경우)
+        if (attVO.getEndTime() != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("already_checked_out");
+        }
+
         // 퇴근 시간 설정 및 empNo 명시적으로 설정
         attVO.setEmpNo(empNo);
         attVO.setEndTime(new Date());
-        
+
         // 퇴근 기록 업데이트
         int result = attService.endAtt(attVO);
-        
+
         if (result == 1) {
             return ResponseEntity.ok("success"); // 퇴근 성공
         } else {

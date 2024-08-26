@@ -6,7 +6,7 @@
     <select id="selectAttendanceByDate" resultType="AttVO">
  			      SELECT *
        			 FROM attendance
-       			 WHERE employee_no = 6
+       			 WHERE employee_no = #{empNo}
          		 AND TRUNC(att_date) = TRUNC(SYSDATE)
 
         

@@ -29,6 +29,8 @@ public interface MailService {
     // 메일 삭제
     Map<String, Object> deleteMail(MailVO mailVO);
 
+    Map<String, Object> removeMail(int mailNo);
+
     // 메일 보내기
     int sendMail(MailVO mailVO, MultipartFile[] files);
   
@@ -41,5 +43,5 @@ public interface MailService {
     MailVO mailInfo(MailVO mailVO);
     //메일 상태변경
     void updateMailStatus(List<Integer> mailIds, String employeeId,String status);
-    
+    void deleteMailStatus(List<Integer> mailIds, String employeeId,String status);
 }

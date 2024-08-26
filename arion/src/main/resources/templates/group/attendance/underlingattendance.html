@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-
+<link rel="stylesheet" th:href="@{/css/group/attendance/myattendance.css}">
 <title>underlingattendance</title>
 </head>
 <input type="hidden" id="employeeno"  th:value="${employeeNo}")>
@@ -15,21 +15,21 @@
 
 	
 	
-			<div colspan="4" align="center" display="inline">
+			<div class="action-bar" colspan="4" align="center" display="inline">
 	
-	<button id="before"></button>
+	<button class="month" id="before"></button>
 			
 	<h2 id="yearmonth" ></h2>
 			
-	<button id="next"></button>
+	<button class="month" id="next"></button>
 			
-	<button id="today">오늘</button>
+	<button class="month" id="today">오늘</button>
 	
     </div>
 			
 			<div colspan="4" align="right">
-			<button id="download">다운로드</button>
-			<a href="/group/attendance/attendancelist">되돌아가기</a>
+			<button id="download" class="styled-button">다운로드</button>
+			<a class="styled-button" href="/group/attendance/attendancelist">되돌아가기</a>
 
 		</div>
 		

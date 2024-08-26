@@ -5,29 +5,30 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-
+<link rel="stylesheet" th:href="@{/css/group/attendance/myworktime.css}">
 <title>underlingworktime</title>
 </head>
 <input type="hidden" id="employeeno"  th:value="${employeeNo}")>
-<h2 th:text="${underlingName}+'의 근무시간'"></h2>
+<h2 id="title" th:text="${underlingName}+'의 근무시간'"></h2>
 
 <body onload="autoReload();">
 
 	
-	<div colspan="4" align="center" display="inline">
+	<div class="action-bar" colspan="4" align="center" display="inline">
 	
-	<button id="before"></button>
+	<button class="month" id="before"></button>
 			
 	<h2 id="yearmonth" ></h2>
 			
-	<button id="next"></button>
-			
-	<button id="today">오늘</button>
+	<button class="month" id="next"></button>
 	
+	<div align="center">		
+	<button class="month" id="today">오늘</button>
+	</div>
     </div>	
 			<div colspan="4" align="right">
-			<button id="download">다운로드</button>
-			<a href="/group/attendance/worktimelist">되돌아가기</a>
+			<button id="download" class="styled-button">다운로드</button>
+			<a class="styled-button" href="/group/attendance/worktimelist">되돌아가기</a>
 	</div>
 						
 		<table align="center" id="worktimetable" width="80%"  height ="30%">

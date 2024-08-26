@@ -60,7 +60,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "/findId",
+            url: "/home/findId",
             data: {
                 ceoName: ceoName,
                 companyBusinessNumber: businessNumber
@@ -91,7 +91,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "/resetPassword",
+            url: "/home/resetPassword",
             data: {
                 companyCode: companyCode,
                 companyId: companyId

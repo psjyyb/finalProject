@@ -131,7 +131,7 @@ public class HomeController {
         return csvc.IdCheck(companyId);
     }
     
-    @PostMapping("/findId")
+    @PostMapping("/home/findId")
     @ResponseBody
     public Map<String, String> findCompanyId(@RequestParam("ceoName") String ceoName, @RequestParam("companyBusinessNumber") int companyBusinessNumber, Model model) {
     	CompanyVO companyVO = csvc.findId(ceoName, companyBusinessNumber);
@@ -144,7 +144,7 @@ public class HomeController {
     	return response; 	
     }
     
-    @PostMapping("/resetPassword")
+    @PostMapping("/home/resetPassword")
     @ResponseBody
     public Map<String, String> resetPassword(@RequestParam("companyCode") String companyCode, 
                                 @RequestParam("companyId") String companyId, 

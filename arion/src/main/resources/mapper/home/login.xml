@@ -28,7 +28,7 @@
                e.employee_resp,
                d.department_no,
                'employee' AS loginType
-        FROM employees e JOIN departments d
+        FROM employees e LEFT JOIN departments d
         				 ON e.department_name = d.department_name
         WHERE e.company_code = #{companyCode} 
           AND e.employee_id = #{userId}

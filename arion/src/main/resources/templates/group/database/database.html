@@ -5,6 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/group/database/database.css}">
 <title>database</title>
 <input type="hidden" id="companycode"  th:value="${session.companyCode}">
 <input type="hidden" id="ranking"  th:value="${ranking}">
@@ -12,7 +13,7 @@
 </head>
 
 <body onload="autoReload();">
-	 
+	 <div id="create">
 	           <div id="createforder">
 	           <input type="hidden" id="csuperforderid">
 	           <span class="label">상위폴더이름:</span><input type="text" id="fsuperforder" value="" readonly>
@@ -22,46 +23,60 @@
 					<option th:each=" underrank :${underranks}" th:value="${underrank.rankranking}"
 						th:text="${underrank.rankname}">없음</option>
 				</select>
-				<button id="forderup">폴더생성</button>
+				<button class="styled-button" id="forderup">폴더생성</button>
 			</div>
 			<div id="uploadfile">
 	           <input type="hidden" id="usuperforderid">
 	           <span class="label">상위폴더이름:</span><input type="text" id="usuperforder" value="" readonly>
 	 
 				<label for="files">첨부파일</label>
-                <input type="file" id="files" name="files" multiple>
-				<button id="upload">업로드</button>
+                <input type="file" id="files" name="files" class="styled-button" multiple>
+				<button class="styled-button" id="upload">업로드</button>
 			</div>
-			<div id="popMenu"  style="display: none; width:300px; border: 1px solid;">        
-            <p id="mforder">하위폴더 생성</p>
-            <p id="mupload">파일 업로드</p>
-             <p id="forderdelete">폴더 삭제</p>       
-    </div>
+			
+						
+		</div>	
+		
+    <!-- 자료실 -->
+    <div class="clouds">
+
 	<div id="1" style="width:500px; align:left; display: inline-block;" >
 	자료실
 	</div>
 	
-	<div id="1" style="width:500px; align:right; display: inline-block;" >
-	
-	<div>
+    </div>
+     <!-- 자료정보 -->
+    <div id="fileinfomation" style="width:500px; align:right; display: inline-block;" >	
+	<div class="filediv">
 	<span class="label" >상위폴더이름:</span><text id="supername" readonly>부모이름</text>
 	</div>
-	<div>
+	<div class="filediv">
 	<span class="label" >업로더:</span><text id="uploadername" readonly>업로더이름</text>
 	</div>
-	<div>
+	<div class="filediv">
 	<span class="label" >파일이름:</span><text id="filename" readonly>파일이름</text>
 	</div>
-		<div>
+		<div class="filediv">
 	<span class="label" >업로드 날짜:</span><text id="uploaddate" readonly>업로드 날짜</text>
-		</div>
-		<div>
+		</div >
+		<div class="filediv">
 	<span class="label" >파일 크기:</span><text id="size" readonly>파일 크기</text>
+	</div>	
+	<a id="download" class="filedivbutton">다운로드</a>
+	<button id="delete" class="filedivbutton">삭제</button>
 	</div>
 	
-	<a id="download">다운로드</a>
-	<button id="delete">삭제</button>
-	</div>
+	
+	
+	
+	
+    <div id="popMenu"  style="display: none; width:300px; border: 1px solid; background-color: white; ">        
+            <p id="mforder">하위폴더 생성</p>
+            <p id="mupload">파일 업로드</p>
+             <p id="forderdelete">폴더 삭제</p>       
+    </div>
+     
+	
 	
 	
 	<script th:src="@{/js/group/database/database.js}"></script>

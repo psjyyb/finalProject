@@ -61,19 +61,26 @@ public class DatabaseController {
 			model.addAttribute("underranks", UnderRank);
 			model.addAttribute("ranking", ranking);
 			return "group/database/database";
-		}
-		
-		
+		}		
 		       //ajax db 첫접속
 				@RequestMapping("/start")
 				@ResponseBody
 				public Map<String, Object> start(HttpServletRequest request,
 						@RequestParam(value = "companycode",required = false) String companycode) throws Exception {
+					Integer startfordercheck =databaseservice.startfordercheck(companycode);
+					HttpSession session = request.getSession();			
 					
-					List<CFileVO> startforder= databaseservice.startforder(companycode);				
-					System.out.println(startforder);
+					String uploader = (String)session.getAttribute("empName");
+					if(startfordercheck==null) {
+						
+						System.out.println("최상단 폴더생성");
+						databaseservice.startfordercreate(companycode,uploader);						
+					}
+					
+//					List<CFileVO> startforder= databaseservice.startforder(companycode);				
+//					System.out.println(startforder);
+//					result.put("startforder", startforder);
 					Map<String, Object> result = new HashMap<String, Object>();
-					result.put("startforder", startforder);
 					return result;
 				}
 				

@@ -84,4 +84,16 @@ public class DatabaseServicelmpl implements DatabaseService{
 		// TODO Auto-generated method stub
 		return databasemapper.forderdelete(companycode, deleteid);
 	}
+
+	@Override
+	public Integer startfordercheck(String companycode) {
+		// TODO Auto-generated method stub
+		return databasemapper.startfordercheck(companycode);
+	}
+	
+	@Override
+	public int startfordercreate(String companycode,String uploader) {
+		// TODO Auto-generated method stub
+		return databasemapper.startfordercreate(companycode,uploader);
+	}
 }

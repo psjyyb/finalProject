@@ -15,6 +15,10 @@ public interface DatabaseMapper {
 	
 	public List<CFileVO> start(String companycode);
 	
+	public Integer startfordercheck(String companycode);
+	
+	public int startfordercreate(String companycode,String uploader);
+	
 	public List<UnderRankVO> underrank(int ranking);
 	
 	public List<CFileVO> filelist(String companycode, int parent);

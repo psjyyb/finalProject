@@ -1,0 +1,106 @@
+@charset "UTF-8";
+
+#createforder {
+	margin: 20px;
+	width: 300px;
+	 display: flex;
+	flex-direction: column;
+	border: 1px solid black;
+	background-color: white; 
+}
+
+.styled-button {
+    padding: 5px 10px; /* 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: 1px solid black;
+    border-radius: 4px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+}
+
+#uploadfile {
+	margin: 20px;
+	width: 300px;
+	 display: flex;
+	flex-direction: column;
+	border: 1px solid black;
+	background-color: white; 
+}
+
+#create {
+	background-color: white; 
+	 display: flex;
+	width: 70%;
+	border: 1px solid black;
+	display: flex; /* Flexbox 사용 */
+            justify-content: center; /* 가로 방향 중앙 정렬 */
+            margin-left: 50px;
+}
+
+input {
+	margin: 10px;
+	
+}
+
+span {
+	margin: 10px;
+	
+}
+
+select {
+	margin: 10px;
+	
+}
+
+label {
+	margin: 10px;
+	
+}
+
+#upload {
+
+	 margin-top: auto;
+}
+
+
+.filedivbutton {
+	padding: 5px 10px; /* 내부 여백 */
+    font-size: 16px; /* 글꼴 크기 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: 1px solid black;
+    border-radius: 4px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+	margin-top: 30px;
+	margin-left: 30px;
+	}
+
+.filediv {
+	
+	margin: 10px;	
+}
+
+.clouds {
+	 
+	background-color: white; 
+	margin-top: 50px;
+	margin-left: 50px;
+	width: 30%;
+     min-height: 300px;
+    justify-content: center; /* 가로 가운데 정렬 */
+    border: 2px solid #000; /* 테두리 추가 */
+}
+
+#fileinfomation {
+	 
+	background-color: white; 
+	margin: 50px;
+	width: 300px;
+	
+	flex-direction: column;
+	border: 1px solid black;
+	margin-right: 50px;
+}

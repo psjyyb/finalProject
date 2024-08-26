@@ -5,12 +5,8 @@ var selectdataid=null;
  var selectdataname=null;
  
 function autoReload()
-	{     
-		      /*  var dt = document.getElementById("1"); 
-		        dt.val('open');
-		  dt.addEventListener('contextmenu', contextmenuClick);*/
-		    		    
-		    		 $('#1').val('open').addClass('forder');   
+	{     		    		    
+		    		 $('#1').val('close').addClass('forder');   
 		    		    $('#1').on('contextmenu', contextmenuClick);
 							$('#1').on('click', folderClick);
 							
@@ -25,7 +21,7 @@ function autoReload()
 		 dataType:"json",
 		 async: false,
            success : function(data) {
-			 			let startforder = data.startforder;
+			 			/*let startforder = data.startforder;
 			 			console.log(startforder);
 			 			
 			 			$.each(startforder, function(key, value) {
@@ -35,10 +31,10 @@ function autoReload()
 							
 							$('#1').append(newDiv);
 								                		          
-		     })							
+		     })					*/		
 			 
 		   }
-		})		
+		})	
 	 }
 	 	 	 	  
 	  function contextmenuClick(event) {
@@ -163,7 +159,7 @@ function autoReload()
 							
 							}
 							else if(type=='file'){
-							newDiv = $('<div></div>').addClass('file').css({'white-space':'pre'}).attr('id', value.me).text(gap+value.filename);
+							newDiv = $('<div></div>').addClass('file').css({'white-space':'pre','color': '#46B8FF'}).attr('id', value.me).text(gap+value.filename);
 							newDiv.on('click', fileClick);
 							}
 							$('#'+clickforder).append(newDiv);
@@ -316,7 +312,7 @@ function autoReload()
 							console.log(value.level);
 							 let gap=' '.repeat(value.level*3);
 							 let newDiv;
-						    newDiv = $('<div></div>').addClass('file').css({'white-space':'pre'}).attr('id', value.me).val('close').text(gap+value.filename);
+						    newDiv = $('<div></div>').addClass('file').css({'white-space':'pre','color': '#46B8FF'}).attr('id', value.me).val('close').text(gap+value.filename);
 							
 							newDiv.on('click', fileClick);
 							if($('#'+$('#usuperforderid').val()).val()=='open'){

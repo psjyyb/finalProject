@@ -8,6 +8,18 @@
         WHERE company_code=#{companycode} AND rank_name = #{rankname}
 	</select>
 
+<select id="startfordercheck" resultType="Integer">      
+ 		SELECT me,company_code
+        FROM CLOUDS
+        WHERE company_code = #{companycode}
+        AND me =1 
+	</select>  
+
+    <insert id="startfordercreate">
+     INSERT INTO CLOUDS(me,company_code,uploader,file_name,upload_date,forder,c_name)
+     VALUES(1,#{companycode},#{uploader},'자료실',sysdate,'Y','자료실')        
+	</insert> 
+
 <select id="start" resultType="CFileVO">      
  		
         SELECT level, me,company_code,parent,uploader,file_name,upload_date,c_size,forder,c_name,department_no,rank_id,c_form
@@ -21,7 +33,7 @@
 	<select id="underrank" resultType="UnderRankVO">      
  		SELECT rank_name,rank_ranking
         FROM RANK
-        WHERE rank_ranking  <![CDATA[<=]]>#{ranking} 
+        WHERE rank_ranking  <![CDATA[>=]]>#{ranking} 
 	</select>   
 	
 	<select id="filelist" resultType="CFileVO">      

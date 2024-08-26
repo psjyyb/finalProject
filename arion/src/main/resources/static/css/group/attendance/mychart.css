@@ -40,3 +40,8 @@ h2 {
     transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
 	 border: 1px solid black;
 }
+
+#title {
+  
+   text-align: center;
+}

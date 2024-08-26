@@ -31,7 +31,7 @@ public class ReplyController {
 		int bno = replyService.insertReply(replyVO);
 		return "redirect:/group/freeboardInfo?boardNo=" + replyVO.getBoardNo();
 	}
-
+	
 	// 댓글 수정
 	@PostMapping("/group/updateReply")
 	@ResponseBody

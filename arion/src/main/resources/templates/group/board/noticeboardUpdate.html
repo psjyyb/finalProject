@@ -50,113 +50,116 @@
         </form>
     </div>
 
-    <script>
-        $(function(){
-            var oEditors = [];
-            nhn.husky.EZCreator.createInIFrame({
-                oAppRef : oEditors,
-                elPlaceHolder : "boardContent",
-                sSkinURI : "/smarteditor2/SmartEditor2Skin.html",
-                fCreator : "createSEditor2"
-            });
-
-            let fileList = [];
-            
-            $('#files').on('change', function(e) {
-                const fileListTable = $('#fileListTable tbody');
-
-                $.each(e.target.files, function(index, file) {
-                    fileList.push(file);
-                    const newRow = $('<tr>');
-                    newRow.append($('<td>').text(file.name));
-                    const removeButton = $('<td>').append($('<span class="remove-file">x</span>').on('click', function() {
-                        const rowIndex = $(this).closest('tr').index();
-                        fileList.splice(rowIndex, 1);
-                        $(this).closest('tr').remove();
-                    }));
-                    newRow.append(removeButton);
-                    fileListTable.append(newRow);
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $(function() {
+                var oEditors = [];
+                nhn.husky.EZCreator.createInIFrame({
+                    oAppRef: oEditors,
+                    elPlaceHolder: "boardContent",
+                    sSkinURI: "/smarteditor2/SmartEditor2Skin.html",
+                    fCreator: "createSEditor2"
                 });
 
-                $('#files').val('');
-            });
-            
-            $('#updateBtn').on('click', boardUpdateAjax);
-            let bno = $('#updateBtn').data('bno-no');
+                let fileList = [];
 
-            function boardUpdateAjax(event){
-                event.preventDefault();
+                $('#files').on('change', function(e) {
+                    const fileListTable = $('#fileListTable tbody');
 
-                oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
-
-                let title = $('input[name="boardTitle"]').val().trim();
-                let content = $('textarea[name="boardContent"]').val().trim();
-
-                if (title === '') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '제목이 입력되지 않았습니다',
-                        text: '제목을 입력해주세요',
-                        confirmButtonText: '확인'
+                    $.each(e.target.files, function(index, file) {
+                        fileList.push(file);
+                        const newRow = $('<tr>');
+                        newRow.append($('<td>').text(file.name));
+                        const removeButton = $('<td>').append($('<span class="remove-file">x</span>').on('click', function() {
+                            const rowIndex = $(this).closest('tr').index();
+                            fileList.splice(rowIndex, 1);
+                            $(this).closest('tr').remove();
+                        }));
+                        newRow.append(removeButton);
+                        fileListTable.append(newRow);
                     });
-                    return;
-                }
-                if (content === '') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '내용이 입력되지 않았습니다',
-                        text: '내용을 입력해주세요',
-                        confirmButtonText: '확인'
-                    });
-                    return;
-                }
 
-                let info = getBoardInfo();
+                    $('#files').val('');
+                });
+                
+                $('#updateBtn').on('click', boardUpdateAjax);    
+                let bno = $('#updateBtn').data('bno-no');
 
-				//FormData 객체를 생성하고, 폼의 모든 데이터를 추가합니다.
-				const formData = new FormData($('form[name="UpdateForm"]')[0]);
+                function boardUpdateAjax(event) {
+                    event.preventDefault(); // 기본 동작 방지
 
-				// 파일 데이터를 추가합니다.
-				$.each(fileList, function(index, file) {
-				    formData.append('files', file);
-				});
-					
-                $.ajax({
-                    url: 'noticeboardUpdate',
-                    type: 'post',
-                    data: formData,
-                    processData: false, // FormData 객체를 문자열로 변환하지 않음
-                    contentType: false  // 요청의 Content-Type을 설정하지 않음
-                })
-                .done(data => {
-                    if (data.result) {
+                    oEditors.getById["boardContent"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                    let title = $('input[name="boardTitle"]').val().trim();
+                    let content = $('textarea[name="boardContent"]').val().trim();
+
+                    if (title === '') {
                         Swal.fire({
-                            icon: 'success',
-                            title: '정상적으로 수정되었습니다',
-                            confirmButtonText: '확인'
-                        }).then(() => {
-                            location.href = `/group/noticeboardInfo?boardNo=` + bno;
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '수정되지 않았습니다',
-                            text: '값을 입력해주세요',
+                            icon: 'warning',
+                            title: '제목이 입력되지 않았습니다',
+                            text: '제목을 입력해주세요',
                             confirmButtonText: '확인'
                         });
+                        return;
                     }
-                })
-                .fail(err => console.log(err));
-            }
+                    if (content === '') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '내용이 입력되지 않았습니다',
+                            text: '내용을 입력해주세요',
+                            confirmButtonText: '확인'
+                        });
+                        return;
+                    }
 
-            function getBoardInfo() {
-                let formData = $('form[name="UpdateForm"]').serializeArray();
-                let objData = {};
-                $.each(formData, (idx, input) => {
-                    objData[input.name] = input.value;
-                });
-                return objData;
-            }
+                    let info = getBoardInfo();
+                    console.log(info);
+                    
+                    // FormData 객체를 생성하고, 폼의 모든 데이터를 추가합니다.
+                    const formData = new FormData($('form[name="UpdateForm"]')[0]);
+
+                    // 파일 데이터를 추가합니다.
+                    $.each(fileList, function(index, file) {
+                        formData.append('files', file);
+                    });
+                    
+                    $.ajax({
+                        url: 'noticeboardUpdate',
+                        type: 'post',
+                        data: formData,
+                        processData: false, // FormData 객체를 문자열로 변환하지 않음
+                        contentType: false  // 요청의 Content-Type을 설정하지 않음
+                    })
+                    .done(data => {
+                        if (data.result) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '정상적으로 수정되었습니다',
+                                confirmButtonText: '확인'
+                            }).then(() => {
+                                location.href = `/group/noticeboardInfo?boardNo=` + bno;
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '수정되지 않았습니다',
+                                text: '값을 입력해주세요',
+                                confirmButtonText: '확인'
+                            });
+                        }
+                    })
+                    .fail(err => console.log(err));
+                };
+
+                function getBoardInfo() {
+                    let formData = $('form[name="UpdateForm"]').serializeArray();
+                    let objData = {};
+                    $.each(formData, (idx, input) => {
+                        objData[input.name] = input.value;
+                    });
+                    return objData;
+                };
+            });
         });
     </script>
 </body>

@@ -11,6 +11,9 @@ public interface ReplyService {
  	// 댓글 등록
  	public int insertReply(ReplyVO replyVO);
  	
+ 	// 답글 등록
+ 	// public int insertReplyReply(ReplyVO replyVO);
+ 	
  	// 댓글 수정
  	public Map<String, Object> updateReply(ReplyVO replyVO);
 

@@ -26,8 +26,8 @@
                 <textarea name="boardContent" id="boardContent" placeholder="내용을 입력해주세요" rows="10"></textarea>
             </div>
             <div class="form-group">
-				<label>첨부파일</label> <label for="files" class="custom-file-upload"></label> 
-				<input type="file" id="files" name="files" multiple>
+				<label>첨부파일</label> <label for="fileUpload" class="custom-file-upload"></label> 
+				<input type="file" id="fileUpload" name="files" multiple>
 				<table id="fileListTable">
 					<thead>
 						<tr>
@@ -59,6 +59,31 @@
 
             $('form[name=insertForm]').on('submit', boardInsertHandler);
 
+            let fileList = [];
+
+            $('#fileUpload').on('change', function(e) {
+               const fileListTable = $('#fileListTable tbody');
+               const files = e.target.files;
+
+               // 파일 목록 추가
+               $.each(e.target.files, function(index, file) {
+                   fileList.push(file);
+                   const newRow = $('<tr>');
+                   newRow.append($('<td>').text(file.name));
+                   
+                   const removeButton = $('<td>').append($('<span class="remove-file">X</span>').on('click', function() {
+                       const rowIndex = $(this).closest('tr').index();
+                       fileList.splice(rowIndex, 1); // 파일 목록에서 삭제
+                       $(this).closest('tr').remove(); // 테이블에서 삭제
+                   }));
+                   
+                   newRow.append(removeButton);
+                   fileListTable.append(newRow);
+               });
+
+               $('#fileUpload').val('');
+           }); 
+            
             function boardInsertHandler(event) {
                 event.preventDefault();
 

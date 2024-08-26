@@ -44,20 +44,37 @@ VALUES
     (
         comm_seq.NEXTVAL,
         #{commentContent},
-        <choose>
-            <when test="parentNo != null and parentNo > 0">
-                #{parentNo}
-            </when>
-            <otherwise>
-                NULL
-            </otherwise>
-        </choose>,
+        NULL,
         #{commentWrite},
         SYSDATE,
         #{boardNo},
         #{companyCode}
     )
 </insert>
+
+<!--  답글 작성 
+<insert id="insertReplyReply" parameterType="ReplyVO">
+INSERT INTO comments
+    (
+        comment_no,
+        comment_content,
+        parent_no,
+        comment_write,
+        comment_date,
+        board_no,
+        company_code
+    )
+VALUES
+    (
+        comm_seq.NEXTVAL,
+        #{commentContent},
+        #{parentNo},
+        #{commentWrite},
+        SYSDATE,
+        #{boardNo},
+        #{companyCode}
+    )
+</insert> -->
 
 <!-- 댓글 수정 -->
 <update id="updateReply" parameterType="ReplyVO">

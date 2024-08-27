@@ -150,4 +150,19 @@ public class GroupEmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error"); // 퇴근 실패
         }
     }
+    // 출퇴근 기록
+    @GetMapping("/attendance")
+    public String getAttendancePage(Model model, HttpSession session) {
+        Integer empNo = (Integer) session.getAttribute("empNo");
+        
+        if (empNo == null) {
+            return "redirect:/login"; 
+        }
+
+        // 출퇴근 상태 조회
+        AttVO attVO = attService.getAttendanceStatus(empNo);
+        model.addAttribute("attendanceStatus", attVO);
+        System.out.println(empNo+"과연");
+        return "group/main/groupMain";
+    }
 }

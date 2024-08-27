@@ -40,4 +40,12 @@
         AND att_date = #{attDate}
     </update>
 
+
+  <select id="selectAttendanceStatus" parameterType="int" resultType="AttVO">
+        SELECT * 
+        FROM attendance
+        WHERE employee_no = #{empNo}
+        AND TRUNC(att_date) = TRUNC(SYSDATE)
+    </select>
+    
 </mapper>

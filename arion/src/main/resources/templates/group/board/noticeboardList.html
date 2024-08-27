@@ -27,11 +27,10 @@
             </form>
             <button type="button" class="styled-button" th:onclick="|location.href='@{noticeboardInsert}'|"
 			 th:if="${session.employeeResp == '관리직' or session.employeeResp == '임원'}" >글쓰기</button>
-				<!-- th:if="${session.rankName == '사장' or session.rankName == '부사장'}">글쓰기</button> -->
         </div>
 
         <!-- 게시판 테이블 -->
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>제목</th>

@@ -61,7 +61,8 @@
 
         <!-- 페이지네이션을 가운데 아래에 배치 -->
         <ul class="pagination">
-            <li th:if="${pageDTO.prev}"><a th:href="@{|/group/mail/importmail?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a></li>
+            <li th:if="${pageDTO.prev}">
+            <a th:href="@{|/group/mail/importmail?pageNum=${pageDTO.startPage - 1}|}">&laquo;</a></li>
             <li th:each="pageNum : ${#numbers.sequence(pageDTO.startPage, pageDTO.endPage)}" th:classappend="${pageNum == criteria.pageNum} ? 'active'">
                 <a th:href="@{|/group/mail/importmail?pageNum=${pageNum}|}" th:text="${pageNum}">1</a>
             </li>

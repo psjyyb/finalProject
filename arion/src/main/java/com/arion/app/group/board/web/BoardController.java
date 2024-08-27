@@ -105,10 +105,15 @@ public class BoardController {
 
 	// 공지사항 게시글 수정 (페이지)
 	@GetMapping("/group/noticeboardUpdate")
-	public String noticeboardUpdateForm(BoardVO boardVO, Model model, HttpSession session) {
+	public String noticeUpdateForm(BoardVO boardVO, Model model, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
-		BoardVO findVO = boardService.noticeboardInfo(boardVO);
+		
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
+		model.addAttribute("fileInfo", fileVOList);
+		
+		BoardVO findVO = boardService.boardInfo(boardVO);
 		model.addAttribute("board", findVO);
 		
 		return "group/board/noticeboardUpdate";
@@ -117,10 +122,13 @@ public class BoardController {
 	// 공지사항 게시글 수정 (처리)
 	@PostMapping("/group/noticeboardUpdate")
 	@ResponseBody
-	public Map<String, Object> noticeUpdateProcess(@RequestBody BoardVO boardVO, MultipartFile[] files, HttpSession session) {
+	public Map<String, Object> noticeUpdateProcess(BoardVO boardVO, 
+			 @RequestParam("files") MultipartFile[] files, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
-		return boardService.noticeupdateBoard(boardVO, files, companyCode);
+		
+		return boardService.updateBoard(boardVO, files, companyCode);
 	}
 
 	// 공지사항 게시글 삭제 (처리)
@@ -296,22 +304,30 @@ public class BoardController {
 
 	// 부서게시판 게시글 수정 (페이지)
 	@GetMapping("/group/deptboardUpdate")
-	public String deptboardUpdateForm(BoardVO boardVO, Model model, HttpSession session) {
+	public String deptUpdateForm(BoardVO boardVO, Model model, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
-		BoardVO findVO = boardService.deptboardInfo(boardVO);
-	    
+		
+		List<FileVO> fileVOList = fsvc.selectFiles("board", boardVO.getBoardNo(), companyCode);
+		model.addAttribute("fileInfo", fileVOList);
+		
+		BoardVO findVO = boardService.boardInfo(boardVO);
 		model.addAttribute("board", findVO);
+		
 		return "group/board/deptboardUpdate";
 	}
 
 	// 부서게시판 게시글 수정 (처리)
 	@PostMapping("/group/deptboardUpdate")
 	@ResponseBody
-	public Map<String, Object> deptUpdateProcess(@RequestBody BoardVO boardVO, MultipartFile[] files, HttpSession session) {
+	public Map<String, Object> deptUpdateProcess(BoardVO boardVO, 
+			 @RequestParam("files") MultipartFile[] files, HttpSession session) {
+		
 		String companyCode = (String) session.getAttribute("companyCode");
 		boardVO.setCompanyCode(companyCode);
-		return boardService.deptupdateBoard(boardVO, files, companyCode);
+		
+		return boardService.updateBoard(boardVO, files, companyCode);
 	}
 
 	// 부서게시판 게시글 삭제 (처리)

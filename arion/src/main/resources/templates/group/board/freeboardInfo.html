@@ -108,8 +108,7 @@
 
 <!-- 댓글 입력 폼 -->
 <div class="comment-container">
-    <form id="replyForm" action="/freeboardInfo" method="POST">
-        <input type="hidden" name="commentNo" id="commentNo" />
+    <form id="replyForm" method="POST">
         <textarea name="commentContent" id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
         <!-- 댓글 입력 폼 -->
 		<div class="form-actions">
@@ -156,7 +155,7 @@
                 type: 'POST', // 요청 방법
                 data: formData, // 폼 데이터
                 success: function(response) {
-                    $('#replyForm')[0].reset();
+                   // $('#replyForm')[0].reset();
                     window.location.reload(); // 등록 후 페이지 리다이렉트
                 },
                 error: function(xhr, status, error) {

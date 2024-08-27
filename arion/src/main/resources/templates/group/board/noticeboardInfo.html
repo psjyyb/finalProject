@@ -8,6 +8,7 @@
 <link rel="stylesheet" th:href="@{/smarteditor2/css/smart_editor2_items.css}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" th:href="@{/css/group/board/reply.css}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <title></title>
 </head>
 <body>
@@ -102,19 +103,16 @@
 
 <!-- 댓글 입력 폼 -->
 <div class="comment-container">
-    <h3>댓글 입력</h3>
-    <form id="replyForm" action="/noticeboardInfo" method="POST">
-        <input type="hidden" name="commentNo" id="commentNo" />
+    <form id="replyForm" method="POST">
         <textarea name="commentContent" id="commentContent" placeholder="댓글을 입력하세요" required></textarea>
         <!-- 댓글 입력 폼 -->
 		<div class="form-actions">
-    		<button type="submit" class="btn-primary">댓글 등록</button>
+    		<button type="submit" class="btn-primary">입력</button>
 		</div>
     </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script th:inline="javascript">	
+<script th:inline="javascript">	
 	 $(document).ready(function() {
 	        var boardNo = "[[${board.boardNo}]]";
 
@@ -152,7 +150,7 @@
 	                type: 'POST', // 요청 방법
 	                data: formData, // 폼 데이터
 	                success: function(response) {
-	                    $('#replyForm')[0].reset();
+	                    //$('#replyForm')[0].reset();
 	                    window.location.reload();	// 등록 후 페이지 리다이렉트
 	                },
 	                error: function(xhr, status, error) {

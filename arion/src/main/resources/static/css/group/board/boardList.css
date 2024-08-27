@@ -35,7 +35,8 @@ h2 {
 }
 
 .table tr:hover {
-    background-color: #f1f1f1; /* 마우스 오버 시 배경색 */
+    background-color: #0080c0; /* 마우스 오버 시 배경색 */
+    cursor: pointer
 }
 
 .pagination {

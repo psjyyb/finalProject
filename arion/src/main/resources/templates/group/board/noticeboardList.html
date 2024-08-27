@@ -25,9 +25,9 @@
                 <input type="text" name="keyword" th:value="${criteria.keyword}">
                 <input type="submit" value="검색">
             </form>
-            <button type="button" th:onclick="|location.href='@{noticeboardInsert}'|"
-			 th:if="${session.rankName == '사장' or session.rankName == '부사장' or session.rankName == '전무' 
-			 		or session.rankName == '상무' or session.rankName == '이사' or session.rankName == '부장'}">글쓰기</button>
+            <button type="button" class="styled-button" th:onclick="|location.href='@{noticeboardInsert}'|"
+			 th:if="${session.employeeResp == '관리직' or session.employeeResp == '임원'}" >글쓰기</button>
+				<!-- th:if="${session.rankName == '사장' or session.rankName == '부사장'}">글쓰기</button> -->
         </div>
 
         <!-- 게시판 테이블 -->

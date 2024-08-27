@@ -1,5 +1,11 @@
 package com.arion.app.group.main.chat.web;
 
+/*
+ * 작성자 : 박성준
+ * 작성일자 : 2024-08-17
+ * 채팅방 : 채팅방생성 및 초대, 채팅방나가기
+ * */
+
 import java.util.HashMap;
 import java.util.Map;
 

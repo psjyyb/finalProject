@@ -19,63 +19,75 @@
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-	h1 {
-		color: #4CAF50;
-		margin-bottom: 20px;
-	}
+h1 {
+	color: #4CAF50;
+	margin-bottom: 20px;
+}
 
-	.payment-info {
-		background-color: #f0f0f0;
-		padding: 15px;
-		border-radius: 8px;
-		margin-bottom: 20px;
-		text-align: left;
-	}
+.payment-info {
+	background-color: #f0f0f0;
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	text-align: left;
+}
 
-	.payment-info p {
-		margin: 8px 0;
-		color: #333;
-	}
+.payment-info p {
+	margin: 8px 0;
+	color: #333;
+}
 
-	.button-container {
-		margin-top: 20px;
-		display: flex;
-		justify-content: space-between;
-	}
+.button-container {
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+}
 
-	.button-container a, .button-container button {
-		background-color: #4CAF50;
-		color: white;
-		border: none;
-		padding: 10px 20px;
-		text-decoration: none;
-		border-radius: 5px;
-		cursor: pointer;
-		transition: background-color 0.3s ease;
-	}
+.button-container a, .button-container button {
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	text-decoration: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
 
-	.button-container a:hover, .button-container button:hover {
-		background-color: #45a049;
-	}
+.button-container a:hover, .button-container button:hover {
+	background-color: #45a049;
+}
 
-	.button-container button {
-		background-color: #008CBA;
-	}
+.button-container button {
+	background-color: #008CBA;
+}
 
-	.button-container button:hover {
-		background-color: #007BB5;
-	}
+.button-container button:hover {
+	background-color: #007BB5;
+}
 </style>
 </head>
 <body>
 	<div class="container2">
 		<h1>결제 정보 확인</h1>
 		<div class="payment-info">
-			<p th:if="${payInfo.firstMonthAmount != 0}"><strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3, 'COMMA')}]]원</p>
-			<p th:if="${payInfo.firstMonthAmount == 0}"><strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.monthPayPrice,3, 'COMMA')}]]원</p>
-			<p><strong>주문명:</strong>[[${payInfo.moduleNames}]]</p>
-			<p><strong>이메일:</strong>[[${comInfo.ceoEmail}]]</p>
-			<p><strong>고객명:</strong>[[${comInfo.ceoName}]]</p>
+			<p th:if="${payInfo.firstMonthAmount != 0}">
+				<strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.firstMonthAmount,3,
+				'COMMA')}]]원
+			</p>
+			<p th:if="${payInfo.firstMonthAmount == 0}">
+				<strong>결제금액:</strong>[[${#numbers.formatInteger(payInfo.monthPayPrice,3,
+				'COMMA')}]]원
+			</p>
+			<p>
+				<strong>주문명:</strong>[[${payInfo.moduleNames}]]
+			</p>
+			<p>
+				<strong>이메일:</strong>[[${comInfo.ceoEmail}]]
+			</p>
+			<p>
+				<strong>고객명:</strong>[[${comInfo.ceoName}]]
+			</p>
 		</div>
 		<div class="button-container">
 			<a href="/payTest">다시 시도</a>
@@ -190,42 +202,29 @@
 			                
 			            }),
 			            success: function(response) {
-			                console.log('DB 저장 성공:', response);
+			            	Swal.fire({
+				        		  icon: "success",
+				        		  title: "결제가 성공적으로 되었습니다.",
+				        		  allowOutsideClick: false,
+				        		  }).then(function(){
+				        			  location.href='/';
+				        		});
 			            },
 			            error: function(error) {
 			                console.log('DB 저장 실패:', error);
+			                Swal.fire({
+				        		  icon: "success",
+				        		  title: "오류발생, 다시 시도해주세요.",
+				        		  allowOutsideClick: false,
+				        		  }).then(function(){
+				        			  location.href='/home';
+				        		});
 			            }
 			        })
-			        .done(result=>{
-			        	Swal.fire({
-			        		  icon: "success",
-			        		  title: "결제가 성공적으로 되었습니다.",
-			        		  allowOutsideClick: false,
-			        		  }).then(function(){
-			        			  location.href='/login';
-			        		});
-			        })
-			          .fail(err=>{
-			        	console.log(err);
-			        	Swal.fire({
-			        		  icon: "success",
-			        		  title: "오류발생, 다시 시도해주세요.",
-			        		  allowOutsideClick: false,
-			        		  }).then(function(){
-			        			  location.href='/home';
-			        		});
-			        })
+
+			       
+
 			    })
-			    .fail(err=> {
-			        console.log(err);
-			        Swal.fire({
-		        		  icon: "success",
-		        		  title: "결제실패 카드를 확인해주세요.",
-		        		  allowOutsideClick: false,
-		        		  }).then(function(){
-		        			  location.href='/home';
-		        		});
-			    });
 			});
 	</script>
 </body>

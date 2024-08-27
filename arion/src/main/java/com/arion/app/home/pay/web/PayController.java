@@ -34,7 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /*
  * 작성자 : 박성준
  * 작성일자 : 2024-08-10
- * 결제및계약서 : 계약서작성, 결제카드 등록, 결제
+ * 결제및계약서 : 계약서작성, 결제카드 등록, 결제, 
+ *            정기결제, 계약해지, 계약수정, 계약기간만료
  * */
 
 @Controller

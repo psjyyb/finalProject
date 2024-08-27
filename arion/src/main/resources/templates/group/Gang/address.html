@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <title>주소록</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -118,7 +118,6 @@
         .email-button:hover {
             background-color: #138496;
         }
-
     </style>
 </head>
 <body>
@@ -213,17 +212,44 @@
         // 삭제 버튼 클릭 시 주소록 삭제 요청
         $('#deleteButton').click(function() {
             let addrId = $('#addressDetail').data('id');
-            $.ajax({
-                url: '/group/Gang/addressDelete',
-                method: 'POST',
-                data: { addrNo: addrId },
-                success: function(response) {
-                    alert('주소록이 삭제되었습니다.');
-                    $('#addressDetail').hide();
-                    $('#addressList').find('[data-id="' + addrId + '"]').remove();
-                },
-                error: function() {
-                    alert('주소록 삭제에 실패했습니다.');
+
+            Swal.fire({
+                title: '삭제 확인',
+                text: '정말로 이 주소록을 삭제하시겠습니까?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/group/Gang/addressDelete',
+                        method: 'POST',
+                        data: { addrNo: addrId },
+                        success: function(response) {
+                            Swal.fire({
+                                title: '삭제 성공',
+                                text: '주소록이 성공적으로 삭제되었습니다.',
+                                icon: 'success',
+                                confirmButtonText: '확인'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $('#addressDetail').hide();
+                                    $('#addressList').find('[data-id="' + addrId + '"]').remove();
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: '삭제 실패',
+                                text: '주소록 삭제에 실패했습니다.',
+                                icon: 'error',
+                                confirmButtonText: '확인'
+                            });
+                        }
+                    });
                 }
             });
         });
@@ -234,7 +260,12 @@
             if (email) {
                 window.location.href = '/group/mail/writemail?receiver=' + encodeURIComponent(email);
             } else {
-                alert('이메일 주소가 없습니다.');
+                Swal.fire({
+                    title: '이메일 없음',
+                    text: '이메일 주소가 없습니다.',
+                    icon: 'info',
+                    confirmButtonText: '확인'
+                });
             }
         });
     });

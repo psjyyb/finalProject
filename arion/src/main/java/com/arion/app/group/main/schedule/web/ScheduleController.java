@@ -1,5 +1,11 @@
 package com.arion.app.group.main.schedule.web;
 
+/*
+ * 작성자 : 박성준
+ * 작성일자 : 2024-08-22
+ * 일정관리 : 사원개인, 부서별 일정 (CRUD)
+ * */
+
 import java.util.List;
 import java.util.Map;
 

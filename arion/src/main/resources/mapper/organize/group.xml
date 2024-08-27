@@ -142,5 +142,17 @@
     AND e.company_code = r.company_code
     WHERE e.resign_date IS NULL
 </select>
-    
+<!-- 전체사원조회 -->
+    <select id="getAllAddress" resultType="AddressVO">
+   SELECT addr_no,
+    		addr_name,
+    		addr_phone,
+    		company_name,
+    		addr_email,
+    		addr_rank,
+    		employee_id
+    FROM address
+	where employee_id = #{empId}
+	
+</select>
 </mapper>

@@ -221,7 +221,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		}
 		return isSuccess;
 	}
-	@Transactional
 	@Override
 	public List<EmployeeVO> excelEmpInsert(MultipartFile excelFile,String companyCode) {
 		List<EmployeeVO> failList = new ArrayList<>();

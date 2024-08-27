@@ -254,22 +254,15 @@ public class MailController {
     // 메일 상태 변경 핸들러 수정
     @PostMapping("/removes")
     public ResponseEntity<String> handleMail(@RequestBody MailVO mailVO) {
-        System.out.println("왔냐?");
-        System.out.println("Action: " + mailVO.getAction()); // 액션 값 출력
-        System.out.println("Mail IDs: " + mailVO.getMailIds()); // 메일 ID 출력
+        System.out.println("Action: " + mailVO.getAction());
+        System.out.println("Mail IDs: " + mailVO.getMailIds());
 
-        // 세션에서 값 가져오기
         String employeeId = (String) httpSession.getAttribute("loginId");
         String companyCode = (String) httpSession.getAttribute("companyCode");
         int empNo = (Integer) httpSession.getAttribute("employeeNo");
 
-        System.out.println(companyCode + "dasdadaskfjasf");
-       // System.out.println(empNo + "555555");
-
         if ("DELETE".equals(mailVO.getAction())) {
-            // 메일 상태를 DELETE로 업데이트합니다.
-            mailService.deleteMailStatus(mailVO.getMailIds(), Integer.toString(empNo), "DELETE");
-            System.out.println(mailVO.getAction() + "123123123123");
+            mailService.deleteMailStatus(mailVO.getMailIds(), Integer.toString(empNo), companyCode);
         } 
 
         return ResponseEntity.ok("Success");

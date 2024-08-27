@@ -39,10 +39,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 				continue;
 			}
 		}
-		// 2. 직급 순위를 기준으로 사원들을 정렬
-//		List<Integer> sortedApproverIds = approverRankInfo.stream()
-//				.sorted((a, b) -> Integer.compare((int) a.get("RANK_RANKING"), (int) b.get("RANK_RANKING")))
-//				.map(a -> (Integer) a.get("EMPLOYEE_NO")).collect(Collectors.toList());
 
 		List<Integer> sortedApproverIds = approverRankInfo.stream().sorted((a, b) -> {
 			// BigDecimal로 반환된 rank_ranking을 Integer로 변환

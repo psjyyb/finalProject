@@ -39,7 +39,7 @@ public class SpringSecurityConfig {
         //http.headers().cacheControl().disable();
         
         http.authorizeHttpRequests()
-                .antMatchers("/error", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**", "/wsocket/**", "//**" ).permitAll()
+                .antMatchers("/error", "/home", "/login", "/home/**", "/css/**", "/js/**", "/images/**", "/scss/**","/vendor/**", "/files/**", "/wsocket/**" ).permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/groupAdmin/**").hasAnyRole("USER")
                 .antMatchers("/pay/**").hasAnyRole("NO")

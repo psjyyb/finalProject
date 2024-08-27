@@ -223,12 +223,14 @@ public class MailServiceImpl implements MailService {
         }
        
     }
+    
+    // 수신메일 상태업데이트
     @Override
     @Transactional
     public void updateMailStatus(List<Integer> mailIds, String employeeId, String status) {
         mailMapper.updateMailStatus(mailIds, employeeId, status);
     }
-    
+    // 발신 삭제 업데이트
     @Override
     @Transactional
     public void deleteMailStatus(List<Integer> mailIds, String employeeId, String status) {

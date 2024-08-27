@@ -235,7 +235,7 @@
                 });
 
                 let currentReceiver = $('#receiverId').val();
-                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + ids.join(', ') : ids.join(', '));
+                $('#receiverId').val(currentReceiver ? currentReceiver + ',' + ids.join(',') : ids.join(','));
                 $('#orgChartModal').modal('hide');
             });
 
@@ -294,7 +294,7 @@
                 });
 
                 let currentReceiver = $('#receiverId').val();
-                $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + emails.join(', ') : emails.join(', '));
+                $('#receiverId').val(currentReceiver ? currentReceiver + ',' + emails.join(',') : emails.join(','));
                 $('#addressBookModal').modal('hide');
             });
 

@@ -16,6 +16,12 @@ import com.arion.app.group.main.chat.repository.ChatMessageRepository;
 import com.arion.app.group.main.chat.service.ChatRoomService;
 import com.arion.app.group.main.chat.service.ChatRoomVO;
 
+/*
+ * 작성자 : 박성준
+ * 작성일자 : 2024-08-17
+ * 채팅화면 : 채팅방목록에 필요한 데이터 보내주기
+ * */
+
 @Controller
 public class ChatPageController {
 

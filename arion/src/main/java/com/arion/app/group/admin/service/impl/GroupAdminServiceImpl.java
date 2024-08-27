@@ -227,7 +227,6 @@ public class GroupAdminServiceImpl implements GroupAdminService {
 		  try {
 			Workbook workbook = new XSSFWorkbook(excelFile.getInputStream());
 			Sheet sheet = workbook.getSheetAt(0);
-			System.out.println(sheet.getPhysicalNumberOfRows()+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			for(int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
 				Row row = sheet.getRow(i);
 				EmployeeVO evo = new EmployeeVO();

@@ -14,4 +14,6 @@ public interface AttMapper {
 	    // 출근 기록 조회
 	    AttVO selectAttendanceByDate(@Param("empNo") Integer empNo, @Param("attDate") Date attDate);
 	    int endAtt(AttVO attVO);
+	    // 출근상태조회
+	    AttVO selectAttendanceStatus(int empNo);
 }

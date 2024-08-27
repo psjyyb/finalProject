@@ -5,36 +5,28 @@
 
 <!-- 받은 메일 조회 -->
 <select id="receiveMailAll" parameterType="map" resultType="MailVO">
-    SELECT * 
-    FROM (
-        SELECT mail_no, 
-               sender_name,
-               send_date,
-               mail_title,
-               ROWNUM AS rn
-        FROM (
-            SELECT DISTINCT m.mail_no, 
-                   FIND_EMP_NAME(m.sender_id) AS sender_name,
-                   m.send_date,
-                   m.mail_title
-            FROM mail m
-            JOIN mail_receive mr ON m.mail_no = mr.mail_no
-            WHERE mr.employee_id = #{mailVO.senderId} 
-            AND mr.mail_status = 'RECEIVED'
-            AND m.company_code = #{mailVO.companyCode}
-            <if test="criteria.searchType != null and criteria.searchType != ''">
-                <if test="criteria.searchType == 'mailtitle'">
-                    AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
-                </if>
-                <if test="criteria.searchType == 'senderId'">
-                    AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
-                </if>
-            </if>
-            ORDER BY m.send_date DESC
-        )
-        WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
+   SELECT * 
+FROM (
+    SELECT ROWNUM AS rn, m.*, mr.employee_id AS receiver_id
+    FROM mail m
+    LEFT JOIN mail_receive mr ON m.mail_no = mr.mail_no
+    WHERE m.sender_id IN (
+        SELECT employee_no
+        FROM employees
+        WHERE employee_id = #{mailVO.senderId}
     )
-    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
+    AND m.mail_status = 'SEND'
+    <if test="criteria.searchType != null and criteria.searchType != ''">
+        <if test="criteria.searchType == 'mailtitle'">
+            AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+        <if test="criteria.searchType == 'senderId'">
+            AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
+        </if>
+    </if>
+    ORDER BY m.mail_no DESC
+)
+WHERE rn BETWEEN (#{criteria.pageNum} - 1) * #{criteria.amount} + 1 AND #{criteria.pageNum} * #{criteria.amount}
 </select>
 
 <select id="selectMailTotalCount" parameterType="map" resultType="int">
@@ -61,7 +53,7 @@
         SELECT ROWNUM AS rn, m.*, mr.employee_id AS receiver_id
         FROM mail m
         LEFT JOIN mail_receive mr ON m.mail_no = mr.mail_no
-        WHERE m.sender_id = (
+        WHERE m.sender_id in (
             SELECT employee_no
             FROM employees
             WHERE employee_id = #{mailVO.senderId}

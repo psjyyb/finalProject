@@ -146,9 +146,11 @@ public class GroupController {
     public Map<String, Object> addressDelete(@RequestParam int addrNo) {
         return gsvc.deleteAddress(addrNo);
     }
-    // 전체사원조회
+    // 전체 사원 조회
     @GetMapping("/employees/all")
+    @ResponseBody
     public List<EmployeesVO> getAllEmployees() {
         return gsvc.getAllEmployees();
     }
+
 }

@@ -33,13 +33,49 @@
         }
 
         .modal-content {
-            max-height: 500px;
+            display: flex;
+            max-height: 700px;
+            overflow: hidden;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            padding: 0;
+        }
+
+        .modal-body .container {
+            flex: 1;
+            padding: 15px;
+            border-right: 1px solid #ddd;
             overflow-y: auto;
         }
 
-        .modal-body ul {
-            max-height: 400px;
+        .selected-container {
+            flex: 0.4;
+            padding: 15px;
+            background-color: #f9f9f9;
             overflow-y: auto;
+        }
+
+        .selected-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .selected-list li {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .selected-list li span {
+            font-size: 0.9rem;
         }
 
         .modal-footer {
@@ -102,6 +138,10 @@
                                 <ul id="employeeList" class="list-unstyled"></ul>
                             </div>
                         </div>
+                        <div class="selected-container">
+                            <h2>선택 확인</h2>
+                            <ul id="selectedEmployeeList" class="selected-list"></ul>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -129,6 +169,10 @@
                                 <h2>주소록</h2>
                                 <ul id="addressList" class="list-unstyled"></ul>
                             </div>
+                        </div>
+                        <div class="selected-container">
+                            <h2>선택된 주소</h2>
+                            <ul id="selectedAddressList" class="selected-list"></ul>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -169,9 +213,18 @@
                         employeeList.empty();
 
                         data.forEach(function(employee) {
-                            employeeList.append('<li><input type="checkbox" class="employeeCheckbox" data-id="' + employee.employeeId + '">' + employee.employeeName + ' (' + employee.rankName + ')</li>');
+                            employeeList.append('<li><input type="checkbox" class="employeeCheckbox" data-id="' + employee.employeeId + '" data-name="' + employee.employeeName + '">' + employee.employeeName + ' (' + employee.rankName + ')</li>');
                         });
                     }
+                });
+            });
+
+            $(document).on('change', '.employeeCheckbox', function() {
+                let selectedEmployeeList = $('#selectedEmployeeList');
+                selectedEmployeeList.empty();
+
+                $('.employeeCheckbox:checked').each(function() {
+                    selectedEmployeeList.append('<li><span>' + $(this).data('name') + '</span> <button class="btn btn-danger btn-small remove-selected">삭제</button></li>');
                 });
             });
 
@@ -184,6 +237,12 @@
                 let currentReceiver = $('#receiverId').val();
                 $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + ids.join(', ') : ids.join(', '));
                 $('#orgChartModal').modal('hide');
+            });
+
+            $(document).on('click', '.remove-selected', function() {
+                let employeeName = $(this).siblings('span').text();
+                $('.employeeCheckbox[data-name="' + employeeName + '"]').prop('checked', false);
+                $(this).parent().remove();
             });
 
             // 주소록 모달 스크립트
@@ -213,9 +272,18 @@
                         addressList.empty();
 
                         data.forEach(function(address) {
-                            addressList.append('<li><input type="checkbox" class="addressCheckbox" data-email="' + address.addrEmail + '">' + address.addrName + '</li>');
+                            addressList.append('<li><input type="checkbox" class="addressCheckbox" data-email="' + address.addrEmail + '" data-name="' + address.addrName + '">' + address.addrName + '</li>');
                         });
                     }
+                });
+            });
+
+            $(document).on('change', '.addressCheckbox', function() {
+                let selectedAddressList = $('#selectedAddressList');
+                selectedAddressList.empty();
+
+                $('.addressCheckbox:checked').each(function() {
+                    selectedAddressList.append('<li><span>' + $(this).data('name') + '</span> <button class="btn btn-danger btn-small remove-selected-address">삭제</button></li>');
                 });
             });
 
@@ -228,6 +296,12 @@
                 let currentReceiver = $('#receiverId').val();
                 $('#receiverId').val(currentReceiver ? currentReceiver + ', ' + emails.join(', ') : emails.join(', '));
                 $('#addressBookModal').modal('hide');
+            });
+
+            $(document).on('click', '.remove-selected-address', function() {
+                let addressName = $(this).siblings('span').text();
+                $('.addressCheckbox[data-name="' + addressName + '"]').prop('checked', false);
+                $(this).parent().remove();
             });
 
             // 폼 제출 시 처리

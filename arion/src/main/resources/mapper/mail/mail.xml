@@ -316,18 +316,31 @@
     AND employee_id = #{employeeId}
    
 </update>
+
+
  <!-- 보낸메일 기준 삭제 -->
-<select id="deleteMailStatus" parameterType="map" resultType="String">
-       SELECT mail_status
-		FROM mail
-		WHERE mail_no =#{mailNo}
-		AND sender_id IN (
-   					 SELECT employee_no
-   					 FROM employees
-   					 WHERE company_code = #{companyCode}
-  					  AND employee_no = #{empNo}
-						);
+    <select id="chooseMailStatus" parameterType="map" resultType="String">
+    SELECT mail_status
+    FROM mail
+    WHERE mail_no = #{mailNo}
+    AND sender_id IN (
+        SELECT employee_no
+        FROM employees
+        WHERE company_code = #{companyCode}
+        AND employee_no = #{empNo}
+  		  );
 </select>
+
+    <!-- 메일 상태를 DELETE로 업데이트하는 쿼리 -->
+    <update id="deleteMailStatus" parameterType="map">
+        UPDATE mail
+        SET mail_status = #{status}
+        WHERE mail_no IN
+        <foreach collection="mailIds" item="mailId" open="(" separator="," close=")">
+            #{mailId}
+        </foreach>
+        AND sender_id = #{empNo}
+    </update>
 <!-- 수신메일 기준 상태변경 -->
 
 

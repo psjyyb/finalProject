@@ -137,7 +137,8 @@ public class TemplateController {
 			// HWP 파일 읽기
 			HWPFile hwpFile = HWPReader.fromFile(tempFile.getPath());
 			if (hwpFile != null) {
-				fileContent = TextExtractor.extract(hwpFile, TextExtractMethod.InsertControlTextBetweenParagraphText);
+				fileContent = TextExtractor.extract(hwpFile,
+								TextExtractMethod.InsertControlTextBetweenParagraphText);
 				fileContent = convertToHTML(fileContent);
 			}
 			// 임시 파일 삭제
@@ -145,7 +146,6 @@ public class TemplateController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return fileContent;
 	}
 

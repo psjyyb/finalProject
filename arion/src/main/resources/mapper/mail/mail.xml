@@ -338,7 +338,7 @@
         <foreach collection="mailIds" item="mailId" open="(" separator="," close=")">
             #{mailId}
         </foreach>
-        AND sender_id = #{empNo}
+     
     </update>
 <!-- 수신메일 기준 상태변경 -->
 

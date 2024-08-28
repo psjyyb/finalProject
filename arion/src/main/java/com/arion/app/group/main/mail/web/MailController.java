@@ -256,7 +256,7 @@ public class MailController {
     public ResponseEntity<String> handleMail(@RequestBody MailVO mailVO) {
         System.out.println("Action: " + mailVO.getAction());
         System.out.println("Mail IDs: " + mailVO.getMailIds());
-
+        System.out.println("여기온거임?");
         String employeeId = (String) httpSession.getAttribute("loginId");
         String companyCode = (String) httpSession.getAttribute("companyCode");
         int empNo = (Integer) httpSession.getAttribute("employeeNo");

@@ -243,7 +243,7 @@ public class MailServiceImpl implements MailService {
     @Override
     @Transactional
     public void deleteMailStatus(List<Integer> mailIds, String employeeId, String status) {
-        mailMapper.updateMailStatus(mailIds, employeeId, status);
+        mailMapper.deleteMailStatus(mailIds, employeeId, status);
     }
     
     

@@ -67,6 +67,15 @@ public class MailServiceImpl implements MailService {
 		return mailMapper.selectMailTotalCount(mailVO,criteria);
 	}
 
+	  //메일 페이징
+		public int importMailTotalCount(MailVO mailVO,Criteria criteria) {
+			return mailMapper.importMailTotalCount(mailVO,criteria);
+		}
+		
+		  //메일 페이징
+		public int deleteMailTotalCount(MailVO mailVO,Criteria criteria) {
+			return mailMapper.deleteMailTotalCount(mailVO,criteria);
+		}
     //휴지통
     @Override
     public List<MailVO> deleteMailList(MailVO mailVO, Criteria criteria) {

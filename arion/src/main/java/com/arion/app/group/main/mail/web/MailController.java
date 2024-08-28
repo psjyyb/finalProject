@@ -75,7 +75,7 @@ public class MailController {
         mailVO.setSenderId(employeeId);
         mailVO.setMailStatus("IMPORT");
         List<MailVO> importMailAll = mailService.importMailList(mailVO, criteria);
-        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        int totalCount = mailService.importMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
        
         model.addAttribute("importMailAll", importMailAll);
@@ -93,7 +93,7 @@ public class MailController {
         mailVO.setSenderId(employeeId);
         mailVO.setMailStatus("TRASH");
         List<MailVO> deleteMailAll = mailService.deleteMailList(mailVO,criteria);
-        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        int totalCount = mailService.deleteMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
         
         model.addAttribute("deleteMailAll", deleteMailAll);

@@ -393,6 +393,7 @@
 								ON d.doc_no = da.doc_no
 								JOIN approval a
 								ON d.doc_no = a.doc_no
+								AND a.employee_no = da.employee_no
 								JOIN employees e
 								ON d.employee_no = e.employee_no
 				WHERE 1=1
@@ -400,7 +401,7 @@
 				AND da.employee_no = #{docAccessVO.employeeNo}
 				AND da.access_appr = 1
 				AND a.appr_status = '결재대기'
-				
+				AND a.sequence = a.appr_line
 				<if test="criteria.docTitle != null and criteria.docTitle != ''">
 					AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 				</if>
@@ -429,6 +430,7 @@
 						ON d.doc_no = da.doc_no
 						JOIN approval a
 						ON d.doc_no = a.doc_no
+						AND a.employee_no = da.employee_no
 						JOIN employees e
 						ON d.employee_no = d.employee_no
 		WHERE 1=1 
@@ -436,7 +438,7 @@
 		AND da.employee_no = #{docAccessVO.employeeNo}
 		AND da.access_appr = 1
 		AND a.appr_status = '결재대기'
-		
+		AND a.sequence = a.appr_line
 		<if test="criteria.docTitle != null and criteria.docTitle != ''">
 			AND d.doc_title LIKE '%' || #{criteria.docTitle} || '%'
 		</if>
@@ -454,7 +456,5 @@
 		</if>
 	</select>
 	
-	
-	
-	
+
 </mapper>

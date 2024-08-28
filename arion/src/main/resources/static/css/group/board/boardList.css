@@ -35,7 +35,7 @@ h2 {
 }
 
 .table tr:hover {
-    background-color: #0080c0; /* 마우스 오버 시 배경색 */
+    background-color: #000040!important; /* 마우스 오버 시 배경색 */
     cursor: pointer
 }
 

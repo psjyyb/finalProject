@@ -26,8 +26,6 @@ ORDER BY
 </select>
 
 
-
-
 <!-- 댓글 작성 -->
 <insert id="insertReply" parameterType="ReplyVO">
 INSERT INTO comments

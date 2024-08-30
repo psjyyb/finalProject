@@ -19,5 +19,5 @@ public interface ScheduleMapper {
 	int updateEmpSchedule(ScheduleVO scheduleVO);
 	
 	// 부서일정 조회
-	List<ScheduleVO> selectDeptScheduleList(int departmentNo);
+	List<ScheduleVO> selectDeptScheduleList(String departmentName,String companyCode);
 }

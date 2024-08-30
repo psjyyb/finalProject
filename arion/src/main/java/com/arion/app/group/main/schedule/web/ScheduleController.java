@@ -66,8 +66,9 @@ public class ScheduleController {
 	@GetMapping("/group/schedule/deptSchedule")
 	@ResponseBody
 	public List<ScheduleVO>deptCalendar(Model model,HttpSession session){
-		int departmetnNo = (Integer) session.getAttribute("departmentNo");
-		return scheduleService.deptScheduleListSelect(departmetnNo);
+		String departmentName = (String) session.getAttribute("department");
+		String companyCode = (String) session.getAttribute("companyCode");
+		return scheduleService.deptScheduleListSelect(departmentName,companyCode);
 	}
 	@PostMapping("/group/schedule/deptCalcInsert")
 	@ResponseBody

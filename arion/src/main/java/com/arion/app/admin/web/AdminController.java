@@ -163,6 +163,6 @@ public class AdminController {
 	@GetMapping("/arion/error")
 	public String error(){
 		System.out.println("이거 찍히면 에러난거임");
-		return "/common/error/404";
+		return "common/error/404";
 	}
 }

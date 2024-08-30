@@ -7,121 +7,128 @@
     <meta charset="UTF-8">
     <title>주소록</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        max-width: 1200px;
+        position: relative; /* 위치 조정을 위해 필요 */
+    }
+    .companies, .addresses {
+        flex: 1;
+        margin: 20px;
+    }
+    .companies h2, .addresses h2 {
+        font-size: 24px;
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+  
+    /* 회사 목록 스타일 */
+    #companyList li {
+        margin: 10px 0;
+    }
+    #companyList a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+    #companyList a:hover {
+        color: #0056b3;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 1200px;
-            position: relative; /* 위치 조정을 위해 필요 */
-        }
-        .companies, .addresses {
-            flex: 1;
-            margin: 20px;
-        }
-        .companies h2, .addresses h2 {
-            font-size: 24px;
-            color: #333;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
-        }
-        a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #0056b3;
-        }
-        .addresses {
-            border-left: 1px solid #e0e0e0;
-            padding-left: 20px;
-        }
-        #addressDetail {
-            flex: 1;
-            margin-left: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: none; /* 주소록 상세 정보가 선택되기 전에는 숨김 */
-        }
-        #addressDetail h3 {
-            margin-top: 0;
-            font-size: 20px;
-            color: #007bff;
-        }
-        #addressDetail p {
-            margin: 8px 0;
-            font-size: 16px;
-            color: #555;
-        }
-        .button-group {
-            margin-top: 20px;
-        }
-        .button-group button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        .button-group button:hover {
-            background-color: #0056b3;
-        }
-        .button-group .delete {
-            background-color: #dc3545;
-        }
-        .button-group .delete:hover {
-            background-color: #c82333;
-        }
-        .register-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .register-button:hover {
-            background-color: #218838;
-        }
-        .email-button {
-            background-color: #17a2b8;
-        }
-        .email-button:hover {
-            background-color: #138496;
-        }
+    /* 주소록 목록 스타일 */
+    #addressList li {
+        margin: 10px 0;
+    }
+    #addressList a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+    #addressList a:hover {
+        color: #0056b3;
+    }
 
-    </style>
+    #addressDetail {
+        flex: 1;
+        margin-left: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: none; /* 주소록 상세 정보가 선택되기 전에는 숨김 */
+    }
+    #addressDetail h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #007bff;
+    }
+    #addressDetail p {
+        margin: 8px 0;
+        font-size: 16px;
+        color: #555;
+    }
+    .button-group {
+        margin-top: 20px;
+    }
+    .button-group button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+    .button-group button:hover {
+        background-color: #0056b3;
+    }
+    .button-group .delete {
+        background-color: #dc3545;
+    }
+    .button-group .delete:hover {
+        background-color: #c82333;
+    }
+    .register-button {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .register-button:hover {
+        background-color: #218838;
+    }
+    .email-button {
+        background-color: #17a2b8;
+    }
+    .email-button:hover {
+        background-color: #138496;
+    }
+</style>
 </head>
 <body>
+<h1>주소록</h1>
     <div class="container">
         <div class="companies">
             <h2>회사 목록</h2>
@@ -213,17 +220,44 @@
         // 삭제 버튼 클릭 시 주소록 삭제 요청
         $('#deleteButton').click(function() {
             let addrId = $('#addressDetail').data('id');
-            $.ajax({
-                url: '/group/Gang/addressDelete',
-                method: 'POST',
-                data: { addrNo: addrId },
-                success: function(response) {
-                    alert('주소록이 삭제되었습니다.');
-                    $('#addressDetail').hide();
-                    $('#addressList').find('[data-id="' + addrId + '"]').remove();
-                },
-                error: function() {
-                    alert('주소록 삭제에 실패했습니다.');
+
+            Swal.fire({
+                title: '삭제 확인',
+                text: '정말로 이 주소록을 삭제하시겠습니까?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/group/Gang/addressDelete',
+                        method: 'POST',
+                        data: { addrNo: addrId },
+                        success: function(response) {
+                            Swal.fire({
+                                title: '삭제 성공',
+                                text: '주소록이 성공적으로 삭제되었습니다.',
+                                icon: 'success',
+                                confirmButtonText: '확인'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $('#addressDetail').hide();
+                                    $('#addressList').find('[data-id="' + addrId + '"]').remove();
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: '삭제 실패',
+                                text: '주소록 삭제에 실패했습니다.',
+                                icon: 'error',
+                                confirmButtonText: '확인'
+                            });
+                        }
+                    });
                 }
             });
         });
@@ -234,7 +268,12 @@
             if (email) {
                 window.location.href = '/group/mail/writemail?receiver=' + encodeURIComponent(email);
             } else {
-                alert('이메일 주소가 없습니다.');
+                Swal.fire({
+                    title: '이메일 없음',
+                    text: '이메일 주소가 없습니다.',
+                    icon: 'info',
+                    confirmButtonText: '확인'
+                });
             }
         });
     });

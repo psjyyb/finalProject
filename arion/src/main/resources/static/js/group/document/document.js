@@ -356,11 +356,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			if (templateName === '휴가신청서') {
 				// 휴가 신청서의 경우
+				const holType = $('select[name="holType"]').val();
 				const startDate = $('input[name="startDate"]').val();
 				const startDateTime = $('select[name="startDateTime"]').val() || '00:00';
 				const endDate = $('input[name="endDate"]').val();
 				const endDateTime = $('select[name="endDateTime"]').val() || '18:00';
-
+	
+				if (holType === '') {
+					Swal.fire({
+						icon: 'warning',
+						text: '휴가종류를 선택해주세요.'
+					});
+					return;
+				}
+				
 				if (startDate === '') {
 					Swal.fire({
 						icon: 'warning',

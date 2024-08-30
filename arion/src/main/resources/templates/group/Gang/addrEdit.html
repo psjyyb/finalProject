@@ -5,28 +5,105 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <title>ARION</title>
+    <title>주소록 수정</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2><i class="fas fa-user-edit"></i> 주소록 수정</h2>
-    <form id="updateForm">
-        <input type="hidden" id="addrNo" name="addrNo" th:value="${address.addrNo}">
-        <label for="addrName">이름:</label>
-        <input type="text" id="addrName" name="addrName" th:value="${address.addrName}" required><br>
-        <label for="addrPhone">연락처:</label>
-        <input type="text" id="addrPhone" name="addrPhone" th:value="${address.addrPhone}" required><br>
-        <label for="companyName">회사명:</label>
-        <input type="text" id="companyName" name="companyName" th:value="${address.companyName}" required><br>
-        <label for="addrEmail">이메일:</label>
-        <input type="text" id="addrEmail" name="addrEmail" th:value="${address.addrEmail}"><br>
-        <label for="addrRank">직급:</label>
-        <input type="text" id="addrRank" name="addrRank" th:value="${address.addrRank}"><br>
-        <button type="button" id="updateButton">수정 완료</button>
-    </form>
-    <a href="/group/Gang/address"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+    <div class="container">
+        <h2><i class="fas fa-user-edit"></i> 주소록 수정</h2>
+        <form id="updateForm">
+            <div class="form-group">
+                <input type="hidden" id="addrNo" name="addrNo" th:value="${address.addrNo}">
+            </div>
+            <div class="form-group">
+                <label for="addrName">이름:</label>
+                <input type="text" id="addrName" name="addrName" th:value="${address.addrName}" required>
+            </div>
+            <div class="form-group">
+                <label for="addrPhone">연락처:</label>
+                <input type="text" id="addrPhone" name="addrPhone" th:value="${address.addrPhone}" required>
+            </div>
+            <div class="form-group">
+                <label for="companyName">회사명:</label>
+                <input type="text" id="companyName" name="companyName" th:value="${address.companyName}" required>
+            </div>
+            <div class="form-group">
+                <label for="addrEmail">이메일:</label>
+                <input type="text" id="addrEmail" name="addrEmail" th:value="${address.addrEmail}">
+            </div>
+            <div class="form-group">
+                <label for="addrRank">직급:</label>
+                <input type="text" id="addrRank" name="addrRank" th:value="${address.addrRank}">
+            </div>
+            <button type="button" id="updateButton">수정 완료</button>
+            <a href="/group/Gang/address" class="back-link"><i class="fas fa-arrow-left"></i> 뒤로가기</a>
+        </form>
+    </div>
 
     <script>
     $(document).ready(function() {
@@ -40,7 +117,12 @@
             const addrRank = $('#addrRank').val();
 
             if (isNaN(addrNo) || addrNo.trim() === '') {
-                alert('주소록 번호가 올바르지 않습니다.');
+                Swal.fire({
+                    title: '입력 오류',
+                    text: '주소록 번호가 올바르지 않습니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                });
                 return;
             }
 
@@ -59,14 +141,32 @@
                 }),
                 success: function(response) {
                     if (response.result) {
-                        alert('주소록이 성공적으로 수정되었습니다.');
-                        window.location.href = '/group/Gang/address';
+                        Swal.fire({
+                            title: '성공',
+                            text: '주소록이 성공적으로 수정되었습니다.',
+                            icon: 'success',
+                            confirmButtonText: '확인'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/group/Gang/address';
+                            }
+                        });
                     } else {
-                        alert('주소록 수정에 실패하였습니다.');
+                        Swal.fire({
+                            title: '실패',
+                            text: '주소록 수정에 실패하였습니다.',
+                            icon: 'error',
+                            confirmButtonText: '확인'
+                        });
                     }
                 },
                 error: function() {
-                    alert('주소록 수정에 실패하였습니다.');
+                    Swal.fire({
+                        title: '오류',
+                        text: '주소록 수정에 실패하였습니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    });
                 }
             });
         });

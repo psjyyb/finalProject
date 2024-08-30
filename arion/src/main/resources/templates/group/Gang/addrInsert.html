@@ -6,9 +6,78 @@
 <head>
     <meta charset="UTF-8">
     <title>주소록 등록</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+  
+        .container {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="submit"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        input[type="button"] {
+            background-color: #f44336;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        input[type="button"]:hover {
+            background-color: #e53935;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .message.success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .message.error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -21,23 +90,23 @@
         <form id="addressForm" action="/group/Gang/AddrInsert" method="post">
             <div class="form-group">
                 <label for="addrName">이름</label>
-                <input type="text" id="addrName" name="addrName" required>
+                <input type="text" id="addrName" name="addrName" placeholder="이름을 입력하세요" required>
             </div>
             <div class="form-group">
                 <label for="addrPhone">연락처</label>
-                <input type="text" id="addrPhone" name="addrPhone" required>
+                <input type="text" id="addrPhone" name="addrPhone" placeholder="연락처를 입력하세요" required>
             </div>
             <div class="form-group">
                 <label for="companyName">회사명</label>
-                <input type="text" id="companyName" name="companyName" required>
+                <input type="text" id="companyName" name="companyName" placeholder="회사명을 입력하세요" required>
             </div>
             <div class="form-group">
                 <label for="addrEmail">이메일 (선택)</label>
-                <input type="email" id="addrEmail" name="addrEmail">
+                <input type="email" id="addrEmail" name="addrEmail" placeholder="이메일을 입력하세요">
             </div>
             <div class="form-group">
                 <label for="addrRank">직급 (선택)</label>
-                <input type="text" id="addrRank" name="addrRank">
+                <input type="text" id="addrRank" name="addrRank" placeholder="직급을 입력하세요">
             </div>
             <div class="form-group">
                 <input type="submit" value="등록하기">

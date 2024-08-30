@@ -24,6 +24,8 @@ public interface MailService {
     //메일 페이징
     int selectMailTotalCount(MailVO mailVO,Criteria criteria);
     
+    int importMailTotalCount(MailVO mailVO,Criteria criteria);
+    int deleteMailTotalCount(MailVO mailVO,Criteria criteria);
     //메일 상태변경
     
     // 메일 삭제

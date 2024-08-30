@@ -14,18 +14,15 @@
 	<h1>전자서명</h1>
 	<div class="container2">
 
-			<!-- empSign이 있을 때 서명 이미지 표시 -->
-			<img th:src="@{/files/signatures/{fileName}(fileName=${empSign})}"
-				alt="Employee Signature" th:if="${empSign != null}" />
-			<!-- empSign이 없을 때 빈 div 박스 표시 -->
-			<div th:if="${empSign == null}" class="center-box"></div>
-	
-		 <div class="button-group">
-            <!-- empSign이 있을 때 "수정" 버튼 표시 -->
-            <button type="button" id="signModalBtn" th:if="${empSign != null}">수정</button>
-            <!-- empSign이 없을 때 "등록" 버튼 표시 -->
-            <button type="button" id="signModalBtn" th:if="${empSign == null}">등록</button>
-        </div>
+		<img th:if="${empSign != null}" th:src="@{/files/signatures/{fileName}(fileName=${empSign})}" alt="Employee Signature" />
+        <div th:if="${empSign == null}" style="width: 300px; height: 200px; border: 1px solid #000;"></div>
+		<div class="button-group">
+			<button type="button" id="signModalBtn"
+                th:if="${empSign != null}">수정</button>
+            <button type="button" id="signModalBtn"
+                th:if="${empSign == null}">등록</button>
+		</div>
+
 	</div>
 
 	<div id="signModal" class="modal">

@@ -2,12 +2,13 @@ package com.arion.app.group.main.mail.web;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,7 +75,7 @@ public class MailController {
         mailVO.setSenderId(employeeId);
         mailVO.setMailStatus("IMPORT");
         List<MailVO> importMailAll = mailService.importMailList(mailVO, criteria);
-        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        int totalCount = mailService.importMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
        
         model.addAttribute("importMailAll", importMailAll);
@@ -92,7 +93,7 @@ public class MailController {
         mailVO.setSenderId(employeeId);
         mailVO.setMailStatus("TRASH");
         List<MailVO> deleteMailAll = mailService.deleteMailList(mailVO,criteria);
-        int totalCount = mailService.selectMailTotalCount(mailVO,criteria);
+        int totalCount = mailService.deleteMailTotalCount(mailVO,criteria);
         PageDTO pageDTO = new PageDTO(10, totalCount, criteria);
         
         model.addAttribute("deleteMailAll", deleteMailAll);
@@ -199,7 +200,8 @@ public class MailController {
     
  // 메일 답장 처리
     @PostMapping("/reply")
-    public String replyToMail(MailVO mailVO, @RequestPart(required = false) MultipartFile[] files, Model model) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> replyToMail(MailVO mailVO, @RequestPart(required = false) MultipartFile[] files) {
         String companyCode = (String) httpSession.getAttribute("companyCode");
         Integer senderId = (Integer) httpSession.getAttribute("employeeNo");
         String senderName = (String) httpSession.getAttribute("loginName");
@@ -216,14 +218,17 @@ public class MailController {
         }
 
         int result = mailService.replyToMail(mailVO, files);
-        
+
+        Map<String, Object> response = new HashMap<>();
         if (result > 0) {
-            model.addAttribute("successMessage", true);
+            response.put("status", "success");
+            response.put("message", "답장이 성공적으로 전송되었습니다.");
         } else {
-            model.addAttribute("errorMessage", true);
+            response.put("status", "error");
+            response.put("message", "답장 전송에 실패했습니다. 다시 시도해 주세요.");
         }
         
-        return "group/mail/replymail"; 
+        return ResponseEntity.ok(response);
     }
  // 메일 상태 변경 핸들러 수정
     @PostMapping("/actions")
@@ -239,6 +244,8 @@ public class MailController {
             mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "TRASH");
         } else if ("RECEIVED".equals(mailVO.getAction())) {
             mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "RECEIVED");
+        } else if ("DELETE".equals(mailVO.getAction())) {
+            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "DELETE");
         }
         
         return ResponseEntity.ok("Success");
@@ -247,17 +254,17 @@ public class MailController {
     // 메일 상태 변경 핸들러 수정
     @PostMapping("/removes")
     public ResponseEntity<String> handleMail(@RequestBody MailVO mailVO) {
-        System.out.println("Action: " + mailVO.getAction()); // 액션 값 출력
-        System.out.println("Mail IDs: " + mailVO.getMailIds()); // 메일 ID 출력
-
+        System.out.println("Action: " + mailVO.getAction());
+        System.out.println("Mail IDs: " + mailVO.getMailIds());
+        System.out.println("여기온거임?");
         String employeeId = (String) httpSession.getAttribute("loginId");
+        String companyCode = (String) httpSession.getAttribute("companyCode");
+        int empNo = (Integer) httpSession.getAttribute("employeeNo");
 
         if ("DELETE".equals(mailVO.getAction())) {
-            // 메일 상태를 DELETE로 업데이트합니다.
-            mailService.updateMailStatus(mailVO.getMailIds(), employeeId, "DELETE");
-            System.out.println(mailVO.getAction()+"123123123123");
+            mailService.deleteMailStatus(mailVO.getMailIds(), Integer.toString(empNo), companyCode);
         } 
-        
+
         return ResponseEntity.ok("Success");
     }
 }

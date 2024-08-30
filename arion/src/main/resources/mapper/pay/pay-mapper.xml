@@ -41,7 +41,7 @@
                              ,ceo_email)
         VALUES(
                #{contractNo}
-              ,#{finalDates}
+              ,TO_DATE(#{finalDates},'yyyy-MM-dd')
               ,#{usersCnt}
               ,#{monthPayPrice}
               ,#{totalPayPrice}

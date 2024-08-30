@@ -23,7 +23,7 @@ $(document).ready(function() {
             localStorage.setItem("id", userId);
             localStorage.setItem("remember", true);
         } else {
-			localStorage.removeItem("loginType", loginType);
+			localStorage.removeItem("loginType");
             localStorage.removeItem("companyCode");
             localStorage.removeItem("id");
             localStorage.setItem("remember", false);

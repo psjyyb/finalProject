@@ -5,7 +5,7 @@
 
 <!-- 받은 메일 조회 -->
 <select id="receiveMailAll" parameterType="map" resultType="MailVO">
-    SELECT * 
+ SELECT * 
     FROM (
         SELECT mail_no, 
                sender_name,
@@ -13,7 +13,7 @@
                mail_title,
                ROWNUM AS rn
         FROM (
-            SELECT m.mail_no, 
+            SELECT DISTINCT m.mail_no, 
                    FIND_EMP_NAME(m.sender_id) AS sender_name,
                    m.send_date,
                    m.mail_title
@@ -34,8 +34,7 @@
         )
         WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
     )
-    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}
-</select>
+    WHERE rn > (#{criteria.pageNum} - 1) * #{criteria.amount}</select>
 
 <select id="selectMailTotalCount" parameterType="map" resultType="int">
     SELECT COUNT(*)
@@ -61,7 +60,7 @@
         SELECT ROWNUM AS rn, m.*, mr.employee_id AS receiver_id
         FROM mail m
         LEFT JOIN mail_receive mr ON m.mail_no = mr.mail_no
-        WHERE m.sender_id = (
+        WHERE m.sender_id in (
             SELECT employee_no
             FROM employees
             WHERE employee_id = #{mailVO.senderId}
@@ -101,7 +100,7 @@
 </select>
 <!-- 중요 메일 조회 -->
 <select id="importMailAll" parameterType="map" resultType="MailVO">
-    SELECT *
+    SELECT * 
     FROM (
         SELECT mail_no, 
                sender_name,
@@ -109,15 +108,15 @@
                mail_title,
                ROWNUM AS rn
         FROM (
-            SELECT m.mail_no, 
+            SELECT DISTINCT m.mail_no, 
                    FIND_EMP_NAME(m.sender_id) AS sender_name,
                    m.send_date,
                    m.mail_title
             FROM mail m
             JOIN mail_receive mr ON m.mail_no = mr.mail_no
-            WHERE mr.employee_id = #{mailVO.senderId}
+            WHERE mr.employee_id = #{mailVO.senderId} 
+            AND mr.mail_status = 'IMPORT'
             AND m.company_code = #{mailVO.companyCode}
-            AND mr.mail_status = 'IMPORT' <!-- 중요 메일 필터링 -->
             <if test="criteria.searchType != null and criteria.searchType != ''">
                 <if test="criteria.searchType == 'mailtitle'">
                     AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
@@ -126,7 +125,7 @@
                     AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
                 </if>
             </if>
-            ORDER BY m.mail_no DESC
+            ORDER BY m.send_date DESC
         )
         WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
     )
@@ -154,7 +153,7 @@
 
 <!-- 휴지통 메일 조회 -->
 <select id="deleteMailAll" parameterType="map" resultType="MailVO">
-    SELECT *
+     SELECT * 
     FROM (
         SELECT mail_no, 
                sender_name,
@@ -162,15 +161,15 @@
                mail_title,
                ROWNUM AS rn
         FROM (
-            SELECT m.mail_no, 
+            SELECT DISTINCT m.mail_no, 
                    FIND_EMP_NAME(m.sender_id) AS sender_name,
                    m.send_date,
                    m.mail_title
             FROM mail m
             JOIN mail_receive mr ON m.mail_no = mr.mail_no
-            WHERE mr.employee_id = #{mailVO.senderId}
+            WHERE mr.employee_id = #{mailVO.senderId} 
+            AND mr.mail_status = 'TRASH'
             AND m.company_code = #{mailVO.companyCode}
-            AND mr.mail_status = 'TRASH' <!-- 휴지통 상태 필터링 -->
             <if test="criteria.searchType != null and criteria.searchType != ''">
                 <if test="criteria.searchType == 'mailtitle'">
                     AND m.mail_title LIKE '%' || #{criteria.keyword} || '%'
@@ -179,7 +178,7 @@
                     AND FIND_EMP_NAME(m.sender_id) LIKE '%' || #{criteria.keyword} || '%'
                 </if>
             </if>
-            ORDER BY m.mail_no DESC
+            ORDER BY m.send_date DESC
         )
         WHERE ROWNUM <![CDATA[ <= ]]> #{criteria.pageNum} * #{criteria.amount}
     )
@@ -316,23 +315,35 @@
     AND employee_id = #{employeeId}
    
 </update>
+
+
  <!-- 보낸메일 기준 삭제 -->
-<select id="chooseMailStatus" parameterType="map" resultType="String">
+    <select id="chooseMailStatus" parameterType="map" resultType="String">
     SELECT mail_status
     FROM mail
     WHERE mail_no = #{mailNo}
-    AND employee_id = #{employeeId}
+    AND sender_id IN (
+        SELECT employee_no
+        FROM employees
+        WHERE company_code = #{companyCode}
+        AND employee_no = #{empNo}
+  		  );
 </select>
+
+    <!-- 메일 상태를 DELETE로 업데이트하는 쿼리 -->
+    <update id="deleteMailStatus" parameterType="map">
+        UPDATE mail
+        SET mail_status = #{status}
+        WHERE mail_no IN
+        <foreach collection="mailIds" item="mailId" open="(" separator="," close=")">
+            #{mailId}
+        </foreach>
+     
+    </update>
 <!-- 수신메일 기준 상태변경 -->
-<update id="deleteMailStatus" parameterType="map">
-    UPDATE mail
-    SET mail_status = #{status}
-    WHERE mail_no IN
-    <foreach collection="mailIds" item="mailNo" open="(" separator="," close=")">
-        #{mailNo}
-    </foreach>
-    AND employee_id = #{employeeId}
-   
-</update>
+
+
+
+
 </mapper>
 

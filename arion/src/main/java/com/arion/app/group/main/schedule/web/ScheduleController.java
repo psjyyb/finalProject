@@ -1,5 +1,11 @@
 package com.arion.app.group.main.schedule.web;
 
+/*
+ * 작성자 : 박성준
+ * 작성일자 : 2024-08-22
+ * 일정관리 : 사원개인, 부서별 일정 (CRUD)
+ * */
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +32,11 @@ public class ScheduleController {
 	
 	@GetMapping("/group/schedule/calendar")
 	public String ScheduleCalendar() {		
-		return"/group/schedule/calendar";
+		return"group/schedule/calendar";
 	}
 	@GetMapping("/group/schedule/deptCalendar")
 	public String ScheduleDeptCalendar() {		
-		return"/group/schedule/deptCalendar";
+		return"group/schedule/deptCalendar";
 	}
 	@PostMapping("/group/schedule/empCalcInsert")
 	@ResponseBody
@@ -60,8 +66,9 @@ public class ScheduleController {
 	@GetMapping("/group/schedule/deptSchedule")
 	@ResponseBody
 	public List<ScheduleVO>deptCalendar(Model model,HttpSession session){
-		int departmetnNo = (Integer) session.getAttribute("departmentNo");
-		return scheduleService.deptScheduleListSelect(departmetnNo);
+		String departmentName = (String) session.getAttribute("department");
+		String companyCode = (String) session.getAttribute("companyCode");
+		return scheduleService.deptScheduleListSelect(departmentName,companyCode);
 	}
 	@PostMapping("/group/schedule/deptCalcInsert")
 	@ResponseBody

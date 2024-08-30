@@ -95,6 +95,7 @@ public class GroupController {
     }
     //주소록 등록 - 처리
     @PostMapping("/AddrInsert")
+    @ResponseBody
     public String addressInsert(
         @RequestParam String addrName,
         @RequestParam String addrPhone,
@@ -121,7 +122,7 @@ public class GroupController {
             model.addAttribute("message", "주소록 등록에 실패하였습니다.");
         }
 
-        return "group/Gang/addrInsertResult"; // 
+        return "group/Gang/addrInsert"; // 
     }
     //주소록 수정페이지
     @GetMapping("/addressEdit")
@@ -145,9 +146,11 @@ public class GroupController {
     public Map<String, Object> addressDelete(@RequestParam int addrNo) {
         return gsvc.deleteAddress(addrNo);
     }
-    // 전체사원조회
+    // 전체 사원 조회
     @GetMapping("/employees/all")
+    @ResponseBody
     public List<EmployeesVO> getAllEmployees() {
         return gsvc.getAllEmployees();
     }
+
 }

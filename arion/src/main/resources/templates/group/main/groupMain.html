@@ -9,7 +9,8 @@
    <!-- SweetAlert2 CSS -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
    <!-- Custom CSS -->
-   <style>
+
+<style>
       body {
          font-family: Arial, sans-serif;
          margin: 0;
@@ -18,38 +19,38 @@
       }
       .container {
          display: flex;
-         padding: 30px; /* Increased padding */
+         padding: 30px; 
       }
       .left-section, .right-section {
-         padding: 20px; /* Increased padding */
+         padding: 20px; 
          background-color: #fff;
-         border-radius: 15px; /* Increased border-radius */
-         box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Increased shadow */
-         margin-right: 40px; /* Increased margin between sections */
+         border-radius: 15px; 
+         box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+         margin-right: 40px;
       }
       .left-section {
-         width: 65%; /* Increased width */
+         width: 65%;
       }
       .right-section {
-         width: 75%; /* Increased width */
+         width: 75%;
       }
       h2 {
          margin-top: 0;
          color: #333;
-         font-size: 2.5em; /* Increased font size */
-         border-bottom: 4px solid #ddd; /* Increased border thickness */
-         padding-bottom: 20px; /* Increased padding */
+         font-size: 2.5em;
+         border-bottom: 4px solid #ddd;
+         padding-bottom: 20px; 
       }
       table {
          width: 100%;
          border-collapse: collapse;
-         margin-bottom: 35px; /* Increased margin */
+         margin-bottom: 35px; 
       }
       th, td {
          border: 1px solid #ddd;
-         padding: 15px; /* Increased padding */
+         padding: 15px; 
          text-align: left;
-         font-size: 1.4em; /* Increased font size */
+         font-size: 1.4em; 
       }
       th {
          background-color: #f4f4f4;
@@ -59,21 +60,21 @@
          flex-direction: column;
       }
       .button-group label {
-         margin-bottom: 20px; /* Increased margin */
+         margin-bottom: 20px;
          display: flex;
          align-items: center;
-         font-size: 1.4em; /* Increased font size */
+         font-size: 1.4em;
       }
       .button-group input[type="radio"] {
-         margin-right: 20px; /* Increased margin */
+         margin-right: 20px;
       }
       .button-group button {
          background-color: #007bff;
          color: #fff;
          border: none;
-         border-radius: 10px; /* Increased border-radius */
-         padding: 20px 40px; /* Increased padding */
-         font-size: 1.4em; /* Increased font size */
+         border-radius: 10px; 
+         padding: 20px 40px; 
+         font-size: 1.4em; 
          cursor: pointer;
          transition: background-color 0.3s ease;
          width: 100%;
@@ -88,6 +89,7 @@
          font-size: 1.5em; /* Increased font size */
       }
    </style>
+
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -100,6 +102,7 @@
          </div>
          <div class="time-display" id="currentTime">현재 시간: 00:00:00</div>
          
+
          <!-- 출퇴근 선택 및 버튼 -->
          <h2>출퇴근</h2>
          <form id="attForm">
@@ -166,61 +169,61 @@
    <!-- SweetAlert2 사용 JavaScript -->
    <script>
    $(document).ready(function() {
-	    // 출퇴근 버튼 처리
-	    $('#attForm').on('submit', function(event) {
-	        event.preventDefault();
-	        
-	        var attType = $('input[name="attType"]:checked').val();
-	        var url = (attType === 'start') ? '/group/startAtt' : '/group/endAtt';
-	        var successTitle = (attType === 'start') ? '출근 성공' : '퇴근 성공';
-	        var successText = (attType === 'start') ? '출근 처리가 완료되었습니다.' : '퇴근 처리가 완료되었습니다.';
-	        var errorText;
+        // 출퇴근 버튼 처리
+        $('#attForm').on('submit', function(event) {
+            event.preventDefault();
+            
+            var attType = $('input[name="attType"]:checked').val();
+            var url = (attType === 'start') ? '/group/startAtt' : '/group/endAtt';
+            var successTitle = (attType === 'start') ? '출근 성공' : '퇴근 성공';
+            var successText = (attType === 'start') ? '출근 처리가 완료되었습니다.' : '퇴근 처리가 완료되었습니다.';
+            var errorText;
 
-	        $.ajax({
-	            url: url,
-	            type: 'POST',
-	            success: function(response) {
-	                Swal.fire({
-	                    icon: 'success',
-	                    title: successTitle,
-	                    text: successText,
-	                    confirmButtonText: '확인'
-	                });
-	            },
-	            error: function(xhr, status, error) {
-	                if (xhr.responseText === 'already_checked_in') {
-	                    errorText = '이미 출근하셨습니다.';
-	                } else if (xhr.responseText === 'already_checked_out') {
-	                    errorText = '이미 퇴근하셨습니다.';
-	                } else {
-	                    errorText = '처리 중 오류가 발생했습니다.';
-	                }
+            $.ajax({
+                url: url,
+                type: 'POST',
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: successTitle,
+                        text: successText,
+                        confirmButtonText: '확인'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseText === 'already_checked_in') {
+                        errorText = '이미 출근하셨습니다.';
+                    } else if (xhr.responseText === 'already_checked_out') {
+                        errorText = '이미 퇴근하셨습니다.';
+                    } else {
+                        errorText = '처리 중 오류가 발생했습니다.';
+                    }
 
-	                Swal.fire({
-	                    icon: 'error',
-	                    title: '',
-	                    text: errorText,
-	                    confirmButtonText: '확인'
-	                });
-	            }
-	        });
-	    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: '',
+                        text: errorText,
+                        confirmButtonText: '확인'
+                    });
+                }
+            });
+        });
 
-	    // 현재 시간 표시
-	    function updateTime() {
-	        var now = new Date();
-	        var hours = String(now.getHours()).padStart(2, '0');
-	        var minutes = String(now.getMinutes()).padStart(2, '0');
-	        var seconds = String(now.getSeconds()).padStart(2, '0');
-	        $('#currentTime').text('현재 시간: ' + hours + ':' + minutes + ':' + seconds);
-	    }
+        // 현재 시간 표시
+        function updateTime() {
+            var now = new Date();
+            var hours = String(now.getHours()).padStart(2, '0');
+            var minutes = String(now.getMinutes()).padStart(2, '0');
+            var seconds = String(now.getSeconds()).padStart(2, '0');
+            $('#currentTime').text('현재 시간: ' + hours + ':' + minutes + ':' + seconds);
+        }
 
-	    // 시간 업데이트
-	    setInterval(updateTime, 1000);
-	    
-	    // 페이지 로드 시 초기 시간 설정
-	    updateTime();
-	});
+        // 시간 업데이트
+        setInterval(updateTime, 1000);
+        
+        // 페이지 로드 시 초기 시간 설정
+        updateTime();
+    });
    </script>
 </body>
 </html>

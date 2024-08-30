@@ -100,4 +100,8 @@ public class GroupServiceImpl implements GroupService{
 	    public List<EmployeesVO> getAllEmployees() {
 	        return mapper.getAllEmployees();
 	    }
+	    
+	    public List<AddressVO> getAllAddress(){
+	    	return mapper.getAllAddress();
+	    }
 }

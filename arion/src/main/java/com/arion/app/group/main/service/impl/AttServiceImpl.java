@@ -50,5 +50,9 @@ public class AttServiceImpl implements AttService{
 	        attVO.setEndTime(new Date());
 	        return attMapper.endAtt(attVO);
 	    }
+	    @Override
+	    public AttVO getAttendanceStatus(int empNo) {
+	        return attMapper.selectAttendanceStatus(empNo);
+	    }
 
 }

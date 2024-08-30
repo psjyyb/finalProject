@@ -23,13 +23,14 @@ public class ReplyController {
 
 	// 댓글 등록(처리)
 	@PostMapping("/group/insertReply")
-	public String Replyinsert(ReplyVO replyVO, HttpSession session) {
+	@ResponseBody
+	public int Replyinsert(ReplyVO replyVO, HttpSession session) {
 		int employeeNo = (int) session.getAttribute("employeeNo");
 		String companyCode = (String) session.getAttribute("companyCode");
-		replyVO.setCommentWrite(new Integer(employeeNo).toString()); //
+		replyVO.setCommentWrite(Integer.toString(employeeNo)); //
 		replyVO.setCompanyCode(companyCode);
 		int bno = replyService.insertReply(replyVO);
-		return "redirect:/group/freeboardInfo?boardNo=" + replyVO.getBoardNo();
+		return bno;
 	}
 	
 	// 댓글 수정
@@ -44,6 +45,6 @@ public class ReplyController {
 	@PostMapping("/group/deleteReply")
     public String deleteReply(@RequestParam("commentNo") int commentNo, @RequestParam("boardNo") int boardNo) {
         replyService.deleteReply(commentNo, boardNo);
-        return "redirect:/group/freeboardInfo?boardNo=" + boardNo;
+        return "redirect:group/freeboardInfo?boardNo=" + boardNo;
     }
 }

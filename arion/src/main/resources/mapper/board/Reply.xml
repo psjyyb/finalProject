@@ -18,14 +18,12 @@ FROM
 JOIN 
     board b ON c.board_no = b.board_no
 JOIN 
-    employees e ON b.employee_no = e.employee_no
+    employees e ON c.comment_write = e.employee_no 
 WHERE 
     c.board_no = #{boardNo}
 ORDER BY
 	NVL(c.parent_no, c.comment_no), c.comment_no
 </select>
-
-
 
 
 <!-- 댓글 작성 -->
@@ -51,30 +49,6 @@ VALUES
         #{companyCode}
     )
 </insert>
-
-<!--  답글 작성 
-<insert id="insertReplyReply" parameterType="ReplyVO">
-INSERT INTO comments
-    (
-        comment_no,
-        comment_content,
-        parent_no,
-        comment_write,
-        comment_date,
-        board_no,
-        company_code
-    )
-VALUES
-    (
-        comm_seq.NEXTVAL,
-        #{commentContent},
-        #{parentNo},
-        #{commentWrite},
-        SYSDATE,
-        #{boardNo},
-        #{companyCode}
-    )
-</insert> -->
 
 <!-- 댓글 수정 -->
 <update id="updateReply" parameterType="ReplyVO">

@@ -31,10 +31,7 @@ public class PageDTO {
 		if(endPage > realEnd) {
 			endPage = realEnd == 0 ? 1 : realEnd;
 		}
-		
 		prev = startPage > 1;
-		next = endPage < realEnd;
-		
-		
+		next = endPage < realEnd;	
 	}
 }

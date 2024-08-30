@@ -18,11 +18,13 @@
 	           <input type="hidden" id="csuperforderid">
 	           <span class="label">상위폴더이름:</span><input type="text" id="fsuperforder" value="" readonly>
 	           <span class="label">폴더이름:</span><input type="text" id="fordername">
+				<!--
 				<select id="underrank" name="underrank">
 					
 					<option th:each=" underrank :${underranks}" th:value="${underrank.rankranking}"
 						th:text="${underrank.rankname}">없음</option>
 				</select>
+				!-->
 				<button class="styled-button" id="forderup">폴더생성</button>
 			</div>
 			<div id="uploadfile">
@@ -37,10 +39,12 @@
 						
 		</div>	
 		
+	<div class="container">
+	
     <!-- 자료실 -->
     <div class="clouds">
 
-	<div id="1" style="width:500px; align:left; display: inline-block;" >
+	<div id="1" style="width:500px; align:left; display: inline-block; margin-top: 10px;margin-left: 10px;" >
 	자료실
 	</div>
 	
@@ -48,24 +52,25 @@
      <!-- 자료정보 -->
     <div id="fileinfomation" style="width:500px; align:right; display: inline-block;" >	
 	<div class="filediv">
-	<span class="label" >상위폴더이름:</span><text id="supername" readonly>부모이름</text>
+	<span class="label" >상위폴더이름:</span><text id="supername" readonly></text>
 	</div>
 	<div class="filediv">
-	<span class="label" >업로더:</span><text id="uploadername" readonly>업로더이름</text>
+	<span class="label" >업로더:</span><text id="uploadername" readonly></text>
 	</div>
 	<div class="filediv">
-	<span class="label" >파일이름:</span><text id="filename" readonly>파일이름</text>
+	<span class="label" >파일이름:</span><text id="filename" readonly></text>
 	</div>
 		<div class="filediv">
-	<span class="label" >업로드 날짜:</span><text id="uploaddate" readonly>업로드 날짜</text>
+	<span class="label" >업로드 날짜:</span><text id="uploaddate" readonly></text>
 		</div >
 		<div class="filediv">
-	<span class="label" >파일 크기:</span><text id="size" readonly>파일 크기</text>
+	<span class="label" >파일 크기:</span><text id="size" readonly></text>
 	</div>	
 	<a id="download" class="filedivbutton">다운로드</a>
 	<button id="delete" class="filedivbutton">삭제</button>
 	</div>
 	
+	</div>	
 	
 	
 	

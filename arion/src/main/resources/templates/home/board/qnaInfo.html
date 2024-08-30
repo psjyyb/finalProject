@@ -58,7 +58,7 @@
         <p th:text="${qnaInfo.qnaReply}"></p>
         <div>
             <strong>답변시간:</strong>
-          
+          <p th:text="${#dates.format(qnaInfo.replyDate,'yyyy/MM/dd')}"></p>
         </div>
     </div>
 

@@ -40,7 +40,7 @@
     
         SELECT 
                TO_CHAR(start_time,'HH24:MI') AS start_time,
-               TO_CHAR(end_time,'HH24:MI') AS end_time,
+               NVL(TO_CHAR(end_time,'HH24:MI'),' ') AS end_time,
                state,
                TO_CHAR(att_date,'dd') AS att_date,
                half_off

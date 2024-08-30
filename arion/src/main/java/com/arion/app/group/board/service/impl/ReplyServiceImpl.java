@@ -31,15 +31,8 @@ public class ReplyServiceImpl implements ReplyService{
 	@Override
 	public int insertReply(ReplyVO replyVO) {
 		int result = replyMapper.insertReply(replyVO);
-		return result == 1 ? replyVO.getCommentNo() : -1;
+		return result; 
 	}
-	
-	// 답글 등록
-//	@Override
-//	public int insertReplyReply(ReplyVO replyVO) {
-//		int result = replyMapper.insertReplyReply(replyVO);
-//		return result == 1 ? replyVO.getCommentNo() : -1;
-//	}
 
 	// 댓글 수정
 	@Override

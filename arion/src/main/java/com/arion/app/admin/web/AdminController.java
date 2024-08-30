@@ -78,7 +78,7 @@ public class AdminController {
 		return "admin/adminEndSubList";
 	}
 
-	@GetMapping("/adminQnAList")
+	@GetMapping("/admin/adminQnAList")
 	public String adminQnAList(Model model) {
 		List<QnAVO> list = adminService.qnaListSelect();
 		model.addAttribute("qnaList", list);

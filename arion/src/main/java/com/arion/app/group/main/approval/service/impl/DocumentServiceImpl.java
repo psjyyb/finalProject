@@ -165,7 +165,15 @@ public class DocumentServiceImpl implements DocumentService{
 	    finalizeApproval(docNo, companyCode, employeeNo);
 		
 	}
+	
+	public void finalizeApproval(int docNo, String companyCode, int employeeNo) {
+	    // 현재 결재자의 결재를 완료 처리
+		asvc.approveDocument(employeeNo, docNo, companyCode);
 
+	    // 남아있는 결재자들이 모두 결재완료 상태인지 확인하고, 문서 상태를 '결재완료'로 업데이트
+	    mapper.updateDocumentStatusAllApproved(docNo, companyCode);
+	}
+	
 	@Override
 	@Transactional
 	public void updateRejectStatus(int docNo, String companyCode, int employeeNo, String apprReason) {
@@ -179,14 +187,6 @@ public class DocumentServiceImpl implements DocumentService{
 		//다음 결재자 미결 처리
 		asvc.nextApprStatus(docNo, companyCode, employeeNo);
 				
-	}
-	
-	public void finalizeApproval(int docNo, String companyCode, int employeeNo) {
-	    // 현재 결재자의 결재를 완료 처리
-		asvc.approveDocument(employeeNo, docNo, companyCode);
-
-	    // 남아있는 결재자들이 모두 결재완료 상태인지 확인하고, 문서 상태를 '결재완료'로 업데이트
-	    mapper.updateDocumentStatusAllApproved(docNo, companyCode);
 	}
 
 	@Override

@@ -34,29 +34,23 @@ public class FileServiceImpl implements FileService {
 	@Transactional
 	@Override
 	public String insertFiles(MultipartFile[] files, String tableName, int keyNo, String companyCode) {
-		log.debug("keyNo : " + keyNo);
 		if(files == null || files.length == 0) {
 			return null;
 		}
 		
 		UUID uuid = UUID.randomUUID();
-		String folderPath = makeFolder();
+		String folderPath = makeFolder(); // 디렉토리 생성
 		String saveName = "";
 
 		int i = 1;
 		for (MultipartFile file : files) {
-			System.out.println(file.getSize());
-			System.out.println(file.getOriginalFilename());
-			
 			if (file.getSize() > 0) {
 				String originalFilename = file.getOriginalFilename();
 				String uniqueFileName = uuid + "_" + originalFilename;
 				saveName = Paths.get(uploadPath, folderPath, uniqueFileName).toString();
-				// saveName = folderPath + File.separator + uniqueFileName;
 				String uploadFileName = folderPath + "/" + uniqueFileName;
 				try {
 					file.transferTo(Paths.get(saveName));
-					// String uploadFileName2 = setImagePath(uploadFileName);
 					FileVO fileVO = new FileVO();
 					fileVO.setFileName(uniqueFileName);
 					fileVO.setFileOriginalName(originalFilename);
@@ -73,7 +67,6 @@ public class FileServiceImpl implements FileService {
 				}
 			}
 		}
-
 		return saveName;
 	}
 

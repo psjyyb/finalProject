@@ -70,6 +70,30 @@ button:disabled {
 .button-group {
     text-align: center;
 }
+
+.form-group  select {
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    -webkit-appearance: none; /* 크롬, 사파리 브라우저의 기본 스타일 제거 */
+    -moz-appearance: none; /* 파이어폭스 브라우저의 기본 스타일 제거 */
+    border: 1px solid #ced4da;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #495057;
+    width: 100%;
+
+}
+
+.form-group select {
+    padding-right: 30px; /* 선택된 텍스트가 드롭다운 버튼과 겹치지 않도록 여백 추가 */
+}
+
+/* 필요할 경우 추가 스타일 적용 */
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 </style>
 </head>
 <body>

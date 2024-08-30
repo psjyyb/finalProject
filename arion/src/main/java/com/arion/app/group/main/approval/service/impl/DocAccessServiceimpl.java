@@ -20,6 +20,7 @@ public class DocAccessServiceimpl implements DocAccessService {
 	
 	@Override
 	public void insertAccessApproval(List<Integer> approverIds, int DocNo, String companyCode) {
+		// 결재자 등록
 		for (Integer approverId : approverIds) {
             DocAccessVO docAccessVO = new DocAccessVO();
             docAccessVO.setDocNo(DocNo);
@@ -31,14 +32,13 @@ public class DocAccessServiceimpl implements DocAccessService {
             mapper.insertAccess(docAccessVO);
         }
 	}
-
+	
 	@Override
 	public void insertAccessReference(List<Integer> referenceIds, int DocNo, String companyCode) {
-		
+		// 참조자 등록
 		if (referenceIds == null || referenceIds.isEmpty()) {
 			return;
 		}
-		
 		for (Integer referenceId : referenceIds) {
             DocAccessVO docAccessVO = new DocAccessVO();
             docAccessVO.setDocNo(DocNo);
@@ -53,7 +53,6 @@ public class DocAccessServiceimpl implements DocAccessService {
 	
 	@Override
 	public void insertAddReference(List<EmployeesVO> referenceList, int DocNo, String companyCode) {
-		
 		if (referenceList == null || referenceList.isEmpty()) {
 			return;
 		}

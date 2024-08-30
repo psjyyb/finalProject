@@ -100,7 +100,7 @@ public class BoardController {
 		boardVO.setBoardCategory("Y01"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
 		
 		long bno = boardService.noticeinsertBoard(boardVO, files, companyCode);
-		return "redirect:/group/noticeboardInfo?boardNo=" + bno;
+		return "redirect:group/noticeboardInfo?boardNo=" + bno;
 	}
 
 	// 공지사항 게시글 수정 (페이지)
@@ -197,7 +197,7 @@ public class BoardController {
 		boardVO.setBoardCategory("Y02"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
 		
 		long bno = boardService.insertBoard(boardVO, files, companyCode);
-		return "redirect:/group/freeboardInfo?boardNo=" + bno;
+		return "redirect:group/freeboardInfo?boardNo=" + bno;
 	}
 
 	// 자유게시판 게시글 수정 (페이지)
@@ -299,7 +299,7 @@ public class BoardController {
 		boardVO.setBoardCategory("Y03"); // 글 등록하기위해선 어떤게시판에 등록할것인지 정해야함 (자유게시판이라 Y02)
 		
 		long bno = boardService.deptinsertBoard(boardVO, files, companyCode);
-		return "redirect:/group/deptboardInfo?boardNo=" + bno;
+		return "redirect:group/deptboardInfo?boardNo=" + bno;
 	}
 
 	// 부서게시판 게시글 수정 (페이지)

@@ -45,6 +45,6 @@ public class ReplyController {
 	@PostMapping("/group/deleteReply")
     public String deleteReply(@RequestParam("commentNo") int commentNo, @RequestParam("boardNo") int boardNo) {
         replyService.deleteReply(commentNo, boardNo);
-        return "redirect:/group/freeboardInfo?boardNo=" + boardNo;
+        return "redirect:group/freeboardInfo?boardNo=" + boardNo;
     }
 }

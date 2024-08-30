@@ -61,7 +61,7 @@ public class GroupAdminController {
 		String comCode = (String) session.getAttribute("companyCode");
 		List<EmployeeVO> list = gaService.empListSelect(comCode);
 		model.addAttribute("empList", list);
-		return "/groupAdmin/GAEmpList";
+		return "groupAdmin/GAEmpList";
 	}
 
 	@GetMapping("/groupAdmin/GAEmpInsert")
@@ -174,14 +174,14 @@ public class GroupAdminController {
 		String comCode = (String)session.getAttribute("companyCode");
 		int result = gaService.contractNo(comCode);
 		model.addAttribute("contractNo",result);
-		return"/groupAdmin/GAConCan";
+		return"groupAdmin/GAConCan";
 	}
 	@GetMapping("/groupAdmin/GAComMod")
 	public String GAComMod(Model model, HttpSession session) {
 		String comCode = (String) session.getAttribute("companyCode");
 		CompanyVO cvo = gaService.comSelect(comCode);
 		model.addAttribute("comInfo",cvo);
-		return "/groupAdmin/GAComMod";
+		return "groupAdmin/GAComMod";
 	}
 	@PostMapping("/groupAdmin/GAComSave")
 	public String GAcomSave(CompanyVO companyVO) {
@@ -196,7 +196,7 @@ public class GroupAdminController {
 	}
 	@GetMapping("/groupAdmin/checkPw")
 	public String checkPw() {
-		return"/groupAdmin/checkPw";
+		return"groupAdmin/checkPw";
 	}
 	@PostMapping("/groupAdmin/checkPw")
 	@ResponseBody
@@ -214,7 +214,7 @@ public class GroupAdminController {
 		String comCode = (String)session.getAttribute("companyCode");
 		List<PayListVO> list = gaService.payList(comCode);
 		model.addAttribute("payList",list);
-		return "/groupAdmin/GAPayList";
+		return "groupAdmin/GAPayList";
 	}
 	@GetMapping("/groupAdmin/GAPayInfo")
 	public String gaPayInfo(int payNo,Model model) {
@@ -222,7 +222,7 @@ public class GroupAdminController {
 		List<PayDetailVO> list = gaService.payDetailInfo(payNo);
 		model.addAttribute("detailList",list);
 		model.addAttribute("payInfo",lvo);
-		return "/groupAdmin/GAPayInfo";
+		return "groupAdmin/GAPayInfo";
 	}
 	@PostMapping("/groupAdmin/GANowContract")
 	public Map<String,Object>extendContract(int period,HttpSession session){

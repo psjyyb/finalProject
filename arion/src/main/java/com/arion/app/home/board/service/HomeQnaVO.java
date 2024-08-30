@@ -18,4 +18,6 @@
 		private String qnaReply;
 		private String qnaState;
 		private String qnaPw;
+		@DateTimeFormat(pattern="yyyy/MM/dd")
+		private Date replyDate;
 	}

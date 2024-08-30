@@ -109,7 +109,8 @@
                qna_date,
                qna_company,
                qna_pw,
-               qna_reply
+               qna_reply,
+               reply_date
         FROM qna
         WHERE qna_no = #{qnaNo}
     </select>

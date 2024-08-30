@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class webMvcConfig implements WebMvcConfigurer{
-	@Value("${file.upload.url}")
+	@Value("${file.upload.url.path}")
 	private String uploadPath;
 
 	//경로 등록

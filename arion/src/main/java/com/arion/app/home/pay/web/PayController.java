@@ -125,7 +125,7 @@ public class PayController {
 		CompanyVO comVo = payService.emailNameSelect(companyCode);
 		model.addAttribute("comInfo", comVo);
 		model.addAttribute("payInfo", contractData);
-		return "/pay/success"; // 성공 페이지로 리다이렉트
+		return "pay/success"; // 성공 페이지로 리다이렉트
 	}
 
 	@GetMapping("/pay/fail")

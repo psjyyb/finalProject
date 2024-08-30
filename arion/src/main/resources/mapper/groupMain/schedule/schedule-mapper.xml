@@ -55,12 +55,15 @@
 	</update>
 	
 	<select id="selectDeptScheduleList" resultType="ScheduleVO">
-		SELECT schedule_no
+	SELECT schedule_no
 		      ,schedule_title
 		      ,TO_CHAR(schedule_start,'yyyy-MM-dd HH24:mi') AS schedule_starts
 		      ,TO_CHAR(schedule_end,'yyyy-MM-dd HH24:mi') AS schedule_ends
 		      ,employee_no
 		      ,department_no
-		FROM schedule WHERE department_no = #{deparmentNo}
+		FROM schedule WHERE department_no =(SELECT department_no
+                                            FROM departments
+                                            WHERE department_name=#{departmentName} 
+                                            AND company_code=#{companyCode})
 	</select>
 </mapper>

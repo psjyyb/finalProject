@@ -50,8 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService{
 		return scheduleMapper.updateEmpSchedule(scheduleVO);
 	}
 	@Override
-	public List<ScheduleVO> deptScheduleListSelect(int departmentNo) {
-		return scheduleMapper.selectDeptScheduleList(departmentNo);
+	public List<ScheduleVO> deptScheduleListSelect(String departmentName,String companyCode) {
+		return scheduleMapper.selectDeptScheduleList(departmentName,companyCode);
 	}
 
 }

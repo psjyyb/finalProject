@@ -113,14 +113,14 @@ public class TemplateController {
 		tempVO.setCompanyCode(companyCode);
 		tsvc.insertTemp(tempVO);
 
-		return "redirect:/group/doc/template";
+		return "redirect:group/doc/template";
 	}
 	
 	@GetMapping("/group/doc/tempDelete")
 	public String tempDelete(@RequestParam String tempNo, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		tsvc.tempDelete(companyCode, tempNo);
-		return "redirect:/group/doc/template";
+		return "redirect:group/doc/template";
 	}
 	
 	

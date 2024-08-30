@@ -32,11 +32,11 @@ public class ScheduleController {
 	
 	@GetMapping("/group/schedule/calendar")
 	public String ScheduleCalendar() {		
-		return"/group/schedule/calendar";
+		return"group/schedule/calendar";
 	}
 	@GetMapping("/group/schedule/deptCalendar")
 	public String ScheduleDeptCalendar() {		
-		return"/group/schedule/deptCalendar";
+		return"group/schedule/deptCalendar";
 	}
 	@PostMapping("/group/schedule/empCalcInsert")
 	@ResponseBody

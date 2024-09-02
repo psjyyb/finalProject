@@ -1,5 +1,6 @@
 package com.arion.app.group.main.database.web;
 
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -160,7 +161,18 @@ public class DatabaseController {
 						UUID uuid = UUID.randomUUID();
 						
 						File saveFile = new File(uploadPath+"/"+filename ,uuid+ "_" + file.getOriginalFilename());
-						file.transferTo(saveFile);	
+						//file.transferTo(saveFile);	
+
+						//수정
+						FileOutputStream fos = new FileOutputStream(saveFile);
+			            
+			                
+			                       fos.write(0);
+			            
+			                       fos.close(); // 파일을 닫는다.
+			
+						
+						//
 
 						
 						

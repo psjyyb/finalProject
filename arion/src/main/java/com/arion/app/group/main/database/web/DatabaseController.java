@@ -42,7 +42,7 @@ import com.arion.app.home.board.service.HomeQnaVO;
 @RequestMapping("/group/database")
 public class DatabaseController {
 
-	@Value("${file.upload.path}")
+	@Value("${file.upload.url}")
 	private String uploadPath;
 	
 	@Autowired

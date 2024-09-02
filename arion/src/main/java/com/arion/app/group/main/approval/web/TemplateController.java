@@ -71,7 +71,7 @@ public class TemplateController {
 	public Map<String, Object> insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO,
 			HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
-		String directoryPath = "D:/upload/";
+		String directoryPath = "D:/upload/templates/";
 		System.out.println("docType: " + tempVO.getDocType());
 		System.out.println("files" + files[0]);
 		System.out.println("files" + files[1]);

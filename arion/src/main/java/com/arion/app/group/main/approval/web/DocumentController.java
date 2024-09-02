@@ -103,7 +103,7 @@ public class DocumentController {
 		templateVO.setTempNo(tempNo);
 
 		TemplateVO template = tsvc.tempInfo(templateVO);
-		String filePath = "D:/upload/" + template.getDocFile();
+		String filePath = "D:/upload/templates/" + template.getDocFile();
 		String docType = template.getDocType();
 
 		if (docType.equals(".hwp")) {

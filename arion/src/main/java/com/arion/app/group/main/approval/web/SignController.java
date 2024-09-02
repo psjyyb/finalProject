@@ -43,7 +43,7 @@ public class SignController {
 		return "group/document/sign/signList";
 	}
 	
-	@PostMapping("/insertSign")
+	@PostMapping("/group/insertSign")
 	public String insertSign(EmployeeVO empVO, @RequestParam("signatureData") String signatureData, HttpSession session) {
 		String fileName = null;
 		String companyCode = (String) session.getAttribute("companyCode");
@@ -54,7 +54,7 @@ public class SignController {
 	        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
 	        // 저장할 디렉토리 경로
-	        String directoryPath = "D:/upload/";
+	        String directoryPath = "D:/upload/signatures/";
 	        File directory = new File(directoryPath);
 
 	        if (!directory.exists()) {
@@ -77,6 +77,6 @@ public class SignController {
 		
 		ssvc.insertSign(empVO);
 		
-		return "redirect:group/doc/sign";
+		return "redirect:/group/doc/sign";
 	}
 }

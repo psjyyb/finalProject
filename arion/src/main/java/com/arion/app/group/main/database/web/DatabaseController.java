@@ -161,7 +161,7 @@ public class DatabaseController {
 						UUID uuid = UUID.randomUUID();
 						
 						File saveFile = new File(uploadPath+"/"+filename ,uuid+ "_" + file.getOriginalFilename());
-						//file.transferTo(saveFile);	
+						file.transferTo(saveFile);	
 
 						
 

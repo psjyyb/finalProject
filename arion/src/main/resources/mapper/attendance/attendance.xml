@@ -112,7 +112,7 @@
    <select id="vacation" resultType="VacationVO">
       SELECT TO_CHAR(start_date,'YYYY-MM-DD')||' ~ '||TO_CHAR(end_date,'YYYY-MM-DD')  as vacationdate,
       CASE WHEN hol_type = '반차(오전)' OR hol_type = '반차(오후)'  THEN 0.5 
-      ELSE (TO_DATE(TRUNC(end_date), 'YYYY-MM-DD') - TO_DATE(TRUNC(start_date), 'YYYY-MM-DD')+2) END as usevacation,
+      ELSE (TO_DATE(TRUNC(end_date), 'YYYY-MM-DD') - TO_DATE(TRUNC(start_date), 'YYYY-MM-DD')+1) END as usevacation,
       h.start_date,d.create_date,hol_type,d.doc_status 
       FROM document d JOIN hol_doc h ON d.doc_no=h.doc_no
       WHERE d.employee_no = #{employeeno}

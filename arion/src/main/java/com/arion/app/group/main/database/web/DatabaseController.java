@@ -163,16 +163,7 @@ public class DatabaseController {
 						File saveFile = new File(uploadPath+"/"+filename ,uuid+ "_" + file.getOriginalFilename());
 						//file.transferTo(saveFile);	
 
-						//수정
-						FileOutputStream fos = new FileOutputStream(saveFile);
-			            
-			                
-			                       fos.write(0);
-			            
-			                       fos.close(); // 파일을 닫는다.
-			
 						
-						//
 
 						
 						

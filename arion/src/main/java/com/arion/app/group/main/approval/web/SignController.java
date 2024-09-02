@@ -78,5 +78,6 @@ public class SignController {
 		ssvc.insertSign(empVO);
 		
 		return "redirect:/group/doc/sign";
+		
 	}
 }

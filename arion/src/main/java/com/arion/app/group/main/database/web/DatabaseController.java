@@ -139,7 +139,7 @@ public class DatabaseController {
 					System.out.println(parent);
 					//회사 폴더 생성
 					String filename = companycode;
-					File uploadPathFoler = new File(uploadPath+"\\", filename);
+					File uploadPathFoler = new File(uploadPath, filename);
 					
 					if (uploadPathFoler.exists() == false) {
 						uploadPathFoler.mkdirs();

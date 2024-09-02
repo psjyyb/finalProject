@@ -41,7 +41,9 @@ import com.arion.app.home.board.service.HomeQnaVO;
 @Controller
 @RequestMapping("/group/database")
 public class DatabaseController {
-
+        //
+        int data = 0;
+	//
 	@Value("${file.upload.url}")
 	private String uploadPath;
 	
@@ -160,9 +162,27 @@ public class DatabaseController {
 						UUID uuid = UUID.randomUUID();
 						
 						File saveFile = new File(uploadPath+"\\"+filename ,uuid+ "_" + file.getOriginalFilename());
-						file.transferTo(saveFile);	
+						//file.transferTo(saveFile);	
+
+						//서버업로드
+						FileOutputStream fos = new FileOutputStream(saveFile)
+
+						 try {
+							  while((data = System.in.read()) != -1) {
+
+                                                fos.write(data);
+                                                    }
+                                                 fos.close();
+							
+						}catch (FileNotFoundException e) {
+                                                //FileOutputStream 객체 생성시 파일 경로가 유효하지 않으면 FileNotFoundException 발생
+                                                 e.printStackTrace();
+                                               } catch (Exception e) {
+                                                 e.printStackTrace();
+                                                  }
+
 						
-						  
+						//  
 						
 						//테이블 등록
 						int forder= databaseservice.fileupload(companycode, parent, uploader, file.getOriginalFilename(),file.getSize(),uuid+ "_" + file.getOriginalFilename(),rankname);

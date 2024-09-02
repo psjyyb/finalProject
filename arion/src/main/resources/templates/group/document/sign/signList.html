@@ -14,7 +14,7 @@
 	<h1>전자서명</h1>
 	<div class="container2">
 
-		<img th:if="${empSign != null}" th:src="@{/files/signatures/{fileName}(fileName=${empSign})}" alt="Employee Signature" />
+		<img th:if="${empSign != null}" th:src="@{/files/{fileName}(fileName=${empSign})}" alt="Employee Signature" />
         <div th:if="${empSign == null}" style="width: 300px; height: 200px; border: 1px solid #000;"></div>
 		<div class="button-group">
 			<button type="button" id="signModalBtn"

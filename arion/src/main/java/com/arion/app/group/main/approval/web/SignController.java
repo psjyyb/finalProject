@@ -54,7 +54,7 @@ public class SignController {
 	        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
 	        // 저장할 디렉토리 경로
-	        String directoryPath = "D:/upload/signatures/";
+	        String directoryPath = "D:/upload/";
 	        File directory = new File(directoryPath);
 
 	        if (!directory.exists()) {

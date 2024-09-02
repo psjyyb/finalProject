@@ -159,7 +159,7 @@ public class DatabaseController {
 						
 						UUID uuid = UUID.randomUUID();
 						
-						File saveFile = new File(uploadPath+"\\"+filename ,uuid+ "_" + file.getOriginalFilename());
+						File saveFile = new File(uploadPath+"/"+filename ,uuid+ "_" + file.getOriginalFilename());
 						file.transferTo(saveFile);	
 
 						
@@ -228,7 +228,7 @@ public class DatabaseController {
 					//테스트
 					String fname = datainfo.get(0).getFilename();
 
-					File file = new File(uploadPath+"\\"+companycode+"\\"+datainfo.get(0).getCname());
+					File file = new File(uploadPath+"/"+companycode+"/"+datainfo.get(0).getCname());
 					FileInputStream in = new FileInputStream(file);
 					System.out.println(file.getName());
 					fname = new String(fname.getBytes("UTF-8"), "8859_1");

@@ -25,6 +25,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,10 @@ import com.arion.app.group.main.approval.service.TemplateVO;
 
 @Controller
 public class TemplateController {
-
+	
+	@Value("${file.upload.url}")
+	private String uploadPath;
+		
 	@Autowired
 	TemplateService tsvc;
 
@@ -71,7 +75,7 @@ public class TemplateController {
 	public Map<String, Object> insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO,
 			HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
-		String directoryPath = "D:/upload/templates/";
+		String directoryPath = uploadPath + "/templates/";
 		System.out.println("docType: " + tempVO.getDocType());
 		System.out.println("files" + files[0]);
 		System.out.println("files" + files[1]);

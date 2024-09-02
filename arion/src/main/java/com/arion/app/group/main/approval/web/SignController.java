@@ -28,7 +28,7 @@ import com.arion.app.group.main.approval.service.SignService;
 @Controller
 public class SignController {
 	
-	@Value("${file.upload.path}")
+	@Value("${file.upload.url}")
 	private String uploadPath;
 		
 	@Autowired

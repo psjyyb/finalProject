@@ -22,7 +22,7 @@ public class webMvcConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String path = "file:///"+uploadPath + '/';
 		System.out.println(path);
-		logger.info("Resource Path: " + path); // 로그 출력
+		logger.info(">>>>>>>>>>>>>>>>>>>>>Resource Path: " + path); // 로그 출력
 		registry
 			.addResourceHandler("/files/**")    // URL
 			.addResourceLocations(path ); //실제 경로

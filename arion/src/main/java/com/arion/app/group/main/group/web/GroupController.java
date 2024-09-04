@@ -48,8 +48,10 @@ public class GroupController {
     @ResponseBody
     public List<EmployeesVO> getEmployees(@RequestParam String departmentName, HttpSession session) {
         String companyCode = (String) session.getAttribute("companyCode");
+    
         return gsvc.selectEmployeeList(companyCode, departmentName);
     }
+    
 
     // 직원 상세정보
     @GetMapping("/employee")
@@ -149,8 +151,9 @@ public class GroupController {
     // 전체 사원 조회
     @GetMapping("/employees/all")
     @ResponseBody
-    public List<EmployeesVO> getAllEmployees() {
-        return gsvc.getAllEmployees();
+    public List<EmployeesVO> getAllEmployees(HttpSession session) {
+    	  String companyCode = (String) session.getAttribute("companyCode");
+    	return gsvc.getAllEmployees(companyCode);
     }
 
 }

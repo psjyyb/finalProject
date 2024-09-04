@@ -97,8 +97,8 @@ public class GroupServiceImpl implements GroupService{
 	    }
 	    //전체사원조회
 	    @Override
-	    public List<EmployeesVO> getAllEmployees() {
-	        return mapper.getAllEmployees();
+	    public List<EmployeesVO> getAllEmployees(String companyCode) {
+	        return mapper.getAllEmployees(companyCode);
 	    }
 	    
 	    public List<AddressVO> getAllAddress(){

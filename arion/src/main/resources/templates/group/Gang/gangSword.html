@@ -7,229 +7,235 @@
     <meta charset="UTF-8">
     <title>ARION</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<style>
-    .container {
-        display: flex;
-        justify-content: center;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        max-width: 1200px;
-    }
-    .departments, .employees {
-        flex: 1;
-        margin: 20px;
-    }
-    .departments h2, .employees h2 {
-        font-size: 24px;
-        color: #333;
-        border-bottom: 2px solid #007bff;
-        padding-bottom: 10px;
-    }
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-    
-    /* 부서 목록 스타일 */
-    #departmentList li {
-        margin: 10px 0;
-    }
-    
-    #departmentList a {
-        text-decoration: none;
-        color: #007bff;
-        font-weight: bold;
-        transition: color 0.3s ease;
-    }
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 1200px;
+        }
+        .departments, .employees {
+            flex: 1;
+            margin: 20px;
+        }
+        .departments h2, .employees h2 {
+            font-size: 24px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        /* 부서 목록 스타일 */
+        #departmentList li {
+            margin: 10px 0;
+        }
+        
+        #departmentList a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
 
-    #departmentList a:hover {
-        color: #0056b3;
-    }
-    
-    /* 사원 목록 스타일 */
-    #employeeList li {
-        margin: 10px 0;
-    }
-    
-    #employeeList a {
-        text-decoration: none;
-        color: #007bff;
-        font-weight: bold;
-        transition: color 0.3s ease;
-    }
+        #departmentList a:hover {
+            color: #0056b3;
+        }
+        
+        /* 사원 목록 스타일 */
+        #employeeList {
+            display: none; /* 처음에는 숨김 */
+        }
 
-    #employeeList a:hover {
-        color: #0056b3;
-    }
+        #employeeList li {
+            margin: 10px 0;
+        }
+        
+        #employeeList a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
 
-    #employeeDetail {
-        flex: 1;
-        margin-left: 20px;
-        padding: 15px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: none; /* 사원 정보가 선택되기 전에는 숨김 */
-    }
-    #employeeDetail h3 {
-        margin-top: 0;
-        font-size: 20px;
-        color: #007bff;
-    }
-    #employeeDetail p {
-        margin: 8px 0;
-        font-size: 16px;
-        color: #555;
-    }
+        #employeeList a:hover {
+            color: #0056b3;
+        }
 
-    #sendMailBtn {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 4px;
-        margin-top: 20px;
-    }
+        #employeeDetail {
+            flex: 1;
+            margin-left: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* 사원 정보가 선택되기 전에는 숨김 */
+        }
+        #employeeDetail h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #007bff;
+        }
+        #employeeDetail p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #555;
+        }
 
-    #sendMailBtn:hover {
-        background-color: #0056b3;
-    }
-</style>
+        #sendMailBtn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        #sendMailBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <h1>조직도</h1>
 
-    <div class="container">
-        <div class="departments">
-            <h2>부서</h2>
-            <ul id="departmentList"></ul>
-        </div>
-        <div class="employees">
-            <h2>사원</h2>
-            <!-- 전체 사원 검색 입력 필드 추가 -->
-            <input type="text" id="employeeSearch" placeholder="전체 사원 검색" />
-            <ul id="employeeList"></ul>
-        </div>
-        <div id="employeeDetail">
-            <h3>사원 정보</h3>
-            <p>이름: </p>
-            <p>직급: </p>
-            <p>부서명: </p>
-            <p>연락처: </p>
-        </div>
+<div class="container">
+    <div class="departments">
+        <h2>부서</h2>
+        <ul id="departmentList"></ul>
     </div>
+    <div class="employees">
+        <h2>사원</h2>
+        <!-- 전체 사원 검색 입력 필드 추가 -->
+        <input type="text" id="employeeSearch" placeholder="전체 사원 검색" style="display: none;" /> 
+        <ul id="employeeList"></ul>
+    </div>
+    <div id="employeeDetail">
+        <h3>사원 정보</h3>
+        <p>이름: </p>
+        <p>직급: </p>
+        <p>부서명: </p>
+        <p>연락처: </p>
+    </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            let allEmployees = [];
+<script>
+    $(document).ready(function() {
+        let allEmployees = [];
 
-            // 전체 사원 목록을 로드
-            function loadEmployees() {
-                $.ajax({
-                    url: '/group/Gang/employees/all', // 전체 사원 조회 API
-                    method: 'GET',
-                    success: function(data) {
-                        allEmployees = data;
-                        displayEmployees(allEmployees);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("오류:", status, error);
-                    }
-                });
-            }
-
-            // 사원 목록을 화면에 표시하는 함수
-            function displayEmployees(employees) {
-                let employeeList = $('#employeeList');
-                employeeList.empty();
-                employees.forEach(function(employee) {
-                    employeeList.append('<li><a href="#" class="employee" data-id="' + employee.employeeNo + '">' + employee.employeeName + ' (' + employee.rankName + ')</a></li>');
-                });
-            }
-
-            // 페이지 로드 시 전체 사원 목록을 불러오기
-            loadEmployees();
-
-            // 전체 사원 검색 필터링
-            $('#employeeSearch').on('input', function() {
-                let searchQuery = $(this).val().toLowerCase();
-                let filteredEmployees = allEmployees.filter(function(employee) {
-                    return employee.employeeName.toLowerCase().indexOf(searchQuery) !== -1;
-                });
-                displayEmployees(filteredEmployees); // 검색 결과를 표시
-            });
-
-            // 사원 클릭 시 상세 정보를 불러오는 AJAX 요청
-            $(document).on('click', '.employee', function(e) {
-                e.preventDefault();
-                let employeeId = $(this).data('id');
-
-                $.ajax({
-                    url: '/group/Gang/employee',
-                    method: 'GET',
-                    data: { employeeNo: employeeId },
-                    success: function(employee) {
-                        $('#employeeDetail').html('<h3>사원 정보</h3>' +
-                            '<p>이름: ' + employee.employeeName + '</p>' +
-                            '<p>직급: ' + employee.rankName + '</p>' +
-                            '<p>부서명: ' + employee.departmentName + '</p>' +
-                            '<p>연락처: ' + employee.employeePhone + '</p>' +
-                            '<button id="sendMailBtn" data-id="' + employee.employeeId + '">메일 보내기</button>'
-                        ).show(); // 사원 정보 표시
-                    }
-                });
-            });
-
-            // 부서 목록을 불러오는 AJAX 요청 (기존 코드)
+        // 전체 사원 목록을 로드
+        function loadEmployees() {
             $.ajax({
-                url: '/group/Gang/departments',
+                url: '/group/Gang/employees/all', // 전체 사원 조회 API
                 method: 'GET',
                 success: function(data) {
-                    let departmentList = $('#departmentList');
-                    departmentList.empty();
-
-                    data.forEach(function(department) {
-                        departmentList.append('<li><a href="#" class="department" data-name="' + department.departmentName + '">' + department.departmentName + '</a></li>');
-                    });
+                    allEmployees = data;
+                    displayEmployees(allEmployees);
+                },
+                error: function(xhr, status, error) {
+                    console.error("오류:", status, error);
                 }
             });
+        }
 
-            // 부서를 클릭했을 때 사원 목록을 부서에 맞게 필터링하는 AJAX 요청 (기존 코드)
-            $(document).on('click', '.department', function(e) {
-                e.preventDefault();
-                let departmentName = $(this).data('name');
-
-                $.ajax({
-                    url: '/group/Gang/employees',
-                    method: 'GET',
-                    data: { departmentName: departmentName },
-                    success: function(data) {
-                        displayEmployees(data); // 부서에 맞게 사원 목록을 표시
-                        $('#employeeDetail').hide(); // 부서를 클릭하면 사원 정보는 숨김
-                    }
-                });
+        // 사원 목록을 화면에 표시하는 함수
+        function displayEmployees(employees) {
+            let employeeList = $('#employeeList');
+            employeeList.empty();
+            employees.forEach(function(employee) {
+                employeeList.append('<li><a href="#" class="employee" data-id="' + employee.employeeNo + '">' + employee.employeeName + ' (' + employee.rankName + ')</a></li>');
             });
+            employeeList.show(); // 사원 목록을 표시
+            $('#employeeSearch').show(); // 사원 검색 입력 필드를 표시
+        }
 
-            // 메일 보내기 버튼 클릭 이벤트 (기존 코드)
-            $(document).on('click', '#sendMailBtn', function() {
-                let employeeId = $(this).data('id');
-                // 수신인 필드에 employeeId를 추가
-                let receiverField = $('#receiverId');
-                let currentReceiver = receiverField.val();
-                if (currentReceiver) {
-                    receiverField.val(currentReceiver + ', ' + employeeId);
-                } else {
-                    receiverField.val(employeeId);
+        // 페이지 로드 시 전체 사원 목록을 불러오기
+        //loadEmployees(); // 주석 처리: 페이지 로드 시 사원 목록을 불러오지 않음
+
+        // 전체 사원 검색 필터링
+        $('#employeeSearch').on('input', function() {
+            let searchQuery = $(this).val().toLowerCase();
+            let filteredEmployees = allEmployees.filter(function(employee) {
+                return employee.employeeName.toLowerCase().indexOf(searchQuery) !== -1;
+            });
+            displayEmployees(filteredEmployees); // 검색 결과를 표시
+        });
+
+        // 사원 클릭 시 상세 정보를 불러오는 AJAX 요청
+        $(document).on('click', '.employee', function(e) {
+            e.preventDefault();
+            let employeeId = $(this).data('id');
+
+            $.ajax({
+                url: '/group/Gang/employee',
+                method: 'GET',
+                data: { employeeNo: employeeId },
+                success: function(employee) {
+                    $('#employeeDetail').html('<h3>사원 정보</h3>' +
+                        '<p>이름: ' + employee.employeeName + '</p>' +
+                        '<p>직급: ' + employee.rankName + '</p>' +
+                        '<p>부서명: ' + employee.departmentName + '</p>' +
+                        '<p>연락처: ' + employee.employeePhone + '</p>' +
+                        '<button id="sendMailBtn" data-id="' + employee.employeeId + '">메일 보내기</button>'
+                    ).show(); // 사원 정보 표시
                 }
-                // 메일 작성 페이지로 이동
-                window.location.href = '/group/mail/writemail?employeeId=' + employeeId;
             });
         });
-    </script>
+
+        // 부서 목록을 불러오는 AJAX 요청 (기존 코드)
+        $.ajax({
+            url: '/group/Gang/departments',
+            method: 'GET',
+            success: function(data) {
+                let departmentList = $('#departmentList');
+                departmentList.empty();
+
+                data.forEach(function(department) {
+                    departmentList.append('<li><a href="#" class="department" data-name="' + department.departmentName + '">' + department.departmentName + '</a></li>');
+                });
+            }
+        });
+
+        // 부서를 클릭했을 때 사원 목록을 부서에 맞게 필터링하는 AJAX 요청 (기존 코드)
+        $(document).on('click', '.department', function(e) {
+            e.preventDefault();
+            let departmentName = $(this).data('name');
+
+            $.ajax({
+                url: '/group/Gang/employees',
+                method: 'GET',
+                data: { departmentName: departmentName },
+                success: function(data) {
+                    displayEmployees(data); // 부서에 맞게 사원 목록을 표시
+                    $('#employeeDetail').hide(); // 부서를 클릭하면 사원 정보는 숨김
+                }
+            });
+        });
+
+        // 메일 보내기 버튼 클릭 이벤트 (기존 코드)
+        $(document).on('click', '#sendMailBtn', function() {
+            let employeeId = $(this).data('id');
+            // 수신인 필드에 employeeId를 추가
+            let receiverField = $('#receiverId');
+            let currentReceiver = receiverField.val();
+            if (currentReceiver) {
+                receiverField.val(currentReceiver + ', ' + employeeId);
+            } else {
+                receiverField.val(employeeId);
+            }
+            // 메일 작성 페이지로 이동
+            window.location.href = '/group/mail/writemail?employeeId=' + employeeId;
+        });
+    });
+</script>
 </body>
 </html>

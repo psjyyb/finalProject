@@ -129,7 +129,7 @@
     </select>
     <!-- 전체사원조회 -->
     <select id="getAllEmployees" resultType="employeesVO">
-    SELECT e.employee_no
+    SELECT DISTINCT e.employee_no
           , e.employee_name
           , e.department_name
           , e.rank_name

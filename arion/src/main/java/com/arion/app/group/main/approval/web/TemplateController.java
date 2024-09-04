@@ -19,11 +19,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +41,10 @@ import com.arion.app.group.main.approval.service.TemplateVO;
 
 @Controller
 public class TemplateController {
-
+	
+	@Value("${file.upload.url}")
+	private String uploadPath;
+		
 	@Autowired
 	TemplateService tsvc;
 
@@ -65,11 +70,12 @@ public class TemplateController {
 		return "group/document/template/templateInsert";
 	}
 
-	@PostMapping("/insertTemp")
-	public String insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO,
+	@PostMapping("/group/insertTemp")
+	@ResponseBody
+	public Map<String, Object> insertTemp(@RequestParam("files") MultipartFile[] files, @ModelAttribute TemplateVO tempVO,
 			HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
-		String directoryPath = "D:/upload/templates/";
+		String directoryPath = uploadPath + "/templates/";
 		System.out.println("docType: " + tempVO.getDocType());
 		System.out.println("files" + files[0]);
 		System.out.println("files" + files[1]);
@@ -111,21 +117,21 @@ public class TemplateController {
 		}
 
 		tempVO.setCompanyCode(companyCode);
-		tsvc.insertTemp(tempVO);
+		Map<String, Object> result = tsvc.insertTemp(tempVO);
 
-		return "redirect:group/doc/template";
+		return result;
 	}
 	
 	@GetMapping("/group/doc/tempDelete")
 	public String tempDelete(@RequestParam String tempNo, HttpSession session) {
 		String companyCode = (String) session.getAttribute("companyCode");
 		tsvc.tempDelete(companyCode, tempNo);
-		return "redirect:group/doc/template";
+		return "redirect:/group/doc/template";
 	}
 	
 	
 	// 파일 업로드전 미리보기
-	@PostMapping("/previewHwp")
+	@PostMapping("/group/previewHwp")
 	@ResponseBody
 	public String previewHwp(@RequestParam("file") MultipartFile file) {
 		String fileContent = "";
@@ -148,7 +154,7 @@ public class TemplateController {
 		return fileContent;
 	}
 
-	@PostMapping("/previewHtml")
+	@PostMapping("/group/previewHtml")
 	@ResponseBody
 	public String previewHtml(@RequestParam("file") MultipartFile file) {
 		StringBuilder fileContent = new StringBuilder();

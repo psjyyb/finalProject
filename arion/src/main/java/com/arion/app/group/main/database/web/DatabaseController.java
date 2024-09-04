@@ -1,5 +1,6 @@
 package com.arion.app.group.main.database.web;
 
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +42,7 @@ import com.arion.app.home.board.service.HomeQnaVO;
 @Controller
 @RequestMapping("/group/database")
 public class DatabaseController {
-
+       
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
@@ -159,10 +160,12 @@ public class DatabaseController {
 						
 						UUID uuid = UUID.randomUUID();
 						
-						File saveFile = new File(uploadPath+"\\"+filename ,uuid+ "_" + file.getOriginalFilename());
+						File saveFile = new File(uploadPath+"/"+filename ,uuid+ "_" + file.getOriginalFilename());
 						file.transferTo(saveFile);	
+
 						
-						  
+
+						
 						
 						//테이블 등록
 						int forder= databaseservice.fileupload(companycode, parent, uploader, file.getOriginalFilename(),file.getSize(),uuid+ "_" + file.getOriginalFilename(),rankname);
@@ -228,7 +231,7 @@ public class DatabaseController {
 					//테스트
 					String fname = datainfo.get(0).getFilename();
 
-					File file = new File(uploadPath+"\\"+companycode+"\\"+datainfo.get(0).getCname());
+					File file = new File(uploadPath+"/"+companycode+"/"+datainfo.get(0).getCname());
 					FileInputStream in = new FileInputStream(file);
 					System.out.println(file.getName());
 					fname = new String(fname.getBytes("UTF-8"), "8859_1");

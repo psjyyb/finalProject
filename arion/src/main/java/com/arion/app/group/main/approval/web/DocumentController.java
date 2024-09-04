@@ -12,6 +12,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +48,10 @@ import kr.dogfoot.hwplib.tool.textextractor.TextExtractor;
 
 @Controller
 public class DocumentController {
-
+	
+	@Value("${file.upload.url}")
+	private String uploadPath;
+	
 	@Autowired
 	TemplateService tsvc;
 
@@ -103,7 +107,7 @@ public class DocumentController {
 		templateVO.setTempNo(tempNo);
 
 		TemplateVO template = tsvc.tempInfo(templateVO);
-		String filePath = "D:/upload/templates/" + template.getDocFile();
+		String filePath = uploadPath + "/templates/" + template.getDocFile();
 		String docType = template.getDocType();
 
 		if (docType.equals(".hwp")) {

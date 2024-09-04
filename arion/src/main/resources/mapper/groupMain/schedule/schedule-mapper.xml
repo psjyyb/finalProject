@@ -24,9 +24,11 @@
 							 ,schedule_title
 							 ,schedule_start
 							 ,schedule_end
+							 <if test="employeeNo != null and employeeNo !=''">
 							 ,employee_no
+							 </if>
 							 ,company_code
-							 <if test="departmentNo != null and departmentNo !=''">
+							 <if test="departmentName != null and departmentName !=''">
 							 ,department_no
 							 </if>
 							 )
@@ -34,10 +36,15 @@
 			  ,#{scheduleTitle}
 			  ,TO_DATE(#{scheduleStarts},'yyyy-MM-dd HH24:mi')
 			  ,TO_DATE(#{scheduleEnds},'yyyy-MM-dd HH24:mi')
+			  <if test="employeeNo != null and employeeNo !=''">
 			  ,#{employeeNo}
+			  </if>
 			  ,#{companyCode}
-			  <if test="departmentNo != null and departmentNo !=''">
-			  ,#{departmentNo}
+			  <if test="departmentName != null and departmentName !=''">
+			  ,(SELECT department_no
+                FROM departments
+                WHERE department_name=#{departmentName} 
+                AND company_code=#{companyCode})
 			  </if>
 			   )
 	</insert>

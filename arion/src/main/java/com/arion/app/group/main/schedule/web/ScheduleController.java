@@ -74,11 +74,11 @@ public class ScheduleController {
 	@ResponseBody
 	public Map<String,Object> deptCalcInsert(ScheduleVO scheduleVO,HttpSession session){
 		String comCode = (String) session.getAttribute("companyCode");
-		int empNo = (Integer) session.getAttribute("employeeNo");
-		int deptNo = (Integer) session.getAttribute("departmentNo");
+		//int empNo = (Integer) session.getAttribute("employeeNo");
+		String deptName = (String) session.getAttribute("department");
 		scheduleVO.setCompanyCode(comCode);
-		scheduleVO.setEmployeeNo(empNo);
-		scheduleVO.setDepartmentNo(deptNo);
+		//scheduleVO.setEmployeeNo(empNo);
+		scheduleVO.setDepartmentName(deptName);
 		return scheduleService.empScheduleInsert(scheduleVO);
 	}
 

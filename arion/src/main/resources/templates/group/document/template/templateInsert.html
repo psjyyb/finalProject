@@ -67,7 +67,7 @@ label {
 	<div class="container">
 		<h1>기안서</h1>
 		<div class="form-container">
-			<form id="insertTemp" th:action="@{/insertTemp}" method="post"
+			<form id="insertTemp" th:action="@{/group/insertTemp}" method="post"
 				enctype="multipart/form-data">
 				<div class="form-group">
 					<label>문서명</label> <input type="text" name="docName"
@@ -118,7 +118,7 @@ label {
 
 		$.ajax({
 			type: "POST",
-			url: "/previewHwp",
+			url: "/group/previewHwp",
 			data: formData,
 			processData: false,
 			contentType: false
@@ -137,7 +137,7 @@ label {
 
 		$.ajax({
 			type: "POST",
-			url: "/previewHtml",
+			url: "/group/previewHtml",
 			data: formData,
 			processData: false,
 			contentType: false

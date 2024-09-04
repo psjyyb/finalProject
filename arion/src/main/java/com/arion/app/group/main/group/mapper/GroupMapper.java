@@ -45,7 +45,7 @@ public interface GroupMapper {
     List<AddressVO> selectAddressesByCompanyAndEmployee(String companyName, String employeeId);
     List<DepartmentVO> selectOrganizationalChartByCompanyCode(String companyCode);
     //전체사원조회
-    List<EmployeesVO> getAllEmployees();
+    List<EmployeesVO> getAllEmployees(String companyCode);
     //전체 주소록조회
     List<AddressVO> getAllAddress();
 }

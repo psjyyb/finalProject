@@ -129,7 +129,7 @@
     </select>
     <!-- 전체사원조회 -->
     <select id="getAllEmployees" resultType="employeesVO">
-    SELECT e.employee_no
+    SELECT DISTINCT e.employee_no
           , e.employee_name
           , e.department_name
           , e.rank_name
@@ -139,7 +139,7 @@
     FROM employees e 
     JOIN rank r 
     ON e.rank_name = r.rank_name 
-    AND e.company_code = r.company_code
+    AND e.company_code = #{companyCode}
     WHERE e.resign_date IS NULL
 </select>
 <!-- 전체사원조회 -->
